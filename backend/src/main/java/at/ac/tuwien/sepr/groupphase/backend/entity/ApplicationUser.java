@@ -8,14 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 //TODO: replace this class with a correct ApplicationUser Entity implementation
 @Entity
-@Table
 public class ApplicationUser {
 
     @OneToOne(cascade = jakarta.persistence.CascadeType.ALL, fetch = FetchType.EAGER)
@@ -35,21 +30,20 @@ public class ApplicationUser {
     public ApplicationUser() {
     }
 
-    public ApplicationUser(String email, String password, Boolean admin, String name, String telNr, Long matrNumber) {
-        //this.details.email = email;
+    public ApplicationUser(String password, Boolean admin, String name, Long matrNumber, ContactDetails details) {
+        this.details = details;
         this.password = password;
         this.admin = admin;
         this.name = name;
         this.matrNumber = matrNumber;
-        //this.details.telNr = telNr;
     }
 
     public String getEmail() {
-        return details.email;
+        return details.getEmail();
     }
 
     public void setEmail(String email) {
-        this.details.email = email;
+        this.details.setEmail(email);
     }
 
     public String getPassword() {

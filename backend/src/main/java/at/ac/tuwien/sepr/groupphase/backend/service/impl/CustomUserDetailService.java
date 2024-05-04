@@ -5,13 +5,9 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.repository.ContactDetailsRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +30,12 @@ public class CustomUserDetailService implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
-    private final ContactDetailsRepository detailsRepository;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, ContactDetailsRepository detailsRepository) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
-        this.detailsRepository = detailsRepository;
     }
 
     @Override
@@ -93,22 +87,17 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser create(ApplicationUserDto applicationUserDto) {
-        //TODO verify user Data and update so it does not need to create two Users and delete one
-        ContactDetails details = new ContactDetails();
-        details.telNr = applicationUserDto.telNr;
-        details.email = applicationUserDto.email;
+        //TODO verify user Data
+
+        ContactDetails details = new ContactDetails(
+            applicationUserDto.telNr,
+            applicationUserDto.email);
         ApplicationUser applicationUser = new ApplicationUser(
-            applicationUserDto.email,
             applicationUserDto.password,
             false,
             applicationUserDto.name,
-            applicationUserDto.telNr,
-            applicationUserDto.matrNumber);
-        applicationUser.setDetails(details);
-        userRepository.save(applicationUser);
-        detailsRepository.save(details);
-        userRepository.save(applicationUser);
-        userRepository.deleteApplicationUserByDetailsNull();
-        return null;
+            applicationUserDto.matrNumber,
+            details);
+        return userRepository.save(applicationUser);
     }
 }

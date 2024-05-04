@@ -17,15 +17,40 @@ import org.hibernate.validator.constraints.ISBN;
 public class ContactDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long id;
+    private long id;
 
-    /*@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
-    public ApplicationUser user;
-*/
     @Column(name = "TEL_NR", length = 255)
-    public String telNr;
+    private String telNr;
 
-    @Column(nullable = true, length = 255)
-    public String email;
+    @Column(nullable = false, length = 255)
+    private String email;
+
+    public ContactDetails() {
+
+    }
+
+    public ContactDetails(String telNr, String email) {
+        this.telNr = telNr;
+        this.email = email;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getTelNr() {
+        return telNr;
+    }
+
+    public void setTelNr(String telNr) {
+        this.telNr = telNr;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
