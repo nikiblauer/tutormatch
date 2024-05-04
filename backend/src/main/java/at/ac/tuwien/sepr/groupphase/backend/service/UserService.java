@@ -39,5 +39,5 @@ public interface UserService extends UserDetailsService {
      */
     String login(UserLoginDto userLoginDto);
 
-    ApplicationUser create(ApplicationUserDto applicationUserDto);
+    ApplicationUser create(ApplicationUserDto applicationUserDto) throws Exception;
 }

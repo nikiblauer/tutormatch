@@ -27,7 +27,7 @@ public class UserEndpoint {
 
     @PermitAll
     @PostMapping
-    public ApplicationUser create(@RequestBody ApplicationUserDto applicationUserDto) {
+    public ApplicationUser create(@RequestBody ApplicationUserDto applicationUserDto) throws Exception {
         return userService.create(applicationUserDto);
     }
 }

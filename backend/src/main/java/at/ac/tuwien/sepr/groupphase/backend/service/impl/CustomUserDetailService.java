@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +31,14 @@ public class CustomUserDetailService implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
+    private final UserValidator validator;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserValidator validator) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
+        this.validator = validator;
     }
 
     @Override
@@ -86,9 +89,9 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser create(ApplicationUserDto applicationUserDto) {
+    public ApplicationUser create(ApplicationUserDto applicationUserDto) throws Exception {
         //TODO verify user Data
-
+        validator.verifyUserData(applicationUserDto);
         ContactDetails details = new ContactDetails(
             applicationUserDto.telNr,
             applicationUserDto.email);
