@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -106,7 +105,11 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public UserUpdateDto updateUser(Long id, UserUpdateDto userUpdateDto) {
+    public ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception {
+        validator.verifyUserData(applicationUserDto);
+        ApplicationUser applicationUser = userRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException("Could not find the user with the id " + id));
+        //TODO finish update User
         return null;
     }
 }

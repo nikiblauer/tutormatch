@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.annotation.security.PermitAll;
@@ -38,9 +37,9 @@ public class UserEndpoint {
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     @PermitAll
-    public UserUpdateDto updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateDto userUpdateDto) {
+    public UserUpdateDto updateUser(@PathVariable Long id, @Valid @RequestBody ApplicationUserDto applicationUserDto) throws Exception {
         LOG.info("Updating user with id " + id);
-        return userService.updateUser(id, userUpdateDto);
+        return userService.updateUser(id, applicationUserDto);
     }
 
 }

@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -46,8 +45,8 @@ public interface UserService extends UserDetailsService {
      * Update a user.
      *
      * @param id the id of the user
-     * @param userUpdateDto the updated user
+     * @param applicationUserDto the updated user
      * @return the updated user
      */
-    UserUpdateDto updateUser(Long id, UserUpdateDto userUpdateDto);
+    ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception;
 }
