@@ -1,4 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-public class SubjectServiceImpl {
+import at.ac.tuwien.sepr.groupphase.backend.service.SubjectService;
+
+public class SubjectServiceImpl implements SubjectService {
 }

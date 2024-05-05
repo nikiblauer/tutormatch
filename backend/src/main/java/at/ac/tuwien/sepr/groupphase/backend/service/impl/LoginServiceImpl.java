@@ -1,4 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-public class LoginServiceImpl {
+import at.ac.tuwien.sepr.groupphase.backend.service.LoginService;
+
+public class LoginServiceImpl implements LoginService {
 }
