@@ -109,7 +109,15 @@ public class CustomUserDetailService implements UserService {
         validator.verifyUserData(applicationUserDto);
         ApplicationUser applicationUser = userRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Could not find the user with the id " + id));
-        //TODO finish update User
-        return null;
+
+        applicationUser.setPassword(applicationUserDto.password);
+        applicationUser.setName(applicationUserDto.name);
+        applicationUser.setMatrNumber(applicationUserDto.matrNumber);
+        applicationUser.getDetails().setEmail(applicationUserDto.email);
+        applicationUser.getDetails().setTelNr(applicationUserDto.telNr);
+
+        // Save the updated ApplicationUser in the database
+        ApplicationUser updatedUser = userRepository.save(applicationUser);
+        return ApplicationUserDto.toDto(updatedUser);
     }
 }

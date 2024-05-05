@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,4 +24,14 @@ public class ApplicationUserDto {
 
     @NotBlank(message = "TelNr is mandatory")
     public String telNr;
+
+    public static ApplicationUserDto toDto(ApplicationUser applicationUser) {
+        ApplicationUserDto dto = new ApplicationUserDto();
+        dto.password = applicationUser.getPassword();
+        dto.name = applicationUser.getName();
+        dto.matrNumber = applicationUser.getMatrNumber();
+        dto.email = applicationUser.getDetails().getEmail();
+        dto.telNr = applicationUser.getDetails().getTelNr();
+        return dto;
+    }
 }
