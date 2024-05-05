@@ -48,5 +48,5 @@ public interface UserService extends UserDetailsService {
      * @param applicationUserDto the updated user
      * @return the updated user
      */
-    ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception;
+    ApplicationUserDto updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception;
 }

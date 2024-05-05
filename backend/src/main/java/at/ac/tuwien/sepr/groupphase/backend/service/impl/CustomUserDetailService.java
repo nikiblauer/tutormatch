@@ -105,7 +105,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception {
+    public ApplicationUserDto updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception {
         validator.verifyUserData(applicationUserDto);
         ApplicationUser applicationUser = userRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Could not find the user with the id " + id));

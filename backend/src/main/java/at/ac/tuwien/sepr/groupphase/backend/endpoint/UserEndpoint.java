@@ -37,7 +37,7 @@ public class UserEndpoint {
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     @PermitAll
-    public UserUpdateDto updateUser(@PathVariable Long id, @Valid @RequestBody ApplicationUserDto applicationUserDto) throws Exception {
+    public ApplicationUserDto updateUser(@PathVariable Long id, @Valid @RequestBody ApplicationUserDto applicationUserDto) throws Exception {
         LOG.info("Updating user with id " + id);
         return userService.updateUser(id, applicationUserDto);
     }

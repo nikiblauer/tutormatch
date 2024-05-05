@@ -4,12 +4,5 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 
 public class UserMapper {
 
-    public UserUpdateDto toDto(ApplicationUser user) {
-        return new UserUpdateDto(
-            user.getId(),
-            user.getName(),
-            user.getEmail(),
-            null // Das Passwort sollte nicht zurückgegeben werden
-        );
-    }
+
 }
