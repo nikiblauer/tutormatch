@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserUpdateDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -102,5 +103,10 @@ public class CustomUserDetailService implements UserService {
             applicationUserDto.matrNumber,
             details);
         return userRepository.save(applicationUser);
+    }
+
+    @Override
+    public UserUpdateDto updateUser(Long id, UserUpdateDto userUpdateDto) {
+        return null;
     }
 }
