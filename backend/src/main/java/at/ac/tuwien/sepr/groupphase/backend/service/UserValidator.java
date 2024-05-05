@@ -15,9 +15,10 @@ public class UserValidator {
     public boolean validate(String email) throws ValidationException {
         return email.matches(VALIDATION_PATTERN_1) || email.matches(VALIDATION_PATTERN_2);
     }
+
     public void verifyUserData(ApplicationUserDto user) throws Exception {
         List<String> errors = new ArrayList<>();
-        if (!validate(user.email)){
+        if (!validate(user.email)) {
             errors.add("Email not valid, it has to end in tuwien.ac.at or student.tuwien.ac.at");
         }
         if (user.email.length() > 255) {
