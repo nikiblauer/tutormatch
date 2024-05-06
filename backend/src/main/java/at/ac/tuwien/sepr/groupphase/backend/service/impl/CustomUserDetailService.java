@@ -69,7 +69,7 @@ public class CustomUserDetailService implements UserService {
         if (applicationUser != null) {
             return applicationUser;
         }
-        throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
+        throw new NotFoundException("Username or password incorrect");
     }
 
     @Override
@@ -79,7 +79,8 @@ public class CustomUserDetailService implements UserService {
             && userDetails.isAccountNonExpired()
             && userDetails.isAccountNonLocked()
             && userDetails.isCredentialsNonExpired()
-            && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
+            //&& passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
+            && userLoginDto.getPassword().equals(userDetails.getPassword())
         ) {
             List<String> roles = userDetails.getAuthorities()
                 .stream()
@@ -87,7 +88,7 @@ public class CustomUserDetailService implements UserService {
                 .toList();
             return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
         }
-        throw new BadCredentialsException("Username or password is incorrect or account is locked");
+        throw new BadCredentialsException("Username or password is incorrect");
     }
 
     @Override
