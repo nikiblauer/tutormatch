@@ -15,7 +15,6 @@ public class UserValidator {
     private static final String VALIDATION_PATTERN_4 = "^(?:\\+?\\d⋅?){6,14}\\d$";
 
 
-
     public boolean validate(String email) {
         return email.matches(VALIDATION_PATTERN_1) || email.matches(VALIDATION_PATTERN_2);
     }
@@ -35,10 +34,10 @@ public class UserValidator {
         if (user.name.matches(VALIDATION_PATTERN_3)) {
             errors.add("Name cannot be whitespace");
         }
-        if (user.password.length() < 8 ){
+        if (user.password.length() < 8) {
             errors.add("Password has to be at least of length 8");
         }
-        if (!user.telNr.matches(VALIDATION_PATTERN_4)){
+        if (!user.telNr.matches(VALIDATION_PATTERN_4)) {
             errors.add("Telephone number has to be a valid phone number");
         }
         if (!errors.isEmpty()) {

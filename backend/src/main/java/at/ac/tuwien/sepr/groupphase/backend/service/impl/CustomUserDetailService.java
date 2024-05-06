@@ -98,7 +98,7 @@ public class CustomUserDetailService implements UserService {
         ApplicationUser applicationUser = new ApplicationUser(
             applicationUserDto.password,
             false,
-            applicationUserDto.name.trim().replaceAll("\\s+"," "),
+            applicationUserDto.name.trim().replaceAll("\\s+", " "),
             applicationUserDto.matrNumber,
             details);
         return userRepository.save(applicationUser);
