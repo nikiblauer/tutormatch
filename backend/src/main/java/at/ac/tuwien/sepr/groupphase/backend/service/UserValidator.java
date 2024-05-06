@@ -9,10 +9,14 @@ import java.util.List;
 
 @Component
 public class UserValidator {
-    private static final String VALIDATION_PATTERN_1 = "^[a-zA-Z0-9.+-]+@student.tuwien.ac.at";
-    private static final String VALIDATION_PATTERN_2 = "^[a-zA-Z0-9.+-]+@tuwien.ac.at";
+    private static final String VALIDATION_PATTERN_1 = "^[a-zA-Z0-9.+-]+@student\\.tuwien\\.ac\\.at$";
+    private static final String VALIDATION_PATTERN_2 = "^[a-zA-Z0-9.+-]+@tuwien\\.ac\\.at$";
+    private static final String VALIDATION_PATTERN_3 = "^\\s+";
+    private static final String VALIDATION_PATTERN_4 = "^(?:\\+?\\d⋅?){6,14}\\d$";
 
-    public boolean validate(String email) throws ValidationException {
+
+
+    public boolean validate(String email) {
         return email.matches(VALIDATION_PATTERN_1) || email.matches(VALIDATION_PATTERN_2);
     }
 
@@ -28,8 +32,14 @@ public class UserValidator {
             errors.add("Name cannot be null");
             throw new ValidationException("Errors while verifying user Data:", errors);
         }
-        if (user.name.equals(" ")) {
+        if (user.name.matches(VALIDATION_PATTERN_3)) {
             errors.add("Name cannot be whitespace");
+        }
+        if (user.password.length() < 8 ){
+            errors.add("Password has to be at least of length 8");
+        }
+        if (!user.telNr.matches(VALIDATION_PATTERN_4)){
+            errors.add("Telephone number has to be a valid phone number");
         }
         if (!errors.isEmpty()) {
             throw new ValidationException("Errors while verifying user Data:", errors);
