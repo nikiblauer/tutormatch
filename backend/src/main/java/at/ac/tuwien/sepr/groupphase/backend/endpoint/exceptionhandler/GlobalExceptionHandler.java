@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -69,6 +70,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ValidationErrorRestDto handleValidationException(ValidationException e) {
         LOGGER.warn("Terminating request processing with status 422 due to {}: {}", e.getClass().getSimpleName(), e.getMessage());
         return new ValidationErrorRestDto(e.summary(), e.errors());
+    }
+
+    @ExceptionHandler(value = {BadCredentialsException.class})
+    protected ResponseEntity<Object> BadCredentialsException(RuntimeException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
 }
