@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 //TODO: replace this class with a correct ApplicationUser JPARepository implementation
 @Repository
 public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
@@ -35,7 +37,8 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
     }*/
     ApplicationUser findApplicationUserByDetails_Email(String email);
 
-    void deleteApplicationUserByDetailsNull();
+    List<ApplicationUser> findAllByDetails_Email(String email);
+
 }
 
 

@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -92,6 +94,9 @@ public class CustomUserDetailService implements UserService {
     public ApplicationUser create(ApplicationUserDto applicationUserDto) throws Exception {
         //TODO verify user Data
         validator.verifyUserData(applicationUserDto);
+        if (!userRepository.findAllByDetails_Email(applicationUserDto.email).isEmpty()) {
+            throw new ValidationException("Email already exits please try an other one", new ArrayList<>());
+        }
         ContactDetails details = new ContactDetails(
             applicationUserDto.telNr,
             applicationUserDto.email);
