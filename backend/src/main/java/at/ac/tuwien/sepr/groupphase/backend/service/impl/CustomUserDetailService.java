@@ -104,6 +104,7 @@ public class CustomUserDetailService implements UserService {
         return userRepository.save(applicationUser);
     }
 
+    //TODO write integration test for this method
     @Override
     public ApplicationUserDto updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception {
         validator.verifyUserData(applicationUserDto);
@@ -116,7 +117,7 @@ public class CustomUserDetailService implements UserService {
         applicationUser.getDetails().setEmail(applicationUserDto.email);
         applicationUser.getDetails().setTelNr(applicationUserDto.telNr);
 
-        // Save the updated ApplicationUser in the database
+        // Save the updated ApplicationUser in th e database
         ApplicationUser updatedUser = userRepository.save(applicationUser);
         return ApplicationUserDto.toDto(updatedUser);
     }
