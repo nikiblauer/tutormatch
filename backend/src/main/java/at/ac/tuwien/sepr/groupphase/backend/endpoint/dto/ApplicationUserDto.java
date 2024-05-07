@@ -16,13 +16,13 @@ public class ApplicationUserDto {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     public String password;
 
-    @NotBlank(message = "Name is mandatory")
-    public String name;
-
+    @NotBlank(message = "Firstname is mandatory")
     public String firstname;
 
+    @NotBlank(message = "Lastname is mandatory")
     public String lastname;
 
+    @NotNull(message = "MatrNumber is mandatory")
     public Long matrNumber;
 
     @NotBlank(message = "Email is mandatory")
@@ -108,7 +108,8 @@ public class ApplicationUserDto {
     public static ApplicationUserDto toDto(ApplicationUser applicationUser) {
         ApplicationUserDto dto = new ApplicationUserDto();
         dto.password = applicationUser.getPassword();
-        dto.name = applicationUser.getFirstname();
+        dto.firstname = applicationUser.getFirstname();
+        dto.lastname = applicationUser.getLastname();
         dto.matrNumber = applicationUser.getMatrNumber();
         dto.email = applicationUser.getDetails().getEmail();
         dto.telNr = applicationUser.getDetails().getTelNr();

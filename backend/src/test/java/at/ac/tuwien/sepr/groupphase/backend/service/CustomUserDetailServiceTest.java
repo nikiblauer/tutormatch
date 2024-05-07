@@ -36,20 +36,23 @@ public class CustomUserDetailServiceTest {
         Long id = 1L;
         ApplicationUserDto applicationUserDto = new ApplicationUserDto();
         applicationUserDto.password = "password";
-        applicationUserDto.name = "name";
+        applicationUserDto.firstname = "Firstname";
+        applicationUserDto.lastname = "Lastname";
         applicationUserDto.matrNumber = 123L;
         applicationUserDto.email = "email@example.com";
         applicationUserDto.telNr = "1234567890";
 
         ApplicationUser applicationUser = new ApplicationUser();
         applicationUser.setPassword(applicationUserDto.password);
-        applicationUser.setName(applicationUserDto.name);
+        applicationUser.setFirstname(applicationUserDto.lastname);
+        applicationUser.setLastname(applicationUserDto.lastname);
         applicationUser.setMatrNumber(applicationUserDto.matrNumber);
         applicationUser.setDetails(new ContactDetails(applicationUserDto.email, applicationUserDto.telNr));
 
         ApplicationUserDto updatedApplicationUserDto = new ApplicationUserDto();
         updatedApplicationUserDto.password = "newPassword";
-        updatedApplicationUserDto.name = "newName";
+        updatedApplicationUserDto.firstname = "newFirstName";
+        updatedApplicationUserDto.lastname = "newLastName";
         updatedApplicationUserDto.matrNumber = 456L;
         updatedApplicationUserDto.email = "newEmail@example.com";
         updatedApplicationUserDto.telNr = "0987654321";
@@ -62,7 +65,8 @@ public class CustomUserDetailServiceTest {
 
         // Assert
         assertEquals(updatedApplicationUserDto.password, returnedUserDto.password);
-        assertEquals(updatedApplicationUserDto.name, returnedUserDto.name);
+        assertEquals(updatedApplicationUserDto.lastname, returnedUserDto.lastname);
+        assertEquals(updatedApplicationUserDto.firstname, returnedUserDto.firstname);
         assertEquals(updatedApplicationUserDto.matrNumber, returnedUserDto.matrNumber);
         assertEquals(updatedApplicationUserDto.email, returnedUserDto.email);
         assertEquals(updatedApplicationUserDto.telNr, returnedUserDto.telNr);
