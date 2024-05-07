@@ -27,6 +27,7 @@ public class ApplicationUser {
     private Boolean admin;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter
     private Long id;
     @Setter
     @Column(nullable = false, length = 255)
