@@ -21,8 +21,8 @@ public class UserValidator {
 
     public void verifyUserData(ApplicationUserDto user) throws Exception {
         List<String> errors = new ArrayList<>();
-        if (user.email.isEmpty()) {
-            errors.add("Email cannot be empty");
+        if (user.email == null) {
+            errors.add("Email cannot be null");
             throw new ValidationException("Errors while verifying user Data:", errors);
         }
         if (!validate(user.email)) {
