@@ -56,7 +56,7 @@ public class CustomUserDetailService implements UserService {
                 grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
             }
 
-            return new User(applicationUser.getEmail(), applicationUser.getPassword(), grantedAuthorities);
+            return new User(applicationUser.getDetails().getEmail(), applicationUser.getPassword(), grantedAuthorities);
         } catch (NotFoundException e) {
             throw new UsernameNotFoundException(e.getMessage(), e);
         }
@@ -92,7 +92,6 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser create(ApplicationUserDto applicationUserDto) throws Exception {
-        //TODO verify user Data
         validator.verifyUserData(applicationUserDto);
         if (!userRepository.findAllByDetails_Email(applicationUserDto.email).isEmpty()) {
             throw new ValidationException("Email already exits please try an other one", new ArrayList<>());
@@ -103,7 +102,8 @@ public class CustomUserDetailService implements UserService {
         ApplicationUser applicationUser = new ApplicationUser(
             applicationUserDto.password,
             false,
-            applicationUserDto.name.trim().replaceAll("\\s+", " "),
+            applicationUserDto.firstname.trim().replaceAll("\\s+", " "),
+            applicationUserDto.lastname.trim().replaceAll("\\s+", " "),
             applicationUserDto.matrNumber,
             details);
         return userRepository.save(applicationUser);
