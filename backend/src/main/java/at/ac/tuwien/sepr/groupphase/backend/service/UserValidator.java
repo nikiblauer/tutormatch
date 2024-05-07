@@ -21,6 +21,10 @@ public class UserValidator {
 
     public void verifyUserData(ApplicationUserDto user) throws Exception {
         List<String> errors = new ArrayList<>();
+        if (user.email.isEmpty()) {
+            errors.add("Email cannot be empty");
+            throw new ValidationException("Errors while verifying user Data:", errors);
+        }
         if (!validate(user.email)) {
             errors.add("Email not valid, does it end in tuwien.ac.at or student.tuwien.ac.at");
         }
