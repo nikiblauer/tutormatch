@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -22,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -54,7 +56,7 @@ public class CustomUserDetailService implements UserService {
                 grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
             }
 
-            return new User(applicationUser.getEmail(), applicationUser.getPassword(), grantedAuthorities);
+            return new User(applicationUser.getDetails().getEmail(), applicationUser.getPassword(), grantedAuthorities);
         } catch (NotFoundException e) {
             throw new UsernameNotFoundException(e.getMessage(), e);
         }
@@ -90,15 +92,18 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser create(ApplicationUserDto applicationUserDto) throws Exception {
-        //TODO verify user Data
         validator.verifyUserData(applicationUserDto);
+        if (!userRepository.findAllByDetails_Email(applicationUserDto.email).isEmpty()) {
+            throw new ValidationException("Email already exits please try an other one", new ArrayList<>());
+        }
         ContactDetails details = new ContactDetails(
             applicationUserDto.telNr,
             applicationUserDto.email);
         ApplicationUser applicationUser = new ApplicationUser(
             applicationUserDto.password,
             false,
-            applicationUserDto.name,
+            applicationUserDto.firstname.trim().replaceAll("\\s+", " "),
+            applicationUserDto.lastname.trim().replaceAll("\\s+", " "),
             applicationUserDto.matrNumber,
             details);
         return userRepository.save(applicationUser);
@@ -112,7 +117,8 @@ public class CustomUserDetailService implements UserService {
             .orElseThrow(() -> new NotFoundException("Could not find the user with the id " + id));
 
         applicationUser.setPassword(applicationUserDto.password);
-        applicationUser.setName(applicationUserDto.name);
+        applicationUser.setFirstname(applicationUserDto.firstname);
+        applicationUser.setLastname(applicationUserDto.lastname);
         applicationUser.setMatrNumber(applicationUserDto.matrNumber);
         applicationUser.getDetails().setEmail(applicationUserDto.email);
         applicationUser.getDetails().setTelNr(applicationUserDto.telNr);

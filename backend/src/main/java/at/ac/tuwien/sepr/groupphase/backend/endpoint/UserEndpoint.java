@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.annotation.security.PermitAll;
@@ -23,15 +25,19 @@ import java.lang.invoke.MethodHandles;
 public class UserEndpoint {
     private final UserService userService;
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private final ApplicationUserMapper mapper;
 
-    public UserEndpoint(UserService userService) {
+
+    public UserEndpoint(UserService userService, ApplicationUserMapper mapper) {
         this.userService = userService;
+        this.mapper = mapper;
     }
 
     @PermitAll
     @PostMapping
-    public ApplicationUser create(@RequestBody ApplicationUserDto applicationUserDto) throws Exception {
-        return userService.create(applicationUserDto);
+    public ApplicationUserDto create(@RequestBody ApplicationUserDto applicationUserDto) throws Exception {
+        ApplicationUser user = userService.create(applicationUserDto);
+        return mapper.mapUserToDto(user, user.getDetails());
     }
 
     @PutMapping("{id}")
@@ -41,7 +47,4 @@ public class UserEndpoint {
         LOG.info("Updating user with id: {}", id);
         return userService.updateUser(id, applicationUserDto);
     }
-
-
-
 }
