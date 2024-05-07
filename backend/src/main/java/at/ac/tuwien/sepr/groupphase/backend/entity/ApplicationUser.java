@@ -2,64 +2,50 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
-//TODO: replace this class with a correct ApplicationUser Entity implementation
+@Getter
 @Entity
-@Table
 public class ApplicationUser {
 
-    @OneToOne
-    @PrimaryKeyJoinColumn
+    @Setter
+    @OneToOne(cascade = jakarta.persistence.CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "DETAILS_ID", referencedColumnName = "ID")
     private ContactDetails details;
+    @Setter
     @Column(nullable = false, length = 255)
     private String password;
-    @Column(nullable = false, name = "IS_ADMIN")
+    @Setter
+    @Column(nullable = false)
     private Boolean admin;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Setter
     @Column(nullable = false, length = 255)
-    private String name;
-    @Column(nullable = false)
+    private String firstname;
+    @Setter
+    @Column(nullable = false, length = 255)
+    private String lastname;
+    @Setter
     private Long matrNumber;
 
     public ApplicationUser() {
     }
 
-    public ApplicationUser(String email, String password, Boolean admin) {
-        this.details = new ContactDetails();
-        this.details.email = email;
+    public ApplicationUser(String password, Boolean admin, String firstname, String lastname, Long matrNumber, ContactDetails details) {
+        this.details = details;
         this.password = password;
         this.admin = admin;
-    }
-
-    public String getEmail() {
-        return details.email;
-    }
-
-    public void setEmail(String email) {
-        this.details.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Boolean getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(Boolean admin) {
-        this.admin = admin;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.matrNumber = matrNumber;
     }
 }

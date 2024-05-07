@@ -2,20 +2,35 @@ package at.ac.tuwien.sepr.groupphase.backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 public class ContactDetails {
     @Id
-    @OneToOne
-    @JoinColumn(name = "USER_ID")
-    private ApplicationUser user;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-    @Column(name = "TEL_NR", length = 255)
+    @Column(length = 255)
+    @Getter
+    @Setter
     private String telNr;
 
     @Column(nullable = false, length = 255)
-    public String email;
+    @Getter
+    @Setter
+    private String email;
+
+    public ContactDetails() {
+
+    }
+
+    public ContactDetails(String telNr, String email) {
+        this.telNr = telNr;
+        this.email = email;
+    }
 }
