@@ -45,6 +45,7 @@ public class UserEndpoint {
     @PermitAll
     public ApplicationUserDto updateUser(@PathVariable("id") Long id, @Valid @RequestBody ApplicationUserDto applicationUserDto) throws Exception {
         LOG.info("Updating user with id: {}", id);
-        return userService.updateUser(id, applicationUserDto);
+        ApplicationUser user = userService.updateUser(id, applicationUserDto);
+        return mapper.mapUserToDto(user, user.getDetails());
     }
 }

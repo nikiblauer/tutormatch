@@ -50,7 +50,7 @@ public interface UserService extends UserDetailsService {
      * @param applicationUserDto the updated user
      * @return the updated user
      */
-    ApplicationUserDto updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception;
+    ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception;
 
     /**
      * Get all users.
@@ -58,5 +58,5 @@ public interface UserService extends UserDetailsService {
      *
      * @return a list of all users
      */
-    List<ApplicationUserDto> getAllUsers();
+    List<ApplicationUser> getAllUsers();
 }

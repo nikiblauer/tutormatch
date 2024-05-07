@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
@@ -27,6 +28,9 @@ public class CustomUserDetailServiceTest {
 
     @Mock
     private UserValidator validator;
+
+    @Mock
+    private ApplicationUserMapper mapper;
 
     @InjectMocks
     private CustomUserDetailService customUserDetailService;
@@ -62,16 +66,16 @@ public class CustomUserDetailServiceTest {
         when(userRepository.save(any(ApplicationUser.class))).thenAnswer(i -> i.getArguments()[0]);
 
         // Act
-        ApplicationUserDto returnedUserDto = customUserDetailService.updateUser(id, updatedApplicationUserDto);
+        ApplicationUser returnedUserDto = customUserDetailService.updateUser(id, updatedApplicationUserDto);
 
         // Assert
         assertAll(
-            () -> assertEquals(updatedApplicationUserDto.password, returnedUserDto.password),
-            () -> assertEquals(updatedApplicationUserDto.lastname, returnedUserDto.lastname),
-            () -> assertEquals(updatedApplicationUserDto.firstname, returnedUserDto.firstname),
-            () -> assertEquals(updatedApplicationUserDto.matrNumber, returnedUserDto.matrNumber),
-            () -> assertEquals(updatedApplicationUserDto.email, returnedUserDto.email),
-            () -> assertEquals(updatedApplicationUserDto.telNr, returnedUserDto.telNr)
+            () -> assertEquals(updatedApplicationUserDto.password, returnedUserDto.getPassword()),
+            () -> assertEquals(updatedApplicationUserDto.lastname, returnedUserDto.getLastname()),
+            () -> assertEquals(updatedApplicationUserDto.firstname, returnedUserDto.getFirstname()),
+            () -> assertEquals(updatedApplicationUserDto.matrNumber, returnedUserDto.getMatrNumber()),
+            () -> assertEquals(updatedApplicationUserDto.email, returnedUserDto.getDetails().getEmail()),
+            () -> assertEquals(updatedApplicationUserDto.telNr, returnedUserDto.getDetails().getTelNr())
         );
     }
 
@@ -94,32 +98,48 @@ public class CustomUserDetailServiceTest {
 
         List<ApplicationUser> applicationUsers = List.of(applicationUser1, applicationUser2);
 
+        ApplicationUserDto applicationUserDto1 = new ApplicationUserDto();
+        applicationUserDto1.password = applicationUser1.getPassword();
+        applicationUserDto1.firstname = applicationUser1.getFirstname();
+        applicationUserDto1.lastname = applicationUser1.getLastname();
+        applicationUserDto1.matrNumber = applicationUser1.getMatrNumber();
+        applicationUserDto1.email = applicationUser1.getDetails().getEmail();
+        applicationUserDto1.telNr = applicationUser1.getDetails().getTelNr();
+
+        ApplicationUserDto applicationUserDto2 = new ApplicationUserDto();
+        applicationUserDto2.password = applicationUser2.getPassword();
+        applicationUserDto2.firstname = applicationUser2.getFirstname();
+        applicationUserDto2.lastname = applicationUser2.getLastname();
+        applicationUserDto2.matrNumber = applicationUser2.getMatrNumber();
+        applicationUserDto2.email = applicationUser2.getDetails().getEmail();
+        applicationUserDto2.telNr = applicationUser2.getDetails().getTelNr();
+
         when(userRepository.findAll()).thenReturn(applicationUsers);
 
         // Act
-        List<ApplicationUserDto> returnedUserDtos = customUserDetailService.getAllUsers();
+        List<ApplicationUser> returnedUserDtos = customUserDetailService.getAllUsers();
 
         // Assert
         assertEquals(2, returnedUserDtos.size());
 
-        ApplicationUserDto returnedUserDto1 = returnedUserDtos.get(0);
+        ApplicationUser returnedUserDto1 = returnedUserDtos.get(0);
         assertAll(
-            () -> assertEquals(applicationUser1.getPassword(), returnedUserDto1.password),
-            () -> assertEquals(applicationUser1.getFirstname(), returnedUserDto1.firstname),
-            () -> assertEquals(applicationUser1.getLastname(), returnedUserDto1.lastname),
-            () -> assertEquals(applicationUser1.getMatrNumber(), returnedUserDto1.matrNumber),
-            () -> assertEquals(applicationUser1.getDetails().getEmail(), returnedUserDto1.email),
-            () -> assertEquals(applicationUser1.getDetails().getTelNr(), returnedUserDto1.telNr)
+            () -> assertEquals(applicationUserDto1.password, returnedUserDto1.getPassword()),
+            () -> assertEquals(applicationUserDto1.firstname, returnedUserDto1.getFirstname()),
+            () -> assertEquals(applicationUserDto1.lastname, returnedUserDto1.getLastname()),
+            () -> assertEquals(applicationUserDto1.matrNumber, returnedUserDto1.getMatrNumber()),
+            () -> assertEquals(applicationUserDto1.email, returnedUserDto1.getDetails().getEmail()),
+            () -> assertEquals(applicationUserDto1.telNr, returnedUserDto1.getDetails().getTelNr())
         );
 
-        ApplicationUserDto returnedUserDto2 = returnedUserDtos.get(1);
+        ApplicationUser returnedUserDto2 = returnedUserDtos.get(1);
         assertAll(
-            () -> assertEquals(applicationUser2.getPassword(), returnedUserDto2.password),
-            () -> assertEquals(applicationUser2.getFirstname(), returnedUserDto2.firstname),
-            () -> assertEquals(applicationUser2.getLastname(), returnedUserDto2.lastname),
-            () -> assertEquals(applicationUser2.getMatrNumber(), returnedUserDto2.matrNumber),
-            () -> assertEquals(applicationUser2.getDetails().getEmail(), returnedUserDto2.email),
-            () -> assertEquals(applicationUser2.getDetails().getTelNr(), returnedUserDto2.telNr)
+            () -> assertEquals(applicationUserDto2.password, returnedUserDto2.getPassword()),
+            () -> assertEquals(applicationUserDto2.firstname, returnedUserDto2.getFirstname()),
+            () -> assertEquals(applicationUserDto2.lastname, returnedUserDto2.getLastname()),
+            () -> assertEquals(applicationUserDto2.matrNumber, returnedUserDto2.getMatrNumber()),
+            () -> assertEquals(applicationUserDto2.email, returnedUserDto2.getDetails().getEmail()),
+            () -> assertEquals(applicationUserDto2.telNr, returnedUserDto2.getDetails().getTelNr())
         );
     }
 }

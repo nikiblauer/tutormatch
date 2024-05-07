@@ -104,15 +104,4 @@ public class ApplicationUserDto {
             return applicationUserDto;
         }
     }
-
-    public static ApplicationUserDto toDto(ApplicationUser applicationUser) {
-        ApplicationUserDto dto = new ApplicationUserDto();
-        dto.password = applicationUser.getPassword();
-        dto.firstname = applicationUser.getFirstname();
-        dto.lastname = applicationUser.getLastname();
-        dto.matrNumber = applicationUser.getMatrNumber();
-        dto.email = applicationUser.getDetails().getEmail();
-        dto.telNr = applicationUser.getDetails().getTelNr();
-        return dto;
-    }
 }

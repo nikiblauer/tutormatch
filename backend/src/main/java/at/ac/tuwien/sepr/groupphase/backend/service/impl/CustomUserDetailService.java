@@ -110,7 +110,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUserDto updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception {
+    public ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception {
         LOG.trace("Updating user with id: {}", id);
         validator.verifyUserData(applicationUserDto);
         ApplicationUser applicationUser = userRepository.findById(id)
@@ -124,19 +124,14 @@ public class CustomUserDetailService implements UserService {
         applicationUser.getDetails().setTelNr(applicationUserDto.telNr);
 
         // Save the updated ApplicationUser in th e database
-        ApplicationUser updatedUser = userRepository.save(applicationUser);
-        return ApplicationUserDto.toDto(updatedUser);
+        return userRepository.save(applicationUser);
     }
 
     @Override
-    public List<ApplicationUserDto> getAllUsers() {
+    public List<ApplicationUser> getAllUsers() {
         LOG.trace("Getting all users");
         List<ApplicationUser> applicationUsers = userRepository.findAll();
-        List<ApplicationUserDto> applicationUserDtos = new ArrayList<>();
-        for (ApplicationUser applicationUser : applicationUsers) {
-            ApplicationUserDto dto = ApplicationUserDto.toDto(applicationUser);
-            applicationUserDtos.add(dto);
-        }
-        return applicationUserDtos;
+        List<ApplicationUser> applicationUserList = new ArrayList<>(applicationUsers);
+        return applicationUserList;
     }
 }
