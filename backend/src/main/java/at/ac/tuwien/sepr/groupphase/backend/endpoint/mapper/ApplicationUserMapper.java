@@ -4,12 +4,28 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper
 
 public interface ApplicationUserMapper {
-    @Mapping(source = "details.email", target = "email")
-    @Mapping(source = "details.telNr", target = "telNr")
-    ApplicationUserDto applicationUserAndDetailsToApplicationUserDto(ApplicationUser applicationUser, ContactDetails details);
+    default ApplicationUserDto mapUserToDto(ApplicationUser applicationUser, ContactDetails details) {
+        if ( applicationUser == null && details == null ) {
+            return null;
+        }
+
+        ApplicationUserDto applicationUserDto = new ApplicationUserDto();
+
+        if ( applicationUser != null ) {
+            applicationUserDto.setPassword( applicationUser.getPassword() );
+            applicationUserDto.setFirstname( applicationUser.getFirstname() );
+            applicationUserDto.setLastname( applicationUser.getLastname() );
+            applicationUserDto.setMatrNumber( applicationUser.getMatrNumber() );
+        }
+        if ( details != null ) {
+            applicationUserDto.setEmail( details.getEmail() );
+            applicationUserDto.setTelNr( details.getTelNr() );
+        }
+
+        return applicationUserDto;
+    }
 }

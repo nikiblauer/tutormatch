@@ -15,7 +15,7 @@ public class ContactDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "TEL_NR", length = 255)
+    @Column(length = 255)
     @Getter
     @Setter
     private String telNr;
