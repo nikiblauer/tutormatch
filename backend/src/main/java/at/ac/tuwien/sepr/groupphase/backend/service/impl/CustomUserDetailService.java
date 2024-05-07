@@ -29,7 +29,7 @@ import java.util.List;
 @Service
 public class CustomUserDetailService implements UserService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
@@ -45,7 +45,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        LOGGER.debug("Load all user by email");
+        LOG.debug("Load all user by email");
         try {
             ApplicationUser applicationUser = findApplicationUserByEmail(email);
 
@@ -64,7 +64,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser findApplicationUserByEmail(String email) {
-        LOGGER.debug("Find application user by email");
+        LOG.debug("Find application user by email");
         ApplicationUser applicationUser = userRepository.findApplicationUserByDetails_Email(email);
         if (applicationUser != null) {
             return applicationUser;
@@ -111,6 +111,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUserDto updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception {
+        LOG.trace("Updating user with id: {}", id);
         validator.verifyUserData(applicationUserDto);
         ApplicationUser applicationUser = userRepository.findById(id)
             .orElseThrow(() -> new NotFoundException("Could not find the user with the id " + id));
@@ -129,6 +130,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public List<ApplicationUserDto> getAllUsers() {
+        LOG.trace("Getting all users");
         List<ApplicationUser> applicationUsers = userRepository.findAll();
         List<ApplicationUserDto> applicationUserDtos = new ArrayList<>();
         for (ApplicationUser applicationUser : applicationUsers) {
