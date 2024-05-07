@@ -5,7 +5,6 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
-import at.ac.tuwien.sepr.groupphase.backend.repository.MessageRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,14 +35,10 @@ public class UserEndpointTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private MessageRepository userRepository;
-
-    @Autowired
     private ApplicationUserMapper userMapper;
 
     @Autowired
     private ObjectMapper objectMapper;
-
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -54,7 +49,7 @@ public class UserEndpointTest {
     }
 
     @Test
-    public void testGetAllUsers() throws Exception {
+    public void testGetAllUsersAdmin() throws Exception {
         //TODO wait for test data which can be used for this test
     }
 
@@ -103,10 +98,5 @@ public class UserEndpointTest {
                 assertEquals(145, content.length());
             }
         );
-    }
-
-    @Test
-    public void getAllUsersInsertAdminAccountIntoDbAndCallEndpoint() throws Exception {
-        //TODO wait for test data which can be used for this test
     }
 }
