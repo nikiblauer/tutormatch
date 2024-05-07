@@ -104,4 +104,9 @@ public class UserEndpointTest {
             }
         );
     }
+
+    @Test
+    public void getAllUsersInsertAdminAccountIntoDbAndCallEndpoint() throws Exception {
+        //TODO wait for test data which can be used for this test
+    }
 }

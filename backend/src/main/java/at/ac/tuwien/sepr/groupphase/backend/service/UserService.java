@@ -54,6 +54,7 @@ public interface UserService extends UserDetailsService {
 
     /**
      * Get all users.
+     * Returns empty list of no users are given in the list
      *
      * @return a list of all users
      */
