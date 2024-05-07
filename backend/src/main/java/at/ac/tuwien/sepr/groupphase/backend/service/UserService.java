@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.List;
+
 public interface UserService extends UserDetailsService {
 
     /**
@@ -44,9 +46,16 @@ public interface UserService extends UserDetailsService {
     /**
      * Update a user.
      *
-     * @param id the id of the user
+     * @param id                 the id of the user
      * @param applicationUserDto the updated user
      * @return the updated user
      */
     ApplicationUserDto updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception;
+
+    /**
+     * Get all users.
+     *
+     * @return a list of all users
+     */
+    List<ApplicationUserDto> getAllUsers();
 }

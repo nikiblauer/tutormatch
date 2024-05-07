@@ -29,7 +29,6 @@ public class AdminEndpoint {
     @GetMapping("/users")
     public List<ApplicationUserDto> getAllUsers() {
         LOG.info("GET /api/v1/admin/users");
-        //return userService.getAllUsers();
-        return null;
+        return userService.getAllUsers();
     }
 }

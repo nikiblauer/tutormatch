@@ -53,6 +53,12 @@ public class UserEndpointTest {
         //TODO wait for test data which can be used for this test
     }
 
+    @Test
+    public void testGetAllUsers() throws Exception {
+        //TODO wait for test data which can be used for this test
+    }
+
+    @Test
     public void createNewValidUser() throws Exception {
         ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+436767720870", "konsti@tuwien.ac.at"));
         ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user, user.getDetails());
