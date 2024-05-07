@@ -33,6 +33,6 @@ public class UserEndpoint {
     @PostMapping
     public ApplicationUserDto create(@RequestBody ApplicationUserDto applicationUserDto) throws Exception {
         ApplicationUser user = userService.create(applicationUserDto);
-        return mapper.userAndDetailsToApplicationUserDto(user, user.getDetails());
+        return mapper.applicationUserAndDetailsToApplicationUserDto(user, user.getDetails());
     }
 }

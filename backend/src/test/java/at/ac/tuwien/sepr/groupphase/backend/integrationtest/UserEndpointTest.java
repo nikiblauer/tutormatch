@@ -51,7 +51,7 @@ public class UserEndpointTest {
     @Test
     public void createNewValidUser() throws Exception {
         ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+436767720870", "konsti@tuwien.ac.at"));
-        ApplicationUserDto applicationUserDto = userMapper.userAndDetailsToApplicationUserDto(user, user.getDetails());
+        ApplicationUserDto applicationUserDto = userMapper.applicationUserAndDetailsToApplicationUserDto(user, user.getDetails());
         String body = objectMapper.writeValueAsString(applicationUserDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
@@ -75,7 +75,7 @@ public class UserEndpointTest {
     @Test
     public void createNewInvalidUser_402() throws Exception {
         ApplicationUser user = new ApplicationUser("", false, "", "", 123465L, new ContactDetails("+436767720870", "konsti@tuswien.ac.at"));
-        ApplicationUserDto applicationUserDto = userMapper.userAndDetailsToApplicationUserDto(user, user.getDetails());
+        ApplicationUserDto applicationUserDto = userMapper.applicationUserAndDetailsToApplicationUserDto(user, user.getDetails());
         String body = objectMapper.writeValueAsString(applicationUserDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)

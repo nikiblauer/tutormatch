@@ -8,5 +8,5 @@ import org.mapstruct.Mapper;
 @Mapper
 
 public interface ApplicationUserMapper {
-    ApplicationUserDto userAndDetailsToApplicationUserDto(ApplicationUser user, ContactDetails details);
+    ApplicationUserDto applicationUserAndDetailsToApplicationUserDto(ApplicationUser applicationUser, ContactDetails details);
 }
