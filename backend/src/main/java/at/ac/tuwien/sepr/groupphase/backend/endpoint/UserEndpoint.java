@@ -41,4 +41,7 @@ public class UserEndpoint {
         LOG.info("Updating user with id: {}", id);
         return userService.updateUser(id, applicationUserDto);
     }
+
+
+
 }
