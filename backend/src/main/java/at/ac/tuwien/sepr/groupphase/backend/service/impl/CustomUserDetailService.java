@@ -91,7 +91,8 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser create(ApplicationUserDto applicationUserDto) throws Exception {
+    public ApplicationUser create(ApplicationUserDto applicationUserDto) throws ValidationException {
+        LOGGER.trace("Create user by applicationUserDto: {}", applicationUserDto);
         validator.verifyUserData(applicationUserDto);
         if (!userRepository.findAllByDetails_Email(applicationUserDto.email).isEmpty()) {
             throw new ValidationException("Email already exits please try an other one", new ArrayList<>());
@@ -107,5 +108,15 @@ public class CustomUserDetailService implements UserService {
             applicationUserDto.matrNumber,
             details);
         return userRepository.save(applicationUser);
+    }
+
+    @Override
+    public ApplicationUser findApplicationUserById(Long id) {
+        LOGGER.trace("Find application user by id:{}", id);
+        ApplicationUser applicationUser = userRepository.findApplicationUsersById(id);
+        if (applicationUser != null) {
+            return applicationUser;
+        }
+        throw new NotFoundException(String.format("Could not find the user with the id %s", id));
     }
 }

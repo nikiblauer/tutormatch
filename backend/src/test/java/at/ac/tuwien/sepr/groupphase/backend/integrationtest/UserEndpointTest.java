@@ -2,10 +2,12 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectsListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.repository.MessageRepository;
+import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,15 +22,22 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.ArrayList;
+
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER_EMAIL;
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_BASE_URI;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_ROLES;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "generateData"})
 @AutoConfigureMockMvc
 public class UserEndpointTest {
 
@@ -48,9 +57,13 @@ public class UserEndpointTest {
     @Autowired
     private SecurityProperties securityProperties;
 
+    @Autowired
+    private JwtTokenizer jwtTokenizer;
+
+
     @Test
     public void createNewValidUser() throws Exception {
-        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+436767720870", "konsti@tuwien.ac.at"));
+        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+437777777777", "konsti@tuwien.ac.at"));
         ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user, user.getDetails());
         String body = objectMapper.writeValueAsString(applicationUserDto);
 
@@ -91,6 +104,95 @@ public class UserEndpointTest {
                 //Reads the errors from the body
                 String content = response.getContentAsString();
                 assertEquals(145, content.length());
+            }
+        );
+    }
+
+    @Test
+    public void putValidUserSubject_Returns200() throws Exception {
+
+        SubjectsListDto subjectsListDto = new SubjectsListDto();
+        subjectsListDto.traineeSubjects = new ArrayList<>();
+        subjectsListDto.traineeSubjects.add(1L);
+        subjectsListDto.traineeSubjects.add(2L);
+        subjectsListDto.tutorSubjects = new ArrayList<>();
+        subjectsListDto.tutorSubjects.add(3L);
+        subjectsListDto.tutorSubjects.add(4L);
+
+        String body = objectMapper.writeValueAsString(subjectsListDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/1/subjects")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertNull(response.getContentType());
+    }
+    @Test
+    public void putInvalidUserForUserSubject_Returns404NotFound() throws Exception {
+
+        SubjectsListDto subjectsListDto = new SubjectsListDto();
+        subjectsListDto.traineeSubjects = new ArrayList<>();
+        subjectsListDto.traineeSubjects.add(1L);
+        subjectsListDto.traineeSubjects.add(2L);
+        subjectsListDto.tutorSubjects = new ArrayList<>();
+        subjectsListDto.tutorSubjects.add(3L);
+        subjectsListDto.tutorSubjects.add(4L);
+
+        String body = objectMapper.writeValueAsString(subjectsListDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/-1/subjects")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
+            .andExpect(status().isNotFound())
+            .andDo(print())
+            .andReturn()
+
+            ;
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertAll(
+            () -> {
+                //Reads the errors from the body
+                String content = response.getContentAsString();
+                assertEquals(38, content.length());
+            }
+        );
+    }
+
+    @Test
+    public void putInvalidSubjectsForUSerSubject_Returns422() throws Exception {
+
+        SubjectsListDto subjectsListDto = new SubjectsListDto();
+        subjectsListDto.traineeSubjects = new ArrayList<>();
+        subjectsListDto.traineeSubjects.add(1L);
+        subjectsListDto.traineeSubjects.add(2L);
+        subjectsListDto.tutorSubjects = new ArrayList<>();
+        subjectsListDto.tutorSubjects.add(2L);
+        subjectsListDto.tutorSubjects.add(3L);
+
+        String body = objectMapper.writeValueAsString(subjectsListDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/1/subjects")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
+            .andExpect(status().isUnprocessableEntity())
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertAll(
+            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus()),
+            () -> {
+                //Reads the errors from the body
+                String content = response.getContentAsString();
+                assertEquals(123, content.length());
             }
         );
     }
