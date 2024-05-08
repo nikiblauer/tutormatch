@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
-import at.ac.tuwien.sepr.groupphase.backend.TestInit;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,9 +23,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "generateData"})
 @AutoConfigureMockMvc
-public class AdminEndpointTest extends TestInit {
+public class AdminEndpointTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -65,6 +64,6 @@ public class AdminEndpointTest extends TestInit {
         List<ApplicationUserDto> returnedUsers = objectMapper.readValue(responseBody, new TypeReference<>() {
         });
 
-        assertEquals(0, returnedUsers.size());
+        assertEquals(0, returnedUsers.size()); //empty list
     }
 }

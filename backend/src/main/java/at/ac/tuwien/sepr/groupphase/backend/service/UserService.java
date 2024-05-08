@@ -59,5 +59,5 @@ public interface UserService extends UserDetailsService {
      *
      * @return a list of all users
      */
-    List<ApplicationUser> queryUsers(String firstname, String lastname);
+    List<ApplicationUser> queryUsers(String firstname, String lastname, String email, Long matrNumber);
 }

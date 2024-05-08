@@ -32,8 +32,13 @@ public class AdminEndpoint {
     //@Secured("ROLE_ADMIN")
     @PermitAll
     @GetMapping("/users")
-    public List<ApplicationUserDto> searchUsers(@RequestParam(name = "firstname", required = false) String firstname, @RequestParam(name = "lastname", required = false) String lastname) {
-        List<ApplicationUser> listOfUsers = userService.queryUsers(firstname, lastname);
+    public List<ApplicationUserDto> searchUsers(
+        @RequestParam(name = "firstname", required = false) String firstname,
+        @RequestParam(name = "lastname", required = false) String lastname,
+        @RequestParam(name = "email", required = false) String email,
+        @RequestParam(name = "matrNumber", required = false) Long matrNumber) {
+
+        List<ApplicationUser> listOfUsers = userService.queryUsers(firstname, lastname, email, matrNumber);
         return listOfUsers.stream()
             .map(user -> mapper.mapUserToDto(user, user.getDetails()))
             .collect(Collectors.toList());

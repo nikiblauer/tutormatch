@@ -133,23 +133,13 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public List<ApplicationUser> queryUsers(String firstname, String lastname) {
+    public List<ApplicationUser> queryUsers(String firstname, String lastname, String email, Long matrNumber) {
         LOG.trace("Getting all users");
-        List<ApplicationUser> applicationUsers = userRepository.findAll();
-        if (firstname != null && !firstname.isEmpty()) {
-            // make the search terms case-insensitive
-            String lowerCaseFirstname = firstname.toLowerCase();
-            applicationUsers = applicationUsers.stream()
-                .filter(user -> user.getFirstname().toLowerCase().contains(lowerCaseFirstname))
-                .collect(Collectors.toList());
-        }
-        if (lastname != null && !lastname.isEmpty()) {
-            // make the search terms case-insensitive
-            String lowerCaseLastname = lastname.toLowerCase();
-            applicationUsers = applicationUsers.stream()
-                .filter(user -> user.getLastname().toLowerCase().contains(lowerCaseLastname))
-                .collect(Collectors.toList());
-        }
-        return applicationUsers;
+        return userRepository.findAll().stream()
+            .filter(user -> firstname == null || firstname.isEmpty() || user.getFirstname().toLowerCase().contains(firstname.toLowerCase()))
+            .filter(user -> lastname == null || lastname.isEmpty() || user.getLastname().toLowerCase().contains(lastname.toLowerCase()))
+            .filter(user -> email == null || email.isEmpty() || user.getDetails().getEmail().toLowerCase().contains(email.toLowerCase()))
+            .filter(user -> matrNumber == null || user.getMatrNumber().equals(matrNumber))
+            .collect(Collectors.toList());
     }
 }

@@ -45,7 +45,7 @@ public class CustomUserDetailServiceTest {
         applicationUserDto.firstname = "Firstname";
         applicationUserDto.lastname = "Lastname";
         applicationUserDto.matrNumber = 123L;
-        applicationUserDto.email = "email@example.com";
+        applicationUserDto.email = "FirstnameLastname@tuwien.ac.at";
         applicationUserDto.telNr = "1234567890";
 
         ApplicationUser applicationUser = new ApplicationUser();
@@ -60,7 +60,7 @@ public class CustomUserDetailServiceTest {
         updatedApplicationUserDto.firstname = "newFirstName";
         updatedApplicationUserDto.lastname = "newLastName";
         updatedApplicationUserDto.matrNumber = 456L;
-        updatedApplicationUserDto.email = "newEmail@example.com";
+        updatedApplicationUserDto.email = "newFirstNameNewLastName@tuwien.ac.at";
         updatedApplicationUserDto.telNr = "0987654321";
 
         when(userRepository.findById(id)).thenReturn(Optional.of(applicationUser));
@@ -83,21 +83,21 @@ public class CustomUserDetailServiceTest {
 
     // Unit Test for queryUsers method in service layer
     @Test
-    void queryForCreatedUser() {
+    void queryForCreatedUserWithFirstnameLastnameMatrNr() {
         // Arrange
         ApplicationUser applicationUser1 = new ApplicationUser();
         applicationUser1.setPassword("password1");
         applicationUser1.setFirstname("John");
         applicationUser1.setLastname("Doe");
         applicationUser1.setMatrNumber(123L);
-        applicationUser1.setDetails(new ContactDetails("email1@example.com", "1234567890"));
+        applicationUser1.setDetails(new ContactDetails("JohnDoe@tuwien.ac.at", "1234567890"));
 
         ApplicationUser applicationUser2 = new ApplicationUser();
         applicationUser2.setPassword("password2");
         applicationUser2.setFirstname("Firstname2");
         applicationUser2.setLastname("Lastname2");
         applicationUser2.setMatrNumber(456L);
-        applicationUser2.setDetails(new ContactDetails("email2@example.com", "0987654321"));
+        applicationUser2.setDetails(new ContactDetails("Firstname2Lastname2@tuwien.ac.at", "0987654321"));
 
         List<ApplicationUser> applicationUsers = List.of(applicationUser1, applicationUser2);
 
@@ -113,7 +113,7 @@ public class CustomUserDetailServiceTest {
         when(userRepository.findAll()).thenReturn(applicationUsers);
 
         // Act
-        List<ApplicationUser> returnedUserDtos = customUserDetailService.queryUsers("John", "Doe");
+        List<ApplicationUser> returnedUserDtos = customUserDetailService.queryUsers("John", "Doe", "", 123L);
 
         // Assert
         assertEquals(1, returnedUserDtos.size());

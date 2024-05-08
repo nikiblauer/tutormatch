@@ -19,7 +19,7 @@ import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorCo
 
 
 @Slf4j
-@Profile({"test", "generateData"})
+@Profile({"test"})
 @Component
 public class UserDataGenerator {
 
