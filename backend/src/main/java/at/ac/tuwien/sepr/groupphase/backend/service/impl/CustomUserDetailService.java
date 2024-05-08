@@ -100,8 +100,11 @@ public class CustomUserDetailService implements UserService {
         ContactDetails details = new ContactDetails(
             applicationUserDto.telNr,
             applicationUserDto.email);
+
+        String encodedPassword = passwordEncoder.encode(applicationUserDto.password);
+
         ApplicationUser applicationUser = new ApplicationUser(
-            applicationUserDto.password,
+            encodedPassword,
             false,
             applicationUserDto.firstname.trim().replaceAll("\\s+", " "),
             applicationUserDto.lastname.trim().replaceAll("\\s+", " "),
