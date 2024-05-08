@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,7 +30,9 @@ import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_BASE_U
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_ROLES;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -53,6 +56,10 @@ public class UserEndpointTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
 
     @Autowired
     private SecurityProperties securityProperties;
@@ -63,7 +70,7 @@ public class UserEndpointTest {
 
     @Test
     public void createNewValidUser() throws Exception {
-        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+437777777777", "konsti@tuwien.ac.at"));
+        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+438881919190", "konsti@tuwien.ac.at"));
         ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user, user.getDetails());
         String body = objectMapper.writeValueAsString(applicationUserDto);
 
@@ -79,10 +86,19 @@ public class UserEndpointTest {
             () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType())
         );
 
-        ApplicationUserDto applicationUserDto1 = objectMapper.readValue(response.getContentAsString(),
+        ApplicationUserDto createdApplicationUserDto = objectMapper.readValue(response.getContentAsString(),
             ApplicationUserDto.class);
 
-        assertEquals(applicationUserDto.toString(), applicationUserDto1.toString());
+        assertAll(
+            () -> assertNotNull(createdApplicationUserDto),
+            () -> assertEquals(createdApplicationUserDto.getEmail(), applicationUserDto.getEmail()),
+            () -> assertEquals(createdApplicationUserDto.getFirstname(), applicationUserDto.getFirstname()),
+            () -> assertEquals(createdApplicationUserDto.getLastname(), applicationUserDto.getLastname()),
+            () -> assertEquals(createdApplicationUserDto.getMatrNumber(), applicationUserDto.getMatrNumber()),
+            () -> assertEquals(createdApplicationUserDto.getTelNr(), applicationUserDto.getTelNr()),
+            () -> assertTrue(passwordEncoder.matches(applicationUserDto.getPassword(), createdApplicationUserDto.getPassword()))
+        );
+
     }
 
     @Test
