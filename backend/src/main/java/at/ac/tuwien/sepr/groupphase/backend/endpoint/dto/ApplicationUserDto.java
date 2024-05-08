@@ -29,7 +29,6 @@ public class ApplicationUserDto {
     @Email(message = "Email should be valid")
     public String email;
 
-    @NotBlank(message = "TelNr is mandatory")
     public String telNr;
 
 

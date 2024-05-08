@@ -19,7 +19,7 @@ public class UserValidator {
         return email.matches(VALIDATION_PATTERN_1) || email.matches(VALIDATION_PATTERN_2);
     }
 
-    public void verifyUserData(ApplicationUserDto user) throws Exception {
+    public void verifyUserData(ApplicationUserDto user) throws ValidationException {
         List<String> errors = new ArrayList<>();
         if (user.email == null) {
             errors.add("Email cannot be null");

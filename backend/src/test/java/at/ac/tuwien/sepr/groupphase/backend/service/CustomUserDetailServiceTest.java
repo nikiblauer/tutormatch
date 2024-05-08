@@ -35,8 +35,9 @@ public class CustomUserDetailServiceTest {
     @InjectMocks
     private CustomUserDetailService customUserDetailService;
 
+    // Unit Test for updateUser method in service layer
     @Test
-    public void testUpdateUserMethod() throws Exception {
+    void testUpdateUserMethod() throws Exception {
         // Arrange
         Long id = 1L;
         ApplicationUserDto applicationUserDto = new ApplicationUserDto();
@@ -79,13 +80,14 @@ public class CustomUserDetailServiceTest {
         );
     }
 
+    // Unit Test for queryUsers method in service layer
     @Test
-    public void testGetAllUsers() {
+    void queryForCreatedUser() {
         // Arrange
         ApplicationUser applicationUser1 = new ApplicationUser();
         applicationUser1.setPassword("password1");
-        applicationUser1.setFirstname("Firstname1");
-        applicationUser1.setLastname("Lastname1");
+        applicationUser1.setFirstname("John");
+        applicationUser1.setLastname("Doe");
         applicationUser1.setMatrNumber(123L);
         applicationUser1.setDetails(new ContactDetails("email1@example.com", "1234567890"));
 
@@ -99,6 +101,7 @@ public class CustomUserDetailServiceTest {
         List<ApplicationUser> applicationUsers = List.of(applicationUser1, applicationUser2);
 
         ApplicationUserDto applicationUserDto1 = new ApplicationUserDto();
+
         applicationUserDto1.password = applicationUser1.getPassword();
         applicationUserDto1.firstname = applicationUser1.getFirstname();
         applicationUserDto1.lastname = applicationUser1.getLastname();
@@ -106,21 +109,13 @@ public class CustomUserDetailServiceTest {
         applicationUserDto1.email = applicationUser1.getDetails().getEmail();
         applicationUserDto1.telNr = applicationUser1.getDetails().getTelNr();
 
-        ApplicationUserDto applicationUserDto2 = new ApplicationUserDto();
-        applicationUserDto2.password = applicationUser2.getPassword();
-        applicationUserDto2.firstname = applicationUser2.getFirstname();
-        applicationUserDto2.lastname = applicationUser2.getLastname();
-        applicationUserDto2.matrNumber = applicationUser2.getMatrNumber();
-        applicationUserDto2.email = applicationUser2.getDetails().getEmail();
-        applicationUserDto2.telNr = applicationUser2.getDetails().getTelNr();
-
         when(userRepository.findAll()).thenReturn(applicationUsers);
 
         // Act
-        List<ApplicationUser> returnedUserDtos = customUserDetailService.getAllUsers();
+        List<ApplicationUser> returnedUserDtos = customUserDetailService.queryUsers("John", "Doe");
 
         // Assert
-        assertEquals(2, returnedUserDtos.size());
+        assertEquals(1, returnedUserDtos.size());
 
         ApplicationUser returnedUserDto1 = returnedUserDtos.get(0);
         assertAll(
@@ -130,16 +125,6 @@ public class CustomUserDetailServiceTest {
             () -> assertEquals(applicationUserDto1.matrNumber, returnedUserDto1.getMatrNumber()),
             () -> assertEquals(applicationUserDto1.email, returnedUserDto1.getDetails().getEmail()),
             () -> assertEquals(applicationUserDto1.telNr, returnedUserDto1.getDetails().getTelNr())
-        );
-
-        ApplicationUser returnedUserDto2 = returnedUserDtos.get(1);
-        assertAll(
-            () -> assertEquals(applicationUserDto2.password, returnedUserDto2.getPassword()),
-            () -> assertEquals(applicationUserDto2.firstname, returnedUserDto2.getFirstname()),
-            () -> assertEquals(applicationUserDto2.lastname, returnedUserDto2.getLastname()),
-            () -> assertEquals(applicationUserDto2.matrNumber, returnedUserDto2.getMatrNumber()),
-            () -> assertEquals(applicationUserDto2.email, returnedUserDto2.getDetails().getEmail()),
-            () -> assertEquals(applicationUserDto2.telNr, returnedUserDto2.getDetails().getTelNr())
         );
     }
 }

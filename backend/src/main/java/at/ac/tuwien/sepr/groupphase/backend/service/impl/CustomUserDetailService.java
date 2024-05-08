@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomUserDetailService implements UserService {
@@ -110,7 +111,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws Exception {
+    public ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws ValidationException {
         LOG.trace("Updating user with id: {}", id);
         validator.verifyUserData(applicationUserDto);
         ApplicationUser applicationUser = userRepository.findById(id)
@@ -123,15 +124,28 @@ public class CustomUserDetailService implements UserService {
         applicationUser.getDetails().setEmail(applicationUserDto.email);
         applicationUser.getDetails().setTelNr(applicationUserDto.telNr);
 
-        // Save the updated ApplicationUser in th e database
+        // Save the updated ApplicationUser in the database
         return userRepository.save(applicationUser);
     }
 
     @Override
-    public List<ApplicationUser> getAllUsers() {
+    public List<ApplicationUser> queryUsers(String firstname, String lastname) {
         LOG.trace("Getting all users");
         List<ApplicationUser> applicationUsers = userRepository.findAll();
-        List<ApplicationUser> applicationUserList = new ArrayList<>(applicationUsers);
-        return applicationUserList;
+        if (firstname != null && !firstname.isEmpty()) {
+            // make the search terms case-insensitive
+            String lowerCaseFirstname = firstname.toLowerCase();
+            applicationUsers = applicationUsers.stream()
+                .filter(user -> user.getFirstname().toLowerCase().contains(lowerCaseFirstname))
+                .collect(Collectors.toList());
+        }
+        if (lastname != null && !lastname.isEmpty()) {
+            // make the search terms case-insensitive
+            String lowerCaseLastname = lastname.toLowerCase();
+            applicationUsers = applicationUsers.stream()
+                .filter(user -> user.getLastname().toLowerCase().contains(lowerCaseLastname))
+                .collect(Collectors.toList());
+        }
+        return applicationUsers;
     }
 }
