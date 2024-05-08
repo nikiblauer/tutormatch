@@ -103,7 +103,7 @@ public class UserEndpointTest {
 
     @Test
     public void createNewInvalidUser_422() throws Exception {
-        ApplicationUser user = new ApplicationUser("", false, "", "", 123465L, new ContactDetails("+436767720870", "konsti@tuswien.ac.at"));
+        ApplicationUser user = new ApplicationUser("", false, "", "", 123465L, new ContactDetails("+438881919190", "konsti@tuswien.ac.at"));
         ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user, user.getDetails());
         String body = objectMapper.writeValueAsString(applicationUserDto);
 
