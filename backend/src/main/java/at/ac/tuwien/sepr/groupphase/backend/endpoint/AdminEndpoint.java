@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,8 @@ public class AdminEndpoint {
         this.mapper = mapper;
     }
 
-    @Secured("ROLE_ADMIN")
+    //@Secured("ROLE_ADMIN")
+    @PermitAll
     @GetMapping("/users")
     public List<ApplicationUserDto> searchUsers(@RequestParam(name = "firstname", required = false) String firstname, @RequestParam(name = "lastname", required = false) String lastname) {
         List<ApplicationUser> listOfUsers = userService.queryUsers(firstname, lastname);

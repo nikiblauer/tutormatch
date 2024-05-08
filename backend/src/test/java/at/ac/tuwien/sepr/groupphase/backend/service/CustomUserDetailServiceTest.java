@@ -64,6 +64,7 @@ public class CustomUserDetailServiceTest {
         updatedApplicationUserDto.telNr = "0987654321";
 
         when(userRepository.findById(id)).thenReturn(Optional.of(applicationUser));
+        when(userRepository.existsById(id)).thenReturn(true);
         when(userRepository.save(any(ApplicationUser.class))).thenAnswer(i -> i.getArguments()[0]);
 
         // Act

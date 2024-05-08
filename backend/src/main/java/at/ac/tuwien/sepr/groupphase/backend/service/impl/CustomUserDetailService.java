@@ -114,8 +114,12 @@ public class CustomUserDetailService implements UserService {
     public ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws ValidationException {
         LOG.trace("Updating user with id: {}", id);
         validator.verifyUserData(applicationUserDto);
-        ApplicationUser applicationUser = userRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException("Could not find the user with the id " + id));
+
+        if (!userRepository.existsById(id)) {
+            throw new NotFoundException(String.format("User with id %d not found", id));
+        }
+
+        ApplicationUser applicationUser = userRepository.findById(id).get();
 
         applicationUser.setPassword(applicationUserDto.password);
         applicationUser.setFirstname(applicationUserDto.firstname);

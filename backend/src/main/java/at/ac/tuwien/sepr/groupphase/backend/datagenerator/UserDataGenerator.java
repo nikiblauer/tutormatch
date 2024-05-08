@@ -19,7 +19,7 @@ import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorCo
 
 
 @Slf4j
-@Profile("generateData")
+@Profile({"test", "generateData"})
 @Component
 public class UserDataGenerator {
 
@@ -33,7 +33,7 @@ public class UserDataGenerator {
     }
 
     @PostConstruct
-    private void generateApplicationUser() {
+    public void generateApplicationUser() {
         // check if data already exists
         if (userRepository.existsById(1L)) {
             log.info("User data already generated. Skipping generation.");
@@ -59,7 +59,7 @@ public class UserDataGenerator {
         String password = passwordEncoder.encode(USER_PASSWORD);
         for (int i = 0; i < count; i++) {
             long matrNumber = 10000001L + i;
-            var user = new ApplicationUser(password, false, "User" + (i + 1), " Surname" + (i + 1),
+            var user = new ApplicationUser(password, false, "User" + (i + 1), "Surname" + (i + 1),
                 matrNumber, new ContactDetails("+43660 1111111", "e" + matrNumber + "@student.tuwien.ac.at"));
             users[i] = user;
         }
