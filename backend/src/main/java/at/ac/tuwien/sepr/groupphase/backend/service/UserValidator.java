@@ -2,13 +2,17 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class UserValidator {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final String VALIDATION_PATTERN_1 = "^[a-zA-Z0-9.+-]+@student\\.tuwien\\.ac\\.at$";
     private static final String VALIDATION_PATTERN_2 = "^[a-zA-Z0-9.+-]+@tuwien\\.ac\\.at$";
     private static final String VALIDATION_PATTERN_3 = "^\\s+";
@@ -16,10 +20,12 @@ public class UserValidator {
 
 
     public boolean validate(String email) {
+        LOGGER.trace("Validation of user email to pattern: {}", email);
         return email.matches(VALIDATION_PATTERN_1) || email.matches(VALIDATION_PATTERN_2);
     }
 
-    public void verifyUserData(ApplicationUserDto user) throws Exception {
+    public void verifyUserData(ApplicationUserDto user) throws ValidationException {
+        LOGGER.trace("Validation of user: {}", user);
         List<String> errors = new ArrayList<>();
         if (user.email == null) {
             errors.add("Email cannot be null");
