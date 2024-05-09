@@ -51,7 +51,7 @@ public class CustomUserDetailService implements UserService {
 
             List<GrantedAuthority> grantedAuthorities;
             if (applicationUser.getAdmin()) {
-                grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER");
+                grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN");
             } else {
                 grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
             }
@@ -63,13 +63,13 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser findApplicationUserByEmail(String email) {
+    public ApplicationUser findApplicationUserByEmail(String email) throws NotFoundException {
         LOGGER.debug("Find application user by email");
         ApplicationUser applicationUser = userRepository.findApplicationUserByDetails_Email(email);
         if (applicationUser != null) {
             return applicationUser;
         }
-        throw new NotFoundException("Username or password incorrect");
+        throw new NotFoundException("No user found with this email");
     }
 
     @Override
@@ -79,9 +79,8 @@ public class CustomUserDetailService implements UserService {
             && userDetails.isAccountNonExpired()
             && userDetails.isAccountNonLocked()
             && userDetails.isCredentialsNonExpired()
-            //&& passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
-            && userLoginDto.getPassword().equals(userDetails.getPassword())
-        ) {
+            && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
+            ) {
             List<String> roles = userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)

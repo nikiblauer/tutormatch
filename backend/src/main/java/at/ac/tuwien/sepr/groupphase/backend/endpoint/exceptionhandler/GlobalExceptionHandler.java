@@ -71,7 +71,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {BadCredentialsException.class})
-    protected ResponseEntity<Object> BadCredentialsException(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> badCredentialsException(RuntimeException ex, WebRequest request) {
         LOGGER.warn(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
