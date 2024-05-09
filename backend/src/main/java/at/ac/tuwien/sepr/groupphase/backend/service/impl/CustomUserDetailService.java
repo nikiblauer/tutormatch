@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CustomUserDetailService implements UserService {
@@ -133,13 +132,8 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public List<ApplicationUser> queryUsers(String firstname, String lastname, String email, Long matrNumber) {
+    public List<ApplicationUser> queryUsers(String fullname, Long matrNumber) {
         LOG.trace("Getting all users");
-        return userRepository.findAll().stream()
-            .filter(user -> firstname == null || firstname.isEmpty() || user.getFirstname().toLowerCase().contains(firstname.toLowerCase()))
-            .filter(user -> lastname == null || lastname.isEmpty() || user.getLastname().toLowerCase().contains(lastname.toLowerCase()))
-            .filter(user -> email == null || email.isEmpty() || user.getDetails().getEmail().toLowerCase().contains(email.toLowerCase()))
-            .filter(user -> matrNumber == null || user.getMatrNumber().equals(matrNumber))
-            .collect(Collectors.toList());
+        return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber);
     }
 }

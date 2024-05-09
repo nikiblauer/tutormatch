@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("generateData")
+@ActiveProfiles({"test", "generateData"})
 @AutoConfigureMockMvc
 public class UserEndpointTest {
 

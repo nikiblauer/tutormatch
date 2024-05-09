@@ -83,7 +83,7 @@ public class CustomUserDetailServiceTest {
 
     // Unit Test for queryUsers method in service layer
     @Test
-    void queryForCreatedUserWithFirstnameLastnameMatrNr() {
+    void queryForCreatedUserWithFullnameMatrNr() {
         // Arrange
         ApplicationUser applicationUser1 = new ApplicationUser();
         applicationUser1.setPassword("password1");
@@ -92,40 +92,24 @@ public class CustomUserDetailServiceTest {
         applicationUser1.setMatrNumber(123L);
         applicationUser1.setDetails(new ContactDetails("JohnDoe@tuwien.ac.at", "1234567890"));
 
-        ApplicationUser applicationUser2 = new ApplicationUser();
-        applicationUser2.setPassword("password2");
-        applicationUser2.setFirstname("Firstname2");
-        applicationUser2.setLastname("Lastname2");
-        applicationUser2.setMatrNumber(456L);
-        applicationUser2.setDetails(new ContactDetails("Firstname2Lastname2@tuwien.ac.at", "0987654321"));
+        List<ApplicationUser> applicationUsers = List.of(applicationUser1);
 
-        List<ApplicationUser> applicationUsers = List.of(applicationUser1, applicationUser2);
-
-        ApplicationUserDto applicationUserDto1 = new ApplicationUserDto();
-
-        applicationUserDto1.password = applicationUser1.getPassword();
-        applicationUserDto1.firstname = applicationUser1.getFirstname();
-        applicationUserDto1.lastname = applicationUser1.getLastname();
-        applicationUserDto1.matrNumber = applicationUser1.getMatrNumber();
-        applicationUserDto1.email = applicationUser1.getDetails().getEmail();
-        applicationUserDto1.telNr = applicationUser1.getDetails().getTelNr();
-
-        when(userRepository.findAll()).thenReturn(applicationUsers);
+        when(userRepository.findAllByFullnameOrMatrNumber("John Doe", 123L)).thenReturn(applicationUsers);
 
         // Act
-        List<ApplicationUser> returnedUserDtos = customUserDetailService.queryUsers("John", "Doe", "", 123L);
+        List<ApplicationUser> returnedUserDtos = customUserDetailService.queryUsers("John Doe", 123L);
 
         // Assert
         assertEquals(1, returnedUserDtos.size());
 
         ApplicationUser returnedUserDto1 = returnedUserDtos.get(0);
         assertAll(
-            () -> assertEquals(applicationUserDto1.password, returnedUserDto1.getPassword()),
-            () -> assertEquals(applicationUserDto1.firstname, returnedUserDto1.getFirstname()),
-            () -> assertEquals(applicationUserDto1.lastname, returnedUserDto1.getLastname()),
-            () -> assertEquals(applicationUserDto1.matrNumber, returnedUserDto1.getMatrNumber()),
-            () -> assertEquals(applicationUserDto1.email, returnedUserDto1.getDetails().getEmail()),
-            () -> assertEquals(applicationUserDto1.telNr, returnedUserDto1.getDetails().getTelNr())
+            () -> assertEquals(applicationUser1.getPassword(), returnedUserDto1.getPassword()),
+            () -> assertEquals(applicationUser1.getFirstname(), returnedUserDto1.getFirstname()),
+            () -> assertEquals(applicationUser1.getLastname(), returnedUserDto1.getLastname()),
+            () -> assertEquals(applicationUser1.getMatrNumber(), returnedUserDto1.getMatrNumber()),
+            () -> assertEquals(applicationUser1.getDetails().getEmail(), returnedUserDto1.getDetails().getEmail()),
+            () -> assertEquals(applicationUser1.getDetails().getTelNr(), returnedUserDto1.getDetails().getTelNr())
         );
     }
 }

@@ -6,7 +6,6 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,12 +32,10 @@ public class AdminEndpoint {
     @PermitAll
     @GetMapping("/users")
     public List<ApplicationUserDto> searchUsers(
-        @RequestParam(name = "firstname", required = false) String firstname,
-        @RequestParam(name = "lastname", required = false) String lastname,
-        @RequestParam(name = "email", required = false) String email,
+        @RequestParam(name = "fullname", required = false) String fullname,
         @RequestParam(name = "matrNumber", required = false) Long matrNumber) {
 
-        List<ApplicationUser> listOfUsers = userService.queryUsers(firstname, lastname, email, matrNumber);
+        List<ApplicationUser> listOfUsers = userService.queryUsers(fullname, matrNumber);
         return listOfUsers.stream()
             .map(user -> mapper.mapUserToDto(user, user.getDetails()))
             .collect(Collectors.toList());
