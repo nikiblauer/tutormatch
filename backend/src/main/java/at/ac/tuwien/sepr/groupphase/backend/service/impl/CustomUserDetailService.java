@@ -122,4 +122,32 @@ public class CustomUserDetailService implements UserService {
         }
         throw new NotFoundException(String.format("Could not find the user with the id %s", id));
     }
+
+    @Override
+    public ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws ValidationException {
+        LOGGER.trace("Updating user with id: {}", id);
+        validator.verifyUserData(applicationUserDto);
+
+        if (!userRepository.existsById(id)) {
+            throw new NotFoundException(String.format("User with id %d not found", id));
+        }
+
+        ApplicationUser applicationUser = userRepository.findById(id).get();
+
+        applicationUser.setPassword(applicationUserDto.password);
+        applicationUser.setFirstname(applicationUserDto.firstname);
+        applicationUser.setLastname(applicationUserDto.lastname);
+        applicationUser.setMatrNumber(applicationUserDto.matrNumber);
+        applicationUser.getDetails().setEmail(applicationUserDto.email);
+        applicationUser.getDetails().setTelNr(applicationUserDto.telNr);
+
+        // Save the updated ApplicationUser in the database
+        return userRepository.save(applicationUser);
+    }
+
+    @Override
+    public List<ApplicationUser> queryUsers(String fullname, Long matrNumber) {
+        LOGGER.trace("Getting all users");
+        return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber);
+    }
 }

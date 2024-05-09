@@ -11,6 +11,7 @@ import lombok.Setter;
 
 @Entity
 public class ContactDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;

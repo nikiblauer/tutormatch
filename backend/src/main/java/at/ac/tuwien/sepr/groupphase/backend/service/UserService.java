@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.List;
+
 public interface UserService extends UserDetailsService {
 
     /**
@@ -39,6 +41,23 @@ public interface UserService extends UserDetailsService {
      * @throws org.springframework.security.authentication.BadCredentialsException if credentials are bad
      */
     String login(UserLoginDto userLoginDto);
+
+    /**
+     * Update a user.
+     *
+     * @param id                 the id of the user
+     * @param applicationUserDto the updated user
+     * @return the updated user
+     */
+    ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws ValidationException;
+
+    /**
+     * Get all users.
+     * Returns empty list of no users are given in the list
+     *
+     * @return a list of all users
+     */
+    List<ApplicationUser> queryUsers(String fullname, Long matrNumber);
 
     ApplicationUser create(ApplicationUserDto applicationUserDto) throws ValidationException;
 
