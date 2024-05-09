@@ -19,4 +19,9 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
         + "OR (u.lastname LIKE CONCAT('%', :fullname, '%') OR :fullname LIKE CONCAT('%', u.lastname, '%')) "
         + "OR CAST(u.matrNumber AS string) LIKE CONCAT('%', :matrNumber, '%')")
     List<ApplicationUser> findAllByFullnameOrMatrNumber(@Param("fullname") String fullname, @Param("matrNumber") Long matrNumber);
+
+    ApplicationUser findApplicationUsersById(Long id);
 }
+
+
+

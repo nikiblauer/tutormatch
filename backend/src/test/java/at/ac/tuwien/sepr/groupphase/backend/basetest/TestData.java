@@ -31,4 +31,6 @@ public interface TestData {
         }
     };
 
+    String DEFAULT_USER_EMAIL = "e10000001@student.tuwien.ac.at";
+
 }

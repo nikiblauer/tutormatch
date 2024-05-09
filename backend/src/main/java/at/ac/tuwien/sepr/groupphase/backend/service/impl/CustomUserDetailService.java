@@ -29,7 +29,7 @@ import java.util.List;
 @Service
 public class CustomUserDetailService implements UserService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
@@ -45,7 +45,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        LOG.debug("Load all user by email");
+        LOGGER.debug("Load all user by email");
         try {
             ApplicationUser applicationUser = findApplicationUserByEmail(email);
 
@@ -64,7 +64,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser findApplicationUserByEmail(String email) {
-        LOG.debug("Find application user by email");
+        LOGGER.debug("Find application user by email");
         ApplicationUser applicationUser = userRepository.findApplicationUserByDetails_Email(email);
         if (applicationUser != null) {
             return applicationUser;
@@ -91,7 +91,8 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser create(ApplicationUserDto applicationUserDto) throws Exception {
+    public ApplicationUser create(ApplicationUserDto applicationUserDto) throws ValidationException {
+        LOGGER.trace("Create user by applicationUserDto: {}", applicationUserDto);
         validator.verifyUserData(applicationUserDto);
         if (!userRepository.findAllByDetails_Email(applicationUserDto.email).isEmpty()) {
             throw new ValidationException("Email already exits please try an other one", new ArrayList<>());
@@ -99,8 +100,11 @@ public class CustomUserDetailService implements UserService {
         ContactDetails details = new ContactDetails(
             applicationUserDto.telNr,
             applicationUserDto.email);
+
+        String encodedPassword = passwordEncoder.encode(applicationUserDto.password);
+
         ApplicationUser applicationUser = new ApplicationUser(
-            applicationUserDto.password,
+            encodedPassword,
             false,
             applicationUserDto.firstname.trim().replaceAll("\\s+", " "),
             applicationUserDto.lastname.trim().replaceAll("\\s+", " "),
@@ -110,8 +114,18 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
+    public ApplicationUser findApplicationUserById(Long id) {
+        LOGGER.trace("Find application user by id:{}", id);
+        ApplicationUser applicationUser = userRepository.findApplicationUsersById(id);
+        if (applicationUser != null) {
+            return applicationUser;
+        }
+        throw new NotFoundException(String.format("Could not find the user with the id %s", id));
+    }
+
+    @Override
     public ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws ValidationException {
-        LOG.trace("Updating user with id: {}", id);
+        LOGGER.trace("Updating user with id: {}", id);
         validator.verifyUserData(applicationUserDto);
 
         if (!userRepository.existsById(id)) {
@@ -133,7 +147,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public List<ApplicationUser> queryUsers(String fullname, Long matrNumber) {
-        LOG.trace("Getting all users");
+        LOGGER.trace("Getting all users");
         return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber);
     }
 }

@@ -42,8 +42,6 @@ public interface UserService extends UserDetailsService {
      */
     String login(UserLoginDto userLoginDto);
 
-    ApplicationUser create(ApplicationUserDto applicationUserDto) throws Exception;
-
     /**
      * Update a user.
      *
@@ -60,4 +58,8 @@ public interface UserService extends UserDetailsService {
      * @return a list of all users
      */
     List<ApplicationUser> queryUsers(String fullname, Long matrNumber);
+
+    ApplicationUser create(ApplicationUserDto applicationUserDto) throws ValidationException;
+
+    ApplicationUser findApplicationUserById(Long id);
 }
