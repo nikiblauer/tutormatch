@@ -128,13 +128,12 @@ public class CustomUserDetailService implements UserService {
         LOGGER.trace("Updating user with id: {}", id);
         validator.verifyUserData(applicationUserDto);
 
-        if (!userRepository.existsById(id)) {
-            throw new NotFoundException(String.format("User with id %d not found", id));
-        }
+        ApplicationUser applicationUser = userRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException(String.format("User with id %d not found", id)));
 
-        ApplicationUser applicationUser = userRepository.findById(id).get();
+        String encodedPassword = passwordEncoder.encode(applicationUserDto.password);
 
-        applicationUser.setPassword(applicationUserDto.password);
+        applicationUser.setPassword(encodedPassword);
         applicationUser.setFirstname(applicationUserDto.firstname);
         applicationUser.setLastname(applicationUserDto.lastname);
         applicationUser.setMatrNumber(applicationUserDto.matrNumber);
