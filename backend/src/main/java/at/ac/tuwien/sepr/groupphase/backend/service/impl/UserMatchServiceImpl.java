@@ -1,6 +1,75 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.stream.Stream;
+
+@Service
 public class UserMatchServiceImpl implements UserMatchService {
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    public Stream<UserMatchDto> findMatchingUserByUserIdAsStream(long userId) {
+
+        if (!userRepository.existsById(userId)) {
+            throw new NotFoundException(String.format("User with id %d not found", userId));
+        }
+
+        String queryString = "SELECT u.MATR_NUMBER, "
+            + "u.FIRSTNAME, "
+            + "u.LASTNAME, "
+            + "cd.EMAIL, "
+            + "cd.TEL_NR, "
+            + "SUM(CASE WHEN us1.ROLE = 'trainee' THEN 1 ELSE 0 END) AS trainee_matchingCount, "
+            + "SUM(CASE WHEN us1.ROLE = 'tutor' THEN 1 ELSE 0 END) AS tutor_matchingCount, "
+            + "COUNT(*) AS total_matchingCount, "
+            + "GROUP_CONCAT(CONCAT(s.NUMBER, ' ', s.TITLE) SEPARATOR ', ') AS subject_titles "
+            + "FROM APPLICATION_USER u "
+            + "JOIN CONTACT_DETAILS cd ON cd.ID = u.DETAILS_ID "
+            + "JOIN USER_SUBJECT us1 ON u.id = us1.USER_ID "
+            + "JOIN USER_SUBJECT us2 ON us1.SUBJECT_ID = us2.SUBJECT_ID "
+            + "AND us1.ROLE != us2.ROLE "
+            + "AND us1.USER_ID != us2.USER_ID "
+            + "JOIN SUBJECT s ON us1.SUBJECT_ID = s.ID "
+            + "WHERE u.ID != :userId AND us2.USER_ID = :userId "
+            + "GROUP BY u.id "
+            + "ORDER BY total_matchingCount DESC";
+
+        Query query = entityManager.createNativeQuery(queryString);
+
+        query.setParameter("userId", userId);
+        query.setMaxResults(100);
+
+        return query.getResultList()
+            .stream()
+            .map(objItem -> {
+                    var item = (Object[]) objItem;
+                    return UserMatchDto
+                        .builder()
+                        .matrNumber((Long) item[0])
+                        .firstname((String) item[1])
+                        .lastname((String) item[2])
+                        .email((String) item[3])
+                        .telNr((String) item[4])
+                        .traineeMatchingcount((Long) item[5])
+                        .tutorMatchingcount((Long) item[6])
+                        .totalMatchingcount((Long) item[7])
+                        .subjectTitles((String) item[8])
+                        .build();
+                }
+            );
+    }
 }
