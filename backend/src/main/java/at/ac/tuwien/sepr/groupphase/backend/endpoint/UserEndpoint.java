@@ -73,8 +73,7 @@ public class UserEndpoint {
 
     //@Secured("ROLE_USER")
     @GetMapping("{id}/matches")
-    public Stream<UserMatchDto> getUserMatches(@PathVariable("id") Long id)
-    {
+    public Stream<UserMatchDto> getUserMatches(@PathVariable("id") Long id) {
         return userMatchService.findMatchingUserByUserIdAsStream(id);
     }
 }

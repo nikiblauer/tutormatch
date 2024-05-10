@@ -7,7 +7,6 @@ import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +68,7 @@ public class UserMatchServiceImpl implements UserMatchService {
                         .totalMatchingcount((Long) item[7])
                         .subjectTitles((String) item[8])
                         .build();
-                }
+                    }
             );
     }
 }
