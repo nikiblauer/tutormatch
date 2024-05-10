@@ -1,9 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +20,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER_EMAIL;
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.LOGIN_BASE_URI;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 
 @ExtendWith(SpringExtension.class)
@@ -36,36 +36,50 @@ import java.util.ArrayList;
 public class LoginEndpointTest {
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
-    private final UserRepository userRepository;
+    UserRepository userRepository;
+
+    @Autowired
+    UserDataGenerator userDataGenerator;
 
     @Autowired
     private SecurityProperties securityProperties;
 
-    @Autowired
-	public LoginEndpointTest(UserRepository userRepository) {
-        this.userRepository = userRepository;
-	}
+    @BeforeEach
+    public void setUp() {
+        System.out.println("Setting up LoginEndpointTest");
+        userRepository.deleteAll();
 
-	@Test
+        userDataGenerator.generateApplicationUser();
+    }
+
+    @Test
     public void validUserLogin() throws Exception {
+        System.out.println(userRepository.findAll());
         String loginData = "{\"password\": \"Password123\", \"email\": \"e10000001@student.tuwien.ac.at\"}";
         ArrayList<String> expectedRole = new ArrayList<>();
         expectedRole.add("ROLE_USER");
-        loginTest(loginData, expectedRole, DEFAULT_USER);
+        System.out.println("logging valid user login");
+        loginTest(loginData, expectedRole, DEFAULT_USER_EMAIL);
     }
+
     @Test
     public void validAdminLogin() throws Exception {
+        System.out.println(userRepository.findAll());
         String loginData = "{\"password\": \"Password123\", \"email\": \"test@admin.at\"}";
         ArrayList<String> expectedRole = new ArrayList<>();
         expectedRole.add("ROLE_ADMIN");
+        System.out.println("logging valid admin login");
         loginTest(loginData, expectedRole, "test@admin.at");
     }
+
     @Test
     public void UserLoginWithNonexistentEmailReturnsNotFound() throws Exception {
         String loginData = "{\"password\": \"Password123\", \"email\": \"nonexistentEmail@student.tuwien.ac.at\"}";
         invalidLoginTest(loginData, HttpStatus.NOT_FOUND.value());
     }
+
     @Test
     public void AdminLoginWithIncorrectPasswordNotFound() throws Exception {
         String loginData = "{\"password\": \"wrongPassword\", \"email\": \"test@admin.at\"}";
@@ -81,6 +95,7 @@ public class LoginEndpointTest {
         MockHttpServletResponse response = mvcResult.getResponse();
         String responseBody = response.getContentAsString();
         String token = responseBody.replace("Bearer ", "");
+        System.out.println("Barer Token " + token);
         byte[] signingKey = securityProperties.getJwtSecret().getBytes();
         Claims claims = Jwts.parser()
             .setSigningKey(signingKey)
@@ -96,6 +111,7 @@ public class LoginEndpointTest {
             () -> assertEquals(expectedRole, actualRole)
         );
     }
+
     private void invalidLoginTest(String loginData, int expectedStatus) throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(post(LOGIN_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
