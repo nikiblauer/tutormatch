@@ -74,6 +74,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public String login(UserLoginDto userLoginDto) {
+        LOGGER.trace("Login as User: {}", userLoginDto);
         UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
         if (userDetails != null
             && userDetails.isAccountNonExpired()

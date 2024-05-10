@@ -17,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER;
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.LOGIN_BASE_URI;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +34,6 @@ import java.util.ArrayList;
 @ActiveProfiles({"test", "generateData"})
 @AutoConfigureMockMvc
 public class LoginEndpointTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -52,7 +52,7 @@ public class LoginEndpointTest {
         String loginData = "{\"password\": \"Password123\", \"email\": \"e10000001@student.tuwien.ac.at\"}";
         ArrayList<String> expectedRole = new ArrayList<>();
         expectedRole.add("ROLE_USER");
-        loginTest(loginData, expectedRole, "e10000001@student.tuwien.ac.at");
+        loginTest(loginData, expectedRole, DEFAULT_USER);
     }
     @Test
     public void validAdminLogin() throws Exception {
@@ -62,12 +62,12 @@ public class LoginEndpointTest {
         loginTest(loginData, expectedRole, "test@admin.at");
     }
     @Test
-    public void invalidUserLogin() throws Exception {
-        String loginData = "{\"password\": \"Password123\", \"email\": \"nonexistendEmail@student.tuwien.ac.at\"}";
+    public void UserLoginWithNonexistentEmailReturnsNotFound() throws Exception {
+        String loginData = "{\"password\": \"Password123\", \"email\": \"nonexistentEmail@student.tuwien.ac.at\"}";
         invalidLoginTest(loginData, HttpStatus.NOT_FOUND.value());
     }
     @Test
-    public void invalidAdminLogin() throws Exception {
+    public void AdminLoginWithIncorrectPasswordNotFound() throws Exception {
         String loginData = "{\"password\": \"wrongPassword\", \"email\": \"test@admin.at\"}";
         invalidLoginTest(loginData, HttpStatus.UNAUTHORIZED.value());
     }
