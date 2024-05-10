@@ -92,7 +92,8 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser create(ApplicationUserDto applicationUserDto) throws Exception {
+    public ApplicationUser create(ApplicationUserDto applicationUserDto) throws ValidationException {
+        LOGGER.trace("Create user by applicationUserDto: {}", applicationUserDto);
         validator.verifyUserData(applicationUserDto);
         if (!userRepository.findAllByDetails_Email(applicationUserDto.email).isEmpty()) {
             throw new ValidationException("Email already exits please try an other one", new ArrayList<>());
@@ -100,13 +101,54 @@ public class CustomUserDetailService implements UserService {
         ContactDetails details = new ContactDetails(
             applicationUserDto.telNr,
             applicationUserDto.email);
+
+        String encodedPassword = passwordEncoder.encode(applicationUserDto.password);
+
         ApplicationUser applicationUser = new ApplicationUser(
-            applicationUserDto.password,
+            encodedPassword,
             false,
             applicationUserDto.firstname.trim().replaceAll("\\s+", " "),
             applicationUserDto.lastname.trim().replaceAll("\\s+", " "),
             applicationUserDto.matrNumber,
             details);
         return userRepository.save(applicationUser);
+    }
+
+    @Override
+    public ApplicationUser findApplicationUserById(Long id) {
+        LOGGER.trace("Find application user by id:{}", id);
+        ApplicationUser applicationUser = userRepository.findApplicationUsersById(id);
+        if (applicationUser != null) {
+            return applicationUser;
+        }
+        throw new NotFoundException(String.format("Could not find the user with the id %s", id));
+    }
+
+    @Override
+    public ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws ValidationException {
+        LOGGER.trace("Updating user with id: {}", id);
+        validator.verifyUserData(applicationUserDto);
+
+        if (!userRepository.existsById(id)) {
+            throw new NotFoundException(String.format("User with id %d not found", id));
+        }
+
+        ApplicationUser applicationUser = userRepository.findById(id).get();
+
+        applicationUser.setPassword(applicationUserDto.password);
+        applicationUser.setFirstname(applicationUserDto.firstname);
+        applicationUser.setLastname(applicationUserDto.lastname);
+        applicationUser.setMatrNumber(applicationUserDto.matrNumber);
+        applicationUser.getDetails().setEmail(applicationUserDto.email);
+        applicationUser.getDetails().setTelNr(applicationUserDto.telNr);
+
+        // Save the updated ApplicationUser in the database
+        return userRepository.save(applicationUser);
+    }
+
+    @Override
+    public List<ApplicationUser> queryUsers(String fullname, Long matrNumber) {
+        LOGGER.trace("Getting all users");
+        return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber);
     }
 }

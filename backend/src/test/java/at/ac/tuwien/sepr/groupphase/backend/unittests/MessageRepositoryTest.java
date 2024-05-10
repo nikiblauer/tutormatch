@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 // This test slice annotation is used instead of @SpringBootTest to load only repository beans instead of
 // the entire application context
 @DataJpaTest
-@ActiveProfiles("test")
+@ActiveProfiles("test") //old profile from template
 public class MessageRepositoryTest implements TestData {
 
     @Autowired

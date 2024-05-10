@@ -3,9 +3,12 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
@@ -39,5 +42,24 @@ public interface UserService extends UserDetailsService {
      */
     String login(UserLoginDto userLoginDto);
 
-    ApplicationUser create(ApplicationUserDto applicationUserDto) throws Exception;
+    /**
+     * Update a user.
+     *
+     * @param id                 the id of the user
+     * @param applicationUserDto the updated user
+     * @return the updated user
+     */
+    ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws ValidationException;
+
+    /**
+     * Get all users.
+     * Returns empty list of no users are given in the list
+     *
+     * @return a list of all users
+     */
+    List<ApplicationUser> queryUsers(String fullname, Long matrNumber);
+
+    ApplicationUser create(ApplicationUserDto applicationUserDto) throws ValidationException;
+
+    ApplicationUser findApplicationUserById(Long id);
 }
