@@ -71,7 +71,7 @@ public class UserEndpoint {
         return mapper.mapUserToDto(user, user.getDetails());
     }
 
-    //@Secured("ROLE_USER")
+    @PermitAll
     @GetMapping("{id}/matches")
     public Stream<UserMatchDto> getUserMatches(@PathVariable("id") Long id) {
         return userMatchService.findMatchingUserByUserIdAsStream(id);

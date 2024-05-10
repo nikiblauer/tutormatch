@@ -1,10 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubjectKey;
+import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
 import jakarta.annotation.PostConstruct;
@@ -12,17 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.ADMIN_EMAIL;
-import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.ADMIN_NAME;
 import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.USER_COUNT;
-import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.USER_PASSWORD;
 
 
 @Slf4j
@@ -32,14 +27,18 @@ import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorCo
 public class UserSubjectDataGenerator {
 
     private final UserSubjectRepository userSubjectRepository;
+    private final UserRepository userRepository;
+    private final SubjectRepository subjectRepository;
 
     @Autowired
-    public UserSubjectDataGenerator(UserSubjectRepository userSubjectRepository) {
+    public UserSubjectDataGenerator(UserSubjectRepository userSubjectRepository, UserRepository userRepository, SubjectRepository subjectRepository) {
         this.userSubjectRepository = userSubjectRepository;
+        this.userRepository = userRepository;
+        this.subjectRepository = subjectRepository;
     }
 
     @PostConstruct
-    private void generateUserSubjectRelation() {
+    public void generateUserSubjectRelation() {
         // check if data already exists
         if (userSubjectRepository.count() > 0) {
             log.info("User-Subject relations already generated. Skipping generation.");
@@ -48,22 +47,21 @@ public class UserSubjectDataGenerator {
         log.info("Generating user-subject relations...");
 
         List<UserSubject> userSubjects = new ArrayList<>();
+        var subjects = subjectRepository.findAll();
 
+        int i = 0;
         // user and subjects are already inserted at this point
-        for (Long userId = 1L; userId < USER_COUNT + 1; userId++) {
-            Long subjectId = userId;
-
+        for (ApplicationUser applicationUser : userRepository.findAll()) {
             //first four subjects as tutor
-            while (subjectId < 5 + userId) {
-                userSubjects.add(getUserSubject(userId, subjectId, "tutor"));
-                subjectId++;
+            for (int j = i; j < 4 + i; j++) {
+                userSubjects.add(getUserSubject(applicationUser.getId(), subjects.get(j).getId(), "tutor"));
             }
 
             //next four subjects as trainee
-            while (subjectId < 9 + userId) {
-                userSubjects.add(getUserSubject(userId, subjectId, "trainee"));
-                subjectId++;
+            for (int j = 4 + i; j < 8 + i; j++) {
+                userSubjects.add(getUserSubject(applicationUser.getId(), subjects.get(j).getId(), "trainee"));
             }
+            i++;
         }
 
         userSubjectRepository.saveAll(userSubjects);
