@@ -27,6 +27,6 @@ public class UserMatchServiceTest extends BaseTest {
         var stream = userMatchService.findMatchingUserByUserIdAsStream(user.get(0).getId());
 
         List<UserMatchDto> resultList = stream.collect(Collectors.toList());
-        assertEquals(7, resultList.size());
+        assertEquals(2, resultList.size());
     }
 }

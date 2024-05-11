@@ -10,13 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UserMatchDto {
-    private long matrNumber;
+    private long id;
     private String firstname;
     private String lastname;
-    private String email;
-    private String telNr;
     private long traineeMatchingcount;
     private long tutorMatchingcount;
     private long totalMatchingcount;
-    private String subjectTitles;
+    private String traineeSubjects;
+    private String tutorSubjects;
 }

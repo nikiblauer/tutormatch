@@ -52,14 +52,17 @@ public class UserSubjectDataGenerator {
         int i = 0;
         // user and subjects are already inserted at this point
         for (ApplicationUser applicationUser : userRepository.findAll()) {
+
+            var role1 = i % 2 == 1 ? "tutor" : "trainee";
             //first four subjects as tutor
             for (int j = i; j < 4 + i; j++) {
-                userSubjects.add(getUserSubject(applicationUser.getId(), subjects.get(j).getId(), "tutor"));
+                userSubjects.add(getUserSubject(applicationUser.getId(), subjects.get(j).getId(), role1));
             }
 
+            var role2 = i % 2 == 1 ? "trainee" : "tutor";
             //next four subjects as trainee
             for (int j = 4 + i; j < 8 + i; j++) {
-                userSubjects.add(getUserSubject(applicationUser.getId(), subjects.get(j).getId(), "trainee"));
+                userSubjects.add(getUserSubject(applicationUser.getId(), subjects.get(j).getId(), role2));
             }
             i++;
         }
