@@ -1,11 +1,14 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.SubjectDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserDataGenerator;
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserSubjectDataGenerator;
+import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 @ExtendWith(SpringExtension.class)
@@ -39,6 +43,14 @@ public class LoginEndpointTest {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    SubjectRepository subjectRepository;
+    @Autowired
+    UserSubjectRepository userSubjectRepository;
+    @Autowired
+    private UserSubjectDataGenerator userSubjectDataGenerator;
+    @Autowired
+    private SubjectDataGenerator subjectDataGenerator;
 
     @Autowired
     UserDataGenerator userDataGenerator;
@@ -47,21 +59,24 @@ public class LoginEndpointTest {
     private SecurityProperties securityProperties;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IOException {
         System.out.println("Setting up LoginEndpointTest");
+        userSubjectRepository.deleteAll();
         userRepository.deleteAll();
-
+        subjectRepository.deleteAll();
         userDataGenerator.generateApplicationUser();
+        subjectDataGenerator.generateSubjects();
+        userSubjectDataGenerator.generateUserSubjectRelation();
     }
 
     @Test
     public void validUserLogin() throws Exception {
         System.out.println(userRepository.findAll());
-        String loginData = "{\"password\": \"Password123\", \"email\": \"e10000001@student.tuwien.ac.at\"}";
+        String loginData = "{\"password\": \"Password123\", \"email\": \"" + DEFAULT_USER_EMAIL + "\"}";
         ArrayList<String> expectedRole = new ArrayList<>();
         expectedRole.add("ROLE_USER");
         System.out.println("logging valid user login");
-        loginTest(loginData, expectedRole, DEFAULT_USER_EMAIL);
+        validLoginTest(loginData, expectedRole, DEFAULT_USER_EMAIL);
     }
 
     @Test
@@ -71,7 +86,7 @@ public class LoginEndpointTest {
         ArrayList<String> expectedRole = new ArrayList<>();
         expectedRole.add("ROLE_ADMIN");
         System.out.println("logging valid admin login");
-        loginTest(loginData, expectedRole, "test@admin.at");
+        validLoginTest(loginData, expectedRole, "test@admin.at");
     }
 
     @Test
@@ -86,7 +101,7 @@ public class LoginEndpointTest {
         invalidLoginTest(loginData, HttpStatus.UNAUTHORIZED.value());
     }
 
-    private void loginTest(String loginData, ArrayList<String> expectedRole, String expectedEmail) throws Exception {
+    private void validLoginTest(String loginData, ArrayList<String> expectedRole, String expectedEmail) throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(post(LOGIN_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(loginData))
