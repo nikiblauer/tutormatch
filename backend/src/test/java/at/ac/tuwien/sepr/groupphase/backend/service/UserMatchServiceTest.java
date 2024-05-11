@@ -22,7 +22,7 @@ public class UserMatchServiceTest extends BaseTest {
 
 
     @Test
-    void testFindMatchingUserByUserIdShouldReturn8Results() {
+    void testFindMatchingUserByUserIdShouldReturn2Results() {
         var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L);
         var stream = userMatchService.findMatchingUserByUserIdAsStream(user.get(0).getId());
 
