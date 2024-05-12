@@ -221,7 +221,7 @@ public class UserEndpointTest {
         System.out.println("UserRepository");
         System.out.println(userRepository.findAll());
 
-     /*   // Create an ApplicationUserDto object with the updated user details
+        // Create an ApplicationUserDto object with the updated user details
         ApplicationUserDto updatedUser = new ApplicationUserDto();
         updatedUser.setFirstname("UserUpdated");
         updatedUser.setLastname("SurnameUpdated");
@@ -251,6 +251,6 @@ public class UserEndpointTest {
             () -> assertEquals(updatedUser.getMatrNumber(), returnedUser.getMatrNumber()),
             () -> assertEquals(updatedUser.getEmail(), returnedUser.getEmail()),
             () -> assertEquals(updatedUser.getTelNr(), returnedUser.getTelNr())
-        );*/
+        );
     }
 }
