@@ -7,3 +7,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+  mail:
+    password: springboot
+    username: test
+    host: 127.0.0.1
+    port: 3025 # default protocol port + 3000 as offset
+    protocol: smtp
