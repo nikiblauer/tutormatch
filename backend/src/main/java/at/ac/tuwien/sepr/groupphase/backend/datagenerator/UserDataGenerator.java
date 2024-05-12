@@ -48,7 +48,7 @@ public class UserDataGenerator {
         //generate admin account
         String userPassword = passwordEncoder.encode(USER_PASSWORD);
         ApplicationUser admin = new ApplicationUser(userPassword, true, ADMIN_NAME.split(" ")[0], ADMIN_NAME.split(" ")[1], null,
-            new ContactDetails("+43660 3333333", ADMIN_EMAIL));
+            new ContactDetails("+43660 3333333", ADMIN_EMAIL), true);
         userRepository.save(admin);
         log.info("User data generation completed.");
     }
@@ -60,7 +60,7 @@ public class UserDataGenerator {
         for (int i = 0; i < count; i++) {
             long matrNumber = 10000001L + i;
             var user = new ApplicationUser(password, false, "User" + (i + 1), "Surname" + (i + 1),
-                matrNumber, new ContactDetails("+43660 1111111", "e" + matrNumber + "@student.tuwien.ac.at"));
+                matrNumber, new ContactDetails("+43660 1111111", "e" + matrNumber + "@student.tuwien.ac.at"), true);
             users[i] = user;
         }
         return users;
