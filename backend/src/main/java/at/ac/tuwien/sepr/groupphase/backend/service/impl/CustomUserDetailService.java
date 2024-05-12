@@ -109,7 +109,8 @@ public class CustomUserDetailService implements UserService {
             applicationUserDto.firstname.trim().replaceAll("\\s+", " "),
             applicationUserDto.lastname.trim().replaceAll("\\s+", " "),
             applicationUserDto.matrNumber,
-            details);
+            details,
+            false);
         return userRepository.save(applicationUser);
     }
 

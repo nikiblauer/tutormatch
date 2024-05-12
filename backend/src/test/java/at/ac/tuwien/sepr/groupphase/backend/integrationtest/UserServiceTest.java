@@ -43,7 +43,7 @@ public class UserServiceTest {
 
     @Test
     public void createNewValidUser() throws Exception {
-        ApplicationUser user = new ApplicationUser("password", false, "Franz", "U", 133465L, new ContactDetails("+438881919190", "franz@student.tuwien.ac.at"));
+        ApplicationUser user = new ApplicationUser("password", false, "Franz", "U", 133465L, new ContactDetails("+438881919190", "franz@student.tuwien.ac.at"), false);
         ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user, user.getDetails());
 
 

@@ -37,16 +37,19 @@ public class ApplicationUser {
     private String lastname;
     @Setter
     private Long matrNumber;
+    @Setter
+    private Boolean verified;
 
     public ApplicationUser() {
     }
 
-    public ApplicationUser(String password, Boolean admin, String firstname, String lastname, Long matrNumber, ContactDetails details) {
+    public ApplicationUser(String password, Boolean admin, String firstname, String lastname, Long matrNumber, ContactDetails details, boolean verified) {
         this.details = details;
         this.password = password;
         this.admin = admin;
         this.firstname = firstname;
         this.lastname = lastname;
         this.matrNumber = matrNumber;
+        this.verified = verified;
     }
 }
