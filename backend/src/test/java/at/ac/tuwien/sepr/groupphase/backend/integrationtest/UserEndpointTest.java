@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
+import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,6 +55,9 @@ public class UserEndpointTest extends BaseTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     @Autowired
     private ApplicationUserMapper userMapper;
@@ -131,11 +135,11 @@ public class UserEndpointTest extends BaseTest {
 
         SubjectsListDto subjectsListDto = new SubjectsListDto();
         subjectsListDto.traineeSubjects = new ArrayList<>();
-        subjectsListDto.traineeSubjects.add(1L);
-        subjectsListDto.traineeSubjects.add(2L);
+        subjectsListDto.traineeSubjects.add(subjectRepository.findAll().get(0).getId());
+        subjectsListDto.traineeSubjects.add(subjectRepository.findAll().get(1).getId());
         subjectsListDto.tutorSubjects = new ArrayList<>();
-        subjectsListDto.tutorSubjects.add(3L);
-        subjectsListDto.tutorSubjects.add(4L);
+        subjectsListDto.tutorSubjects.add(subjectRepository.findAll().get(2).getId());
+        subjectsListDto.tutorSubjects.add(subjectRepository.findAll().get(3).getId());
 
         String body = objectMapper.writeValueAsString(subjectsListDto);
 
