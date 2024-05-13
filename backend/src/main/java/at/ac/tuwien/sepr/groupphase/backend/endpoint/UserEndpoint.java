@@ -3,10 +3,12 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectsListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.SubjectService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -14,10 +16,11 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +29,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
-import java.util.List;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "/api/v1/user")
@@ -36,18 +39,32 @@ public class UserEndpoint {
     private final ApplicationUserMapper mapper;
     private final SubjectService subjectService;
 
+    private final UserMatchService userMatchService;
 
-    public UserEndpoint(UserService userService, ApplicationUserMapper mapper, SubjectService subjectService) {
+    public UserEndpoint(UserService userService, ApplicationUserMapper mapper, SubjectService subjectService, UserMatchService userMatchService) {
         this.userService = userService;
         this.mapper = mapper;
         this.subjectService = subjectService;
+        this.userMatchService = userMatchService;
     }
 
     @PermitAll
     @PostMapping
     public ApplicationUserDto create(@RequestBody CreateApplicationUserDto toCreate) throws ValidationException {
+        LOGGER.info("POST /api/v1/user/ body: {}", toCreate);
         ApplicationUser user = userService.create(toCreate);
         return mapper.mapUserToDto(user, user.getDetails());
+    }
+
+    @GetMapping(value = "/verify/{token}")
+    @PermitAll
+    public ResponseEntity verifyEmail(@PathVariable("token") String token) {
+        LOGGER.info("PUT /api/v1/user/verify/{}", token);
+        if (userService.verifyEmail(token)) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @Secured("ROLE_USER")
@@ -64,7 +81,15 @@ public class UserEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @PermitAll
     public ApplicationUserDto updateUser(@PathVariable("id") Long id, @Valid @RequestBody ApplicationUserDto applicationUserDto) throws Exception {
+        LOGGER.info("PUT /api/v1/user/{} body: {}", id, applicationUserDto);
         ApplicationUser user = userService.updateUser(id, applicationUserDto);
         return mapper.mapUserToDto(user, user.getDetails());
+    }
+
+    @PermitAll
+    @GetMapping("{id}/matches")
+    public Stream<UserMatchDto> getUserMatches(@PathVariable("id") Long id) {
+        LOGGER.info("GET /api/v1/user/{}/matches", id);
+        return userMatchService.findMatchingUserByUserIdAsStream(id);
     }
 }

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
@@ -31,9 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @ActiveProfiles("test")
 public class UserServiceTest {
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
     private ApplicationUserMapper userMapper;
 
     @Autowired
@@ -44,7 +42,7 @@ public class UserServiceTest {
 
     @Test
     public void createNewValidUser() throws Exception {
-        ApplicationUser user = new ApplicationUser("password", false, "Franz", "U", 133465L, new ContactDetails("+438881919190", "franz@student.tuwien.ac.at"));
+        ApplicationUser user = new ApplicationUser("password", false, "Franz", "U", 133465L, new ContactDetails("+438881919190", "franz@student.tuwien.ac.at"), false);
         CreateApplicationUserDto applicationUserDto = userMapper.mapUserToCreateApplicationUserDto(user, user.getDetails());
 
 

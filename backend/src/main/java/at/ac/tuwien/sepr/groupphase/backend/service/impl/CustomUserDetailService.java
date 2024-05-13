@@ -11,6 +11,8 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserValidator;
+import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
+import org.aspectj.weaver.ast.Not;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +37,15 @@ public class CustomUserDetailService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator validator;
+    private final EmailSmtpService emailService;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserValidator validator) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserValidator validator, EmailSmtpService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
         this.validator = validator;
+        this.emailService = emailService;
     }
 
     @Override
@@ -110,7 +114,9 @@ public class CustomUserDetailService implements UserService {
             toCreate.firstname.trim().replaceAll("\\s+", " "),
             toCreate.lastname.trim().replaceAll("\\s+", " "),
             toCreate.matrNumber,
-            details);
+            details,
+            false);
+        emailService.sendVerificationEmail(toCreate);
         return userRepository.save(applicationUser);
     }
 
@@ -125,17 +131,39 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
+    public boolean verifyEmail(String token) {
+        LOGGER.trace("Verify Email with token:{}", token);
+        String tokenEmail = jwtTokenizer.extractUsernameFromVerificationToken(token);
+        try {
+            UserDetails userDetails = loadUserByUsername(tokenEmail);
+            if (userDetails != null
+                    && userDetails.isAccountNonExpired()
+                    && userDetails.isAccountNonLocked()
+                    && userDetails.isCredentialsNonExpired()
+            ) {
+                ApplicationUser applicationUser = findApplicationUserByEmail(tokenEmail);
+                applicationUser.setVerified(true);
+                userRepository.save(applicationUser);
+            } else {
+                return false;
+            }
+        } catch (UsernameNotFoundException | NotFoundException e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws ValidationException {
         LOGGER.trace("Updating user with id: {}", id);
         validator.verifyUserData(applicationUserDto);
 
-        if (!userRepository.existsById(id)) {
-            throw new NotFoundException(String.format("User with id %d not found", id));
-        }
+        ApplicationUser applicationUser = userRepository.findById(id)
+            .orElseThrow(() -> new NotFoundException(String.format("User with id %d not found", id)));
 
-        ApplicationUser applicationUser = userRepository.findById(id).get();
+        String encodedPassword = passwordEncoder.encode(applicationUserDto.password);
 
-        applicationUser.setPassword(applicationUserDto.password);
+        applicationUser.setPassword(encodedPassword);
         applicationUser.setFirstname(applicationUserDto.firstname);
         applicationUser.setLastname(applicationUserDto.lastname);
         applicationUser.setMatrNumber(applicationUserDto.matrNumber);

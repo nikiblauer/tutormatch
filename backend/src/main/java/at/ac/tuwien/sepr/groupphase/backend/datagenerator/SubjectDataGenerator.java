@@ -36,7 +36,7 @@ public class SubjectDataGenerator {
     }
 
     @PostConstruct
-    private void generateSubjects() throws IOException {
+    public void generateSubjects() throws IOException {
         if (subjectRepository.existsById(1L)) {
             log.info("Subject data already generated. Skipping generation.");
             return;

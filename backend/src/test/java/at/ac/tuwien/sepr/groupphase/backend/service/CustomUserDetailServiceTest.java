@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -11,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -31,6 +33,9 @@ public class CustomUserDetailServiceTest {
 
     @Mock
     private ApplicationUserMapper mapper;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private CustomUserDetailService customUserDetailService;
@@ -64,8 +69,8 @@ public class CustomUserDetailServiceTest {
         updatedApplicationUserDto.telNr = "0987654321";
 
         when(userRepository.findById(id)).thenReturn(Optional.of(applicationUser));
-        when(userRepository.existsById(id)).thenReturn(true);
         when(userRepository.save(any(ApplicationUser.class))).thenAnswer(i -> i.getArguments()[0]);
+        when(passwordEncoder.encode(anyString())).thenReturn("newPassword");
 
         // Act
         ApplicationUser returnedUserDto = customUserDetailService.updateUser(id, updatedApplicationUserDto);

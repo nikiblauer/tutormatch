@@ -63,4 +63,11 @@ public interface UserService extends UserDetailsService {
     ApplicationUser create(CreateApplicationUserDto applicationUserDto) throws ValidationException;
 
     ApplicationUser findApplicationUserById(Long id);
+
+    /**
+     * sets the user verification status to verified.
+     *
+     * @return true if user was verified this way or false if the token was invalid (e.g. expired, wrong format)
+     */
+    boolean verifyEmail(String token);
 }
