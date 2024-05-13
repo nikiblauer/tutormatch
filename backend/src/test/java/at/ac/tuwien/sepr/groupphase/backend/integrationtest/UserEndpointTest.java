@@ -162,11 +162,11 @@ public class UserEndpointTest extends BaseTest {
 
         SubjectsListDto subjectsListDto = new SubjectsListDto();
         subjectsListDto.traineeSubjects = new ArrayList<>();
-        subjectsListDto.traineeSubjects.add(1L);
-        subjectsListDto.traineeSubjects.add(2L);
+        subjectsListDto.traineeSubjects.add(subjectRepository.findAll().get(0).getId());
+        subjectsListDto.traineeSubjects.add(subjectRepository.findAll().get(1).getId());
         subjectsListDto.tutorSubjects = new ArrayList<>();
-        subjectsListDto.tutorSubjects.add(3L);
-        subjectsListDto.tutorSubjects.add(4L);
+        subjectsListDto.tutorSubjects.add(subjectRepository.findAll().get(2).getId());
+        subjectsListDto.tutorSubjects.add(subjectRepository.findAll().get(3).getId());
 
         String body = objectMapper.writeValueAsString(subjectsListDto);
 
@@ -191,15 +191,15 @@ public class UserEndpointTest extends BaseTest {
     }
 
     @Test
-    public void putInvalidSubjectsForUSerSubject_Returns422() throws Exception {
+    public void putInvalidSubjectsForUserSubject_Returns422() throws Exception {
 
         SubjectsListDto subjectsListDto = new SubjectsListDto();
         subjectsListDto.traineeSubjects = new ArrayList<>();
-        subjectsListDto.traineeSubjects.add(1L);
-        subjectsListDto.traineeSubjects.add(2L);
+        subjectsListDto.traineeSubjects.add(subjectRepository.findAll().get(0).getId());
+        subjectsListDto.traineeSubjects.add(subjectRepository.findAll().get(1).getId());
         subjectsListDto.tutorSubjects = new ArrayList<>();
-        subjectsListDto.tutorSubjects.add(2L);
-        subjectsListDto.tutorSubjects.add(3L);
+        subjectsListDto.tutorSubjects.add(subjectRepository.findAll().get(1).getId());
+        subjectsListDto.tutorSubjects.add(subjectRepository.findAll().get(2).getId());
 
         String body = objectMapper.writeValueAsString(subjectsListDto);
 

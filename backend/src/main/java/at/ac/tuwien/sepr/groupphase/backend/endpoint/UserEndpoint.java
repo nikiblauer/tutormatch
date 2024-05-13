@@ -49,6 +49,7 @@ public class UserEndpoint {
     @PermitAll
     @PostMapping
     public ApplicationUserDto create(@RequestBody ApplicationUserDto applicationUserDto) throws ValidationException {
+        LOGGER.info("POST /api/v1/user/ body: {}", applicationUserDto);
         ApplicationUser user = userService.create(applicationUserDto);
         return mapper.mapUserToDto(user, user.getDetails());
     }
@@ -67,6 +68,7 @@ public class UserEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @PermitAll
     public ApplicationUserDto updateUser(@PathVariable("id") Long id, @Valid @RequestBody ApplicationUserDto applicationUserDto) throws Exception {
+        LOGGER.info("PUT /api/v1/user/{} body: {}", id, applicationUserDto);
         ApplicationUser user = userService.updateUser(id, applicationUserDto);
         return mapper.mapUserToDto(user, user.getDetails());
     }
@@ -74,6 +76,7 @@ public class UserEndpoint {
     @PermitAll
     @GetMapping("{id}/matches")
     public Stream<UserMatchDto> getUserMatches(@PathVariable("id") Long id) {
+        LOGGER.info("GET /api/v1/user/{}/matches", id);
         return userMatchService.findMatchingUserByUserIdAsStream(id);
     }
 }

@@ -7,9 +7,12 @@ import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.invoke.MethodHandles;
 import java.util.stream.Stream;
 
 @Service
@@ -20,8 +23,12 @@ public class UserMatchServiceImpl implements UserMatchService {
     @Autowired
     private UserRepository userRepository;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+
     @Override
     public Stream<UserMatchDto> findMatchingUserByUserIdAsStream(long userId) {
+        LOGGER.trace("findMatchingUserByUserIdAsStream({})", userId);
 
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException(String.format("User with id %d not found", userId));
