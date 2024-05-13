@@ -10,6 +10,8 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserValidator;
+import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
+import org.aspectj.weaver.ast.Not;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +36,15 @@ public class CustomUserDetailService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator validator;
+    private final EmailSmtpService emailService;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserValidator validator) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserValidator validator, EmailSmtpService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
         this.validator = validator;
+        this.emailService = emailService;
     }
 
     @Override
@@ -111,6 +115,7 @@ public class CustomUserDetailService implements UserService {
             applicationUserDto.matrNumber,
             details,
             false);
+        emailService.sendVerificationEmail(applicationUserDto);
         return userRepository.save(applicationUser);
     }
 
@@ -122,6 +127,29 @@ public class CustomUserDetailService implements UserService {
             return applicationUser;
         }
         throw new NotFoundException(String.format("Could not find the user with the id %s", id));
+    }
+
+    @Override
+    public boolean verifyEmail(String token) {
+        LOGGER.trace("Verify Email with token:{}", token);
+        String tokenEmail = jwtTokenizer.extractUsernameFromVerificationToken(token);
+        try {
+            UserDetails userDetails = loadUserByUsername(tokenEmail);
+            if (userDetails != null
+                    && userDetails.isAccountNonExpired()
+                    && userDetails.isAccountNonLocked()
+                    && userDetails.isCredentialsNonExpired()
+            ) {
+                ApplicationUser applicationUser = findApplicationUserByEmail(tokenEmail);
+                applicationUser.setVerified(true);
+                userRepository.save(applicationUser);
+            } else {
+                return false;
+            }
+        } catch (UsernameNotFoundException | NotFoundException e) {
+            return false;
+        }
+        return true;
     }
 
     @Override

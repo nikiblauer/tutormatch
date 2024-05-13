@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl.email;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.ThymeleafService;
 import jakarta.mail.internet.MimeMessage;
@@ -23,14 +24,23 @@ public class EmailSmtpServiceImpl implements EmailSmtpService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Autowired
     private JavaMailSender mailSender;
 
-    @Autowired
     ThymeleafService thymeleafService;
+
+    private final JwtTokenizer jwtTokenizer;
+
+
 
     @Value("${spring.mail.username}")
     private String senderEmail;
+
+    @Autowired
+    public EmailSmtpServiceImpl(JwtTokenizer jwtTokenizer, JavaMailSender mailSender, ThymeleafService thymeleafService) {
+        this.mailSender = mailSender;
+        this.thymeleafService = thymeleafService;
+        this.jwtTokenizer = jwtTokenizer;
+    }
 
     @Override
     public void sendVerificationEmail(ApplicationUserDto dto) {
@@ -47,15 +57,14 @@ public class EmailSmtpServiceImpl implements EmailSmtpService {
 
             Map<String, Object> variables = new HashMap<>();
             variables.put("full_name", dto.getFirstname() + " " + dto.getLastname());
-            //TODO create verification link
-            //authenticator.createVerificationLink(dto.getEmail())
-            variables.put("verification_link", "www.google.com");
+            String token = jwtTokenizer.buildVerificationToken(dto.getEmail());
+            //TODO link to frontend page here and call backend endpoint with GET request
+            variables.put("verification_link", "http://localhost:8080/api/v1/user/verify/" + token);
             helper.setText(thymeleafService.createContent("verification_email.html", variables), true);
             helper.setFrom(senderEmail);
             mailSender.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.debug("Send verification email failed", e.getStackTrace());
         }
     }
-
 }
