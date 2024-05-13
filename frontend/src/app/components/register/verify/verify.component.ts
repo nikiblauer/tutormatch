@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {NgIf} from "@angular/common";
 import {ActivatedRoute, Router} from "@angular/router";
+import {UserService} from "../../../services/user.service";
 
 @Component({
   selector: 'app-verify',
@@ -12,10 +13,10 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrl: './verify.component.scss'
 })
 export class VerifyComponent {
-  verified: boolean = true;
+  verified: boolean = false;
   token: string = "";
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) {
 
   }
 
@@ -24,6 +25,19 @@ export class VerifyComponent {
       this.token = params.get('token');
       console.log(this.token);
     });
+
+    this.userService.verifyUser(this.token).subscribe({
+        next: () => {
+          console.log("verified");
+          this.verified = true;
+        },
+        error: error => {
+          console.log("Error when verifying user");
+        }
+      }
+    );
+
+
   }
 
 

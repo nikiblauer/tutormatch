@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {FormsModule, NgForm} from "@angular/forms";
 import {UserService} from "../../services/user.service";
-import {CreateApplicationUserDto} from "../../dtos/User";
+import {CreateApplicationUserDto} from "../../dtos/user";
 import {Router} from "@angular/router";
 import {NgIf} from "@angular/common";
 
