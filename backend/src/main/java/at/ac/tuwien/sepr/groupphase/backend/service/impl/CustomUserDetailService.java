@@ -55,7 +55,7 @@ public class CustomUserDetailService implements UserService {
 
             List<GrantedAuthority> grantedAuthorities;
             if (applicationUser.getAdmin()) {
-                grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER");
+                grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN");
             } else {
                 grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
             }
@@ -67,31 +67,32 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser findApplicationUserByEmail(String email) {
+    public ApplicationUser findApplicationUserByEmail(String email) throws NotFoundException {
         LOGGER.debug("Find application user by email");
         ApplicationUser applicationUser = userRepository.findApplicationUserByDetails_Email(email);
         if (applicationUser != null) {
             return applicationUser;
         }
-        throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
+        throw new NotFoundException("No user found with this email");
     }
 
     @Override
     public String login(UserLoginDto userLoginDto) {
+        LOGGER.trace("Login as User: {}", userLoginDto);
         UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
         if (userDetails != null
             && userDetails.isAccountNonExpired()
             && userDetails.isAccountNonLocked()
             && userDetails.isCredentialsNonExpired()
             && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
-        ) {
+            ) {
             List<String> roles = userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
             return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
         }
-        throw new BadCredentialsException("Username or password is incorrect or account is locked");
+        throw new BadCredentialsException("Username or password is incorrect");
     }
 
     @Override
