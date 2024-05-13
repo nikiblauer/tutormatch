@@ -60,7 +60,7 @@ public class EmailSmtpServiceImpl implements EmailSmtpService {
             variables.put("full_name", dto.getFirstname() + " " + dto.getLastname());
             String token = jwtTokenizer.buildVerificationToken(dto.getEmail());
             //TODO link to frontend page here and call backend endpoint with GET request
-            variables.put("verification_link", "http://localhost:8080/api/v1/user/verify/" + token);
+            variables.put("verification_link", "http://localhost:4200/#/register/verify/" + token);
             helper.setText(thymeleafService.createContent("verification_email.html", variables), true);
             helper.setFrom(senderEmail);
             mailSender.send(message);

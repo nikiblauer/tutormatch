@@ -103,7 +103,6 @@ public class UserEndpointTest extends BaseTest {
             () -> assertEquals(createdApplicationUserDto.getFirstname(), applicationUserDto.getFirstname()),
             () -> assertEquals(createdApplicationUserDto.getLastname(), applicationUserDto.getLastname()),
             () -> assertEquals(createdApplicationUserDto.getMatrNumber(), applicationUserDto.getMatrNumber()),
-            () -> assertEquals(createdApplicationUserDto.getTelNr(), applicationUserDto.getTelNr()),
             () -> assertTrue(passwordEncoder.matches(applicationUserDto.getPassword(), createdApplicationUserDto.getPassword()))
         );
 

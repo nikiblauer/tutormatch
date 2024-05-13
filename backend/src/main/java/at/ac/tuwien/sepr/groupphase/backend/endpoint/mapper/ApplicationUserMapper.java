@@ -30,5 +30,27 @@ public interface ApplicationUserMapper {
         return applicationUserDto;
     }
 
-    CreateApplicationUserDto mapUserToCreateApplicationUserDto(ApplicationUser a, ContactDetails c);
+    default CreateApplicationUserDto mapUserToCreateApplicationUserDto(ApplicationUser applicationUser, ContactDetails details) {
+        if (applicationUser == null && details == null) {
+            return null;
+        }
+
+        CreateApplicationUserDto createApplicationUserDto = new CreateApplicationUserDto();
+
+        if (applicationUser != null) {
+            createApplicationUserDto.setPassword(applicationUser.getPassword());
+            createApplicationUserDto.setFirstname(applicationUser.getFirstname());
+            createApplicationUserDto.setLastname(applicationUser.getLastname());
+            createApplicationUserDto.setMatrNumber(applicationUser.getMatrNumber());
+        }
+        if (details != null) {
+            createApplicationUserDto.setEmail(details.getEmail());
+        }
+
+        return createApplicationUserDto;
+    }
+
+
+
+    //CreateApplicationUserDto mapUserToCreateApplicationUserDto(ApplicationUser a, ContactDetails c);
 }
