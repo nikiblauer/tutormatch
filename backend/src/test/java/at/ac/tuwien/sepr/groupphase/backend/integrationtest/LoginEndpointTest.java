@@ -1,15 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.datagenerator.SubjectDataGenerator;
-import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserDataGenerator;
-import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserSubjectDataGenerator;
-import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 @ExtendWith(SpringExtension.class)
@@ -42,32 +35,10 @@ public class LoginEndpointTest {
     private MockMvc mockMvc;
 
     @Autowired
-    UserRepository userRepository;
-    @Autowired
-    SubjectRepository subjectRepository;
-    @Autowired
-    UserSubjectRepository userSubjectRepository;
-    @Autowired
-    private UserSubjectDataGenerator userSubjectDataGenerator;
-    @Autowired
-    private SubjectDataGenerator subjectDataGenerator;
-
-    @Autowired
-    UserDataGenerator userDataGenerator;
+    private UserRepository userRepository;
 
     @Autowired
     private SecurityProperties securityProperties;
-
-    @BeforeEach
-    public void setUp() throws IOException {
-        System.out.println("Setting up LoginEndpointTest");
-        userSubjectRepository.deleteAll();
-        userRepository.deleteAll();
-        subjectRepository.deleteAll();
-        userDataGenerator.generateApplicationUser();
-        subjectDataGenerator.generateSubjects();
-        userSubjectDataGenerator.generateUserSubjectRelation();
-    }
 
     @Test
     public void validUserLogin() throws Exception {
