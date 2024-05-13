@@ -70,7 +70,7 @@ public class UserEndpointTest {
 
     @Test
     public void createNewValidUser() throws Exception {
-        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+438881919190", "konsti@tuwien.ac.at"));
+        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("", "konsti@tuwien.ac.at"));
         ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user, user.getDetails());
         String body = objectMapper.writeValueAsString(applicationUserDto);
 

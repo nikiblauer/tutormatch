@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
@@ -91,24 +92,24 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser create(ApplicationUserDto applicationUserDto) throws ValidationException {
-        LOGGER.trace("Create user by applicationUserDto: {}", applicationUserDto);
-        validator.verifyUserData(applicationUserDto);
-        if (!userRepository.findAllByDetails_Email(applicationUserDto.email).isEmpty()) {
+    public ApplicationUser create(CreateApplicationUserDto toCreate) throws ValidationException {
+        LOGGER.trace("Create user by applicationUserDto: {}", toCreate);
+        validator.validateForCreate(toCreate);
+        if (!userRepository.findAllByDetails_Email(toCreate.email).isEmpty()) {
             throw new ValidationException("Email already exits please try an other one", new ArrayList<>());
         }
         ContactDetails details = new ContactDetails(
-            applicationUserDto.telNr,
-            applicationUserDto.email);
+            "",
+            toCreate.email);
 
-        String encodedPassword = passwordEncoder.encode(applicationUserDto.password);
+        String encodedPassword = passwordEncoder.encode(toCreate.password);
 
         ApplicationUser applicationUser = new ApplicationUser(
             encodedPassword,
             false,
-            applicationUserDto.firstname.trim().replaceAll("\\s+", " "),
-            applicationUserDto.lastname.trim().replaceAll("\\s+", " "),
-            applicationUserDto.matrNumber,
+            toCreate.firstname.trim().replaceAll("\\s+", " "),
+            toCreate.lastname.trim().replaceAll("\\s+", " "),
+            toCreate.matrNumber,
             details);
         return userRepository.save(applicationUser);
     }

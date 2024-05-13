@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import org.mapstruct.Mapper;
@@ -28,4 +29,6 @@ public interface ApplicationUserMapper {
 
         return applicationUserDto;
     }
+
+    CreateApplicationUserDto mapUserToCreateApplicationUserDto(ApplicationUser a, ContactDetails c);
 }
