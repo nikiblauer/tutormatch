@@ -31,7 +31,7 @@ public interface UserService extends UserDetailsService {
      * @param email the email address
      * @return a application user
      */
-    ApplicationUser findApplicationUserByDetailsEmail(String email);
+    ApplicationUser findApplicationUserByEmail(String email);
 
     /**
      * Log in a user.

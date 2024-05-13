@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER_EMAIL;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.ADMIN_EMAIL;
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.LOGIN_BASE_URI;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,11 +54,11 @@ public class LoginEndpointTest {
     @Test
     public void validAdminLogin() throws Exception {
         System.out.println(userRepository.findAll());
-        String loginData = "{\"password\": \"Password123\", \"email\": \"test@admin.at\"}";
+        String loginData = "{\"password\": \"Password123\", \"email\": \"" + ADMIN_EMAIL + "\"}";
         ArrayList<String> expectedRole = new ArrayList<>();
         expectedRole.add("ROLE_ADMIN");
         System.out.println("logging valid admin login");
-        validLoginTest(loginData, expectedRole, "test@admin.at");
+        validLoginTest(loginData, expectedRole, ADMIN_EMAIL);
     }
 
     @Test
