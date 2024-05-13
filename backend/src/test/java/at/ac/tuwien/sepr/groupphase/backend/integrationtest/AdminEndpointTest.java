@@ -22,9 +22,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("generateData")
+@ActiveProfiles({"test", "generateData"})
 @AutoConfigureMockMvc
-public class AdminEndpointTest {
+public class AdminEndpointTest extends BaseTest {
 
     @Autowired
     private MockMvc mockMvc;
