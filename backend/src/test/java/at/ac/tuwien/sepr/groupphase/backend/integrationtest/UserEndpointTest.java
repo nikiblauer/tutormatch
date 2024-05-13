@@ -25,6 +25,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
@@ -35,6 +36,7 @@ import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_BASE_U
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_ROLES;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -260,6 +262,20 @@ public class UserEndpointTest extends BaseTest {
     }
 
     @Test
+    void testUserVerificationEndpointSetsUserToVerified() throws Exception {
+        List<ApplicationUser> usersList = userRepository.findAll();
+        ApplicationUser userBefore = usersList.get(1);
+        assertFalse(userBefore.getVerified());
+        String token = jwtTokenizer.buildVerificationToken(userBefore.getDetails().getEmail());
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/user/verify/" + token))
+                               .andExpect(status().isOk())
+                               .andReturn();
+        List<ApplicationUser> updatedList = userRepository.findAll();
+        ApplicationUser userAfter = updatedList.get(1);
+        assertTrue(userAfter.getVerified());
+    }
+
+
     void testGetMatchingsShouldReturn2Matches() throws Exception {
         ArrayList<UserMatchDto> expectedMatches = new ArrayList<>();
         expectedMatches.add(UserMatchDto.builder()

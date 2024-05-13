@@ -15,6 +15,7 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +53,17 @@ public class UserEndpoint {
         LOGGER.info("POST /api/v1/user/ body: {}", applicationUserDto);
         ApplicationUser user = userService.create(applicationUserDto);
         return mapper.mapUserToDto(user, user.getDetails());
+    }
+
+    @GetMapping(value = "/verify/{token}")
+    @PermitAll
+    public ResponseEntity verifyEmail(@PathVariable("token") String token) {
+        LOGGER.info("PUT /api/v1/user/verify/{}", token);
+        if (userService.verifyEmail(token)) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @Secured("ROLE_USER")

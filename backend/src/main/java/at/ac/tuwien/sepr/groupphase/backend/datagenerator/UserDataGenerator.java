@@ -57,10 +57,12 @@ public class UserDataGenerator {
     private ApplicationUser[] generateUsers(int count) {
         ApplicationUser[] users = new ApplicationUser[count];
         String password = passwordEncoder.encode(USER_PASSWORD);
+        //odd numbered users are not verified
         for (int i = 0; i < count; i++) {
             long matrNumber = 10000001L + i;
+            boolean verified = (i % 2 == 0);
             var user = new ApplicationUser(password, false, "User" + (i + 1), "Surname" + (i + 1),
-                matrNumber, new ContactDetails("+43660 1111111", "e" + matrNumber + "@student.tuwien.ac.at"), true);
+                matrNumber, new ContactDetails("+43660 1111111", "e" + matrNumber + "@student.tuwien.ac.at"), verified);
             users[i] = user;
         }
         return users;
