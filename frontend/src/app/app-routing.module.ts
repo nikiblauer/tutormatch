@@ -12,7 +12,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'register', children: [
       {path: '', component: RegisterComponent},
-      {path: 'verify', component: VerifyComponent}
+      {path: 'verify/:token', component: VerifyComponent}
     ]},
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent}
 ];
