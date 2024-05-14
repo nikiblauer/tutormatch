@@ -49,8 +49,4 @@ public interface ApplicationUserMapper {
 
         return createApplicationUserDto;
     }
-
-
-
-    //CreateApplicationUserDto mapUserToCreateApplicationUserDto(ApplicationUser a, ContactDetails c);
 }
