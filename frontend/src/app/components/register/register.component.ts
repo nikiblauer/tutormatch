@@ -23,7 +23,7 @@ export class RegisterComponent {
   createUser: CreateApplicationUserDto = {
       firstname: "",
       lastname: "",
-      matrNumber: 0,
+      matrNumber: null,
       email: "",
       password: ""
 
