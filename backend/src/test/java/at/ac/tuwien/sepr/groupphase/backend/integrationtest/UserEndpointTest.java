@@ -275,6 +275,7 @@ public class UserEndpointTest extends BaseTest {
     }
 
 
+    @Test
     void testGetMatchingsShouldReturn2Matches() throws Exception {
         ArrayList<UserMatchDto> expectedMatches = new ArrayList<>();
         expectedMatches.add(UserMatchDto.builder()
