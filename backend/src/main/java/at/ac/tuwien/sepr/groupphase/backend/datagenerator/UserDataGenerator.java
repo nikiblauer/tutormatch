@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
+import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
@@ -48,7 +49,7 @@ public class UserDataGenerator {
         //generate admin account
         String userPassword = passwordEncoder.encode(USER_PASSWORD);
         ApplicationUser admin = new ApplicationUser(userPassword, true, ADMIN_NAME.split(" ")[0], ADMIN_NAME.split(" ")[1], null,
-            new ContactDetails("+43660 3333333", ADMIN_EMAIL), true);
+            new ContactDetails("+43660 3333333", ADMIN_EMAIL, null), true);
         userRepository.save(admin);
         log.info("User data generation completed.");
     }
@@ -62,7 +63,7 @@ public class UserDataGenerator {
             long matrNumber = 10000001L + i;
             boolean verified = (i % 2 == 0);
             var user = new ApplicationUser(password, false, "User" + (i + 1), "Surname" + (i + 1),
-                matrNumber, new ContactDetails("+43660 1111111", "e" + matrNumber + "@student.tuwien.ac.at"), verified);
+                matrNumber, new ContactDetails("+43660 1111111", "e" + matrNumber + "@student.tuwien.ac.at", new Address("Teststraße " + i, 1000 + i * 10, "Wien")), verified);
             users[i] = user;
         }
         return users;

@@ -6,6 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectsListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
@@ -78,8 +79,8 @@ public class UserEndpointTest extends BaseTest {
 
     @Test
     public void createNewValidUser() throws Exception {
-        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+438881919190", "konsti@tuwien.ac.at"), false);
-        ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user, user.getDetails());
+        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+438881919190", "konsti@tuwien.ac.at",new Address("Teststraße 2", 1100, "Wien")), false);
+        ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user);
         String body = objectMapper.writeValueAsString(applicationUserDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
@@ -110,8 +111,8 @@ public class UserEndpointTest extends BaseTest {
 
     @Test
     public void createNewInvalidUser_422() throws Exception {
-        ApplicationUser user = new ApplicationUser("", false, "", "", 123465L, new ContactDetails("+438881919190", "konsti@tuswien.ac.at"), false);
-        ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user, user.getDetails());
+        ApplicationUser user = new ApplicationUser("", false, "", "", 123465L, new ContactDetails("+438881919190", "konsti@tuswien.ac.at", new Address( "Teststraße 2", 1200, "Wien")), false);
+        ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user);
         String body = objectMapper.writeValueAsString(applicationUserDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
@@ -235,7 +236,9 @@ public class UserEndpointTest extends BaseTest {
         updatedUser.setMatrNumber(1211646L);
         updatedUser.setEmail("updateduser@tuwien.ac.at");
         updatedUser.setTelNr("+4367675553");
-
+        updatedUser.setStreet("newStreet 54");
+        updatedUser.setAreaCode(1110);
+        updatedUser.setCity("Graz");
         // Retrieve all users and get the ID of the first user
         List<ApplicationUser> users = userRepository.findAll();
         Long userIdToUpdate = users.get(0).getId();
@@ -256,7 +259,10 @@ public class UserEndpointTest extends BaseTest {
             () -> assertEquals(updatedUser.getLastname(), returnedUser.getLastname()),
             () -> assertEquals(updatedUser.getMatrNumber(), returnedUser.getMatrNumber()),
             () -> assertEquals(updatedUser.getEmail(), returnedUser.getEmail()),
-            () -> assertEquals(updatedUser.getTelNr(), returnedUser.getTelNr())
+            () -> assertEquals(updatedUser.getTelNr(), returnedUser.getTelNr()),
+            () -> assertEquals(updatedUser.getStreet(), returnedUser.getStreet()),
+            () -> assertEquals(updatedUser.getAreaCode(), returnedUser.getAreaCode()),
+            () -> assertEquals(updatedUser.getCity(), returnedUser.getCity())
         );
     }
 

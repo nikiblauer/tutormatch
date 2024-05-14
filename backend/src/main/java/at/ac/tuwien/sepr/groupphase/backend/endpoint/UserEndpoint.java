@@ -53,7 +53,7 @@ public class UserEndpoint {
     public ApplicationUserDto create(@RequestBody CreateApplicationUserDto toCreate) throws ValidationException {
         LOGGER.info("POST /api/v1/user/ body: {}", toCreate);
         ApplicationUser user = userService.create(toCreate);
-        return mapper.mapUserToDto(user, user.getDetails());
+        return mapper.mapUserToDto(user);
     }
 
     @GetMapping(value = "/verify/{token}")
@@ -83,7 +83,7 @@ public class UserEndpoint {
     public ApplicationUserDto updateUser(@PathVariable("id") Long id, @Valid @RequestBody ApplicationUserDto applicationUserDto) throws Exception {
         LOGGER.info("PUT /api/v1/user/{} body: {}", id, applicationUserDto);
         ApplicationUser user = userService.updateUser(id, applicationUserDto);
-        return mapper.mapUserToDto(user, user.getDetails());
+        return mapper.mapUserToDto(user);
     }
 
     @PermitAll

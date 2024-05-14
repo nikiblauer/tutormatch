@@ -9,11 +9,7 @@ import org.mapstruct.Mapper;
 @Mapper
 
 public interface ApplicationUserMapper {
-    default ApplicationUserDto mapUserToDto(ApplicationUser applicationUser, ContactDetails details) {
-        if (applicationUser == null && details == null) {
-            return null;
-        }
-
+    default ApplicationUserDto mapUserToDto(ApplicationUser applicationUser) {
         ApplicationUserDto applicationUserDto = new ApplicationUserDto();
 
         if (applicationUser != null) {
@@ -21,19 +17,23 @@ public interface ApplicationUserMapper {
             applicationUserDto.setFirstname(applicationUser.getFirstname());
             applicationUserDto.setLastname(applicationUser.getLastname());
             applicationUserDto.setMatrNumber(applicationUser.getMatrNumber());
-        }
-        if (details != null) {
-            applicationUserDto.setEmail(details.getEmail());
-            applicationUserDto.setTelNr(details.getTelNr());
+            if (applicationUser.getDetails() != null) {
+                applicationUserDto.setEmail(applicationUser.getDetails().getEmail());
+                applicationUserDto.setTelNr(applicationUser.getDetails().getTelNr());
+                if (applicationUser.getDetails().getAddress() != null) {
+                    applicationUserDto.setStreet(applicationUser.getDetails().getAddress().getStreet());
+                    applicationUserDto.setAreaCode(applicationUser.getDetails().getAddress().getAreaCode());
+                    applicationUserDto.setCity(applicationUser.getDetails().getAddress().getCity());
+                }
+            }
+        } else {
+            return null;
         }
 
         return applicationUserDto;
     }
 
-    default CreateApplicationUserDto mapUserToCreateApplicationUserDto(ApplicationUser applicationUser, ContactDetails details) {
-        if (applicationUser == null && details == null) {
-            return null;
-        }
+    default CreateApplicationUserDto mapUserToCreateApplicationUserDto(ApplicationUser applicationUser) {
 
         CreateApplicationUserDto createApplicationUserDto = new CreateApplicationUserDto();
 
@@ -42,9 +42,9 @@ public interface ApplicationUserMapper {
             createApplicationUserDto.setFirstname(applicationUser.getFirstname());
             createApplicationUserDto.setLastname(applicationUser.getLastname());
             createApplicationUserDto.setMatrNumber(applicationUser.getMatrNumber());
-        }
-        if (details != null) {
-            createApplicationUserDto.setEmail(details.getEmail());
+            if (applicationUser.getDetails() != null) {
+                createApplicationUserDto.setEmail(applicationUser.getDetails().getEmail());
+            }
         }
 
         return createApplicationUserDto;

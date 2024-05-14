@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -103,9 +104,7 @@ public class CustomUserDetailService implements UserService {
         if (!userRepository.findAllByDetails_Email(toCreate.email).isEmpty()) {
             throw new ValidationException("Email already exits please try an other one", new ArrayList<>());
         }
-        ContactDetails details = new ContactDetails(
-            "",
-            toCreate.email);
+        ContactDetails details = new ContactDetails("", toCreate.email, null);
 
         String encodedPassword = passwordEncoder.encode(toCreate.password);
 
@@ -170,6 +169,9 @@ public class CustomUserDetailService implements UserService {
         applicationUser.setMatrNumber(applicationUserDto.matrNumber);
         applicationUser.getDetails().setEmail(applicationUserDto.email);
         applicationUser.getDetails().setTelNr(applicationUserDto.telNr);
+        applicationUser.getDetails().getAddress().setStreet(applicationUserDto.street);
+        applicationUser.getDetails().getAddress().setAreaCode(applicationUserDto.areaCode);
+        applicationUser.getDetails().getAddress().setCity(applicationUserDto.city);
 
         // Save the updated ApplicationUser in the database
         return userRepository.save(applicationUser);
