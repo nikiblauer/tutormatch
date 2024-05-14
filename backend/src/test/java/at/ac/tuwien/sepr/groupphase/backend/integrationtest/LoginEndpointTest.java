@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test", "generateData"})
 @AutoConfigureMockMvc
-public class LoginEndpointTest {
+public class LoginEndpointTest extends BaseTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -69,7 +70,7 @@ public class LoginEndpointTest {
 
     @Test
     public void AdminLoginWithIncorrectPasswordNotFound() throws Exception {
-        String loginData = "{\"password\": \"wrongPassword\", \"email\": \"test@admin.at\"}";
+        String loginData = "{\"password\": \"wrongPassword\", \"email\": \"" + ADMIN_EMAIL + "\"}";
         invalidLoginTest(loginData, HttpStatus.UNAUTHORIZED.value());
     }
 

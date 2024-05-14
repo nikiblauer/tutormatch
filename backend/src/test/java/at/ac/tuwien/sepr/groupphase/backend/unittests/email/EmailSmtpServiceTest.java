@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests.email;
 
-import at.ac.tuwien.sepr.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
 import com.icegreen.greenmail.util.GreenMail;
@@ -24,8 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-public class EmailSmtpServiceTest implements TestData {
+@ActiveProfiles({"test", "generateData"})
+public class EmailSmtpServiceTest extends BaseTest {
 
     @Resource
     private EmailSmtpService emailService;
@@ -42,6 +42,7 @@ public class EmailSmtpServiceTest implements TestData {
     public void stopMailServer() {
         greenMail.stop();
     }
+
     @Test
     public void testVerificationEmailSent()
         throws InterruptedException, MessagingException {
@@ -62,7 +63,4 @@ public class EmailSmtpServiceTest implements TestData {
         String body = GreenMailUtil.getBody(messages[0]).replaceAll("=\r?\n", "");
         assertThat(body, containsString("Max Mustermann"));
     }
-
-
-
 }
