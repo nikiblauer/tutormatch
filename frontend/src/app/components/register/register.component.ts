@@ -17,14 +17,8 @@ import {NgIf} from "@angular/common";
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent {
-  firstName: string = '';
-  lastName: string = '';
-  email: string = '';
-  password: string = '';
-  matrNumber: number;
-
   form: FormGroup;
-  submitted: boolean = false;
+  created: boolean = false;
 
   toCreate: CreateApplicationUserDto;
 
@@ -49,7 +43,7 @@ export class RegisterComponent {
 
     this.userService.createUser(this.toCreate).subscribe({
         next: () => {
-          this.submitted = true
+          this.created = true
         },
         error: error => {
           console.log("Error when creating user");
