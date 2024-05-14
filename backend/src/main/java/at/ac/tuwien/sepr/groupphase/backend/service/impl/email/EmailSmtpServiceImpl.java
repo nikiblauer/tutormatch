@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl.email;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.ThymeleafService;
@@ -43,7 +44,7 @@ public class EmailSmtpServiceImpl implements EmailSmtpService {
     }
 
     @Override
-    public void sendVerificationEmail(ApplicationUserDto dto) {
+    public void sendVerificationEmail(CreateApplicationUserDto dto) {
         LOG.trace("Send verification email {}", dto);
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -59,7 +60,7 @@ public class EmailSmtpServiceImpl implements EmailSmtpService {
             variables.put("full_name", dto.getFirstname() + " " + dto.getLastname());
             String token = jwtTokenizer.buildVerificationToken(dto.getEmail());
             //TODO link to frontend page here and call backend endpoint with GET request
-            variables.put("verification_link", "http://localhost:8080/api/v1/user/verify/" + token);
+            variables.put("verification_link", "http://localhost:4200/#/register/verify/" + token);
             helper.setText(thymeleafService.createContent("verification_email.html", variables), true);
             helper.setFrom(senderEmail);
             mailSender.send(message);

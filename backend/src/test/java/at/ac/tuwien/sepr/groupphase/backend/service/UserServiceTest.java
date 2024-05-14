@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
@@ -42,7 +43,7 @@ public class UserServiceTest {
     @Test
     public void createNewValidUser() throws Exception {
         ApplicationUser user = new ApplicationUser("password", false, "Franz", "U", 133465L, new ContactDetails("+438881919190", "franz@student.tuwien.ac.at"), false);
-        ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user, user.getDetails());
+        CreateApplicationUserDto applicationUserDto = userMapper.mapUserToCreateApplicationUserDto(user, user.getDetails());
 
 
 
@@ -56,7 +57,6 @@ public class UserServiceTest {
             () -> assertEquals(createdApplicationUser.getFirstname(), applicationUserDto.getFirstname()),
             () -> assertEquals(createdApplicationUser.getLastname(), applicationUserDto.getLastname()),
             () -> assertEquals(createdApplicationUser.getMatrNumber(), applicationUserDto.getMatrNumber()),
-            () -> assertEquals(createdApplicationUser.getDetails().getTelNr(), applicationUserDto.getTelNr()),
             () -> assertTrue(passwordEncoder.matches(applicationUserDto.getPassword(), createdApplicationUser.getPassword()))
         );
 

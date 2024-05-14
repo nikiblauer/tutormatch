@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectsListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
@@ -49,9 +50,9 @@ public class UserEndpoint {
 
     @PermitAll
     @PostMapping
-    public ApplicationUserDto create(@RequestBody ApplicationUserDto applicationUserDto) throws ValidationException {
-        LOGGER.info("POST /api/v1/user/ body: {}", applicationUserDto);
-        ApplicationUser user = userService.create(applicationUserDto);
+    public ApplicationUserDto create(@RequestBody CreateApplicationUserDto toCreate) throws ValidationException {
+        LOGGER.info("POST /api/v1/user/ body: {}", toCreate);
+        ApplicationUser user = userService.create(toCreate);
         return mapper.mapUserToDto(user, user.getDetails());
     }
 

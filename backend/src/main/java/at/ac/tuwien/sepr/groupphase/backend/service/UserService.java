@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -59,7 +60,7 @@ public interface UserService extends UserDetailsService {
      */
     List<ApplicationUser> queryUsers(String fullname, Long matrNumber);
 
-    ApplicationUser create(ApplicationUserDto applicationUserDto) throws ValidationException;
+    ApplicationUser create(CreateApplicationUserDto applicationUserDto) throws ValidationException;
 
     ApplicationUser findApplicationUserById(Long id);
 

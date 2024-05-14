@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.unittests.email;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
@@ -49,7 +50,7 @@ public class EmailSmtpServiceTest extends BaseTest {
 
         String mailSubject = "TutorMatch - Verify your email";
         String mailTo = "test@excaple.com";
-        ApplicationUserDto testDto = new ApplicationUserDto();
+        CreateApplicationUserDto testDto = new CreateApplicationUserDto();
 
         testDto.setEmail(mailTo);
         testDto.setFirstname("Max");

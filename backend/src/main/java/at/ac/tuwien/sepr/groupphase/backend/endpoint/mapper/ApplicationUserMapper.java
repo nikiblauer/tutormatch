@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import org.mapstruct.Mapper;
@@ -27,5 +28,25 @@ public interface ApplicationUserMapper {
         }
 
         return applicationUserDto;
+    }
+
+    default CreateApplicationUserDto mapUserToCreateApplicationUserDto(ApplicationUser applicationUser, ContactDetails details) {
+        if (applicationUser == null && details == null) {
+            return null;
+        }
+
+        CreateApplicationUserDto createApplicationUserDto = new CreateApplicationUserDto();
+
+        if (applicationUser != null) {
+            createApplicationUserDto.setPassword(applicationUser.getPassword());
+            createApplicationUserDto.setFirstname(applicationUser.getFirstname());
+            createApplicationUserDto.setLastname(applicationUser.getLastname());
+            createApplicationUserDto.setMatrNumber(applicationUser.getMatrNumber());
+        }
+        if (details != null) {
+            createApplicationUserDto.setEmail(details.getEmail());
+        }
+
+        return createApplicationUserDto;
     }
 }
