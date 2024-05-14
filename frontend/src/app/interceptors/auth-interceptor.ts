@@ -15,8 +15,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const registerUri = this.globals.backendUri + '/user';
     const verifyUri = this.globals.backendUri + '/user/verify';
     // Do not intercept authentication requests
-    console.log(req.url);
-    console.log(verifyUri);
+
 
     if (req.url === authUri || req.url == registerUri || req.url.startsWith(verifyUri)) {
       console.log(req.url);
