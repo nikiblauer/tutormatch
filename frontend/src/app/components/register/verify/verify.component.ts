@@ -23,7 +23,6 @@ export class VerifyComponent {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.token = params.get('token');
-      console.log(this.token);
     });
 
     this.userService.verifyUser(this.token).subscribe({
