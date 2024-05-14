@@ -46,6 +46,7 @@ public class ApplicationUserDto {
             + ", lastname='" + lastname + '\''
             + ", matrNumber=" + matrNumber
             + ", email='" + email + '\''
+            + ", telNr='" + telNr + '\''
             + ", street='" + street + '\''
             + ", areaCode='" + areaCode + '\''
             + ", city='" + city + '\''
