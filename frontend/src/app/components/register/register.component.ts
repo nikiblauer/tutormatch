@@ -20,7 +20,14 @@ export class RegisterComponent {
   form: FormGroup;
   created: boolean = false;
 
-  toCreate: CreateApplicationUserDto;
+  createUser: CreateApplicationUserDto = {
+      firstname: "",
+      lastname: "",
+      matrNumber: 0,
+      email: "",
+      password: ""
+
+  }
 
   constructor(private userService: UserService, private router: Router) {
 
@@ -33,15 +40,8 @@ export class RegisterComponent {
       console.log('Form not valid!');
     }
 
-    this.toCreate = {
-      firstname: form.value.firstname,
-      lastname: form.value.lastname,
-      matrNumber: form.value.matrNumber,
-      email: form.value.email,
-      password: form.value.password
-    }
 
-    this.userService.createUser(this.toCreate).subscribe({
+    this.userService.createUser(this.createUser).subscribe({
         next: () => {
           this.created = true
         },
