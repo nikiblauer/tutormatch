@@ -18,6 +18,7 @@ public interface ApplicationUserMapper {
             applicationUserDto.setFirstname(applicationUser.getFirstname());
             applicationUserDto.setLastname(applicationUser.getLastname());
             applicationUserDto.setMatrNumber(applicationUser.getMatrNumber());
+            applicationUserDto.setId(applicationUser.getId());
             if (applicationUser.getDetails() != null) {
                 applicationUserDto.setEmail(applicationUser.getDetails().getEmail());
                 applicationUserDto.setTelNr(applicationUser.getDetails().getTelNr());

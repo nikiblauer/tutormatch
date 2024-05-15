@@ -12,6 +12,8 @@ import jakarta.validation.constraints.Size;
 @Setter
 public class ApplicationUserDto {
 
+    public Long id;
+
     @NotBlank(message = "Password is mandatory")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     public String password;

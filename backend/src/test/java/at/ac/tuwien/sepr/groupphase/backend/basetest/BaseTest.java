@@ -7,19 +7,14 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Component;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
 
-
 public class BaseTest {
+
     @Autowired
     protected UserMatchService userMatchService;
     @Autowired
@@ -37,12 +32,23 @@ public class BaseTest {
 
     @BeforeEach
     public void setUp() throws IOException {
-        userSubjectRepository.deleteAll();
-        userRepository.deleteAll();
-        subjectRepository.deleteAll();
+        generateData();
+    }
 
+    @AfterEach
+    public void tearDown() throws IOException {
+        clearData();
+    }
+
+    private void generateData() throws IOException {
         userDataGenerator.generateApplicationUser();
         subjectDataGenerator.generateSubjects();
         userSubjectDataGenerator.generateUserSubjectRelation();
+    }
+
+    private void clearData() {
+        userSubjectRepository.deleteAll();
+        userRepository.deleteAll();
+        subjectRepository.deleteAll();
     }
 }
