@@ -124,7 +124,7 @@ public class CustomUserDetailService implements UserService {
     public ApplicationUser findApplicationUserById(Long id) {
         LOGGER.trace("Find application user by id:{}", id);
         ApplicationUser applicationUser = userRepository.findApplicationUsersById(id);
-        if (applicationUser != null) {
+        if (applicationUser != null && !applicationUser.getAdmin()) {
             return applicationUser;
         }
         throw new NotFoundException(String.format("Could not find the user with the id %s", id));

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -48,5 +49,32 @@ public interface ApplicationUserMapper {
         }
 
         return createApplicationUserDto;
+    }
+
+    default ApplicationUserDetailDto mapApplicationUserToApplicationUserDto(ApplicationUser user) {
+        if (user == null || user.getDetails() == null) {
+            return null;
+        }
+        ApplicationUserDetailDto applicationUserDetailDto = new ApplicationUserDetailDto();
+
+        if (user.getDetails().getAddress() != null) {
+            applicationUserDetailDto.setCity(user.getDetails().getAddress().getCity() == null ? "" : user.getDetails().getAddress().getCity());
+            applicationUserDetailDto.setStreet(user.getDetails().getAddress().getStreet() == null ? "" : user.getDetails().getAddress().getStreet());
+            applicationUserDetailDto.setAreaCode(user.getDetails().getAddress().getAreaCode() == null ? 0 : user.getDetails().getAddress().getAreaCode());
+        } else {
+            applicationUserDetailDto.setCity("");
+            applicationUserDetailDto.setAreaCode(0);
+            applicationUserDetailDto.setStreet("");
+        }
+        applicationUserDetailDto.setEmail(user.getDetails().getEmail());
+        if (user.getDetails().getTelNr() != null) {
+            applicationUserDetailDto.setTelNr(user.getDetails().getTelNr());
+        } else {
+            applicationUserDetailDto.setTelNr("");
+        }
+        applicationUserDetailDto.setFirstname(user.getFirstname());
+        applicationUserDetailDto.setLastname(user.getLastname());
+
+        return applicationUserDetailDto;
     }
 }
