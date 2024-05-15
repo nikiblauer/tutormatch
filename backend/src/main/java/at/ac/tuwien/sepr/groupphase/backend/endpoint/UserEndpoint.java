@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectsListDto;
@@ -91,5 +92,13 @@ public class UserEndpoint {
     public Stream<UserMatchDto> getUserMatches(@PathVariable("id") Long id) {
         LOGGER.info("GET /api/v1/user/{}/matches", id);
         return userMatchService.findMatchingUserByUserIdAsStream(id);
+    }
+
+    @PermitAll
+    @GetMapping("{id}")
+    public ApplicationUserDetailDto getUserDetailsById(@PathVariable("id") Long id) {
+        LOGGER.info("GET /api/v1/user/{}", id);
+        ApplicationUser user = userService.findApplicationUserById(id);
+        return mapper.mapApplicationUserToApplicationUserDto(user);
     }
 }
