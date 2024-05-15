@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -42,9 +43,8 @@ public class UserServiceTest {
 
     @Test
     public void createNewValidUser() throws Exception {
-        ApplicationUser user = new ApplicationUser("password", false, "Franz", "U", 133465L, new ContactDetails("+438881919190", "franz@student.tuwien.ac.at"), false);
-        CreateApplicationUserDto applicationUserDto = userMapper.mapUserToCreateApplicationUserDto(user, user.getDetails());
-
+        ApplicationUser user = new ApplicationUser("password", false, "Franz", "U", 133465L, new ContactDetails("+438881919190", "franz@student.tuwien.ac.at", new Address( "Teststraße 2", 1200, "Wien")), false);
+        CreateApplicationUserDto applicationUserDto = userMapper.mapUserToCreateApplicationUserDto(user);
 
 
         ApplicationUser createdApplicationUser = userService.create(applicationUserDto);

@@ -37,7 +37,7 @@ public class AdminEndpoint {
 
         List<ApplicationUser> listOfUsers = userService.queryUsers(fullname, matrNumber);
         return listOfUsers.stream()
-            .map(user -> mapper.mapUserToDto(user, user.getDetails()))
+            .map(user -> mapper.mapUserToDto(user))
             .collect(Collectors.toList());
     }
 }

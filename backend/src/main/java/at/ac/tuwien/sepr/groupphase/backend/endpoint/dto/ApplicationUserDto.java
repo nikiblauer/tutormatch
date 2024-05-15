@@ -31,6 +31,12 @@ public class ApplicationUserDto {
 
     public String telNr;
 
+    public String street;
+
+    public Integer areaCode;
+
+    public String city;
+
 
     @Override
     public String toString() {
@@ -41,6 +47,9 @@ public class ApplicationUserDto {
             + ", matrNumber=" + matrNumber
             + ", email='" + email + '\''
             + ", telNr='" + telNr + '\''
+            + ", street='" + street + '\''
+            + ", areaCode='" + areaCode + '\''
+            + ", city='" + city + '\''
             + '}';
     }
 
@@ -55,6 +64,13 @@ public class ApplicationUserDto {
         private Long matrNumber;
         private String email;
         private String telNr;
+
+        private String street;
+
+        private Integer areaCode;
+        private String city;
+
+
 
         private ApplicationUserDtoBuilder() {
         }
@@ -93,6 +109,21 @@ public class ApplicationUserDto {
             return this;
         }
 
+        public ApplicationUserDto.ApplicationUserDtoBuilder withStreet(String street) {
+            this.street = street;
+            return this;
+        }
+
+        public ApplicationUserDto.ApplicationUserDtoBuilder withAreaCode(Integer areaCode) {
+            this.areaCode = areaCode;
+            return this;
+        }
+
+        public ApplicationUserDto.ApplicationUserDtoBuilder withCity(String city) {
+            this.city = city;
+            return this;
+        }
+
         public ApplicationUserDto build() {
             ApplicationUserDto applicationUserDto = new ApplicationUserDto();
             applicationUserDto.setEmail(email);
@@ -100,6 +131,9 @@ public class ApplicationUserDto {
             applicationUserDto.setLastname(lastname);
             applicationUserDto.setPassword(password);
             applicationUserDto.setMatrNumber(matrNumber);
+            applicationUserDto.setStreet(street);
+            applicationUserDto.setAreaCode(areaCode);
+            applicationUserDto.setCity(city);
             return applicationUserDto;
         }
     }
