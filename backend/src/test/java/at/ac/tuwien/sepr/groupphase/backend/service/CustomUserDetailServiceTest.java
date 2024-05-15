@@ -30,13 +30,10 @@ public class CustomUserDetailServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private UserValidator validator;
-
-    @Mock
-    private ApplicationUserMapper mapper;
-
-    @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private UserValidator userValidator;
 
     @InjectMocks
     private CustomUserDetailService customUserDetailService;
