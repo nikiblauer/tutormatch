@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestUtils;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,7 +33,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test", "generateData"})
 @AutoConfigureMockMvc
-@Transactional
 public class AdminEndpointTest extends BaseTest {
 
     @Autowired
@@ -81,7 +82,10 @@ public class AdminEndpointTest extends BaseTest {
 
     @Test
     void testGetUserDetailsFromUserWithId1() throws Exception {
-        long userId = 1L;
+        // get the first user from the database
+        List<ApplicationUser> users = userRepository.findAll();
+        Long userId = users.get(0).getId();
+
         String token = loginAsAdmin();
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users/" + userId)
                 .header("Authorization", "Bearer " + token)
