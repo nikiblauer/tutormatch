@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Globals} from "../global/globals";
-import {Message} from "../dtos/message";
 import {Observable} from "rxjs";
 import {ApplicationUserDto, CreateApplicationUserDto} from "../dtos/user";
 
@@ -23,5 +22,11 @@ export class UserService {
 
   verifyUser(token: string){
     return this.httpClient.get((this.userUri+"/verify/" + token));
+  }
+  getUserMatcher(id: number):Observable<any>{
+    return this.httpClient.get(this.userUri + `/${id}` + "/matches");
+  }
+  getUser(id:number):Observable<any>{
+    return this.httpClient.get(this.userUri+`/${id}`);
   }
 }

@@ -14,3 +14,13 @@ export class ApplicationUserDto {
   email: string;
   telNr: string;
 }
+
+export class ApplicationUserDetailDto{
+  firstname: string;
+  lastname: string;
+  email: string;
+  telNr: string;
+  street: string;
+  areaCode: number;
+  city: string;
+}
