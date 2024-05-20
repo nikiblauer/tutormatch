@@ -13,6 +13,7 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {MatchComponent} from "./components/match/match.component";
+import {NgOptimizedImage} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {MatchComponent} from "./components/match/match.component";
     HttpClientModule,
     NgbModule,
     FormsModule,
+    NgOptimizedImage,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
