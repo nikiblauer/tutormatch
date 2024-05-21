@@ -23,8 +23,8 @@ export class UserService {
   verifyUser(token: string) {
     return this.httpClient.get((this.userUri + "/verify/" + token));
   }
-  getUserMatcher(id: number): Observable<any> {
-    return this.httpClient.get(this.userUri + `/${id}` + "/matches");
+  getUserMatcher(): Observable<any> {
+    return this.httpClient.get(this.userUri + "/matches");
   }
 
   getUserSubjects(id: number): Observable<UserProfile> {
@@ -35,12 +35,12 @@ export class UserService {
     return this.httpClient.get(this.userUri + `/${id}`);
   }
 
-  updateUser(id: number, toUpdate: ApplicationUserDto) : Observable<ApplicationUserDto> {
-    return this.httpClient.put<ApplicationUserDto>(this.userUri +  `/${id}`, toUpdate, { responseType: 'json' });
+  updateUser(toUpdate: ApplicationUserDto) : Observable<ApplicationUserDto> {
+    return this.httpClient.put<ApplicationUserDto>(this.userUri, toUpdate, { responseType: 'json' });
   }
 
-  addSubjectToUser(id: number, traineeSubjects: number[], tutorSubjects: number[]): Observable<any> {
-    return this.httpClient.put(this.userUri + `/${id}/subjects`, {
+  addSubjectToUser(traineeSubjects: number[], tutorSubjects: number[]): Observable<any> {
+    return this.httpClient.put(this.userUri + `/subjects`, {
       traineeSubjects: traineeSubjects,
       tutorSubjects: tutorSubjects
     })

@@ -30,7 +30,7 @@ export class UserProfileComponent implements OnInit {
   user: UserProfile;
 
 
-  // user for edit function 
+  // user for edit function
   editedUser: UserProfile;
 
   //tracking changes in user assigned subjects
@@ -128,7 +128,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   saveProfile(): void {
-    this.userService.addSubjectToUser(1, this.userOffer.map(item => item.id), this.userNeed.map(item => item.id))
+    this.userService.addSubjectToUser(this.userOffer.map(item => item.id), this.userNeed.map(item => item.id))
       .subscribe({
         next: _ => this.updateUser(),
         error: (e) => this.handleError(e),
@@ -138,7 +138,7 @@ export class UserProfileComponent implements OnInit {
 
   updateInfo(): void {
     this.userInfoChanged = true;
-    this.userService.updateUser(1, this.editedUser)
+    this.userService.updateUser(this.editedUser)
       .subscribe({
         next: _ => {
           this.updateUser()
