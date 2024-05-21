@@ -9,6 +9,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.UnverifiedAccountException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
@@ -19,6 +20,9 @@ import org.aspectj.weaver.ast.Not;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -85,11 +89,16 @@ public class CustomUserDetailService implements UserService {
     public String login(UserLoginDto userLoginDto) {
         LOGGER.trace("Login as User: {}", userLoginDto);
         UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
+        ApplicationUser applicationUser = findApplicationUserByEmail(userLoginDto.getEmail());
+        if (!applicationUser.getVerified()) {
+            throw new UnverifiedAccountException("Account is not verified yet. Please verify your account to log in.");
+        }
         if (userDetails != null
             && userDetails.isAccountNonExpired()
             && userDetails.isAccountNonLocked()
             && userDetails.isCredentialsNonExpired()
             && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
+            && applicationUser.getVerified()
         ) {
             List<String> roles = userDetails.getAuthorities()
                 .stream()
@@ -132,6 +141,12 @@ public class CustomUserDetailService implements UserService {
             return applicationUser;
         }
         throw new NotFoundException(String.format("Could not find the user with the id %s", id));
+    }
+
+    @Override
+    public List<String> getUserSubjectsByRole(Long id, String role) {
+        LOGGER.trace("Find subjects by user id:{}", id);
+        return userRepository.getUserSubjectsByRole(id, role);
     }
 
     @Override
@@ -181,8 +196,8 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public List<ApplicationUser> queryUsers(String fullname, Long matrNumber) {
+    public Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Pageable pageable) {
         LOGGER.trace("Getting all users");
-        return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber);
+        return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber, pageable);
     }
 }

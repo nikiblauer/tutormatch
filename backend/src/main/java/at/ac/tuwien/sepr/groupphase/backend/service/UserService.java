@@ -6,6 +6,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDt
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -60,11 +62,13 @@ public interface UserService extends UserDetailsService {
      *
      * @return a list of all users
      */
-    List<ApplicationUser> queryUsers(String fullname, Long matrNumber);
+    Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Pageable pageable);
 
     ApplicationUser create(CreateApplicationUserDto applicationUserDto) throws ValidationException;
 
     ApplicationUser findApplicationUserById(Long id);
+
+    public List<String> getUserSubjectsByRole(Long id, String role);
 
     /**
      * sets the user verification status to verified.

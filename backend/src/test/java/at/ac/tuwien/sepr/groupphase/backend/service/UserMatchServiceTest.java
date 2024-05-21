@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -20,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureMockMvc
 public class UserMatchServiceTest extends BaseTest {
 
-
     @Test
     void testFindMatchingUserByUserIdShouldReturn2Results() {
-        var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L);
+        Pageable pageable = Pageable.unpaged();
+        var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, pageable).getContent();
         var stream = userMatchService.findMatchingUserByUserIdAsStream(user.get(0).getId());
 
         List<UserMatchDto> resultList = stream.collect(Collectors.toList());

@@ -1,0 +1,38 @@
+.form-inline {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+@media (min-width: 768px) {
+  .form-inline {
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+  }
+}
+
+.form-group {
+  flex-grow: 1;
+  margin-bottom: 10px;
+}
+
+@media (min-width: 768px) {
+  .form-group {
+    margin-bottom: 0;
+    margin-right: 10px;
+  }
+}
+
+.form-group input {
+  width: 100%;
+}
+
+td {
+  vertical-align: middle;
+}
+
+.custom-button {
+  background-color: #33709c; 
+  border-color: #33709c;
+}

@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core';
-import {AuthRequest} from '../dtos/auth-request';
-import {Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {tap} from 'rxjs/operators';
-import {jwtDecode} from 'jwt-decode';
-import {Globals} from '../global/globals';
+import { Injectable } from '@angular/core';
+import { AuthRequest } from '../dtos/auth-request';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
+import { jwtDecode } from 'jwt-decode';
+import { Globals } from '../global/globals';
 
 @Injectable({
   providedIn: 'root'
@@ -22,12 +22,13 @@ export class AuthService {
    * @param authRequest User data
    */
   loginUser(authRequest: AuthRequest): Observable<string> {
-    return this.httpClient.post(this.authBaseUri, authRequest, {responseType: 'text'})
+    return this.httpClient.post(this.authBaseUri, authRequest, { responseType: 'text' })
       .pipe(
-        tap((authResponse: string) => this.setToken(authResponse))
+        tap((authResponse: string) => {
+          this.setToken(authResponse);
+        })
       );
   }
-
 
   /**
    * Check if a valid JWT token is saved in the localStorage

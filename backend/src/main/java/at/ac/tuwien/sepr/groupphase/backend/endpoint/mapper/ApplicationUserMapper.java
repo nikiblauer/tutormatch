@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserBaseInfoDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailsWithSubjectDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserSubjectsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
@@ -15,7 +16,7 @@ import java.util.List;
 @Mapper
 
 public interface ApplicationUserMapper {
-    default ApplicationUserDto mapUserToDto(ApplicationUser applicationUser) {
+    default ApplicationUserDto applicationUserToDto(ApplicationUser applicationUser) {
         ApplicationUserDto applicationUserDto = new ApplicationUserDto();
 
         if (applicationUser != null) {
@@ -57,31 +58,54 @@ public interface ApplicationUserMapper {
         return createApplicationUserDto;
     }
 
-    default ApplicationUserDetailDto mapApplicationUserToApplicationUserDto(ApplicationUser user) {
+    default UserBaseInfoDto mapApplicationUserToApplicationUserDto(ApplicationUser user) {
         if (user == null || user.getDetails() == null) {
             return null;
         }
-        ApplicationUserDetailDto applicationUserDetailDto = new ApplicationUserDetailDto();
+        UserBaseInfoDto userBaseInfoDto = new UserBaseInfoDto();
 
         if (user.getDetails().getAddress() != null) {
-            applicationUserDetailDto.setCity(user.getDetails().getAddress().getCity() == null ? "" : user.getDetails().getAddress().getCity());
-            applicationUserDetailDto.setStreet(user.getDetails().getAddress().getStreet() == null ? "" : user.getDetails().getAddress().getStreet());
-            applicationUserDetailDto.setAreaCode(user.getDetails().getAddress().getAreaCode() == null ? 0 : user.getDetails().getAddress().getAreaCode());
+            userBaseInfoDto.setCity(user.getDetails().getAddress().getCity() == null ? "" : user.getDetails().getAddress().getCity());
+            userBaseInfoDto.setStreet(user.getDetails().getAddress().getStreet() == null ? "" : user.getDetails().getAddress().getStreet());
+            userBaseInfoDto.setAreaCode(user.getDetails().getAddress().getAreaCode() == null ? 0 : user.getDetails().getAddress().getAreaCode());
         } else {
-            applicationUserDetailDto.setCity("");
-            applicationUserDetailDto.setAreaCode(0);
-            applicationUserDetailDto.setStreet("");
+            userBaseInfoDto.setCity("");
+            userBaseInfoDto.setAreaCode(0);
+            userBaseInfoDto.setStreet("");
         }
-        applicationUserDetailDto.setEmail(user.getDetails().getEmail());
+        userBaseInfoDto.setEmail(user.getDetails().getEmail());
         if (user.getDetails().getTelNr() != null) {
-            applicationUserDetailDto.setTelNr(user.getDetails().getTelNr());
+            userBaseInfoDto.setTelNr(user.getDetails().getTelNr());
         } else {
-            applicationUserDetailDto.setTelNr("");
+            userBaseInfoDto.setTelNr("");
         }
+        userBaseInfoDto.setFirstname(user.getFirstname());
+        userBaseInfoDto.setLastname(user.getLastname());
+
+        return userBaseInfoDto;
+    }
+
+    default UserDetailsWithSubjectDto applicationUserToSubjectsDto(ApplicationUser user) {
+        if (user == null || user.getDetails() == null) {
+            return null;
+        }
+
+        UserDetailsWithSubjectDto applicationUserDetailDto = new UserDetailsWithSubjectDto();
+
         applicationUserDetailDto.setFirstname(user.getFirstname());
         applicationUserDetailDto.setLastname(user.getLastname());
 
-        return applicationUserDetailDto;
+        UserDetailsWithSubjectDto userDetailWithSubjectInfo = new UserDetailsWithSubjectDto();
+
+        userDetailWithSubjectInfo.setFirstname(user.getFirstname());
+        userDetailWithSubjectInfo.setLastname(user.getLastname());
+        userDetailWithSubjectInfo.setEmail(user.getDetails().getEmail());
+        userDetailWithSubjectInfo.setTelNr(user.getDetails().getTelNr());
+        userDetailWithSubjectInfo.setStreet(user.getDetails().getAddress().getStreet());
+        userDetailWithSubjectInfo.setAreaCode(user.getDetails().getAddress().getAreaCode());
+        userDetailWithSubjectInfo.setCity(user.getDetails().getAddress().getCity());
+
+        return userDetailWithSubjectInfo;
     }
 
     default ApplicationUserSubjectsDto mapUserAndSubjectsToUserSubjectDto(ApplicationUser user, List<UserSubject> userSubjects) {

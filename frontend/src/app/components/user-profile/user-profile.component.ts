@@ -6,7 +6,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject as RxSubject } from 'rxjs';
 
-
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -17,9 +16,7 @@ export class UserProfileComponent implements OnInit {
   constructor(private userService: UserService, private subjectService: SubjectService) {
   }
 
-
   searchSubject$ = new RxSubject<string>();
-
 
   // view ist loaded it this variables is true
   loadUser = false;
@@ -28,7 +25,6 @@ export class UserProfileComponent implements OnInit {
   //profile information
   userAddress = '';
   user: UserProfile;
-
 
   // user for edit function 
   editedUser: UserProfile;
@@ -44,7 +40,6 @@ export class UserProfileComponent implements OnInit {
 
   //flag to check if profile was edited
   userInfoChanged = false;
-
 
   // message to display error or success messages
   message: string = '';
@@ -70,7 +65,6 @@ export class UserProfileComponent implements OnInit {
     // this.userOffer = this.user.subjects.filter(item => item.role == "tutor").map(item => item.name);
     // this.userAddress = this.user.getAddressAsString();
   }
-
 
   onSearchChange(): void {
     this.searchSubject$.next(this.searchQuery);

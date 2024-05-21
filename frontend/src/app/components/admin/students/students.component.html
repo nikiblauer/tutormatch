@@ -1,0 +1,68 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<!-- Error Message -->
+<div class="alert alert-danger alert-dismissible fade show error-box" role="alert" *ngIf="showError">
+    <p class="mb-0">{{errorMessage}}</p>
+</div>
+
+<div class="container mt-5">
+    <h2>Students:</h2>
+    <form class="form-inline mb-3">
+        <div class="form-group mr-2">
+            <input type="text" class="form-control" [(ngModel)]="searchName" (input)="searchTerm$.next(null)"
+                placeholder="Name" name="name">
+        </div>
+        <div class="form-group mr-2">
+            <input type="text" class="form-control" [(ngModel)]="matrNumber" (input)="searchTerm$.next(null)"
+                placeholder="Student ID" name="studentId">
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let student of filteredStudents">
+                <td>{{ student.firstname }} {{ student.lastname }}</td>
+                <td>{{ student.email }}</td>
+                <td>
+                    <button class="btn btn-info custom-button" (click)="viewDetails(student, detailsModal)">
+                        <i class="bi bi-info-circle"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="text-center" *ngIf="filteredStudents.length > 0">
+        <button type="button" class="btn btn-primary custom-button" (click)="loadMore()" [disabled]="noMoreResults">Load
+            More</button>
+        <p *ngIf="noMoreResults" class="text-muted">No more results.</p>
+    </div>
+
+    <!-- Student Details Modal -->
+    <ng-template #detailsModal let-modal>
+        <div class="modal-header">
+            <h5 class="modal-title" style="font-size: 2em; color: #33709c;">Student Details</h5>
+        </div>
+        <div class="modal-body">
+            <p>Name: {{selectedStudentDetails?.firstname}} {{selectedStudentDetails?.lastname}}</p>
+            <p>Email: {{selectedStudentDetails?.email}}</p>
+            <p>Telephone: {{selectedStudentDetails?.telNr}}</p>
+            <p>Street: {{selectedStudentDetails?.street}}</p>
+            <p>Area Code: {{selectedStudentDetails?.areaCode}}</p>
+            <p>City: {{selectedStudentDetails?.city}}</p>
+            <p><em>Trainee Subjects: </em> {{selectedStudentDetails?.traineeSubjects.join(', ')}}</p>
+            <p><em>Tutor Subjects: </em> {{selectedStudentDetails?.tutorSubjects.join(', ')}}</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+        </div>
+    </ng-template>
+</div>
