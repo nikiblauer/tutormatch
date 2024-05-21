@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;

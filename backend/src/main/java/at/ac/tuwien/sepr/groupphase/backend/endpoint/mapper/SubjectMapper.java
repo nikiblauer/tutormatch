@@ -6,10 +6,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
-
 @Mapper
-
 public interface SubjectMapper {
     default SubjectDto subjectToDto(Subject subject) {
         SubjectDto dto = new SubjectDto();
