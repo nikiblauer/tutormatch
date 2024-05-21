@@ -170,8 +170,6 @@ public class CustomUserDetailService implements UserService {
 
         applicationUser.setFirstname(applicationUserDto.firstname);
         applicationUser.setLastname(applicationUserDto.lastname);
-        applicationUser.setMatrNumber(applicationUserDto.matrNumber);
-        applicationUser.getDetails().setEmail(applicationUserDto.email);
         applicationUser.getDetails().setTelNr(applicationUserDto.telNr);
         applicationUser.getDetails().getAddress().setStreet(applicationUserDto.street);
         applicationUser.getDetails().getAddress().setAreaCode(applicationUserDto.areaCode);

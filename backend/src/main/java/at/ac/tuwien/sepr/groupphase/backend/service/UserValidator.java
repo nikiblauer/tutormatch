@@ -71,27 +71,17 @@ public class UserValidator {
             errors.add("Password has to be at least of length 8");
         }
 
-        validateUserData(user.email, user.firstname, user.lastname, user.telNr, errors);
+        validateUserData(user.firstname, user.lastname, user.telNr, errors);
     }
 
     public void verifyUserData(UpdateApplicationUserDto user) throws ValidationException {
         LOGGER.trace("Validation of user: {}", user);
         List<String> errors = new ArrayList<>();
 
-        validateUserData(user.email, user.firstname, user.lastname, user.telNr, errors);
+        validateUserData(user.firstname, user.lastname, user.telNr, errors);
     }
 
-    private void validateUserData(String email, String firstname, String lastname, String telNr, List<String> errors) throws ValidationException {
-        if (email == null) {
-            errors.add("Email cannot be null");
-            throw new ValidationException("Errors while verifying user Data:", errors);
-        }
-        if (!validate(email)) {
-            errors.add("Email not valid, does it end in tuwien.ac.at or student.tuwien.ac.at");
-        }
-        if (email.length() > 255) {
-            errors.add("Email is too long");
-        }
+    private void validateUserData(String firstname, String lastname, String telNr, List<String> errors) throws ValidationException {
         if (firstname.isEmpty()) {
             errors.add("Name cannot be null");
             throw new ValidationException("Errors while verifying user Data:", errors);

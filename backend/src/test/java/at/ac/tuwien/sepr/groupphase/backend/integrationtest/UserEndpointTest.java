@@ -248,8 +248,6 @@ public class UserEndpointTest extends BaseTest {
         updatedUser.setFirstname("UserUpdated");
         updatedUser.setLastname("SurnameUpdated");
         updatedUser.setPassword("NewPassword123");
-        updatedUser.setMatrNumber(1211646L);
-        updatedUser.setEmail("updateduser@tuwien.ac.at");
         updatedUser.setTelNr("+4367675553");
         updatedUser.setStreet("newStreet 54");
         updatedUser.setAreaCode(1110);
@@ -272,8 +270,6 @@ public class UserEndpointTest extends BaseTest {
         assertAll(
             () -> assertEquals(updatedUser.getFirstname(), returnedUser.getFirstname()),
             () -> assertEquals(updatedUser.getLastname(), returnedUser.getLastname()),
-            () -> assertEquals(updatedUser.getMatrNumber(), returnedUser.getMatrNumber()),
-            () -> assertEquals(updatedUser.getEmail(), returnedUser.getEmail()),
             () -> assertEquals(updatedUser.getTelNr(), returnedUser.getTelNr()),
             () -> assertEquals(updatedUser.getStreet(), returnedUser.getStreet()),
             () -> assertEquals(updatedUser.getAreaCode(), returnedUser.getAreaCode()),
