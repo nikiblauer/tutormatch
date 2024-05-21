@@ -52,6 +52,6 @@ export class MatchComponent implements OnInit {
     }
 
     public getSelectedUserAddressAsString(user: ApplicationUserDetailDto) {
-        return (user.street == "" ? "" : (user.street + " ")) + (user.areaCode == 0 ? "" : (user.areaCode + " ")) + user.city;
+        return ApplicationUserDetailDto.getAddressAsString(user);
     }
 }

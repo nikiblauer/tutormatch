@@ -2,10 +2,15 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserSubjectsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserSubjectDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
+import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
 import org.mapstruct.Mapper;
+
+import java.util.List;
 
 @Mapper
 
@@ -77,5 +82,60 @@ public interface ApplicationUserMapper {
         applicationUserDetailDto.setLastname(user.getLastname());
 
         return applicationUserDetailDto;
+    }
+
+    default ApplicationUserSubjectsDto mapUserAndSubjectsToUserSubjectDto(ApplicationUser user, List<UserSubject> userSubjects) {
+        if (user == null || user.getDetails() == null) {
+            return null;
+        }
+
+        ApplicationUserSubjectsDto applicationUserSubjectsDto = new ApplicationUserSubjectsDto();
+
+        var address = user.getDetails().getAddress();
+        if (address != null) {
+            applicationUserSubjectsDto.setCity(address.getCity());
+            applicationUserSubjectsDto.setStreet(address.getStreet());
+            applicationUserSubjectsDto.setAreaCode(address.getAreaCode());
+        } else {
+            applicationUserSubjectsDto.setCity("");
+            applicationUserSubjectsDto.setStreet("");
+            applicationUserSubjectsDto.setAreaCode(0);
+        }
+
+        applicationUserSubjectsDto.setEmail(user.getDetails().getEmail());
+        applicationUserSubjectsDto.setTelNr(user.getDetails().getTelNr());
+
+        applicationUserSubjectsDto.setFirstname(user.getFirstname());
+        applicationUserSubjectsDto.setLastname(user.getLastname());
+        applicationUserSubjectsDto.setMatrNumber(user.getMatrNumber());
+        applicationUserSubjectsDto.setTelNr(user.getDetails().getTelNr());
+
+        List<UserSubjectDto> subjects = userSubjects.stream().map(this::userSubjectToDto).toList();
+        applicationUserSubjectsDto.setSubjects(subjects);
+        return applicationUserSubjectsDto;
+    }
+
+    default UserSubjectDto userSubjectToDto(UserSubject userSubject) {
+        UserSubjectDto dto = new UserSubjectDto();
+        dto.setRole(userSubject.getRole());
+        dto.setName(userSubject.getSubject().getType() + " " + userSubject.getSubject().getNumber() + " " + userSubject.getSubject().getTitle());
+        dto.setId(userSubject.getSubject().getId());
+        dto.setUrl(userSubject.getSubject().getUrl());
+        dto.setDescription(userSubject.getSubject().getDescription());
+        return dto;
+    }
+
+    default UpdateApplicationUserDto toUpdateDto(ApplicationUser applicationUserUpdated) {
+        UpdateApplicationUserDto dto = new UpdateApplicationUserDto();
+        dto.setId(applicationUserUpdated.getId());
+        dto.setFirstname(applicationUserUpdated.getFirstname());
+        dto.setLastname(applicationUserUpdated.getLastname());
+        dto.setEmail(applicationUserUpdated.getDetails().getEmail());
+        dto.setMatrNumber(applicationUserUpdated.getMatrNumber());
+        dto.setTelNr(applicationUserUpdated.getDetails().getTelNr());
+        dto.setCity(applicationUserUpdated.getDetails().getAddress().getCity());
+        dto.setStreet(applicationUserUpdated.getDetails().getAddress().getStreet());
+        dto.setAreaCode(applicationUserUpdated.getDetails().getAddress().getAreaCode());
+        return dto;
     }
 }

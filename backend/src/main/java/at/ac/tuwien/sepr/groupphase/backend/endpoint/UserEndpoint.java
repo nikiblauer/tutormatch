@@ -2,11 +2,14 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserSubjectsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectsListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.SubjectService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
@@ -19,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.HttpStatus;
@@ -30,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.stream.Stream;
 
 @RestController
@@ -75,16 +80,15 @@ public class UserEndpoint {
         LOGGER.info("PUT /api/v1/user/{}/subjects body:{}", id, listDto);
         ApplicationUser student = userService.findApplicationUserById(id);
         subjectService.setUserSubjects(student, listDto.traineeSubjects, listDto.tutorSubjects);
-        //return mapper.mapUserToDto(student, student.getDetails());
     }
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     @PermitAll
-    public ApplicationUserDto updateUser(@PathVariable("id") Long id, @Valid @RequestBody ApplicationUserDto applicationUserDto) throws Exception {
+    public UpdateApplicationUserDto updateUser(@PathVariable("id") Long id, @Valid @RequestBody UpdateApplicationUserDto applicationUserDto) throws Exception {
         LOGGER.info("PUT /api/v1/user/{} body: {}", id, applicationUserDto);
-        ApplicationUser user = userService.updateUser(id, applicationUserDto);
-        return mapper.mapUserToDto(user);
+        var user = userService.updateUser(id, applicationUserDto);
+        return mapper.toUpdateDto(user);
     }
 
     @PermitAll
@@ -100,5 +104,15 @@ public class UserEndpoint {
         LOGGER.info("GET /api/v1/user/{}", id);
         ApplicationUser user = userService.findApplicationUserById(id);
         return mapper.mapApplicationUserToApplicationUserDto(user);
+    }
+
+    @PermitAll
+    @GetMapping("{id}/subjects")
+    @ResponseStatus(HttpStatus.OK)
+    public ApplicationUserSubjectsDto getUserSubjectsById(@PathVariable("id") Long id) {
+        LOGGER.info("GET /api/v1/user/{}/subjects", id);
+        ApplicationUser user = userService.findApplicationUserById(id);
+        List<UserSubject> subjects = subjectService.findSubjectsByUser(user);
+        return mapper.mapUserAndSubjectsToUserSubjectDto(user, subjects);
     }
 }

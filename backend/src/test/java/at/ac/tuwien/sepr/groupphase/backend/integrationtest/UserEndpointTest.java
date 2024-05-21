@@ -3,13 +3,17 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserSubjectsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectsListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
+import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,14 +32,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER_EMAIL;
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_BASE_URI;
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_ROLES;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -60,6 +68,9 @@ public class UserEndpointTest extends BaseTest {
     private UserRepository userRepository;
 
     @Autowired
+    private UserSubjectRepository userSubjectRepository;
+
+    @Autowired
     private SubjectRepository subjectRepository;
 
     @Autowired
@@ -79,7 +90,7 @@ public class UserEndpointTest extends BaseTest {
 
     @Test
     public void createNewValidUser() throws Exception {
-        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+438881919190", "konsti@tuwien.ac.at",new Address("Teststraße 2", 1100, "Wien")), false);
+        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+438881919190", "konsti@tuwien.ac.at", new Address("Teststraße 2", 1100, "Wien")), false);
         ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user);
         String body = objectMapper.writeValueAsString(applicationUserDto);
 
@@ -111,7 +122,7 @@ public class UserEndpointTest extends BaseTest {
 
     @Test
     public void createNewInvalidUser_422() throws Exception {
-        ApplicationUser user = new ApplicationUser("", false, "", "", 123465L, new ContactDetails("+438881919190", "konsti@tuswien.ac.at", new Address( "Teststraße 2", 1200, "Wien")), false);
+        ApplicationUser user = new ApplicationUser("", false, "", "", 123465L, new ContactDetails("+438881919190", "konsti@tuswien.ac.at", new Address("Teststraße 2", 1200, "Wien")), false);
         ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user);
         String body = objectMapper.writeValueAsString(applicationUserDto);
 
@@ -148,7 +159,7 @@ public class UserEndpointTest extends BaseTest {
         var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L);
 
 
-        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/{id}/subjects", user.get(0).getId())
+        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI + "/{id}/subjects", user.get(0).getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
@@ -159,6 +170,7 @@ public class UserEndpointTest extends BaseTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertNull(response.getContentType());
     }
+
     @Test
     public void putInvalidUserForUserSubject_Returns404NotFound() throws Exception {
 
@@ -172,15 +184,13 @@ public class UserEndpointTest extends BaseTest {
 
         String body = objectMapper.writeValueAsString(subjectsListDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/-1/subjects")
+        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI + "/-1/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
             .andExpect(status().isNotFound())
             .andDo(print())
-            .andReturn()
-
-            ;
+            .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
         assertAll(
@@ -207,7 +217,7 @@ public class UserEndpointTest extends BaseTest {
 
         var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L);
 
-        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/{id}/subjects", user.get(0).getId())
+        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI + "/{id}/subjects", user.get(0).getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
@@ -223,6 +233,41 @@ public class UserEndpointTest extends BaseTest {
                 String content = response.getContentAsString();
                 assertEquals(123, content.length());
             }
+        );
+    }
+
+    @Test
+    void testGetSubjectsOfUser() throws Exception {
+        // Retrieve all users and get the ID of the first user
+        List<ApplicationUser> users = userRepository.findAll();
+        var expectedUser = users.get(0);
+        long[] expectedUserSubjects = userSubjectRepository.findAll()
+            .stream()
+            .filter(item -> item.getUser().getId().equals(expectedUser.getId()))
+            .map(item -> item.getSubject().getId())
+            .mapToLong(Long::longValue)
+            .toArray();
+        // Perform a GET request to the "/api/v1/user/{id}/subjects" endpoint
+        MvcResult result = mockMvc.perform(get("/api/v1/user/" + expectedUser.getId() + "/subjects"))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        // Parse the response
+        ApplicationUserSubjectsDto returnedUser = objectMapper.readValue(result.getResponse().getContentAsString(StandardCharsets.UTF_8), ApplicationUserSubjectsDto.class);
+        long[] returnedUserSubjects = returnedUser.getSubjects().stream().map(SubjectDto::getId).mapToLong(Long::longValue)
+            .toArray();
+
+        // Assert that the returned user has the updated details
+        assertAll(
+            () -> assertEquals(expectedUser.getFirstname(), returnedUser.getFirstname()),
+            () -> assertEquals(expectedUser.getLastname(), returnedUser.getLastname()),
+            () -> assertEquals(expectedUser.getMatrNumber(), returnedUser.getMatrNumber()),
+            () -> assertEquals(expectedUser.getDetails().getEmail(), returnedUser.getEmail()),
+            () -> assertEquals(expectedUser.getDetails().getTelNr(), returnedUser.getTelNr()),
+            () -> assertEquals(expectedUser.getDetails().getAddress().getStreet(), returnedUser.getStreet()),
+            () -> assertEquals(expectedUser.getDetails().getAddress().getAreaCode(), returnedUser.getAreaCode()),
+            () -> assertEquals(expectedUser.getDetails().getAddress().getCity(), returnedUser.getCity()),
+            () -> assertArrayEquals(expectedUserSubjects, returnedUserSubjects)
         );
     }
 
@@ -273,8 +318,8 @@ public class UserEndpointTest extends BaseTest {
         assertFalse(userBefore.getVerified());
         String token = jwtTokenizer.buildVerificationToken(userBefore.getDetails().getEmail());
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/user/verify/" + token))
-                               .andExpect(status().isOk())
-                               .andReturn();
+            .andExpect(status().isOk())
+            .andReturn();
         List<ApplicationUser> updatedList = userRepository.findAll();
         ApplicationUser userAfter = updatedList.get(1);
         assertTrue(userAfter.getVerified());
