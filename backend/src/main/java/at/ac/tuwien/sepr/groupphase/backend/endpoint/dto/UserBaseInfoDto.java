@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class ApplicationUserDetailDto {
+public class UserBaseInfoDto {
     @NotBlank(message = "Firstname is mandatory")
     private String firstname;
 

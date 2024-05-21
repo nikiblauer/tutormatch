@@ -1,10 +1,13 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailsWithSubjectDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,20 +34,27 @@ public class AdminEndpoint {
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/users")
-    public List<ApplicationUserDto> searchUsers(
+    public Page<ApplicationUserDto> searchUsers(
         @RequestParam(name = "fullname", required = false) String fullname,
-        @RequestParam(name = "matrNumber", required = false) Long matrNumber) {
-
-        List<ApplicationUser> listOfUsers = userService.queryUsers(fullname, matrNumber);
-        return listOfUsers.stream()
-            .map(user -> mapper.mapUserToDto(user))
-            .collect(Collectors.toList());
+        @RequestParam(name = "matrNumber", required = false) Long matrNumber,
+        Pageable pageable) {
+        Page<ApplicationUser> pageOfUsers = userService.queryUsers(fullname, matrNumber, pageable);
+        return pageOfUsers.map(mapper::applicationUserToDto);
     }
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/users/{id}")
-    public ApplicationUserDto getUserDetails(@PathVariable(name = "id") Long id) {
+    public UserDetailsWithSubjectDto getUserDetails(@PathVariable(name = "id") Long id) {
+        //get user by id and map to UserDetailsWithSubjectDto
         ApplicationUser user = userService.findApplicationUserById(id);
-        return mapper.mapUserToDto(user);
+        UserDetailsWithSubjectDto resultingUser = mapper.applicationUserToSubjectsDto(user);
+
+        //get subjects for user id and set them in the resultingUser
+        List<String> tutorSubjects = userService.getUserSubjectsByRole(id, "tutor");
+        List<String> traineeSubjects = userService.getUserSubjectsByRole(id, "trainee");
+
+        resultingUser.setTutorSubjects(tutorSubjects.toArray(new String[0]));
+        resultingUser.setTraineeSubjects(traineeSubjects.toArray(new String[0]));
+        return resultingUser;
     }
 }

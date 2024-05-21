@@ -7,9 +7,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Entity
@@ -39,6 +42,10 @@ public class ApplicationUser {
     private Long matrNumber;
     @Setter
     private Boolean verified;
+
+    @Setter
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<UserSubject> userSubjects;
 
     public ApplicationUser() {
     }

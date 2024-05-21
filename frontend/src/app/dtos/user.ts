@@ -26,14 +26,31 @@ export interface CreateApplicationUserDto extends BaseUser {
 }
 
 export interface ApplicationUserDto extends BaseUser {
+  id: number;
+  firstname: string;
+  lastname: string;
   matrNumber: number;
+  email: string;
   telNr: string;
   street: string;
   areaCode: number;
   city: string;
 }
 
-export class ApplicationUserDetailDto implements BaseUser {
+export class UserDetailWithSubjectsDto {
+  firstname: string;
+  lastname: string;
+  email: string;
+  telNr: string;
+  street: string;
+  areaCode: number;
+  city: string;
+  tutorSubjects: string[];
+  traineeSubjects: string[];
+}
+
+export class ApplicationUserDetailDto implements BaseUser { 
+  id: number;
   firstname: string;
   lastname: string;
   email: string;

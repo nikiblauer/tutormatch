@@ -2,6 +2,23 @@
 
 $base-color: #33709C;
 
+.admin-header {
+  border: 4px solid #d87000;
+}
+/* error box for displaying error messages, see admin.component.html for usage */
+.error-box {
+  position: fixed;
+  top: 20px;
+  right: 0;
+  left: 0;
+  padding: 10px;
+  border-radius: 5px;
+  opacity: 0.9;
+  margin: auto;
+  width: fit-content;
+  text-align: center;
+}
+
 body {
   background-color: whitesmoke;
 
