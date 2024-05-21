@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ApplicationUserSubjectsDto extends ApplicationUserDetailDto {
+public class ApplicationUserSubjectsDto extends UserBaseInfoDto {
     @NotNull(message = "MatrNumber is mandatory")
     public Long matrNumber;
 

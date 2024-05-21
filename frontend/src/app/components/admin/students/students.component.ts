@@ -1,0 +1,103 @@
+import { Component, OnInit } from "@angular/core";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ApplicationUserDto } from "src/app/dtos/user";
+import { AdminService } from "src/app/services/admin.service";
+import { UserDetailWithSubjectsDto } from "src/app/dtos/user";
+import { Subject } from "rxjs";
+import { debounceTime } from "rxjs/operators"; 
+import { Page } from "src/app/dtos/page";
+
+interface StudentListing {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+}
+
+@Component({
+  selector: "app-students",
+  templateUrl: "./students.component.html",
+  styleUrls: ["./students.component.scss"],
+})
+
+export class StudentsComponent implements OnInit {
+  students: StudentListing[] = [];
+  filteredStudents: StudentListing[] = [];
+  searchName: string = '';
+  matrNumber: string = '';
+  selectedStudent: StudentListing | null = null;
+  selectedStudentDetails: UserDetailWithSubjectsDto | null = null;
+  showError: boolean = false;
+  errorMessage: string = '';
+  searchTerm$ = new Subject<string>();
+  noMoreResults: boolean = false;
+
+  constructor(private modalService: NgbModal, private adminService: AdminService) {
+    this.searchTerm$.pipe(
+      debounceTime(400)
+    ).subscribe(() => this.search());
+  }
+
+  ngOnInit(): void {
+    this.search(false);
+  }
+
+  page = 0; // Current page number (0-indexed)
+
+  search(newSearch: boolean = true): void {
+    // Reset the page count and clear the list of filtered students only if it's a new search
+    if (newSearch) {
+      this.page = 0;
+      this.filteredStudents = []; // Clear the list of filtered students
+    }
+  
+    this.adminService.searchUsers(this.searchName, Number(this.matrNumber), this.page, 5).subscribe({
+      next: (response: Page<ApplicationUserDto>) => {
+        if (response.content.length === 0) {
+          this.noMoreResults = true; // Set noMoreResults to true when there are no more results
+        } else {
+          this.noMoreResults = false; 
+          this.filteredStudents = [...this.filteredStudents, ...response.content.map(user => ({
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            id: user.id
+          }))];
+        }
+      },
+      error: (error: any) => {
+        console.error('Error:', error);
+        this.showError = true;
+        this.page -= 0; // Reset the page count if there was an error
+        this.errorMessage = "Error in fetching students. Please try again.";
+        setTimeout(() => this.showError = false, 3000); // hide error after 5 seconds
+      }
+    });
+  }
+
+  viewDetails(student: StudentListing, content: any): void {
+    this.selectedStudent = student;
+    this.adminService.getUserDetails(student.id).subscribe({ //call getUserDetails endpoint with selected User ID 
+      next: (response: UserDetailWithSubjectsDto) => {
+        this.selectedStudentDetails = response;
+        this.modalService.open(content);
+      },
+      error: (error: any) => {
+        console.error('Error:', error);
+        this.showError = true;
+        this.page -= 0; // Reset the page count if there was an error
+        this.errorMessage = "Error in fetching student details. Please try again.";
+        setTimeout(() => this.showError = false, 3000); // hide error after 5 seconds
+      }
+    });
+  }
+
+  hideError(): void {
+    this.showError = false;
+  }
+
+  loadMore(): void {
+    this.page += 1;
+    this.search(false); // Don't clear the list of filtered students
+  }
+}

@@ -13,8 +13,11 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {MatchComponent} from "./components/match/match.component";
-import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import {UserProfileComponent} from './components/user-profile/user-profile.component';
 import {NgOptimizedImage} from "@angular/common";
+import {StudentsComponent} from './components/admin/students/students.component';
+import {DashboardComponent} from './components/admin/dashboard/dashboard.component';
+import {AdminComponent} from './components/admin/admin.component';
 
 
 @NgModule({
@@ -26,8 +29,11 @@ import {NgOptimizedImage} from "@angular/common";
     LoginComponent,
     MessageComponent,
     MatchComponent,
+    AdminComponent,
+    DashboardComponent,
+    StudentsComponent,
     UserProfileComponent
-    ],
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -14,4 +14,8 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
   }
 
+  isAdmin() { 
+    return this.authService.getUserRole() === 'ADMIN';
+  }
+
 }

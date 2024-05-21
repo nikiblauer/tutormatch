@@ -1,9 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {AuthService} from '../../services/auth.service';
-import {AuthRequest} from '../../dtos/auth-request';
+import { Component, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { AuthRequest } from '../../dtos/auth-request';
 
+export enum LoginMode {
+  admin,
+  user,
+}
 
 @Component({
   selector: 'app-login',
@@ -11,7 +15,7 @@ import {AuthRequest} from '../../dtos/auth-request';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-
+  mode: LoginMode = LoginMode.user;
   loginForm: UntypedFormGroup;
   // After first submission attempt, form validation will start
   submitted = false;
@@ -19,7 +23,7 @@ export class LoginComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router, private route: ActivatedRoute) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
@@ -48,20 +52,36 @@ export class LoginComponent implements OnInit {
     console.log('Try to authenticate user: ' + authRequest.email);
     this.authService.loginUser(authRequest).subscribe({
       next: () => {
-        console.log('Successfully logged in user: ' + authRequest.email);
-        this.router.navigate(['/message']);
+        if (this.mode === LoginMode.admin && this.isAdmin()) {
+          console.log('Successfully logged in admin: ' + authRequest.email);
+          this.router.navigate(['admin/dashboard']);
+        } else if (this.mode === LoginMode.admin){
+          this.handleError({ error: 'Invalid admin email' });
+        } else if (this.mode === LoginMode.user && this.isAdmin()) {
+          console.log('Successfully logged in admin: ' + authRequest.email);
+          this.router.navigate(['admin/dashboard']);
+        } else if (this.mode === LoginMode.user) {
+          console.log('Successfully logged in user: ' + authRequest.email);
+          this.router.navigate(['/message']);
+        }
       },
       error: error => {
-        console.log('Could not log in due to:');
-        console.log(error);
-        this.error = true;
-        if (typeof error.error === 'object') {
-          this.errorMessage = error.error.error;
-        } else {
-          this.errorMessage = error.error;
-        }
+        this.handleError(error);
       }
     });
+  }
+  private handleError(error: any): void {
+    console.log('Could not log in due to:');
+    console.log(error);
+    this.error = true;
+    if (typeof error.error === 'object') {
+      this.errorMessage = error.error.error;
+    } else {
+      this.errorMessage = error.error;
+    }
+  }
+  isAdmin(): boolean {
+    return this.authService.getUserRole() === 'ADMIN';
   }
 
   /**
@@ -72,6 +92,39 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.route.data.subscribe(data => {
+      this.mode = data.mode;
+    });
+  }
+  public get description(): string {
+    switch (this.mode) {
+      case LoginMode.admin:
+        return 'Login as admin to view user data!';
+      case LoginMode.user:
+        return 'Login to view your latest matches!'
+      default:
+        return '?';
+    }
+  }
+  public get registerLink(): string {
+    switch (this.mode) {
+      case LoginMode.admin:
+        return null;
+      case LoginMode.user:
+        return 'Register';
+      default:
+        return '#';
+    }
+  }
+  public get resetPasswordLink(): string {
+    switch (this.mode) {
+      case LoginMode.admin:
+        return null;
+      case LoginMode.user:
+        return 'Forgot password?';
+      default:
+        return '#';
+    }
   }
 
 }
