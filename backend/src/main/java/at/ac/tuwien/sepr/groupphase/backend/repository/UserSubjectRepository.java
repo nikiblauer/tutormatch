@@ -18,4 +18,7 @@ public interface UserSubjectRepository extends JpaRepository<UserSubject, UserSu
 
     @Transactional
     void removeUserSubjectById(UserSubjectKey userId);
+
+    @Transactional
+    void deleteUserSubjectsBySubject(Subject subject);
 }

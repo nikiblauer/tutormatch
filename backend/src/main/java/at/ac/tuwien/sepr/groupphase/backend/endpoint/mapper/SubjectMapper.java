@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import org.mapstruct.Mapper;
@@ -21,5 +22,19 @@ public interface SubjectMapper {
 
     default Page<SubjectDto> subjectListToDto(Page<Subject> subjects) {
         return subjects.map(this::subjectToDto);
+    }
+
+    default SubjectDetailDto subjectToSubjectDetailDto(Subject subject) {
+        SubjectDetailDto subjectDetailDto = new SubjectDetailDto();
+
+        subjectDetailDto.setId(subject.getId());
+        subjectDetailDto.setType(subject.getType());
+        subjectDetailDto.setDescription(subject.getDescription());
+        subjectDetailDto.setNumber(subject.getNumber());
+        subjectDetailDto.setTitle(subject.getTitle());
+        subjectDetailDto.setSemester(subject.getSemester());
+        subjectDetailDto.setUrl(subject.getUrl());
+
+        return subjectDetailDto;
     }
 }
