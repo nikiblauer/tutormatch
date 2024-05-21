@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -58,8 +59,7 @@ public class CustomUserDetailServiceTest {
         applicationUser.setMatrNumber(applicationUserDto.matrNumber);
         applicationUser.setDetails(new ContactDetails(applicationUserDto.email, applicationUserDto.telNr, new Address("oldStreet 2", 1100, "Wien")));
 
-        ApplicationUserDto updatedApplicationUserDto = new ApplicationUserDto();
-        updatedApplicationUserDto.password = "newPassword";
+        UpdateApplicationUserDto updatedApplicationUserDto = new UpdateApplicationUserDto();
         updatedApplicationUserDto.firstname = "newFirstName";
         updatedApplicationUserDto.lastname = "newLastName";
         updatedApplicationUserDto.matrNumber = 456L;
@@ -71,14 +71,12 @@ public class CustomUserDetailServiceTest {
 
         when(userRepository.findById(id)).thenReturn(Optional.of(applicationUser));
         when(userRepository.save(any(ApplicationUser.class))).thenAnswer(i -> i.getArguments()[0]);
-        when(passwordEncoder.encode(anyString())).thenReturn("newPassword");
 
         // Act
         ApplicationUser returnedUserDto = customUserDetailService.updateUser(id, updatedApplicationUserDto);
 
         // Assert
         assertAll(
-            () -> assertEquals(updatedApplicationUserDto.password, returnedUserDto.getPassword()),
             () -> assertEquals(updatedApplicationUserDto.lastname, returnedUserDto.getLastname()),
             () -> assertEquals(updatedApplicationUserDto.firstname, returnedUserDto.getFirstname()),
             () -> assertEquals(updatedApplicationUserDto.matrNumber, returnedUserDto.getMatrNumber()),
@@ -99,7 +97,7 @@ public class CustomUserDetailServiceTest {
         applicationUser1.setFirstname("John");
         applicationUser1.setLastname("Doe");
         applicationUser1.setMatrNumber(123L);
-        applicationUser1.setDetails(new ContactDetails("JohnDoe@tuwien.ac.at", "1234567890", new Address( "Teststraße 2", 1200, "Wien")));
+        applicationUser1.setDetails(new ContactDetails("JohnDoe@tuwien.ac.at", "1234567890", new Address("Teststraße 2", 1200, "Wien")));
 
         List<ApplicationUser> applicationUsers = List.of(applicationUser1);
 

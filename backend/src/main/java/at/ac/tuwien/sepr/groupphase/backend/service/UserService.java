@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -45,12 +46,13 @@ public interface UserService extends UserDetailsService {
 
     /**
      * Update a user.
+     * Email and matrNumber will not be part of update.
      *
      * @param id                 the id of the user
      * @param applicationUserDto the updated user
      * @return the updated user
      */
-    ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws ValidationException;
+    ApplicationUser updateUser(Long id, UpdateApplicationUserDto applicationUserDto) throws ValidationException;
 
     /**
      * Get all users.

@@ -13,7 +13,9 @@ import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
 import {MatchComponent} from "./components/match/match.component";
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import {NgOptimizedImage} from "@angular/common";
+
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import {NgOptimizedImage} from "@angular/common";
     LoginComponent,
     MessageComponent,
     MatchComponent,
-  ],
+    UserProfileComponent
+    ],
   imports: [
     BrowserModule,
     AppRoutingModule,

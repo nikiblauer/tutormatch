@@ -45,73 +45,10 @@
   padding: 0;
 }
 
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.popup-container {
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  max-width: 800px;
-  width: 100%;
-}
-
-.popup-container p {
-  margin: 15px 0;
-}
-
-.popup-container button {
-  background-color: #33709c;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
-}
 
 .match-details {
   width: 100%;
   margin-top: 20px;
-}
-
-.detail-row {
-  display: table-row;
-}
-
-.detail-label {
-  display: table-cell;
-  font-weight: bold;
-  padding-right: 10px;
-  vertical-align: top;
-}
-
-.detail-row span {
-  display: table-cell;
-  padding-bottom: 15px;
-  font-size: 20px;
-}
-
-.flex-container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.flex-item {
-  flex: 1;
-  margin-right: 10px;
 }
 
 .matches-container {

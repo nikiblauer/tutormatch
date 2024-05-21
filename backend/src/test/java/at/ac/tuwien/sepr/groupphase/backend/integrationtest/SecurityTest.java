@@ -129,7 +129,6 @@ public class SecurityTest implements TestData {
             .as("Most rest methods should be secured. If one is really intended for public use, explicitly state that with @PermitAll. "
                 + "The following are missing: \n" + notSecured.stream().map(pair -> "Class: " + pair.getLeft() + " Method: " + pair.getRight()).reduce("", (a, b) -> a + "\n" + b))
             .isZero();
-
     }
 
     @Test
