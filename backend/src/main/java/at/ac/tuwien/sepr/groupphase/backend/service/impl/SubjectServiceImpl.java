@@ -11,6 +11,9 @@ import at.ac.tuwien.sepr.groupphase.backend.service.SubjectService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserSubjectValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -59,5 +62,17 @@ public class SubjectServiceImpl implements SubjectService {
             list.add(subjectRepository.findSubjectById(id));
         }
         return list;
+    }
+
+    @Override
+    public List<UserSubject> findSubjectsByUser(ApplicationUser user) {
+        LOGGER.trace("findSubjectsByUserId: user {}", user);
+        return userSubjectRepository.getUserSubjectByUser(user);
+    }
+
+    @Override
+    public Page<Subject> findSubjectsBySearchParam(String searchParam, Pageable pageable) {
+        LOGGER.trace("findSubjectsByQuery: searchParam {}", searchParam);
+        return subjectRepository.findAllSubjectByQueryParam(searchParam, pageable);
     }
 }

@@ -2,7 +2,10 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -40,7 +43,8 @@ public class CustomUserDetailService implements UserService {
     private final EmailSmtpService emailService;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer, UserValidator validator, EmailSmtpService emailService) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer,
+                                   UserValidator validator, EmailSmtpService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
@@ -86,7 +90,7 @@ public class CustomUserDetailService implements UserService {
             && userDetails.isAccountNonLocked()
             && userDetails.isCredentialsNonExpired()
             && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
-            ) {
+        ) {
             List<String> roles = userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -103,9 +107,7 @@ public class CustomUserDetailService implements UserService {
         if (!userRepository.findAllByDetails_Email(toCreate.email).isEmpty()) {
             throw new ValidationException("Email already exits please try an other one", new ArrayList<>());
         }
-        ContactDetails details = new ContactDetails(
-            "",
-            toCreate.email);
+        ContactDetails details = new ContactDetails("", toCreate.email, null);
 
         String encodedPassword = passwordEncoder.encode(toCreate.password);
 
@@ -124,8 +126,9 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser findApplicationUserById(Long id) {
         LOGGER.trace("Find application user by id:{}", id);
-        ApplicationUser applicationUser = userRepository.findApplicationUsersById(id);
-        if (applicationUser != null) {
+        ApplicationUser applicationUser = userRepository.findById(id).orElseThrow(() ->
+            new NotFoundException(String.format("Could not find the user with the id %s", id)));
+        if (applicationUser != null && !applicationUser.getAdmin()) {
             return applicationUser;
         }
         throw new NotFoundException(String.format("Could not find the user with the id %s", id));
@@ -138,9 +141,9 @@ public class CustomUserDetailService implements UserService {
         try {
             UserDetails userDetails = loadUserByUsername(tokenEmail);
             if (userDetails != null
-                    && userDetails.isAccountNonExpired()
-                    && userDetails.isAccountNonLocked()
-                    && userDetails.isCredentialsNonExpired()
+                && userDetails.isAccountNonExpired()
+                && userDetails.isAccountNonLocked()
+                && userDetails.isCredentialsNonExpired()
             ) {
                 ApplicationUser applicationUser = findApplicationUserByEmail(tokenEmail);
                 applicationUser.setVerified(true);
@@ -155,21 +158,23 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser updateUser(Long id, ApplicationUserDto applicationUserDto) throws ValidationException {
+    public ApplicationUser updateUser(Long id, UpdateApplicationUserDto applicationUserDto) throws ValidationException {
         LOGGER.trace("Updating user with id: {}", id);
+        //remove whitespaces from telNr
+        applicationUserDto.telNr = applicationUserDto.telNr != null ? applicationUserDto.telNr.replace(" ", "") : null;
         validator.verifyUserData(applicationUserDto);
 
         ApplicationUser applicationUser = userRepository.findById(id)
             .orElseThrow(() -> new NotFoundException(String.format("User with id %d not found", id)));
 
-        String encodedPassword = passwordEncoder.encode(applicationUserDto.password);
-
-        applicationUser.setPassword(encodedPassword);
         applicationUser.setFirstname(applicationUserDto.firstname);
         applicationUser.setLastname(applicationUserDto.lastname);
         applicationUser.setMatrNumber(applicationUserDto.matrNumber);
         applicationUser.getDetails().setEmail(applicationUserDto.email);
         applicationUser.getDetails().setTelNr(applicationUserDto.telNr);
+        applicationUser.getDetails().getAddress().setStreet(applicationUserDto.street);
+        applicationUser.getDetails().getAddress().setAreaCode(applicationUserDto.areaCode);
+        applicationUser.getDetails().getAddress().setCity(applicationUserDto.city);
 
         // Save the updated ApplicationUser in the database
         return userRepository.save(applicationUser);

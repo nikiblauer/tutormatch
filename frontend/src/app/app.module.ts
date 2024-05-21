@@ -12,6 +12,10 @@ import {LoginComponent} from './components/login/login.component';
 import {MessageComponent} from './components/message/message.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
+import {MatchComponent} from "./components/match/match.component";
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import {NgOptimizedImage} from "@angular/common";
+
 
 @NgModule({
   declarations: [
@@ -21,7 +25,9 @@ import {httpInterceptorProviders} from './interceptors';
     HomeComponent,
     LoginComponent,
     MessageComponent,
-  ],
+    MatchComponent,
+    UserProfileComponent
+    ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -29,6 +35,7 @@ import {httpInterceptorProviders} from './interceptors';
     HttpClientModule,
     NgbModule,
     FormsModule,
+    NgOptimizedImage,
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

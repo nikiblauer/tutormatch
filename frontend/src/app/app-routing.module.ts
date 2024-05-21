@@ -6,6 +6,8 @@ import {AuthGuard} from './guards/auth.guard';
 import {MessageComponent} from './components/message/message.component';
 import {RegisterComponent} from "./components/register/register.component";
 import {VerifyComponent} from "./components/register/verify/verify.component";
+import {MatchComponent} from "./components/match/match.component";
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -14,7 +16,9 @@ const routes: Routes = [
       {path: '', component: RegisterComponent},
       {path: 'verify/:token', component: VerifyComponent}
     ]},
-  {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent}
+  {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
+  {path: 'matches', component: MatchComponent},
+  {path: 'myprofile', component: UserProfileComponent}
 ];
 
 @NgModule({

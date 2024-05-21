@@ -1,0 +1,204 @@
+<div class="pt-5">
+    <!-- Add this alert to display error messages -->
+    <div class="row p-2 justify-content-center error-pos" *ngIf="showErrorMessage">
+        <div class="card col-11 col-sm-10 col-md-8 shadow alert alert-danger" role="alert" style="border: none;">
+            <div class="row justify-content-end">
+                <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorMessage()"></button>
+            </div>
+            <div class="card-body p-2 p-md-3">
+                <div class="row justify-content-center">
+                    <h2 class="mb-2 px-3 px-md-5 text-center">Error </h2>
+                    <p class="mb-3 mb-md-5 px-3 px-md-5  text-center text-muted">{{ message }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Add this alert to display success messages -->
+    <div class="row p-2 justify-content-center error-pos" *ngIf="showSuccessMessage">
+        <div class="card col-11 col-sm-10 col-md-8 shadow alert alert-success" role="alert" style="border: none;">
+            <div class="row justify-content-end">
+                <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessMessage()"></button>
+            </div>
+            <div class="card-body p-2 p-md-3">
+                <div class="row justify-content-center">
+                    <h2 class="mb-2 px-3 px-md-5 text-center">Success </h2>
+                    <p class="mb-3 mb-md-5 px-3 px-md-5  text-center text-muted">{{ message }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row align-items-center justify-content-center">
+        <h2 class="col-md-8 mb-4">My Profile</h2>
+        <div class="card col-md-8 box-shadow" style="border: none; margin-bottom: 40px;" *ngIf="loadUser">
+            <h3 class="m-4">Personal Data</h3>
+            <button class="btn btn-edit position-absolute top-0 end-0 mt-3 me-3" (click)="editUser()"
+                data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                edit
+            </button>
+            <div class="card-body m-3">
+                <div class="mb-4">
+                    <h4>{{ user.firstname }} {{ user.lastname }}</h4>
+                </div>
+                <div class="mb-3 row">
+                    <label for="email" class="col-sm-3 col-form-label">Email:</label>
+                    <div class="col-sm-5">
+                        <input type="email" id="email" class="form-control" [(ngModel)]="user.email" disabled>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="matrNumber" class="col-sm-3 col-form-label">Studentnumber:</label>
+                    <div class="col-sm-5">
+                        <input type="matrNumber" id="matrNumber" class="form-control" [(ngModel)]="user.matrNumber"
+                            disabled>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="address" class="col-sm-3 col-form-label">Address:</label>
+                    <div class="col-sm-5">
+                        <input type="text" id="address" class="form-control" [(ngModel)]="userAddress" disabled>
+                    </div>
+                </div>
+                <div class="mb-5 row">
+                    <label for="phone" class="col-sm-3 col-form-label">Phone:</label>
+                    <div class="col-sm-5">
+                        <input type="tel" id="phone" class="form-control" [(ngModel)]="user.telNr" disabled>
+                    </div>
+                </div>
+                <!-- Add horizontal line here -->
+                <hr class="my-4">
+                <h3 class="row mb-5" mb-5>My Subjects:</h3>
+                <div class="row mb-5">
+                    <div class="col">
+                        <h5>I need subjects:</h5>
+                        <ul class="list-group list-group-flush">
+                            <li *ngFor="let need of userNeed "
+                                class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ need.name }}
+                                <button class="btn btn-outline-primary btn-sm del-button"
+                                    (click)="removeSubject(need)">✖</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col">
+                        <h5>I offer subjects:</h5>
+                        <ul class="list-group list-group-flush">
+                            <li *ngFor="let offer of userOffer"
+                                class="list-group-item d-flex justify-content-between align-items-center ">
+                                {{ offer.name }}
+                                <button class="btn btn-outline-primary btn-sm del-button"
+                                    (click)="removeSubject(offer)">✖</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mb-4 input-group">
+                    <input type="text" placeholder="Search Subjects ..." [(ngModel)]="searchQuery"
+                        (input)="onSearchChange()" class="form-control mb-2">
+                </div>
+                <div class="mb-4 table-responsive">
+                    <table class="table ">
+                        <thead>
+                            <tr>
+                                <th class="table-header">Subject Name</th>
+                                <th class="table-header text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="loadSubjects">
+                            <tr *ngFor="let subject of filteredSubjects">
+                                <td>{{ subject.name }}</td>
+                                <td class="text-right btn-container">
+                                    <button (click)="addNeed(subject)"
+                                        class="btn btn-outline-primary btn-sm">Need</button>
+                                    <button (click)="addOffer(subject)"
+                                        class="btn btn-outline-primary btn-sm">Offer</button>
+                                    <button (click)="openInfo(subject)" data-bs-toggle="popup"
+                                        data-bs-target="#openSubjectInfo" type="button" class="btn btn-info">
+                                        &#9432;
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="offset-md-10">
+                    <button class="btn primary-btn w-100" (click)="saveProfile()">Save Subjects</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true"
+    *ngIf="loadUser">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" [(ngModel)]="editedUser.firstname"
+                            name="firstName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" [(ngModel)]="editedUser.lastname"
+                            name="lastName">
+                    </div>
+                    <div class="mb-3">
+                        <label for="street" class="form-label">Street</label>
+                        <input type="text" class="form-control" id="street" [(ngModel)]="editedUser.street"
+                            name="street">
+                    </div>
+                    <div class="mb-3">
+                        <label for="areaCode" class="form-label">Post Code</label>
+                        <input type="text" class="form-control" id="areaCode" [(ngModel)]="editedUser.areaCode"
+                            name="areaCode">
+                    </div>
+                    <div class="mb-3">
+                        <label for="city" class="form-label">City</label>
+                        <input type="text" class="form-control" id="city" [(ngModel)]="editedUser.city" name="city">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone" [(ngModel)]="editedUser.telNr" name="phone">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                    (click)="updateInfo()">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="popup popup-overlay" (click)="closeSubjectInfo()" id="openSubjectInfo" tabindex="-1"
+    aria-labelledby="openSubjectInfoLabel" aria-hidden="true" *ngIf="selectedSubject">
+    <div class="popup-container" (click)="$event.stopPropagation()">
+        <div class="header-container">
+            <h2>Subject Info:</h2>
+        </div>
+        <div class="details">
+            <div class="detail-row"><span class="detail-label">Name:</span>
+                <span>{{ selectedSubject.name }}</span>
+            </div>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <div class="detail-row"><span class="detail-label">Description:</span>
+                        <span>{{ selectedSubject.description }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="offset-md-10">
+            <a class="btn primary-btn w-100" [href]="selectedSubject.url" target="_blank" role="button">More Info</a>
+        </div>
+    </div>
+</div>
