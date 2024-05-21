@@ -24,7 +24,7 @@ public class UserMatchServiceTest extends BaseTest {
     @Test
     void testFindMatchingUserByUserIdShouldReturn2Results() {
         var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L);
-        var stream = userMatchService.findMatchingUserByUserIdAsStream(user.get(0).getId());
+        var stream = userMatchService.findMatchingsForUser(user.get(0).getDetails().getEmail());
 
         List<UserMatchDto> resultList = stream.collect(Collectors.toList());
         assertEquals(2, resultList.size());

@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.HttpStatus;
@@ -67,6 +68,8 @@ public class UserEndpoint {
         }
     }
 
+
+    /*
     @Secured("ROLE_USER")
     @PutMapping(value = "/{id}/subjects")
     @Operation(summary = "Set subjects for a user", security = @SecurityRequirement(name = "apiKey"))
@@ -74,8 +77,22 @@ public class UserEndpoint {
         LOGGER.info("PUT /api/v1/user/{}/subjects body:{}", id, listDto);
         ApplicationUser student = userService.findApplicationUserById(id);
         subjectService.setUserSubjects(student, listDto.traineeSubjects, listDto.tutorSubjects);
-        //return mapper.mapUserToDto(student, student.getDetails());
     }
+    */
+
+
+
+    @Secured("ROLE_USER")
+    @PutMapping(value = "/subjects")
+    @Operation(summary = "Set subjects for a user", security = @SecurityRequirement(name = "apiKey"))
+    public void setUserSubjects(@Valid @RequestBody SubjectsListDto listDto) throws ValidationException {
+        LOGGER.info("PUT /api/v1/user/subjects body:{}",listDto);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        ApplicationUser student = userService.findApplicationUserByEmail(userEmail);
+        subjectService.setUserSubjects(student, listDto.traineeSubjects, listDto.tutorSubjects);
+    }
+
+
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -87,9 +104,10 @@ public class UserEndpoint {
     }
 
     @PermitAll
-    @GetMapping("{id}/matches")
-    public Stream<UserMatchDto> getUserMatches(@PathVariable("id") Long id) {
-        LOGGER.info("GET /api/v1/user/{}/matches", id);
-        return userMatchService.findMatchingUserByUserIdAsStream(id);
+    @GetMapping("/matches")
+    public Stream<UserMatchDto> getUserMatches() {
+        LOGGER.info("GET /api/v1/user/matches");
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userMatchService.findMatchingsForUser(userEmail);
     }
 }

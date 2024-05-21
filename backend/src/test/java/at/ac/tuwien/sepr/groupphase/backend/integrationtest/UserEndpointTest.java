@@ -147,7 +147,7 @@ public class UserEndpointTest extends BaseTest {
         var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L);
 
 
-        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/{id}/subjects", user.get(0).getId())
+        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
@@ -158,6 +158,8 @@ public class UserEndpointTest extends BaseTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertNull(response.getContentType());
     }
+
+    /*
     @Test
     public void putInvalidUserForUserSubject_Returns404NotFound() throws Exception {
 
@@ -171,7 +173,7 @@ public class UserEndpointTest extends BaseTest {
 
         String body = objectMapper.writeValueAsString(subjectsListDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/-1/subjects")
+        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
@@ -190,6 +192,7 @@ public class UserEndpointTest extends BaseTest {
             }
         );
     }
+     */
 
     @Test
     public void putInvalidSubjectsForUserSubject_Returns422() throws Exception {
@@ -206,7 +209,7 @@ public class UserEndpointTest extends BaseTest {
 
         var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L);
 
-        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/{id}/subjects", user.get(0).getId())
+        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
@@ -303,8 +306,9 @@ public class UserEndpointTest extends BaseTest {
 
         var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L);
 
-        // Perform a GET request to the "/api/v1/user/{id}/matches" endpoint
-        var body = mockMvc.perform(get("/api/v1/user/{id}" + "/matches", user.get(0).getId()))
+        // Perform a GET request to the "/api/v1/user/matches" endpoint
+        var body = mockMvc.perform(get("/api/v1/user/matches")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
 
