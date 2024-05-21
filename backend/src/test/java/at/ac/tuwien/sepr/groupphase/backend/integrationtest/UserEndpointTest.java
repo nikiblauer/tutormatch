@@ -171,38 +171,6 @@ public class UserEndpointTest extends BaseTest {
         assertNull(response.getContentType());
     }
 
-    /*
-    @Test
-    public void putInvalidUserForUserSubject_Returns404NotFound() throws Exception {
-
-        SubjectsListDto subjectsListDto = new SubjectsListDto();
-        subjectsListDto.traineeSubjects = new ArrayList<>();
-        subjectsListDto.traineeSubjects.add(subjectRepository.findAll().get(0).getId());
-        subjectsListDto.traineeSubjects.add(subjectRepository.findAll().get(1).getId());
-        subjectsListDto.tutorSubjects = new ArrayList<>();
-        subjectsListDto.tutorSubjects.add(subjectRepository.findAll().get(2).getId());
-        subjectsListDto.tutorSubjects.add(subjectRepository.findAll().get(3).getId());
-
-        String body = objectMapper.writeValueAsString(subjectsListDto);
-
-        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/subjects")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
-            .andExpect(status().isNotFound())
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertAll(
-            () -> {
-                //Reads the errors from the body
-                String content = response.getContentAsString();
-                assertEquals(38, content.length());
-            }
-        );
-    }
-     */
 
     @Test
     public void putInvalidSubjectsForUserSubject_Returns422() throws Exception {
@@ -288,11 +256,11 @@ public class UserEndpointTest extends BaseTest {
         updatedUser.setCity("Graz");
         // Retrieve all users and get the ID of the first user
         List<ApplicationUser> users = userRepository.findAll();
-        Long userIdToUpdate = users.get(0).getId();
 
-        // Perform a PUT request to the "/api/v1/user/{id}" endpoint
-        MvcResult result = mockMvc.perform(put("/api/v1/user/" + userIdToUpdate)
-                .contentType(MediaType.APPLICATION_JSON)
+        // Perform a PUT request to the "/api/v1/user" endpoint
+        MvcResult result = mockMvc.perform(put("/api/v1/user")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(users.getFirst().getDetails().getEmail(), USER_ROLES))
+            .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedUser)))
             .andExpect(status().isOk())
             .andReturn();

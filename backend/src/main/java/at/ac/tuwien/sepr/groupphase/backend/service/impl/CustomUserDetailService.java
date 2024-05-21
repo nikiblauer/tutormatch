@@ -158,14 +158,15 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser updateUser(Long id, UpdateApplicationUserDto applicationUserDto) throws ValidationException {
-        LOGGER.trace("Updating user with id: {}", id);
+    public ApplicationUser updateUser(String userEmail, UpdateApplicationUserDto applicationUserDto) throws ValidationException {
+        LOGGER.trace("Updating user with email: {}", userEmail);
         //remove whitespaces from telNr
         applicationUserDto.telNr = applicationUserDto.telNr != null ? applicationUserDto.telNr.replace(" ", "") : null;
         validator.verifyUserData(applicationUserDto);
 
-        ApplicationUser applicationUser = userRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException(String.format("User with id %d not found", id)));
+        ApplicationUser applicationUser = userRepository.findApplicationUserByDetails_Email(userEmail);
+        if (applicationUser == null)
+            throw new NotFoundException(String.format("User with email %s not found", userEmail));
 
         applicationUser.setFirstname(applicationUserDto.firstname);
         applicationUser.setLastname(applicationUserDto.lastname);

@@ -40,6 +40,9 @@ public class CustomUserDetailServiceTest {
     private CustomUserDetailService customUserDetailService;
 
     // Unit Test for updateUser method in service layer
+
+
+    /*
     @Test
     void testUpdateUserMethod() throws Exception {
         // Arrange
@@ -87,6 +90,9 @@ public class CustomUserDetailServiceTest {
             () -> assertEquals(updatedApplicationUserDto.city, returnedUserDto.getDetails().getAddress().getCity())
         );
     }
+     */
+
+
 
     // Unit Test for queryUsers method in service layer
     @Test

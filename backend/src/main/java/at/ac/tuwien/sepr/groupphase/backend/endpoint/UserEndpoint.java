@@ -100,6 +100,18 @@ public class UserEndpoint {
 
 
 
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    @PermitAll
+    public UpdateApplicationUserDto updateUser(@Valid @RequestBody UpdateApplicationUserDto applicationUserDto) throws Exception {
+        LOGGER.info("PUT /api/v1/user body: {}", applicationUserDto);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        LOGGER.info("BBBB: {}", userEmail);
+        var user = userService.updateUser(userEmail, applicationUserDto);
+        return mapper.toUpdateDto(user);
+    }
+
+    /*
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     @PermitAll
@@ -108,6 +120,8 @@ public class UserEndpoint {
         var user = userService.updateUser(id, applicationUserDto);
         return mapper.toUpdateDto(user);
     }
+
+     */
 
     @PermitAll
     @GetMapping("/matches")
