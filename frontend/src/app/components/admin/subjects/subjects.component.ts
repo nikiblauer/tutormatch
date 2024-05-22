@@ -1,9 +1,8 @@
 import {Component, OnInit} from "@angular/core";
-import {Subject, UserProfile} from "src/app/dtos/user";
+import {Subject} from "src/app/dtos/user";
 import {AdminService} from "src/app/services/admin.service";
 import {debounceTime, distinctUntilChanged} from "rxjs/operators";
 import {Subject as RxSubject} from 'rxjs';
-import {UserService} from "../../../services/user.service";
 import {SubjectService} from "../../../services/subject.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {SubjectDetailDto} from "../../../dtos/subject";
@@ -15,30 +14,25 @@ import {SubjectDetailDto} from "../../../dtos/subject";
 })
 
 export class SubjectComponent implements OnInit {
-  constructor(private userService: UserService, private subjectService: SubjectService, private adminService: AdminService) {
+  constructor(private subjectService: SubjectService, private adminService: AdminService) {
   }
 
   searchSubject$ = new RxSubject<string>();
 
   // view ist loaded it this variables is true
-  loadUser = false;
   loadSubjects = false
+
+  createdSubject: SubjectDetailDto = new SubjectDetailDto();
 
   edit: boolean = false;
   info: boolean = false;
-
-  //profile information
-  user: UserProfile;
-
-  // user for edit function
-  editedUser: UserProfile;
+  create: boolean = false;
 
   //search variables for query and loaded subjects
   searchQuery: string = '';
   subjects: Subject[];
 
   //flag to check if profile was edited
-  userInfoChanged = false;
 
   // message to display error or success messages
   message: string = '';
@@ -57,10 +51,6 @@ export class SubjectComponent implements OnInit {
     ).subscribe(query => {
       this.searchSubjects(query);
     });
-
-    // this.userNeed = this.user.subjects.filter(item => item.role == "trainee").map(item => item.name);
-    // this.userOffer = this.user.subjects.filter(item => item.role == "tutor").map(item => item.name);
-    // this.userAddress = this.user.getAddressAsString();
   }
 
   onSearchChange(): void {
@@ -166,6 +156,11 @@ export class SubjectComponent implements OnInit {
     this.selectedSubject = null;
   }
 
+  closeSubjectCreate(){
+    this.create = false;
+    this.createdSubject = new SubjectDetailDto();
+  }
+
   saveSelectedSubject(event: Event) {
     this.adminService.updateSubject(this.selectedSubject).subscribe({
       next: _ => {
@@ -176,4 +171,15 @@ export class SubjectComponent implements OnInit {
       complete: () => this.showMessageWithTimeout("Successfully updated subject information!", false)
     });
   }
+  saveNewSubject(subject: SubjectDetailDto, event: Event){
+    this.adminService.createSubject(subject).subscribe({
+      next: _ => {
+        event.stopPropagation();
+        this.create = false;
+      },
+      error: (e) => this.handleError(e),
+      complete: () => this.showMessageWithTimeout("Successfully created subject!", false)
+    });
+  }
+
 }

@@ -28,8 +28,13 @@
       </div>
     </div>
   </div>
-  <div class="row align-items-center justify-content-center">
-    <h3 class="row mb-5">All Subjects:</h3>
+  <div class="row align-items-center justify-content-between">
+    <div>
+      <a class="mb-5 btn btn-123 btn-primary float-end" data-bs-toggle="popup"
+         data-bs-target="#openSubjectCreate" (click)="create = true">Create new Subject</a>
+      <div class="detail-row"><h3 class="detail-label">All Subjects:</h3></div>
+    </div>
+
     <div class="mb-4 input-group">
       <input type="text" placeholder="Search Subjects ..." [(ngModel)]="searchQuery"
              (input)="onSearchChange()" class="form-control mb-2">
@@ -37,7 +42,7 @@
     <div class="mb-4 table-responsive">
       <table class="table">
         <!--TODO braucht noch bissi überarbtung -->
-        <thead [class.disable-sticky]="selectedSubject" class="sticky-top">
+        <thead [class.disable-sticky]="selectedSubject || create " class="sticky-top">
         <tr>
           <th class="table-header">Subject Name</th>
           <th class="table-header text-right">Actions</th>
@@ -56,7 +61,7 @@
                 <i class="bi bi-info-lg"> &#9432;</i>
               </a>
               <a (click)="onEdit(subject)" data-bs-toggle="popup"
-                 data-bs-target="#openSubjectInfo2" type="button" class="btn btn-sm responsive-warning-button"
+                 data-bs-target="#openSubjectEdit" type="button" class="btn btn-sm responsive-warning-button"
                  aria-label="Edit Subject">
                 <i class="bi bi-pencil">&#x270F;</i>
               </a>
@@ -97,7 +102,7 @@
   </div>
 </div>
 
-<div class="popup popup-overlay" (click)="closeSubjectEdit()" id="openSubjectInfo2" tabindex="-1"
+<div class="popup popup-overlay" (click)="closeSubjectEdit()" id="openSubjectEdit" tabindex="-1"
      aria-labelledby="openSubjectInfoLabel" aria-hidden="true" *ngIf="edit">
   <div class="popup-container" (click)="$event.stopPropagation()">
     <div class="header-container">
@@ -110,23 +115,68 @@
       </div>
       <div class="detail-row w-100">
         <span class="detail-label">Semester:</span>
-        <input id="subjectSemester" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.semester" class="form-control"/></div>
+        <input id="subjectSemester" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.semester"
+               class="form-control"/></div>
       <div class="detail-row">
         <span class="detail-label">Title:</span>
-        <input id="subjectTitle" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.title" class="form-control"/></div>
+        <input id="subjectTitle" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.title" class="form-control"/>
+      </div>
       <div class="detail-row">
         <span class="detail-label">Type:</span>
         <input id="subjectType" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.type" class="form-control"/></div>
       <div class="detail-row">
         <span class="detail-label">Description:</span>
-        <input id="subjectDescription" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.description" class="form-control"/></div>
+        <input id="subjectDescription" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.description"
+               class="form-control"/></div>
       <div class="detail-row"><span class="detail-label">URL:</span>
-        <textarea id="subjectUrl" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.url" class="form-control"></textarea></div>
+        <textarea id="subjectUrl" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.url"
+                  class="form-control"></textarea></div>
       <div class="detail-row"><span class="detail-label"></span>
-        <span class="pt-3"><strong>Pleas be careful when editing any Subjects. It can have major effects on the User Experience!</strong></span> </div>
+        <span class="pt-3"><strong>Pleas be careful when editing any Subjects. It can have major effects on the User Experience!</strong></span>
+      </div>
       <div class="button-container">
         <a class="btn btn-danger w-50" role="button" (click)="onDelete(selectedSubject.id, $event)">Delete</a>
         <a class="btn btn-edit w-50" role="button" (click)="saveSelectedSubject($event)">Save</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="popup popup-overlay" (click)="closeSubjectCreate()" id="openSubjectCreate" tabindex="-1"
+     aria-labelledby="openSubjectInfoLabel" aria-hidden="true" *ngIf="this.create">
+  <div class="popup-container" (click)="$event.stopPropagation()">
+    <div class="header-container">
+      <h2>Create Subject:</h2>
+    </div>
+    <div class="subject-details w-100">
+      <div class="detail-row">
+        <span class="detail-label">Number:</span>
+        <input id="subjectNumber1" [(ngModel)]="createdSubject.number" class="form-control"/>
+      </div>
+      <div class="detail-row w-100">
+        <span class="detail-label">Semester:</span>
+        <input id="subjectSemester1" [(ngModel)]="createdSubject.semester"
+               class="form-control"/></div>
+      <div class="detail-row">
+        <span class="detail-label">Title:</span>
+        <input id="subjectTitle1" [(ngModel)]="createdSubject.title" class="form-control"/>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Type:</span>
+        <input id="subjectType1" *ngIf="createdSubject" [(ngModel)]="createdSubject.type" class="form-control"/></div>
+      <div class="detail-row">
+        <span class="detail-label">Description:</span>
+        <input id="subjectDescription1" *ngIf="createdSubject" [(ngModel)]="createdSubject.description"
+               class="form-control"/></div>
+      <div class="detail-row"><span class="detail-label">URL:</span>
+        <textarea id="subjectUrl1" *ngIf="createdSubject" [(ngModel)]="createdSubject.url"
+                  class="form-control"></textarea></div>
+      <div class="detail-row"><span class="detail-label"></span>
+        <span class="pt-3"><strong>Pleas be careful when creating any Subjects. It can have major effects on the User Experience!</strong></span>
+      </div>
+      <div class="button-container">
+        <a class="btn btn-edit w-50" role="button" (click)="saveNewSubject(createdSubject, $event)">Save</a>
       </div>
     </div>
   </div>
