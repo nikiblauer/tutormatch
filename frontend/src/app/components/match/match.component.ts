@@ -18,7 +18,6 @@ export class MatchComponent implements OnInit {
     }
 
     ngOnInit() {
-        //TODO here implement so the correct User is selected (token)
         this.userService.getUserMatcher().subscribe(matches => {
             this.matches = matches;
         });

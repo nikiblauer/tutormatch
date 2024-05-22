@@ -27,8 +27,8 @@ export class UserService {
     return this.httpClient.get(this.userUri + "/matches");
   }
 
-  getUserSubjects(id: number): Observable<UserProfile> {
-    return this.httpClient.get<UserProfile>(this.userUri + `/${id}/subjects`);
+  getUserSubjects(): Observable<UserProfile> {
+    return this.httpClient.get<UserProfile>(this.userUri + `/subjects`);
   }
 
   getUser(id: number): Observable<any> {

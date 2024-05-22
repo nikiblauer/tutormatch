@@ -123,4 +123,15 @@ public class UserEndpoint {
         List<UserSubject> subjects = subjectService.findSubjectsByUser(user);
         return mapper.mapUserAndSubjectsToUserSubjectDto(user, subjects);
     }
+
+    @PermitAll
+    @GetMapping("subjects")
+    @ResponseStatus(HttpStatus.OK)
+    public ApplicationUserSubjectsDto getUserSubjectsByEmail() {
+        LOGGER.info("GET /api/v1/user/subjects");
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        ApplicationUser user = userService.findApplicationUserByEmail(userEmail);
+        List<UserSubject> subjects = subjectService.findSubjectsByUser(user);
+        return mapper.mapUserAndSubjectsToUserSubjectDto(user, subjects);
+    }
 }

@@ -56,7 +56,6 @@ export class UserProfileComponent implements OnInit {
   selectedSubject: Subject;
 
   ngOnInit() {
-    //TODO here implement so the correct User is selected (token)
     this.updateUser()
     this.searchSubjects();
     this.searchSubject$.pipe(
@@ -150,7 +149,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   updateUser() {
-    this.userService.getUserSubjects(1)
+    this.userService.getUserSubjects()
       .subscribe({
         next: userProfile => {
           this.loadUser = true;
