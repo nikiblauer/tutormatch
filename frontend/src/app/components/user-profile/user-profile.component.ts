@@ -27,7 +27,7 @@ export class UserProfileComponent implements OnInit {
   user: UserProfile;
 
 
-  // user for edit function 
+  // user for edit function
   editedUser: UserProfile;
 
   //tracking changes in user assigned subjects
@@ -101,6 +101,7 @@ export class UserProfileComponent implements OnInit {
       .subscribe(subjects => {
         this.subjects = subjects.content;
         this.loadSubjects = true;
+        this.filteredSubjects = this.subjects;
         this.updateFilterSubjects();
       });
   }
@@ -119,6 +120,7 @@ export class UserProfileComponent implements OnInit {
     if (ids.length > 0 && this.subjects) {
       this.filteredSubjects = this.subjects.filter(item => !ids.includes(item.id));
     }
+
   }
 
   saveProfile(): void {
