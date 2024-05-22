@@ -1,6 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {ApplicationUserDetailDto, ApplicationUserDto, Subject, UserProfile} from "src/app/dtos/user";
+import {Subject, UserProfile} from "src/app/dtos/user";
 import {AdminService} from "src/app/services/admin.service";
 import {debounceTime, distinctUntilChanged} from "rxjs/operators";
 import {Subject as RxSubject} from 'rxjs';
