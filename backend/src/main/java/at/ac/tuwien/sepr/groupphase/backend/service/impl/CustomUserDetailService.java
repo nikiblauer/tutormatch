@@ -165,8 +165,9 @@ public class CustomUserDetailService implements UserService {
         validator.verifyUserData(applicationUserDto);
 
         ApplicationUser applicationUser = userRepository.findApplicationUserByDetails_Email(userEmail);
-        if (applicationUser == null)
+        if (applicationUser == null){
             throw new NotFoundException(String.format("User with email %s not found", userEmail));
+        }
 
         applicationUser.setFirstname(applicationUserDto.firstname);
         applicationUser.setLastname(applicationUserDto.lastname);

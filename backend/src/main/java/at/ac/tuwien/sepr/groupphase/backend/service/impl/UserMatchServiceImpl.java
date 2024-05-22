@@ -126,7 +126,6 @@ public class UserMatchServiceImpl implements UserMatchService {
                         .traineeSubjects((String) item[6])
                         .tutorSubjects((String) item[7])
                         .build();
-                }
-            );
+            });
     }
 }

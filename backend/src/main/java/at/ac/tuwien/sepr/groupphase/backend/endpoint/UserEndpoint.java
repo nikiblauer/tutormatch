@@ -79,7 +79,7 @@ public class UserEndpoint {
     @PutMapping(value = "/subjects")
     @Operation(summary = "Set subjects for a user", security = @SecurityRequirement(name = "apiKey"))
     public void setUserSubjects(@Valid @RequestBody SubjectsListDto listDto) throws ValidationException {
-        LOGGER.info("PUT /api/v1/user/subjects body:{}",listDto);
+        LOGGER.info("PUT /api/v1/user/subjects body:{}", listDto);
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         ApplicationUser student = userService.findApplicationUserByEmail(userEmail);
         subjectService.setUserSubjects(student, listDto.traineeSubjects, listDto.tutorSubjects);
