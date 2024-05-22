@@ -41,12 +41,12 @@ export class AdminService {
   }
 
   createSubject(subject: SubjectCreateDto){
-    return this.http.post(this.baseUri + `/subject`, subject, { responseType: 'json' });
+    return this.http.post<UserDetailWithSubjectsDto>(this.baseUri + `/subject`, subject, { responseType: 'json' });
   }
   updateSubject(subject: SubjectDetailDto){
-    return this.http.put(this.baseUri + `/subject`, subject, { responseType: 'json' });
+    return this.http.put<UserDetailWithSubjectsDto>(this.baseUri + `/subject`, subject, { responseType: 'json' });
   }
   deleteSubject(id: number){
-    return this.http.delete(this.baseUri + `/${id}`, { responseType: 'json' });
+    return this.http.delete<UserDetailWithSubjectsDto>(this.baseUri + `/${id}`, { responseType: 'json' });
   }
 }

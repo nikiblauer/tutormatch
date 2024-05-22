@@ -38,16 +38,16 @@ public class SubjectValidator {
         if (!errors.isEmpty()) {
             throw new ValidationException("Errors orroured while validating the subject", errors);
         }
-        if (subject.getNumber().matches(VALIDATION_PATTERN)){
+        if (subject.getNumber().matches(VALIDATION_PATTERN)) {
             errors.add("Number may not consists only of whitespaces.");
         }
-        if (subject.getType().matches(VALIDATION_PATTERN)){
+        if (subject.getType().matches(VALIDATION_PATTERN)) {
             errors.add("Number may not consists only of whitespaces.");
         }
-        if (subject.getTitle().matches(VALIDATION_PATTERN)){
+        if (subject.getTitle().matches(VALIDATION_PATTERN)) {
             errors.add("Number may not consists only of whitespaces.");
         }
-        if (subject.getSemester().matches(VALIDATION_PATTERN)){
+        if (subject.getSemester().matches(VALIDATION_PATTERN)) {
             errors.add("Number may not consists only of whitespaces.");
         }
         if (!errors.isEmpty()) {
