@@ -5,25 +5,18 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.SubjectMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import at.ac.tuwien.sepr.groupphase.backend.service.SubjectService;
 import jakarta.annotation.security.PermitAll;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.invoke.MethodHandles;
-
 @RestController
 @RequestMapping(value = "/api/v1/subject")
 public class SubjectEndpoint {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final SubjectService subjectService;
     private final SubjectMapper mapper;
-
 
     public SubjectEndpoint(SubjectService subjectService, SubjectMapper mapper) {
         this.subjectService = subjectService;
@@ -37,5 +30,4 @@ public class SubjectEndpoint {
         Page<Subject> subjects = subjectService.findSubjectsBySearchParam(searchParam, pageable);
         return mapper.subjectListToDto(subjects);
     }
-
 }

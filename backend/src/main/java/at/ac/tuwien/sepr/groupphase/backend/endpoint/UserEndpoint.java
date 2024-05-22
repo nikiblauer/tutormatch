@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDetailDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserBaseInfoDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserSubjectsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
@@ -60,7 +60,7 @@ public class UserEndpoint {
     public ApplicationUserDto create(@RequestBody CreateApplicationUserDto toCreate) throws ValidationException {
         LOGGER.info("POST /api/v1/user/ body: {}", toCreate);
         ApplicationUser user = userService.create(toCreate);
-        return mapper.mapUserToDto(user);
+        return mapper.applicationUserToDto(user);
     }
 
     @GetMapping(value = "/verify/{token}")
@@ -108,8 +108,7 @@ public class UserEndpoint {
 
     @PermitAll
     @GetMapping("{id}")
-    public ApplicationUserDetailDto getUserDetailsById(@PathVariable("id") Long id) {
-        LOGGER.info("GET /api/v1/user/{}", id);
+    public UserBaseInfoDto getUserDetailsById(@PathVariable("id") Long id) {
         ApplicationUser user = userService.findApplicationUserById(id);
         return mapper.mapApplicationUserToApplicationUserDto(user);
     }

@@ -1,9 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
@@ -17,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;

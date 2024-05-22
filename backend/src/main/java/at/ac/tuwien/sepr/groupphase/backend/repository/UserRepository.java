@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,12 +16,15 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
 
     List<ApplicationUser> findAllByDetails_Email(String email);
 
-    @Query("SELECT u FROM ApplicationUser u WHERE (:fullname IS NULL AND :matrNumber IS NULL) "
-        + "OR (u.firstname LIKE CONCAT('%', :fullname, '%') OR :fullname LIKE CONCAT('%', u.firstname, '%')) "
-        + "OR (u.lastname LIKE CONCAT('%', :fullname, '%') OR :fullname LIKE CONCAT('%', u.lastname, '%')) "
-        + "OR CAST(u.matrNumber AS string) LIKE CONCAT('%', :matrNumber, '%')")
-    List<ApplicationUser> findAllByFullnameOrMatrNumber(@Param("fullname") String fullname, @Param("matrNumber") Long matrNumber);
+    @Query("SELECT u FROM ApplicationUser u WHERE u.admin = false AND " + "((:fullname IS NULL AND :matrNumber IS NULL) "
+        + "OR (LOWER(u.firstname) LIKE LOWER(CONCAT('%', :fullname, '%')) OR LOWER(:fullname) LIKE LOWER(CONCAT('%', u.firstname, '%'))) "
+        + "OR (LOWER(u.lastname) LIKE LOWER(CONCAT('%', :fullname, '%')) OR LOWER(:fullname) LIKE LOWER(CONCAT('%', u.lastname, '%'))) " + "OR CAST(u.matrNumber AS string) LIKE CONCAT('%', :matrNumber, '%'))")
+    Page<ApplicationUser> findAllByFullnameOrMatrNumber(@Param("fullname") String fullname, @Param("matrNumber") Long matrNumber, Pageable pageable);
 
+    ApplicationUser findApplicationUsersById(Long id);
+
+    @Query("SELECT s.title FROM ApplicationUser u JOIN u.userSubjects us JOIN us.subject s WHERE u.id = :userId AND us.role = :role")
+    List<String> getUserSubjectsByRole(@Param("userId") Long id, @Param("role") String role);
 }
 
 

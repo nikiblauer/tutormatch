@@ -22,6 +22,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -90,8 +92,8 @@ public class UserEndpointTest extends BaseTest {
 
     @Test
     public void createNewValidUser() throws Exception {
-        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+438881919190", "konsti@tuwien.ac.at", new Address("Teststraße 2", 1100, "Wien")), false);
-        ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user);
+        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+438881919190", "konsti@tuwien.ac.at",new Address("Teststraße 2", 1100, "Wien")), false);
+        ApplicationUserDto applicationUserDto = userMapper.applicationUserToDto(user);
         String body = objectMapper.writeValueAsString(applicationUserDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
@@ -122,8 +124,8 @@ public class UserEndpointTest extends BaseTest {
 
     @Test
     public void createNewInvalidUser_422() throws Exception {
-        ApplicationUser user = new ApplicationUser("", false, "", "", 123465L, new ContactDetails("+438881919190", "konsti@tuswien.ac.at", new Address("Teststraße 2", 1200, "Wien")), false);
-        ApplicationUserDto applicationUserDto = userMapper.mapUserToDto(user);
+        ApplicationUser user = new ApplicationUser("", false, "", "", 123465L, new ContactDetails("+438881919190", "konsti@tuswien.ac.at", new Address( "Teststraße 2", 1200, "Wien")), false);
+        ApplicationUserDto applicationUserDto = userMapper.applicationUserToDto(user);
         String body = objectMapper.writeValueAsString(applicationUserDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
