@@ -87,9 +87,9 @@ public class UserEndpoint {
 
 
 
+    @Secured("ROLE_USER")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    @PermitAll
     public UpdateApplicationUserDto updateUser(@Valid @RequestBody UpdateApplicationUserDto applicationUserDto) throws Exception {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         LOGGER.info("PUT /api/v1/user with email: {}, body: {}", userEmail, applicationUserDto);
@@ -98,7 +98,7 @@ public class UserEndpoint {
         return mapper.toUpdateDto(user);
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @GetMapping("/matches")
     public Stream<UserMatchDto> getUserMatches() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();

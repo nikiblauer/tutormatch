@@ -16,6 +16,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,9 +42,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER_EMAIL;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_BASE_URI;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_ROLES;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -236,6 +235,46 @@ public class UserEndpointTest extends BaseTest {
             () -> assertEquals(expectedUser.getDetails().getAddress().getCity(), returnedUser.getCity()),
             () -> assertArrayEquals(expectedUserSubjects, returnedUserSubjects)
         );
+    }
+
+    @Test
+    void testUpdateUserWithoutUserTokenReturns403() throws Exception {
+
+        // Create an ApplicationUserDto object with the updated user details
+        ApplicationUserDto updatedUser = new ApplicationUserDto();
+        updatedUser.setFirstname("UserUpdated");
+        updatedUser.setLastname("SurnameUpdated");
+        updatedUser.setPassword("NewPassword123");
+        updatedUser.setTelNr("+4367675553");
+        updatedUser.setStreet("newStreet 54");
+        updatedUser.setAreaCode(1110);
+        updatedUser.setCity("Graz");
+
+
+        mockMvc.perform(put("/api/v1/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedUser)))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void testUpdateUserWithAdminTokenReturns403() throws Exception {
+        // Create an ApplicationUserDto object with the updated user details
+        ApplicationUserDto updatedUser = new ApplicationUserDto();
+        updatedUser.setFirstname("UserUpdated");
+        updatedUser.setLastname("SurnameUpdated");
+        updatedUser.setPassword("NewPassword123");
+        updatedUser.setTelNr("+4367675553");
+        updatedUser.setStreet("newStreet 54");
+        updatedUser.setAreaCode(1110);
+        updatedUser.setCity("Graz");
+
+
+        mockMvc.perform(put("/api/v1/user")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_EMAIL, ADMIN_ROLES))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedUser)))
+            .andExpect(status().isForbidden());
     }
 
     @Test
