@@ -240,9 +240,8 @@ public class UserEndpointTest extends BaseTest {
 
     @Test
     void testGetSubjectsByTokenEmailOfUser() throws Exception {
-        // Retrieve all users and get the ID of the first user
-        var expectedUser = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L).get(0);
-
+        Pageable pageable = Pageable.unpaged();
+        var expectedUser = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, pageable).getContent().get(0);
 
         long[] expectedUserSubjects = userSubjectRepository.findAll()
             .stream()
