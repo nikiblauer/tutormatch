@@ -116,7 +116,7 @@ public class CustomUserDetailService implements UserService {
         if (!userRepository.findAllByDetails_Email(toCreate.email).isEmpty()) {
             throw new ValidationException("Email already exits please try an other one", new ArrayList<>());
         }
-        ContactDetails details = new ContactDetails("", toCreate.email, null);
+        ContactDetails details = new ContactDetails("", toCreate.email, new Address("", 0, ""));
 
         String encodedPassword = passwordEncoder.encode(toCreate.password);
 
