@@ -48,13 +48,12 @@ public interface UserService extends UserDetailsService {
 
     /**
      * Update a user.
-     * Email and matrNumber will not be part of update.
      *
-     * @param id                 the id of the user
+     * @param userEmail the email of the user
      * @param applicationUserDto the updated user
      * @return the updated user
      */
-    ApplicationUser updateUser(Long id, UpdateApplicationUserDto applicationUserDto) throws ValidationException;
+    ApplicationUser updateUser(String userEmail, UpdateApplicationUserDto applicationUserDto) throws ValidationException;
 
     /**
      * Get all users.

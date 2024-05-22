@@ -116,7 +116,7 @@ public class CustomUserDetailService implements UserService {
         if (!userRepository.findAllByDetails_Email(toCreate.email).isEmpty()) {
             throw new ValidationException("Email already exits please try an other one", new ArrayList<>());
         }
-        ContactDetails details = new ContactDetails("", toCreate.email, null);
+        ContactDetails details = new ContactDetails("", toCreate.email, new Address("", 0, ""));
 
         String encodedPassword = passwordEncoder.encode(toCreate.password);
 
@@ -173,19 +173,19 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser updateUser(Long id, UpdateApplicationUserDto applicationUserDto) throws ValidationException {
-        LOGGER.trace("Updating user with id: {}", id);
+    public ApplicationUser updateUser(String userEmail, UpdateApplicationUserDto applicationUserDto) throws ValidationException {
+        LOGGER.trace("Updating user with email: {}", userEmail);
         //remove whitespaces from telNr
         applicationUserDto.telNr = applicationUserDto.telNr != null ? applicationUserDto.telNr.replace(" ", "") : null;
         validator.verifyUserData(applicationUserDto);
 
-        ApplicationUser applicationUser = userRepository.findById(id)
-            .orElseThrow(() -> new NotFoundException(String.format("User with id %d not found", id)));
+        ApplicationUser applicationUser = userRepository.findApplicationUserByDetails_Email(userEmail);
+        if (applicationUser == null) {
+            throw new NotFoundException(String.format("User with email %s not found", userEmail));
+        }
 
         applicationUser.setFirstname(applicationUserDto.firstname);
         applicationUser.setLastname(applicationUserDto.lastname);
-        applicationUser.setMatrNumber(applicationUserDto.matrNumber);
-        applicationUser.getDetails().setEmail(applicationUserDto.email);
         applicationUser.getDetails().setTelNr(applicationUserDto.telNr);
         applicationUser.getDetails().getAddress().setStreet(applicationUserDto.street);
         applicationUser.getDetails().getAddress().setAreaCode(applicationUserDto.areaCode);

@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
@@ -27,12 +29,11 @@ public class UserMatchServiceImpl implements UserMatchService {
 
 
     @Override
-    public Stream<UserMatchDto> findMatchingUserByUserIdAsStream(long userId) {
-        LOGGER.trace("findMatchingUserByUserIdAsStream({})", userId);
+    public Stream<UserMatchDto> findMatchingsForUser(String email) {
+        LOGGER.trace("findMatchingUserByUserIdAsStream({})", email);
 
-        if (!userRepository.existsById(userId)) {
-            throw new NotFoundException(String.format("User with id %d not found", userId));
-        }
+        ApplicationUser user = userRepository.findApplicationUserByDetails_Email(email);
+
 
         String queryString = "SELECT u.Id, "
             + "u.FIRSTNAME, "
@@ -55,25 +56,24 @@ public class UserMatchServiceImpl implements UserMatchService {
 
         Query query = entityManager.createNativeQuery(queryString);
 
-        query.setParameter("userId", userId);
+        query.setParameter("userId", user.getId());
         query.setMaxResults(100);
 
         return query.getResultList()
             .stream()
             .map(objItem -> {
-                    var item = (Object[]) objItem;
-                    return UserMatchDto
-                        .builder()
-                        .id((Long) item[0])
-                        .firstname((String) item[1])
-                        .lastname((String) item[2])
-                        .traineeMatchingcount((Long) item[3])
-                        .tutorMatchingcount((Long) item[4])
-                        .totalMatchingcount((Long) item[5])
-                        .traineeSubjects((String) item[6])
-                        .tutorSubjects((String) item[7])
-                        .build();
-                    }
-            );
+                var item = (Object[]) objItem;
+                return UserMatchDto
+                    .builder()
+                    .id((Long) item[0])
+                    .firstname((String) item[1])
+                    .lastname((String) item[2])
+                    .traineeMatchingcount((Long) item[3])
+                    .tutorMatchingcount((Long) item[4])
+                    .totalMatchingcount((Long) item[5])
+                    .traineeSubjects((String) item[6])
+                    .tutorSubjects((String) item[7])
+                    .build();
+            });
     }
 }

@@ -154,8 +154,6 @@ public interface ApplicationUserMapper {
         dto.setId(applicationUserUpdated.getId());
         dto.setFirstname(applicationUserUpdated.getFirstname());
         dto.setLastname(applicationUserUpdated.getLastname());
-        dto.setEmail(applicationUserUpdated.getDetails().getEmail());
-        dto.setMatrNumber(applicationUserUpdated.getMatrNumber());
         dto.setTelNr(applicationUserUpdated.getDetails().getTelNr());
         dto.setCity(applicationUserUpdated.getDetails().getAddress().getCity());
         dto.setStreet(applicationUserUpdated.getDetails().getAddress().getStreet());

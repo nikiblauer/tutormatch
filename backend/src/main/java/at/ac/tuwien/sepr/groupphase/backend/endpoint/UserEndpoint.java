@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -73,29 +74,35 @@ public class UserEndpoint {
         }
     }
 
+
     @Secured("ROLE_USER")
-    @PutMapping(value = "/{id}/subjects")
+    @PutMapping(value = "/subjects")
     @Operation(summary = "Set subjects for a user", security = @SecurityRequirement(name = "apiKey"))
-    public void setUserSubjects(@PathVariable(name = "id") Long id, @Valid @RequestBody SubjectsListDto listDto) throws ValidationException {
-        LOGGER.info("PUT /api/v1/user/{}/subjects body:{}", id, listDto);
-        ApplicationUser student = userService.findApplicationUserById(id);
+    public void setUserSubjects(@Valid @RequestBody SubjectsListDto listDto) throws ValidationException {
+        LOGGER.info("PUT /api/v1/user/subjects body:{}", listDto);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        ApplicationUser student = userService.findApplicationUserByEmail(userEmail);
         subjectService.setUserSubjects(student, listDto.traineeSubjects, listDto.tutorSubjects);
     }
 
-    @PutMapping("{id}")
+
+
+    @Secured("ROLE_USER")
+    @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    @PermitAll
-    public UpdateApplicationUserDto updateUser(@PathVariable("id") Long id, @Valid @RequestBody UpdateApplicationUserDto applicationUserDto) throws Exception {
-        LOGGER.info("PUT /api/v1/user/{} body: {}", id, applicationUserDto);
-        var user = userService.updateUser(id, applicationUserDto);
+    public UpdateApplicationUserDto updateUser(@Valid @RequestBody UpdateApplicationUserDto applicationUserDto) throws Exception {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        LOGGER.info("PUT /api/v1/user with email: {}, body: {}", userEmail, applicationUserDto);
+
+        var user = userService.updateUser(userEmail, applicationUserDto);
         return mapper.toUpdateDto(user);
     }
 
-    @PermitAll
-    @GetMapping("{id}/matches")
-    public Stream<UserMatchDto> getUserMatches(@PathVariable("id") Long id) {
-        LOGGER.info("GET /api/v1/user/{}/matches", id);
-        return userMatchService.findMatchingUserByUserIdAsStream(id);
+    @Secured("ROLE_USER")
+    @GetMapping("/matches")
+    public Stream<UserMatchDto> getUserMatches() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userMatchService.findMatchingsForUser(userEmail);
     }
 
     @PermitAll
@@ -111,6 +118,16 @@ public class UserEndpoint {
     public ApplicationUserSubjectsDto getUserSubjectsById(@PathVariable("id") Long id) {
         LOGGER.info("GET /api/v1/user/{}/subjects", id);
         ApplicationUser user = userService.findApplicationUserById(id);
+        List<UserSubject> subjects = subjectService.findSubjectsByUser(user);
+        return mapper.mapUserAndSubjectsToUserSubjectDto(user, subjects);
+    }
+
+    @PermitAll
+    @GetMapping("subjects")
+    @ResponseStatus(HttpStatus.OK)
+    public ApplicationUserSubjectsDto getUserSubjectsByEmail() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        ApplicationUser user = userService.findApplicationUserByEmail(userEmail);
         List<UserSubject> subjects = subjectService.findSubjectsByUser(user);
         return mapper.mapUserAndSubjectsToUserSubjectDto(user, subjects);
     }

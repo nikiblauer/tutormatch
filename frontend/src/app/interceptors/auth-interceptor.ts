@@ -17,7 +17,7 @@ export class AuthInterceptor implements HttpInterceptor {
     // Do not intercept authentication requests
 
 
-    if (req.url === authUri || req.url == registerUri || req.url.startsWith(verifyUri)) {
+    if (req.url === authUri || (req.url === registerUri && req.method === "POST")  || req.url.startsWith(verifyUri)) {
       console.log(req.url);
       return next.handle(req);
     }

@@ -16,6 +16,7 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,9 +42,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER_EMAIL;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_BASE_URI;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_ROLES;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -158,11 +157,7 @@ public class UserEndpointTest extends BaseTest {
 
         String body = objectMapper.writeValueAsString(subjectsListDto);
 
-        Pageable pageable = PageRequest.of(0, 100);
-        var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, pageable).getContent();
-
-
-        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI + "/{id}/subjects", user.get(0).getId())
+        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
@@ -174,36 +169,6 @@ public class UserEndpointTest extends BaseTest {
         assertNull(response.getContentType());
     }
 
-    @Test
-    public void putInvalidUserForUserSubject_Returns404NotFound() throws Exception {
-
-        SubjectsListDto subjectsListDto = new SubjectsListDto();
-        subjectsListDto.traineeSubjects = new ArrayList<>();
-        subjectsListDto.traineeSubjects.add(subjectRepository.findAll().get(0).getId());
-        subjectsListDto.traineeSubjects.add(subjectRepository.findAll().get(1).getId());
-        subjectsListDto.tutorSubjects = new ArrayList<>();
-        subjectsListDto.tutorSubjects.add(subjectRepository.findAll().get(2).getId());
-        subjectsListDto.tutorSubjects.add(subjectRepository.findAll().get(3).getId());
-
-        String body = objectMapper.writeValueAsString(subjectsListDto);
-
-        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI + "/-1/subjects")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(body)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
-            .andExpect(status().isNotFound())
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        assertAll(
-            () -> {
-                //Reads the errors from the body
-                String content = response.getContentAsString();
-                assertEquals(38, content.length());
-            }
-        );
-    }
 
     @Test
     public void putInvalidSubjectsForUserSubject_Returns422() throws Exception {
@@ -218,10 +183,7 @@ public class UserEndpointTest extends BaseTest {
 
         String body = objectMapper.writeValueAsString(subjectsListDto);
 
-        Pageable pageable = PageRequest.of(0, 100);
-        var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, pageable).getContent();
-
-        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI + "/{id}/subjects", user.get(0).getId())
+        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
@@ -276,25 +238,131 @@ public class UserEndpointTest extends BaseTest {
     }
 
     @Test
+    void getMatchingWithoutUserTokenReturns403() throws Exception {
+        ArrayList<UserMatchDto> expectedMatches = new ArrayList<>();
+        expectedMatches.add(UserMatchDto.builder()
+            .firstname("User2")
+            .lastname("Surname2")
+            .traineeMatchingcount(3)
+            .tutorMatchingcount(3)
+            .totalMatchingcount(6)
+            .traineeSubjects("188.952 Advanced Model Engineering, 188.953 Advanced Model Engineering, 194.056 Advanced Modeling and Simulation")
+            .tutorSubjects("183.130 3D Vision, 194.163 AKNUM Reinforcement Learning, 194.160 Abstrakte Maschinen")
+            .build()
+        );
+
+        expectedMatches.add(UserMatchDto.builder()
+            .firstname("User4")
+            .lastname("Surname4")
+            .traineeMatchingcount(1)
+            .tutorMatchingcount(1)
+            .totalMatchingcount(2)
+            .traineeSubjects("194.056 Advanced Modeling and Simulation")
+            .tutorSubjects("194.160 Abstrakte Maschinen")
+            .build()
+        );
+
+
+        // Perform a GET request to the "/api/v1/user/matches" endpoint
+        mockMvc.perform(get("/api/v1/user/matches"))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void testUpdateUserWithoutUserTokenReturns403() throws Exception {
+
+        // Create an ApplicationUserDto object with the updated user details
+        ApplicationUserDto updatedUser = new ApplicationUserDto();
+        updatedUser.setFirstname("UserUpdated");
+        updatedUser.setLastname("SurnameUpdated");
+        updatedUser.setPassword("NewPassword123");
+        updatedUser.setTelNr("+4367675553");
+        updatedUser.setStreet("newStreet 54");
+        updatedUser.setAreaCode(1110);
+        updatedUser.setCity("Graz");
+
+
+        mockMvc.perform(put("/api/v1/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedUser)))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void testUpdateUserWithAdminTokenReturns403() throws Exception {
+        // Create an ApplicationUserDto object with the updated user details
+        ApplicationUserDto updatedUser = new ApplicationUserDto();
+        updatedUser.setFirstname("UserUpdated");
+        updatedUser.setLastname("SurnameUpdated");
+        updatedUser.setPassword("NewPassword123");
+        updatedUser.setTelNr("+4367675553");
+        updatedUser.setStreet("newStreet 54");
+        updatedUser.setAreaCode(1110);
+        updatedUser.setCity("Graz");
+
+
+        mockMvc.perform(put("/api/v1/user")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_EMAIL, ADMIN_ROLES))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedUser)))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void testGetSubjectsByTokenEmailOfUser() throws Exception {
+        Pageable pageable = Pageable.unpaged();
+        var expectedUser = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, pageable).getContent().get(0);
+
+        long[] expectedUserSubjects = userSubjectRepository.findAll()
+            .stream()
+            .filter(item -> item.getUser().getId().equals(expectedUser.getId()))
+            .map(item -> item.getSubject().getId())
+            .mapToLong(Long::longValue)
+            .toArray();
+        // Perform a GET request to the "/api/v1/user/{id}/subjects" endpoint
+        MvcResult result = mockMvc.perform(get("/api/v1/user/subjects")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(expectedUser.getDetails().getEmail(), USER_ROLES))
+            )
+            .andExpect(status().isOk())
+            .andReturn();
+
+        // Parse the response
+        ApplicationUserSubjectsDto returnedUser = objectMapper.readValue(result.getResponse().getContentAsString(StandardCharsets.UTF_8), ApplicationUserSubjectsDto.class);
+        long[] returnedUserSubjects = returnedUser.getSubjects().stream().map(SubjectDto::getId).mapToLong(Long::longValue)
+            .toArray();
+
+        // Assert that the returned user has the updated details
+        assertAll(
+            () -> assertEquals(expectedUser.getFirstname(), returnedUser.getFirstname()),
+            () -> assertEquals(expectedUser.getLastname(), returnedUser.getLastname()),
+            () -> assertEquals(expectedUser.getMatrNumber(), returnedUser.getMatrNumber()),
+            () -> assertEquals(expectedUser.getDetails().getEmail(), returnedUser.getEmail()),
+            () -> assertEquals(expectedUser.getDetails().getTelNr(), returnedUser.getTelNr()),
+            () -> assertEquals(expectedUser.getDetails().getAddress().getStreet(), returnedUser.getStreet()),
+            () -> assertEquals(expectedUser.getDetails().getAddress().getAreaCode(), returnedUser.getAreaCode()),
+            () -> assertEquals(expectedUser.getDetails().getAddress().getCity(), returnedUser.getCity()),
+            () -> assertArrayEquals(expectedUserSubjects, returnedUserSubjects)
+        );
+    }
+
+    @Test
     void testUpdateUser() throws Exception {
         // Create an ApplicationUserDto object with the updated user details
         ApplicationUserDto updatedUser = new ApplicationUserDto();
         updatedUser.setFirstname("UserUpdated");
         updatedUser.setLastname("SurnameUpdated");
         updatedUser.setPassword("NewPassword123");
-        updatedUser.setMatrNumber(1211646L);
-        updatedUser.setEmail("updateduser@tuwien.ac.at");
         updatedUser.setTelNr("+4367675553");
         updatedUser.setStreet("newStreet 54");
         updatedUser.setAreaCode(1110);
         updatedUser.setCity("Graz");
         // Retrieve all users and get the ID of the first user
         List<ApplicationUser> users = userRepository.findAll();
-        Long userIdToUpdate = users.get(0).getId();
 
-        // Perform a PUT request to the "/api/v1/user/{id}" endpoint
-        MvcResult result = mockMvc.perform(put("/api/v1/user/" + userIdToUpdate)
-                .contentType(MediaType.APPLICATION_JSON)
+        // Perform a PUT request to the "/api/v1/user" endpoint
+        MvcResult result = mockMvc.perform(put("/api/v1/user")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(users.getFirst().getDetails().getEmail(), USER_ROLES))
+            .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedUser)))
             .andExpect(status().isOk())
             .andReturn();
@@ -306,8 +374,6 @@ public class UserEndpointTest extends BaseTest {
         assertAll(
             () -> assertEquals(updatedUser.getFirstname(), returnedUser.getFirstname()),
             () -> assertEquals(updatedUser.getLastname(), returnedUser.getLastname()),
-            () -> assertEquals(updatedUser.getMatrNumber(), returnedUser.getMatrNumber()),
-            () -> assertEquals(updatedUser.getEmail(), returnedUser.getEmail()),
             () -> assertEquals(updatedUser.getTelNr(), returnedUser.getTelNr()),
             () -> assertEquals(updatedUser.getStreet(), returnedUser.getStreet()),
             () -> assertEquals(updatedUser.getAreaCode(), returnedUser.getAreaCode()),
@@ -355,11 +421,10 @@ public class UserEndpointTest extends BaseTest {
             .build()
         );
 
-        Pageable pageable = PageRequest.of(0, 100);
-        var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, pageable).getContent();
 
-        // Perform a GET request to the "/api/v1/user/{id}/matches" endpoint
-        var body = mockMvc.perform(get("/api/v1/user/{id}" + "/matches", user.get(0).getId()))
+        // Perform a GET request to the "/api/v1/user/matches" endpoint
+        var body = mockMvc.perform(get("/api/v1/user/matches")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsByteArray();
 
