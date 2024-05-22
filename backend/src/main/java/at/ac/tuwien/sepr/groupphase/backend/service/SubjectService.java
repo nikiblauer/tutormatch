@@ -48,7 +48,7 @@ public interface SubjectService {
      *
      * @param id the Subject that is deleted
      */
-    Subject deleteSubject(Long id);
+    void deleteSubject(Long id);
 
     /**
      * creates a new Subject.

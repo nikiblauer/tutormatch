@@ -47,6 +47,6 @@ export class AdminService {
     return this.http.put(this.baseUri + `/subject`, subject, { responseType: 'json' });
   }
   deleteSubject(id: number){
-    return this.http.put(this.baseUri + `/subject/${id}/deletion`, { responseType: 'json' });
+    return this.http.delete(this.baseUri + `/${id}`, { responseType: 'json' });
   }
 }

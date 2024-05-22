@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,14 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/admin")
 public class AdminEndpoint {
 
     private final UserService userService;
-    private final ApplicationUserMapper mapper;
+    private final ApplicationUserMapper userMapper;
     private final SubjectService subjectService;
     private final SubjectMapper subjectMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -46,7 +46,7 @@ public class AdminEndpoint {
     @Autowired
     public AdminEndpoint(UserService userService, ApplicationUserMapper mapper, SubjectService subjectService, SubjectMapper subjectMapper) {
         this.userService = userService;
-        this.mapper = mapper;
+        this.userMapper = mapper;
         this.subjectService = subjectService;
         this.subjectMapper = subjectMapper;
     }
@@ -58,7 +58,7 @@ public class AdminEndpoint {
         @RequestParam(name = "matrNumber", required = false) Long matrNumber,
         Pageable pageable) {
         Page<ApplicationUser> pageOfUsers = userService.queryUsers(fullname, matrNumber, pageable);
-        return pageOfUsers.map(mapper::applicationUserToDto);
+        return pageOfUsers.map(userMapper::applicationUserToDto);
     }
 
     @Secured("ROLE_ADMIN")
@@ -66,7 +66,7 @@ public class AdminEndpoint {
     public UserDetailsWithSubjectDto getUserDetails(@PathVariable(name = "id") Long id) {
         //get user by id and map to UserDetailsWithSubjectDto
         ApplicationUser user = userService.findApplicationUserById(id);
-        UserDetailsWithSubjectDto resultingUser = mapper.applicationUserToSubjectsDto(user);
+        UserDetailsWithSubjectDto resultingUser = userMapper.applicationUserToSubjectsDto(user);
 
         //get subjects for user id and set them in the resultingUser
         List<String> tutorSubjects = userService.getUserSubjectsByRole(id, "tutor");
@@ -77,15 +77,15 @@ public class AdminEndpoint {
         return resultingUser;
     }
 
-    @PermitAll
+    @Secured("ROLE_ADMIN")
     @PostMapping("/subject")
     public SubjectDetailDto createSubject(@Valid @RequestBody SubjectCreateDto subjectDetailDto) throws ValidationException {
-        LOGGER.info("PUT /api/v1/admin/subject/body: {}", subjectDetailDto);
+        LOGGER.info("POST /api/v1/admin/subject body: {}", subjectDetailDto);
         Subject subject = subjectService.createSubject(subjectDetailDto);
         return subjectMapper.subjectToSubjectDetailDto(subject);
     }
 
-    @PermitAll
+    @Secured("ROLE_ADMIN")
     @PutMapping("/subject")
     public SubjectDetailDto updateSubject(@Valid @RequestBody SubjectDetailDto subjectDetailDto) throws Exception {
         LOGGER.info("PUT /api/v1/admin/subject body: {}", subjectDetailDto);
@@ -93,11 +93,10 @@ public class AdminEndpoint {
         return subjectMapper.subjectToSubjectDetailDto(subject);
     }
 
-    @PermitAll
-    @PutMapping("subject/{id}/deletion")
-    public SubjectDetailDto removeSubject(@PathVariable("id") Long id) {
-        LOGGER.info("PUT /api/v1/admin/subject/{}/deletion", id);
-        Subject subject = subjectService.deleteSubject(id);
-        return subjectMapper.subjectToSubjectDetailDto(subject);
+    @Secured("ROLE_ADMIN")
+    @DeleteMapping("{id}")
+    public void removeSubject(@PathVariable("id") Long id) {
+        LOGGER.info("PUT /api/v1/admin/{}", id);
+        subjectService.deleteSubject(id);
     }
 }

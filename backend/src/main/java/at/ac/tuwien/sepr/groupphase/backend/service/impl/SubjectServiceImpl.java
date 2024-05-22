@@ -29,20 +29,20 @@ public class SubjectServiceImpl implements SubjectService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserSubjectRepository userSubjectRepository;
     private final SubjectRepository subjectRepository;
-    private final UserSubjectValidator validator;
+    private final UserSubjectValidator userSubjectValidator;
     private final SubjectValidator subjectValidator;
 
     public SubjectServiceImpl(UserSubjectRepository userSubjectRepository, SubjectRepository subjectRepository, UserSubjectValidator validator, SubjectValidator subjectValidator) {
         this.userSubjectRepository = userSubjectRepository;
         this.subjectRepository = subjectRepository;
-        this.validator = validator;
+        this.userSubjectValidator = validator;
         this.subjectValidator = subjectValidator;
     }
 
     @Override
     public void setUserSubjects(ApplicationUser student, List<Long> trainees, List<Long> tutors) throws ValidationException {
         LOGGER.trace("choose subjects with user: {}, trainee: {}, tutor: {}", student, trainees, tutors);
-        validator.validateSubjectSelection(trainees, tutors, student);
+        userSubjectValidator.validateSubjectSelection(trainees, tutors, student);
         List<UserSubject> keys = userSubjectRepository.getUserSubjectByUser(student);
         for (UserSubject key : keys) {
             if (key != null) {
@@ -89,12 +89,12 @@ public class SubjectServiceImpl implements SubjectService {
         if (s == null) {
             throw new NotFoundException(String.format("Subject with id %d not found", subject.getId()));
         }
-        safeSubjectDetailDto(subject, s);
+        saveSubjectDetailDto(subject, s);
         return s;
     }
 
     @Override
-    public Subject deleteSubject(Long id) {
+    public void deleteSubject(Long id) {
         LOGGER.trace("deleteSubject: id{}", id);
         Subject s = subjectRepository.findSubjectById(id);
         if (s == null) {
@@ -102,7 +102,6 @@ public class SubjectServiceImpl implements SubjectService {
         }
         userSubjectRepository.deleteUserSubjectsBySubject(s);
         subjectRepository.deleteById(id);
-        return s;
     }
 
     @Override
@@ -110,7 +109,7 @@ public class SubjectServiceImpl implements SubjectService {
         LOGGER.trace("updateSubject: subject{}", subject);
         subjectValidator.validateSubject(subject);
         Subject s = new Subject();
-        safeSubjectDetailDto(subject, s);
+        saveSubjectDetailDto(subject, s);
         return s;
     }
 
@@ -119,8 +118,8 @@ public class SubjectServiceImpl implements SubjectService {
         return subjectRepository.findSubjectById(id);
     }
 
-    private void safeSubjectDetailDto(SubjectCreateDto subject, Subject s) {
-        LOGGER.trace("safeSubjectDetailDto: subjectDetailDto{}, subject:{}", subject, s);
+    private void saveSubjectDetailDto(SubjectCreateDto subject, Subject s) {
+        LOGGER.trace("saveSubjectDetailDto: subjectDetailDto{}, subject:{}", subject, s);
         s.setDescription(subject.getDescription());
         s.setTitle(subject.getTitle());
         s.setType(subject.getType());

@@ -1,47 +1,38 @@
-import {Component, OnInit} from "@angular/core";
-import {Subject} from "src/app/dtos/user";
-import {AdminService} from "src/app/services/admin.service";
-import {debounceTime, distinctUntilChanged} from "rxjs/operators";
-import {Subject as RxSubject} from 'rxjs';
-import {SubjectService} from "../../../services/subject.service";
-import {HttpErrorResponse} from "@angular/common/http";
-import {SubjectDetailDto} from "../../../dtos/subject";
+import { Component, OnInit } from "@angular/core";
+import { Subject } from "src/app/dtos/user";
+import { AdminService } from "src/app/services/admin.service";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { Subject as RxSubject } from 'rxjs';
+import { SubjectService } from "../../../services/subject.service";
+import { HttpErrorResponse } from "@angular/common/http";
+import { SubjectDetailDto } from "../../../dtos/subject";
 
 @Component({
   selector: "app-subjects",
   templateUrl: "./subjects.component.html",
   styleUrls: ["./subjects.component.scss"],
 })
-
 export class SubjectComponent implements OnInit {
-  constructor(private subjectService: SubjectService, private adminService: AdminService) {
-  }
+  constructor(private subjectService: SubjectService, private adminService: AdminService) {}
 
   searchSubject$ = new RxSubject<string>();
-
-  // view ist loaded it this variables is true
-  loadSubjects = false
-
+  loadSubjects = false;
   createdSubject: SubjectDetailDto = new SubjectDetailDto();
-
   edit: boolean = false;
   info: boolean = false;
   create: boolean = false;
+  delete: boolean = false;
 
-  //search variables for query and loaded subjects
   searchQuery: string = '';
   subjects: Subject[];
-
-  //flag to check if profile was edited
-
-  // message to display error or success messages
   message: string = '';
   showErrorMessage: boolean;
   showSuccessMessage: boolean;
 
-
-  //Subject for info modal
   selectedSubject: SubjectDetailDto;
+  subject: Subject = null;
+
+  subjectToDelete: SubjectDetailDto = null;
 
   ngOnInit() {
     this.searchSubjects();
@@ -57,7 +48,6 @@ export class SubjectComponent implements OnInit {
     this.searchSubject$.next(this.searchQuery);
   }
 
-
   searchSubjects(query: string = ''): void {
     this.subjectService.getSubjects(query, 0, 100)
       .subscribe(subjects => {
@@ -66,10 +56,14 @@ export class SubjectComponent implements OnInit {
       });
   }
 
-
   closeSubjectInfo() {
     this.info = false;
     this.selectedSubject = null;
+  }
+
+  closeCreate() {
+    this.create = false;
+    this.createdSubject = new SubjectDetailDto();
   }
 
   onInfo(subject: Subject) {
@@ -82,26 +76,37 @@ export class SubjectComponent implements OnInit {
   }
 
   onEdit(subject: Subject) {
-    if (this.info != true){
-        this.subjectService.getSubjectById(subject.id).subscribe(s => {
-          this.selectedSubject = s;
-        });
+    if (this.info != true) {
+      this.subjectService.getSubjectById(subject.id).subscribe(s => {
+        this.selectedSubject = s;
+      });
     }
     this.info = false;
     this.edit = true;
   }
 
-  onDelete(id: number, event:Event) {
-    this.adminService.deleteSubject(id).subscribe({
-      next: _ => {
-        event.stopPropagation();
-        this.edit = false;
-        this.info = false;
-      },
-      error: (e) => this.handleError(e),
-      complete: () => this.showMessageWithTimeout("Successfully deleted subject!", false)
+  onDelete(id: number, event: Event) {
+    event.stopPropagation();
+    this.subjectService.getSubjectById(id).subscribe(subject => {
+      this.subjectToDelete = subject;
+      this.delete = true;
     });
+  }
 
+  confirmDelete() {
+    this.adminService.deleteSubject(this.subjectToDelete.id).subscribe({
+      next: _ => {
+        this.delete = false;
+        this.updateSubjectList();
+        this.showMessageWithTimeout("Successfully deleted subject!", false);
+      },
+      error: (e) => this.handleError(e)
+    });
+  }
+
+  closeDeleteDialog() {
+    this.delete = false;
+    this.subjectToDelete = null;
   }
 
   closeErrorMessage() {
@@ -119,7 +124,6 @@ export class SubjectComponent implements OnInit {
       const startIndex = errorString.indexOf("[");
       const endIndex = errorString.lastIndexOf("]");
       const contents = errorString.substring(startIndex + 1, endIndex);
-
       this.showMessageWithTimeout(contents, true);
     } else {
       this.showMessageWithTimeout(error.error, true);
@@ -138,11 +142,10 @@ export class SubjectComponent implements OnInit {
       this.showErrorMessage = false;
       this.showSuccessMessage = false;
     }, 1000); // Hide the message after 1 seconds
-
     this.updateSubjectList();
   }
 
-  private updateSubjectList(){
+  private updateSubjectList() {
     this.searchSubjects();
     this.searchSubject$.pipe(
       debounceTime(300),
@@ -151,12 +154,13 @@ export class SubjectComponent implements OnInit {
       this.searchSubjects(query);
     });
   }
+
   closeSubjectEdit() {
     this.edit = false;
     this.selectedSubject = null;
   }
 
-  closeSubjectCreate(){
+  closeSubjectCreate() {
     this.create = false;
     this.createdSubject = new SubjectDetailDto();
   }
@@ -166,9 +170,9 @@ export class SubjectComponent implements OnInit {
       next: _ => {
         event.stopPropagation();
         this.edit = false;
+        this.showMessageWithTimeout("Successfully updated subject information!", false);
       },
-      error: (e) => this.handleError(e),
-      complete: () => this.showMessageWithTimeout("Successfully updated subject information!", false)
+      error: (e) => this.handleError(e)
     });
   }
   saveNewSubject(subject: SubjectDetailDto, event: Event){
@@ -176,10 +180,9 @@ export class SubjectComponent implements OnInit {
       next: _ => {
         event.stopPropagation();
         this.create = false;
+        this.showMessageWithTimeout("Successfully created subject!", false);
       },
-      error: (e) => this.handleError(e),
-      complete: () => this.showMessageWithTimeout("Successfully created subject!", false)
+      error: (e) => this.handleError(e)
     });
   }
-
 }
