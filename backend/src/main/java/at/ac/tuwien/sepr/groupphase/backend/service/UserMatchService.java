@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 public interface UserMatchService {
 
     /**
-     * Retrieves the matchings of the given user
+     * Retrieves the matchings of the given user.
      *
      * @param email of the user
      * @return all matchings for this user
