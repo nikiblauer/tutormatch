@@ -75,19 +75,6 @@ public class UserEndpoint {
     }
 
 
-    /*
-    @Secured("ROLE_USER")
-    @PutMapping(value = "/{id}/subjects")
-    @Operation(summary = "Set subjects for a user", security = @SecurityRequirement(name = "apiKey"))
-    public void setUserSubjects(@PathVariable(name = "id") Long id, @Valid @RequestBody SubjectsListDto listDto) throws ValidationException {
-        LOGGER.info("PUT /api/v1/user/{}/subjects body:{}", id, listDto);
-        ApplicationUser student = userService.findApplicationUserById(id);
-        subjectService.setUserSubjects(student, listDto.traineeSubjects, listDto.tutorSubjects);
-    }
-    */
-
-
-
     @Secured("ROLE_USER")
     @PutMapping(value = "/subjects")
     @Operation(summary = "Set subjects for a user", security = @SecurityRequirement(name = "apiKey"))
@@ -110,18 +97,6 @@ public class UserEndpoint {
         var user = userService.updateUser(userEmail, applicationUserDto);
         return mapper.toUpdateDto(user);
     }
-
-    /*
-    @PutMapping("{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PermitAll
-    public UpdateApplicationUserDto updateUser(@PathVariable("id") Long id, @Valid @RequestBody UpdateApplicationUserDto applicationUserDto) throws Exception {
-        LOGGER.info("PUT /api/v1/user/{} body: {}", id, applicationUserDto);
-        var user = userService.updateUser(id, applicationUserDto);
-        return mapper.toUpdateDto(user);
-    }
-
-     */
 
     @PermitAll
     @GetMapping("/matches")

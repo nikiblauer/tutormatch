@@ -39,60 +39,6 @@ public class CustomUserDetailServiceTest {
     @InjectMocks
     private CustomUserDetailService customUserDetailService;
 
-    // Unit Test for updateUser method in service layer
-
-
-    /*
-    @Test
-    void testUpdateUserMethod() throws Exception {
-        // Arrange
-        Long id = 1L;
-        ApplicationUserDto applicationUserDto = new ApplicationUserDto();
-        applicationUserDto.password = "password";
-        applicationUserDto.firstname = "Firstname";
-        applicationUserDto.lastname = "Lastname";
-        applicationUserDto.matrNumber = 123L;
-        applicationUserDto.email = "FirstnameLastname@tuwien.ac.at";
-        applicationUserDto.telNr = "1234567890";
-
-        ApplicationUser applicationUser = new ApplicationUser();
-        applicationUser.setPassword(applicationUserDto.password);
-        applicationUser.setFirstname(applicationUserDto.lastname);
-        applicationUser.setLastname(applicationUserDto.lastname);
-        applicationUser.setMatrNumber(applicationUserDto.matrNumber);
-        applicationUser.setDetails(new ContactDetails(applicationUserDto.email, applicationUserDto.telNr, new Address("oldStreet 2", 1100, "Wien")));
-
-        UpdateApplicationUserDto updatedApplicationUserDto = new UpdateApplicationUserDto();
-        updatedApplicationUserDto.firstname = "newFirstName";
-        updatedApplicationUserDto.lastname = "newLastName";
-        updatedApplicationUserDto.matrNumber = 456L;
-        updatedApplicationUserDto.email = "newFirstNameNewLastName@tuwien.ac.at";
-        updatedApplicationUserDto.telNr = "0987654321";
-        updatedApplicationUserDto.street = "newStreet 54";
-        updatedApplicationUserDto.areaCode = 1110;
-        updatedApplicationUserDto.city = "Graz";
-
-        when(userRepository.findById(id)).thenReturn(Optional.of(applicationUser));
-        when(userRepository.save(any(ApplicationUser.class))).thenAnswer(i -> i.getArguments()[0]);
-
-        // Act
-        ApplicationUser returnedUserDto = customUserDetailService.updateUser(id, updatedApplicationUserDto);
-
-        // Assert
-        assertAll(
-            () -> assertEquals(updatedApplicationUserDto.lastname, returnedUserDto.getLastname()),
-            () -> assertEquals(updatedApplicationUserDto.firstname, returnedUserDto.getFirstname()),
-            () -> assertEquals(updatedApplicationUserDto.matrNumber, returnedUserDto.getMatrNumber()),
-            () -> assertEquals(updatedApplicationUserDto.email, returnedUserDto.getDetails().getEmail()),
-            () -> assertEquals(updatedApplicationUserDto.telNr, returnedUserDto.getDetails().getTelNr()),
-            () -> assertEquals(updatedApplicationUserDto.street, returnedUserDto.getDetails().getAddress().getStreet()),
-            () -> assertEquals(updatedApplicationUserDto.areaCode, returnedUserDto.getDetails().getAddress().getAreaCode()),
-            () -> assertEquals(updatedApplicationUserDto.city, returnedUserDto.getDetails().getAddress().getCity())
-        );
-    }
-     */
-
-
 
     // Unit Test for queryUsers method in service layer
     @Test
