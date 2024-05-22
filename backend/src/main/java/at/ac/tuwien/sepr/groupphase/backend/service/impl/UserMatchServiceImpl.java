@@ -114,18 +114,18 @@ public class UserMatchServiceImpl implements UserMatchService {
         return query.getResultList()
             .stream()
             .map(objItem -> {
-                    var item = (Object[]) objItem;
-                    return UserMatchDto
-                        .builder()
-                        .id((Long) item[0])
-                        .firstname((String) item[1])
-                        .lastname((String) item[2])
-                        .traineeMatchingcount((Long) item[3])
-                        .tutorMatchingcount((Long) item[4])
-                        .totalMatchingcount((Long) item[5])
-                        .traineeSubjects((String) item[6])
-                        .tutorSubjects((String) item[7])
-                        .build();
+                var item = (Object[]) objItem;
+                return UserMatchDto
+                    .builder()
+                    .id((Long) item[0])
+                    .firstname((String) item[1])
+                    .lastname((String) item[2])
+                    .traineeMatchingcount((Long) item[3])
+                    .tutorMatchingcount((Long) item[4])
+                    .totalMatchingcount((Long) item[5])
+                    .traineeSubjects((String) item[6])
+                    .tutorSubjects((String) item[7])
+                    .build();
             });
     }
 }
