@@ -156,9 +156,6 @@ public class UserEndpointTest extends BaseTest {
 
         String body = objectMapper.writeValueAsString(subjectsListDto);
 
-        var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L);
-
-
         MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -184,8 +181,6 @@ public class UserEndpointTest extends BaseTest {
         subjectsListDto.tutorSubjects.add(subjectRepository.findAll().get(2).getId());
 
         String body = objectMapper.writeValueAsString(subjectsListDto);
-
-        var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L);
 
         MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -219,6 +214,44 @@ public class UserEndpointTest extends BaseTest {
             .toArray();
         // Perform a GET request to the "/api/v1/user/{id}/subjects" endpoint
         MvcResult result = mockMvc.perform(get("/api/v1/user/" + expectedUser.getId() + "/subjects"))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        // Parse the response
+        ApplicationUserSubjectsDto returnedUser = objectMapper.readValue(result.getResponse().getContentAsString(StandardCharsets.UTF_8), ApplicationUserSubjectsDto.class);
+        long[] returnedUserSubjects = returnedUser.getSubjects().stream().map(SubjectDto::getId).mapToLong(Long::longValue)
+            .toArray();
+
+        // Assert that the returned user has the updated details
+        assertAll(
+            () -> assertEquals(expectedUser.getFirstname(), returnedUser.getFirstname()),
+            () -> assertEquals(expectedUser.getLastname(), returnedUser.getLastname()),
+            () -> assertEquals(expectedUser.getMatrNumber(), returnedUser.getMatrNumber()),
+            () -> assertEquals(expectedUser.getDetails().getEmail(), returnedUser.getEmail()),
+            () -> assertEquals(expectedUser.getDetails().getTelNr(), returnedUser.getTelNr()),
+            () -> assertEquals(expectedUser.getDetails().getAddress().getStreet(), returnedUser.getStreet()),
+            () -> assertEquals(expectedUser.getDetails().getAddress().getAreaCode(), returnedUser.getAreaCode()),
+            () -> assertEquals(expectedUser.getDetails().getAddress().getCity(), returnedUser.getCity()),
+            () -> assertArrayEquals(expectedUserSubjects, returnedUserSubjects)
+        );
+    }
+
+    @Test
+    void testGetSubjectsByTokenEmailOfUser() throws Exception {
+        // Retrieve all users and get the ID of the first user
+        var expectedUser = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L).get(0);
+
+
+        long[] expectedUserSubjects = userSubjectRepository.findAll()
+            .stream()
+            .filter(item -> item.getUser().getId().equals(expectedUser.getId()))
+            .map(item -> item.getSubject().getId())
+            .mapToLong(Long::longValue)
+            .toArray();
+        // Perform a GET request to the "/api/v1/user/{id}/subjects" endpoint
+        MvcResult result = mockMvc.perform(get("/api/v1/user/subjects")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(expectedUser.getDetails().getEmail(), USER_ROLES))
+            )
             .andExpect(status().isOk())
             .andReturn();
 
@@ -317,8 +350,6 @@ public class UserEndpointTest extends BaseTest {
             .build()
         );
 
-
-        var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L);
 
         // Perform a GET request to the "/api/v1/user/matches" endpoint
         var body = mockMvc.perform(get("/api/v1/user/matches")

@@ -46,7 +46,6 @@ public interface UserService extends UserDetailsService {
 
     /**
      * Update a user.
-     * Email and matrNumber will not be part of update.
      *
      * @param userEmail the email of the user
      * @param applicationUserDto the updated user
