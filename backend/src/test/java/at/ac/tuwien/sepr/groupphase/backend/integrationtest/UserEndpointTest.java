@@ -238,6 +238,37 @@ public class UserEndpointTest extends BaseTest {
     }
 
     @Test
+    void getMatchingWithoutUserTokenReturns403() throws Exception {
+        ArrayList<UserMatchDto> expectedMatches = new ArrayList<>();
+        expectedMatches.add(UserMatchDto.builder()
+            .firstname("User2")
+            .lastname("Surname2")
+            .traineeMatchingcount(3)
+            .tutorMatchingcount(3)
+            .totalMatchingcount(6)
+            .traineeSubjects("188.952 Advanced Model Engineering, 188.953 Advanced Model Engineering, 194.056 Advanced Modeling and Simulation")
+            .tutorSubjects("183.130 3D Vision, 194.163 AKNUM Reinforcement Learning, 194.160 Abstrakte Maschinen")
+            .build()
+        );
+
+        expectedMatches.add(UserMatchDto.builder()
+            .firstname("User4")
+            .lastname("Surname4")
+            .traineeMatchingcount(1)
+            .tutorMatchingcount(1)
+            .totalMatchingcount(2)
+            .traineeSubjects("194.056 Advanced Modeling and Simulation")
+            .tutorSubjects("194.160 Abstrakte Maschinen")
+            .build()
+        );
+
+
+        // Perform a GET request to the "/api/v1/user/matches" endpoint
+        mockMvc.perform(get("/api/v1/user/matches"))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
     void testUpdateUserWithoutUserTokenReturns403() throws Exception {
 
         // Create an ApplicationUserDto object with the updated user details
