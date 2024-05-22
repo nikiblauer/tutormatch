@@ -7,7 +7,13 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import java.util.stream.Stream;
 
 public interface UserMatchService {
-    //Stream<UserMatchDto> findMatchingUserByUserIdAsStream(long userId);
+
+    /**
+     * Retrieves the matchings of the given user
+     *
+     * @param email of the user
+     * @return all matchings for this user
+     */
     Stream<UserMatchDto> findMatchingsForUser(String email);
 
 }

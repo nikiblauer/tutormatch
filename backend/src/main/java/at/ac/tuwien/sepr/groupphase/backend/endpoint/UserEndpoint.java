@@ -91,9 +91,9 @@ public class UserEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @PermitAll
     public UpdateApplicationUserDto updateUser(@Valid @RequestBody UpdateApplicationUserDto applicationUserDto) throws Exception {
-        LOGGER.info("PUT /api/v1/user body: {}", applicationUserDto);
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        LOGGER.info("BBBB: {}", userEmail);
+        LOGGER.info("PUT /api/v1/user with email: {}, body: {}", userEmail, applicationUserDto);
+
         var user = userService.updateUser(userEmail, applicationUserDto);
         return mapper.toUpdateDto(user);
     }
@@ -101,7 +101,6 @@ public class UserEndpoint {
     @PermitAll
     @GetMapping("/matches")
     public Stream<UserMatchDto> getUserMatches() {
-        LOGGER.info("GET /api/v1/user/matches");
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         return userMatchService.findMatchingsForUser(userEmail);
     }
@@ -127,7 +126,6 @@ public class UserEndpoint {
     @GetMapping("subjects")
     @ResponseStatus(HttpStatus.OK)
     public ApplicationUserSubjectsDto getUserSubjectsByEmail() {
-        LOGGER.info("GET /api/v1/user/subjects");
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         ApplicationUser user = userService.findApplicationUserByEmail(userEmail);
         List<UserSubject> subjects = subjectService.findSubjectsByUser(user);
