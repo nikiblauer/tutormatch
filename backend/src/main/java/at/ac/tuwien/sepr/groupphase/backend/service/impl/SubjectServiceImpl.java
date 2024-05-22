@@ -114,6 +114,11 @@ public class SubjectServiceImpl implements SubjectService {
         return s;
     }
 
+    @Override
+    public Subject getSubjectById(Long id) {
+        return subjectRepository.findSubjectById(id);
+    }
+
     private void safeSubjectDetailDto(SubjectCreateDto subject, Subject s) {
         LOGGER.trace("safeSubjectDetailDto: subjectDetailDto{}, subject:{}", subject, s);
         s.setDescription(subject.getDescription());

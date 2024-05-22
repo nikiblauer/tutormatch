@@ -5,6 +5,7 @@ import { Globals } from "../global/globals";
 import { ApplicationUserDto } from '../dtos/user';
 import { UserDetailWithSubjectsDto } from '../dtos/user';
 import { Page } from '../dtos/page';
+import {SubjectCreateDto, SubjectDetailDto} from "../dtos/subject";
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +13,12 @@ import { Page } from '../dtos/page';
 
 export class AdminService {
 
-  private baseUri: string = this.globals.backendUri;
+  private baseUri: string = this.globals.backendUri + '/admin';
 
   constructor(private http: HttpClient, private globals: Globals) { }
 
   searchUsers(fullname: string, matrNumber: number, page: number, size: number): Observable<Page<ApplicationUserDto>> {
-    const url = `${this.baseUri}/admin/users`;
+    const url = `${this.baseUri}/users`;
 
     // Define the query parameters
     let params: any = {};
@@ -35,7 +36,17 @@ export class AdminService {
   }
 
   getUserDetails(id: number): Observable<UserDetailWithSubjectsDto> {
-    const url = `${this.baseUri}/admin/users/${id}`;
+    const url = `${this.baseUri}/users/${id}`;
     return this.http.get<UserDetailWithSubjectsDto>(url);
+  }
+
+  createSubject(subject: SubjectCreateDto){
+    return this.http.post(this.baseUri + `/subject`, subject, { responseType: 'json' });
+  }
+  updateSubject(subject: SubjectDetailDto){
+    return this.http.put(this.baseUri + `/subject`, subject, { responseType: 'json' });
+  }
+  deleteSubject(id: number){
+    return this.http.put(this.baseUri + `/subject/${id}/deletion`, { responseType: 'json' });
   }
 }

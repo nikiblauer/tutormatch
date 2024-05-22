@@ -50,5 +50,20 @@ public interface SubjectService {
      */
     Subject deleteSubject(Long id);
 
+    /**
+     * creates a new Subject.
+     *
+     * @param subjectDetailDto Subject to create
+     * @return created Subject
+     * @throws ValidationException if Subject is not valid
+     */
     Subject createSubject(SubjectCreateDto subjectDetailDto) throws ValidationException;
+
+    /**
+     * finds a Subject by its id.
+     *
+     * @param id the subject is
+     * @return the persisted Subject for the corresponding id
+     */
+    Subject getSubjectById(Long id);
 }

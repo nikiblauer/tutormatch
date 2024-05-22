@@ -33,6 +33,9 @@
       <li class="nav-item" *ngIf="isAdmin()">
         <a class="nav-link" routerLink="/admin/students" routerLinkActive="active">Students</a>
       </li>
+      <li class="nav-item" *ngIf="isAdmin()">
+        <a class="nav-link" routerLink="/admin/subjects" routerLinkActive="active">Subjects</a>
+      </li>
     </ul>
     <ul class="navbar-nav m-3">
       <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>

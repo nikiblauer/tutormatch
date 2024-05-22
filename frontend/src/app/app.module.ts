@@ -18,6 +18,7 @@ import {NgOptimizedImage} from "@angular/common";
 import {StudentsComponent} from './components/admin/students/students.component';
 import {DashboardComponent} from './components/admin/dashboard/dashboard.component';
 import {AdminComponent} from './components/admin/admin.component';
+import {SubjectComponent} from "./components/admin/subjects/subjects.component";
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import {AdminComponent} from './components/admin/admin.component';
     AdminComponent,
     DashboardComponent,
     StudentsComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    SubjectComponent
   ],
   imports: [
     BrowserModule,
