@@ -116,7 +116,7 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public Subject getSubjectById(Long id) {
         Subject subject = subjectRepository.findSubjectById(id);
-        if (subject == null){
+        if (subject == null) {
             throw new NotFoundException("Subject not found");
         }
         return subject;
