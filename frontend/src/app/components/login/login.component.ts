@@ -3,6 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AuthRequest } from '../../dtos/auth-request';
+import {ToastrService} from "ngx-toastr";
 
 export enum LoginMode {
   admin,
@@ -20,10 +21,8 @@ export class LoginComponent implements OnInit {
   // After first submission attempt, form validation will start
   submitted = false;
   // Error flag
-  error = false;
-  errorMessage = '';
 
-  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router, private route: ActivatedRoute) {
+  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router, private route: ActivatedRoute, private notification: ToastrService) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
@@ -73,22 +72,17 @@ export class LoginComponent implements OnInit {
   private handleError(error: any): void {
     console.log('Could not log in due to:');
     console.log(error);
-    this.error = true;
+    let errorMessage = ""
     if (typeof error.error === 'object') {
-      this.errorMessage = error.error.error;
+      errorMessage = error.error.error;
     } else {
-      this.errorMessage = error.error;
+      errorMessage = error.error;
     }
+
+    this.notification.error(errorMessage, "Sign in failed!")
   }
   isAdmin(): boolean {
     return this.authService.getUserRole() === 'ADMIN';
-  }
-
-  /**
-   * Error flag will be deactivated, which clears the error message
-   */
-  vanishError() {
-    this.error = false;
   }
 
   ngOnInit() {

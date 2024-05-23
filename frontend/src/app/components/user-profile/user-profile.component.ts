@@ -5,6 +5,7 @@ import { ApplicationUserDetailDto, UserProfile, UserSubject, Subject, Applicatio
 import { HttpErrorResponse } from '@angular/common/http';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject as RxSubject } from 'rxjs';
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-user-profile',
@@ -13,7 +14,7 @@ import { Subject as RxSubject } from 'rxjs';
 })
 export class UserProfileComponent implements OnInit {
 
-  constructor(private userService: UserService, private subjectService: SubjectService) {
+  constructor(private userService: UserService, private subjectService: SubjectService, private notification: ToastrService) {
   }
 
   searchSubject$ = new RxSubject<string>();
@@ -41,11 +42,6 @@ export class UserProfileComponent implements OnInit {
 
   //flag to check if profile was edited
   userInfoChanged = false;
-
-  // message to display error or success messages
-  message: string = '';
-  showErrorMessage: boolean;
-  showSuccessMessage: boolean;
 
 
   //Subject for info modal
@@ -128,7 +124,7 @@ export class UserProfileComponent implements OnInit {
       .subscribe({
         next: _ => this.updateUser(),
         error: (e) => this.handleError(e),
-        complete: () => this.showMessageWithTimeout("Successfully updated user subjects!", false)
+        complete: () => this.notification.success("Successfully updated user subjects", "Updated user subjects!")
       });
   }
 
@@ -141,7 +137,7 @@ export class UserProfileComponent implements OnInit {
           this.userInfoChanged = false;
         },
         error: (e) => this.handleError(e),
-        complete: () => this.showMessageWithTimeout("Successfully updated user information!", false)
+        complete: () => this.notification.success("Successfully updated user information!", "Updated user information!")
       });
   }
 
@@ -174,13 +170,6 @@ export class UserProfileComponent implements OnInit {
     this.selectedSubject = subject;
   }
 
-  closeErrorMessage() {
-    this.showErrorMessage = false;
-  }
-
-  closeSuccessMessage() {
-    this.showSuccessMessage = false;
-  }
 
   private handleError(error: HttpErrorResponse) {
     console.log(error);
@@ -190,22 +179,10 @@ export class UserProfileComponent implements OnInit {
       const endIndex = errorString.lastIndexOf("]");
       const contents = errorString.substring(startIndex + 1, endIndex);
 
-      this.showMessageWithTimeout(contents, true);
+      this.notification.error(contents, "Error");
     } else {
-      this.showMessageWithTimeout(error.error, true); "Something went wrong. Please try again later.";
+      this.notification.error(error.error, "Error")
     }
   }
 
-  private showMessageWithTimeout(message: string, isError: boolean) {
-    this.message = message;
-    if (isError) {
-      this.showErrorMessage = true;
-    } else {
-      this.showSuccessMessage = true;
-    }
-    setTimeout(() => {
-      this.showErrorMessage = false;
-      this.showSuccessMessage = false;
-    }, 5000); // Hide the message after 5 seconds
-  }
 }

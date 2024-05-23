@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../services/user.service";
 import {UserMatchDto} from "../../dtos/user-match";
 import {ApplicationUserDetailDto} from "../../dtos/user";
+import {ToastrService} from "ngx-toastr";
 
 
 @Component({
@@ -14,12 +15,18 @@ export class MatchComponent implements OnInit {
     public selectedMatch: UserMatchDto;
     public selectedUser: ApplicationUserDetailDto;
 
-    constructor(private userService: UserService) {
+    constructor(private userService: UserService, private notification: ToastrService) {
     }
 
     ngOnInit() {
-        this.userService.getUserMatcher().subscribe(matches => {
+        this.userService.getUserMatcher().subscribe({
+          next: (matches) => {
             this.matches = matches;
+          },
+          error: error => {
+            console.error("Error when retrieving matches", error);
+            this.notification.error(error.error, "Something went wrong!");
+          }
         });
     }
 
@@ -37,9 +44,16 @@ export class MatchComponent implements OnInit {
 
     public openMatch(match: UserMatchDto) {
         this.selectedMatch = match;
-        this.userService.getUser(match.id).subscribe(user => {
+
+        this.userService.getUser(match.id).subscribe({
+          next: (user) => {
             this.selectedUser = user;
-        });
+          },
+          error: error => {
+            console.error("Error when user match details", error);
+            this.notification.error(error.error, "Something went wrong!");
+          }
+        })
     }
 
     public closeMatch() {

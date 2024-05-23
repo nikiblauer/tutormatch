@@ -19,6 +19,9 @@ import {StudentsComponent} from './components/admin/students/students.component'
 import {DashboardComponent} from './components/admin/dashboard/dashboard.component';
 import {AdminComponent} from './components/admin/admin.component';
 import {SubjectComponent} from "./components/admin/subjects/subjects.component";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ToastrModule} from "ngx-toastr";
+import {RegisterComponent} from "./components/register/register.component";
 
 
 @NgModule({
@@ -27,6 +30,7 @@ import {SubjectComponent} from "./components/admin/subjects/subjects.component";
     HeaderComponent,
     FooterComponent,
     HomeComponent,
+    RegisterComponent,
     LoginComponent,
     MessageComponent,
     MatchComponent,
@@ -44,6 +48,8 @@ import {SubjectComponent} from "./components/admin/subjects/subjects.component";
     NgbModule,
     FormsModule,
     NgOptimizedImage,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]
