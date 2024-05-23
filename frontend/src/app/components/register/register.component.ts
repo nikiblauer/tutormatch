@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../services/user.service";
 import {CreateApplicationUserDto} from "../../dtos/user";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {NgIf} from "@angular/common";
 
 @Component({
@@ -11,7 +11,8 @@ import {NgIf} from "@angular/common";
   imports: [
     FormsModule,
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
