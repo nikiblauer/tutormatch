@@ -7,6 +7,7 @@ import { SubjectService } from "../../../services/subject.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { SubjectDetailDto } from "../../../dtos/subject";
 import {isError} from "lodash";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: "app-subjects",
@@ -14,7 +15,7 @@ import {isError} from "lodash";
   styleUrls: ["./subjects.component.scss"],
 })
 export class SubjectComponent implements OnInit {
-  constructor(private subjectService: SubjectService, private adminService: AdminService) {
+  constructor(private subjectService: SubjectService, private adminService: AdminService, private notification: ToastrService) {
   }
 
   searchSubject$ = new RxSubject<string>();
@@ -27,9 +28,6 @@ export class SubjectComponent implements OnInit {
 
   searchQuery: string = '';
   subjects: Subject[];
-  message: string = '';
-  showErrorMessage: boolean;
-  showSuccessMessage: boolean;
 
   selectedSubject: SubjectDetailDto;
 
@@ -40,8 +38,14 @@ export class SubjectComponent implements OnInit {
     this.searchSubject$.pipe(
       debounceTime(300),
       distinctUntilChanged()
-    ).subscribe(query => {
-      this.searchSubjects(query);
+    ).subscribe( {
+      next: (query) => {
+        this.searchSubjects(query);
+        },
+      error: error => {
+        console.error("Error when loading subjects", error);
+        this.notification.error(error.error, "Loading subjects failed!");
+      }
     });
   }
 
@@ -51,9 +55,15 @@ export class SubjectComponent implements OnInit {
 
   searchSubjects(query: string = ''): void {
     this.subjectService.getSubjects(query, 0, 100)
-      .subscribe(subjects => {
-        this.subjects = subjects.content;
-        this.loadSubjects = true;
+      .subscribe({
+        next: subjects => {
+          this.subjects = subjects.content;
+          this.loadSubjects = true;
+        },
+        error: error => {
+          console.error("Error when loading subjects", error);
+          this.notification.error(error.error, "Loading subjects failed!");
+        }
       });
   }
 
@@ -94,7 +104,7 @@ export class SubjectComponent implements OnInit {
       this.delete = true;
     },
       error: (e =>{
-        this.showMessageWithTimeout("Maybe it was already deleted?" + e.error, true);
+        this.notification.error(e.error,"Maybe it was already deleted?")
       })
     }
   );
@@ -105,7 +115,7 @@ export class SubjectComponent implements OnInit {
       next: _ => {
         this.delete = false;
         this.updateSubjectList();
-        this.showMessageWithTimeout("Successfully deleted subject!", false);
+        this.notification.success("Successfully deleted subject", "Delted subject!");
       },
       error: (e => {
         if (e.status != 404){
@@ -120,33 +130,9 @@ export class SubjectComponent implements OnInit {
     this.subjectToDelete = null;
   }
 
-  closeErrorMessage() {
-    this.showErrorMessage = false;
-  }
-
-  closeSuccessMessage() {
-    this.showSuccessMessage = false;
-  }
-
   private handleError(error: HttpErrorResponse) {
     console.log(error.error);
-    this.showMessageWithTimeout(error.error, true);
-    "Something went wrong. Please try again later.";
-
-  }
-
-  private showMessageWithTimeout(message: string, isError: boolean) {
-    this.message = message;
-    if (isError) {
-      this.showErrorMessage = true;
-    } else {
-      this.showSuccessMessage = true;
-    }
-    setTimeout(() => {
-      this.showErrorMessage = false;
-      this.showSuccessMessage = false;
-    }, 5000); // Hide the message after 5 seconds
-    this.updateSubjectList();
+    this.notification.error(error.error, "Something went wrong. Please try again later.")
   }
 
   private updateSubjectList() {
@@ -174,7 +160,7 @@ export class SubjectComponent implements OnInit {
       next: _ => {
         event.stopPropagation();
         this.edit = false;
-        this.showMessageWithTimeout("Successfully updated subject information!", false);
+        this.notification.success("Successfully updated subject information", "Updated subject information!")
       },
       error: (e) => this.handleError(e)
     });
@@ -185,7 +171,7 @@ export class SubjectComponent implements OnInit {
       next: _ => {
         event.stopPropagation();
         this.create = false;
-        this.showMessageWithTimeout("Successfully created subject!", false);
+        this.notification.success("Successfully created subject", "Created subject!")
       },
       error: (e) => this.handleError(e)
     });

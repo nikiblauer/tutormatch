@@ -1,33 +1,4 @@
 <div class="pt-5">
-  <!-- Add this alert to display error messages -->
-  <div class="row p-2 justify-content-center error-pos" *ngIf="showErrorMessage">
-    <div class="card col-11 col-sm-10 col-md-8 shadow alert alert-danger" role="alert" style="border: none;">
-      <div class="row justify-content-end">
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorMessage()"></button>
-      </div>
-      <div class="card-body p-2 p-md-3">
-        <div class="row justify-content-center">
-          <h2 class="mb-2 px-3 px-md-5 text-center">Error </h2>
-          <p class="mb-3 mb-md-5 px-3 px-md-5  text-center text-muted">{{ message }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Add this alert to display success messages -->
-  <div class="row p-2 justify-content-center error-pos" *ngIf="showSuccessMessage">
-    <div class="card col-11 col-sm-10 col-md-8 shadow alert alert-success" role="alert" style="border: none;">
-      <div class="row justify-content-end">
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessMessage()"></button>
-      </div>
-      <div class="card-body p-2 p-md-3">
-        <div class="row justify-content-center">
-          <h2 class="mb-2 px-3 px-md-5 text-center">Success </h2>
-          <p class="mb-3 mb-md-5 px-3 px-md-5  text-center text-muted">{{ message }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
   <div class="row align-items-center justify-content-between">
     <div>
       <a class="mb-5 btn btn-123 btn-primary float-end" data-bs-toggle="popup"
