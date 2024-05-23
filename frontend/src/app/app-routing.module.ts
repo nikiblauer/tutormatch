@@ -11,6 +11,8 @@ import {AdminComponent} from './components/admin/admin.component';
 import {DashboardComponent} from './components/admin/dashboard/dashboard.component';
 import {StudentsComponent} from './components/admin/students/students.component';
 import {UserProfileComponent} from './components/user-profile/user-profile.component';
+import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
+import {RequestResetComponent} from "./components/password-reset/request-reset/request-reset.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -21,6 +23,12 @@ const routes: Routes = [
       {path: 'verify/:token', component: VerifyComponent}
     ]
   },
+  {    path: 'password_reset', children: [
+      {path: '', component: RequestResetComponent},
+      {path: ':token', component: PasswordResetComponent}
+    ]
+  },
+
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {path: 'matches', component: MatchComponent},
   {path: 'myprofile', component: UserProfileComponent},

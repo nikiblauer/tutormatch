@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl.email;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.ThymeleafService;
@@ -59,9 +59,33 @@ public class EmailSmtpServiceImpl implements EmailSmtpService {
             Map<String, Object> variables = new HashMap<>();
             variables.put("full_name", dto.getFirstname() + " " + dto.getLastname());
             String token = jwtTokenizer.buildVerificationToken(dto.getEmail());
-            //TODO link to frontend page here and call backend endpoint with GET request
             variables.put("verification_link", "http://localhost:4200/#/register/verify/" + token);
             helper.setText(thymeleafService.createContent("verification_email.html", variables), true);
+            helper.setFrom(senderEmail);
+            mailSender.send(message);
+        } catch (Exception e) {
+            LOG.debug("Send verification email failed", e.getStackTrace());
+        }
+    }
+
+    @Override
+    public void sendPasswordResetEmail(ApplicationUser dto) {
+        LOG.trace("Send password reset email {}", dto);
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(
+                message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                StandardCharsets.UTF_8.name()
+            );
+
+            helper.setTo(dto.getDetails().getEmail());
+            helper.setSubject("TutorMatch - Reset Password");
+
+            Map<String, Object> variables = new HashMap<>();
+            variables.put("full_name", dto.getFirstname() + " " + dto.getLastname());
+            String token = jwtTokenizer.buildVerificationToken(dto.getDetails().getEmail());
+            variables.put("password_reset_link", "http://localhost:4200/#/register/password_reset/" + token);
+            helper.setText(thymeleafService.createContent("password_reset_email.html", variables), true);
             helper.setFrom(senderEmail);
             mailSender.send(message);
         } catch (Exception e) {

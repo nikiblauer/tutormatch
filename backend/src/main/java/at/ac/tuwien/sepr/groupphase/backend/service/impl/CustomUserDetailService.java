@@ -1,10 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
@@ -16,12 +15,10 @@ import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserValidator;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
-import org.aspectj.weaver.ast.Not;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
@@ -170,6 +167,48 @@ public class CustomUserDetailService implements UserService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void requestPasswordReset(String email) {
+        LOGGER.trace("Send Password Reset Email to :{}", email);
+        try {
+            UserDetails userDetails = loadUserByUsername(email);
+            if (userDetails != null
+                    && userDetails.isAccountNonExpired()
+                    && userDetails.isAccountNonLocked()
+                    && userDetails.isCredentialsNonExpired()
+            ) {
+                ApplicationUser applicationUser = findApplicationUserByEmail(email);
+                emailService.sendPasswordResetEmail(applicationUser);
+            }
+        } catch (UsernameNotFoundException | NotFoundException ignored) {
+            LOGGER.warn("Password Reset Email Request with non-existent User: {}", email);
+        }
+    }
+
+    @Override
+    public boolean changePasswordWithToken(String token, PasswordResetDto resetDto) throws ValidationException {
+        LOGGER.trace("Change Password using token :{}", token);
+        String tokenEmail = jwtTokenizer.extractUsernameFromVerificationToken(token);
+        try {
+            UserDetails userDetails = loadUserByUsername(tokenEmail);
+            if (userDetails != null
+                    && userDetails.isAccountNonExpired()
+                    && userDetails.isAccountNonLocked()
+                    && userDetails.isCredentialsNonExpired()
+            ) {
+                ApplicationUser applicationUser = findApplicationUserByEmail(tokenEmail);
+                validator.validatePasswordChange(resetDto);
+                String encodedPassword = passwordEncoder.encode(resetDto.password);
+                applicationUser.setPassword(encodedPassword);
+                userRepository.save(applicationUser);
+                return true;
+            }
+        } catch (UsernameNotFoundException | NotFoundException ignored) {
+            LOGGER.warn("Password Reset submitted with invalid token: {}", token);
+        }
+        return false;
     }
 
     @Override

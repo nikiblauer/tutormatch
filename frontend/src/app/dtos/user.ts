@@ -24,6 +24,13 @@ export interface CreateApplicationUserDto extends BaseUser {
   password: string;
   matrNumber: number;
 }
+export interface SendPasswordResetDto {
+  email: string;
+}
+export interface PasswordResetDto {
+  password: string;
+  repeatPassword: string;
+}
 
 export interface ApplicationUserDto extends BaseUser {
   id: number;
@@ -49,7 +56,7 @@ export class UserDetailWithSubjectsDto {
   traineeSubjects: string[];
 }
 
-export class ApplicationUserDetailDto implements BaseUser { 
+export class ApplicationUserDetailDto implements BaseUser {
   id: number;
   firstname: string;
   lastname: string;

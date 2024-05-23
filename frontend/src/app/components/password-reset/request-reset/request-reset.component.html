@@ -1,0 +1,61 @@
+<div class="pt-5" *ngIf="!submitted">
+  <div class="row align-items-center justify-content-center" >
+    <div class="card col-md-8 shadow" style="border: none;">
+      <div class="card-body m-4">
+        <div class="row">
+          <div class="col-md-6 col-sm-12  d-flex">
+            <div class="pt-5 rounded bg-light">
+              <div class="row justify-content-center">
+                <img class="w-50 rounded-circle" src="../../../assets/logo.jpg" alt="Logo image">
+              </div>
+              <div class="row p-4 mb-4">
+                <h2 class="text-center">TutorMatch</h2>
+                <p class="text-muted text-center">Advance your academic career, reach your goals and study with others!</p>
+              </div>
+            </div>
+          </div>
+          <div class="col p-4">
+            <div class="row mb-3">
+              <h3>Request Password Reset</h3>
+              <p class="text-muted">Enter the email you used for registration</p>
+            </div>
+            <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+              <div class="mb-3 form-group">
+                <label for="email" class="form-label text-muted">Email</label>
+                <input id="email" type="email" class="form-control" name="email" [(ngModel)]="emailSendPasswordResetDto.email" email required>
+                <div *ngIf="submitted && form.controls.username.errors" class="error">
+                  <small class="form-text text-danger" *ngIf="form.controls.username.errors.required">Please enter your email!
+                  </small>
+                </div>
+              </div>
+              <div class="mt-1 text-end mb-5 ">
+                <a href="#login">Login</a>
+              </div>
+              <div class="row mb-3">
+                <button (click)="onSubmit(form)" class="btn primary-btn w-100" [disabled]="form.invalid">Send password reset email</button>
+              </div>
+            </form>
+            <div>
+              You don't have an account? <a href="#register">Register</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pt-5" *ngIf="submitted">
+  <div class="row p-4 justify-content-center">
+    <div class="card col-md-8 shadow" style="border: none;">
+      <div class="card-body m-4">
+        <div class="row justify-content-center">
+          <img class="w-25 mb-5" src="/assets/logo.jpg">
+          <h2 class="mb-3 px-5 text-center">Password reset successful! If an account exists for the email, a password reset link was sent.</h2>
+          <p class="mb-5 px-5 text-center text-muted">Go to login <a href="#login">Login</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

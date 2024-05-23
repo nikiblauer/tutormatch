@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.slf4j.Logger;
@@ -107,4 +108,18 @@ public class UserValidator {
         }
     }
 
+    public void validatePasswordChange(PasswordResetDto resetDto) throws ValidationException {
+        List<String> errors = new ArrayList<>();
+        if (!resetDto.password.equals(resetDto.repeatPassword)) {
+            errors.add("Passwords must match");
+        }
+
+        if (resetDto.password.length() < 8) {
+            errors.add("Password has to be at least of length 8");
+        }
+
+        if (!errors.isEmpty()) {
+            throw new ValidationException("Errors while verifying password change:", errors);
+        }
+    }
 }
