@@ -6,6 +6,7 @@ import { Subject as RxSubject } from 'rxjs';
 import { SubjectService } from "../../../services/subject.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { SubjectDetailDto } from "../../../dtos/subject";
+import {isError} from "lodash";
 
 @Component({
   selector: "app-subjects",
@@ -13,7 +14,8 @@ import { SubjectDetailDto } from "../../../dtos/subject";
   styleUrls: ["./subjects.component.scss"],
 })
 export class SubjectComponent implements OnInit {
-  constructor(private subjectService: SubjectService, private adminService: AdminService) {}
+  constructor(private subjectService: SubjectService, private adminService: AdminService) {
+  }
 
   searchSubject$ = new RxSubject<string>();
   loadSubjects = false;
@@ -30,7 +32,6 @@ export class SubjectComponent implements OnInit {
   showSuccessMessage: boolean;
 
   selectedSubject: SubjectDetailDto;
-  subject: Subject = null;
 
   subjectToDelete: SubjectDetailDto = null;
 
@@ -87,10 +88,16 @@ export class SubjectComponent implements OnInit {
 
   onDelete(id: number, event: Event) {
     event.stopPropagation();
-    this.subjectService.getSubjectById(id).subscribe(subject => {
+    this.subjectService.getSubjectById(id).subscribe({
+      next: subject =>{
       this.subjectToDelete = subject;
       this.delete = true;
-    });
+    },
+      error: (e =>{
+        this.showMessageWithTimeout("Maybe it was already deleted?" + e.error, true);
+      })
+    }
+  );
   }
 
   confirmDelete() {
@@ -100,7 +107,11 @@ export class SubjectComponent implements OnInit {
         this.updateSubjectList();
         this.showMessageWithTimeout("Successfully deleted subject!", false);
       },
-      error: (e) => this.handleError(e)
+      error: (e => {
+        if (e.status != 404){
+          this.handleError(e);
+        }
+      })
     });
   }
 
@@ -118,17 +129,10 @@ export class SubjectComponent implements OnInit {
   }
 
   private handleError(error: HttpErrorResponse) {
-    console.log(error);
-    if (error.status === 400 || error.status === 422) {
-      const errorString = error.error;
-      const startIndex = errorString.indexOf("[");
-      const endIndex = errorString.lastIndexOf("]");
-      const contents = errorString.substring(startIndex + 1, endIndex);
-      this.showMessageWithTimeout(contents, true);
-    } else {
-      this.showMessageWithTimeout(error.error, true);
-      "Something went wrong. Please try again later.";
-    }
+    console.log(error.error);
+    this.showMessageWithTimeout(error.error, true);
+    "Something went wrong. Please try again later.";
+
   }
 
   private showMessageWithTimeout(message: string, isError: boolean) {
@@ -141,7 +145,7 @@ export class SubjectComponent implements OnInit {
     setTimeout(() => {
       this.showErrorMessage = false;
       this.showSuccessMessage = false;
-    }, 1000); // Hide the message after 1 seconds
+    }, 5000); // Hide the message after 5 seconds
     this.updateSubjectList();
   }
 
@@ -175,7 +179,8 @@ export class SubjectComponent implements OnInit {
       error: (e) => this.handleError(e)
     });
   }
-  saveNewSubject(subject: SubjectDetailDto, event: Event){
+
+  saveNewSubject(subject: SubjectDetailDto, event: Event) {
     this.adminService.createSubject(subject).subscribe({
       next: _ => {
         event.stopPropagation();

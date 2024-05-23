@@ -14,7 +14,7 @@ import java.util.Objects;
 @Component
 public class SubjectValidator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final String VALIDATION_PATTERN = "^\\s+";
+    private static final String VALIDATION_PATTERN = "^\\s*";
 
 
     public void validateSubject(SubjectCreateDto subject) throws ValidationException {
@@ -39,19 +39,19 @@ public class SubjectValidator {
             throw new ValidationException("Errors orroured while validating the subject", errors);
         }
         if (subject.getNumber().matches(VALIDATION_PATTERN)) {
-            errors.add("Number may not consists only of whitespaces.");
+            errors.add("Number may not consists only of whitespaces");
         }
         if (subject.getType().matches(VALIDATION_PATTERN)) {
-            errors.add("Number may not consists only of whitespaces.");
+            errors.add("Number may not consists only of whitespaces");
         }
         if (subject.getTitle().matches(VALIDATION_PATTERN)) {
-            errors.add("Number may not consists only of whitespaces.");
+            errors.add("Number may not consists only of whitespaces");
         }
         if (subject.getSemester().matches(VALIDATION_PATTERN)) {
-            errors.add("Number may not consists only of whitespaces.");
+            errors.add("Number may not consists only of whitespaces");
         }
         if (!errors.isEmpty()) {
-            throw new ValidationException("Errors orroured while validating the subject", errors);
+            throw new ValidationException("Errors occurred while validating the subject", errors);
         }
     }
 }

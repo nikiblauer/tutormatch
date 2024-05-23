@@ -96,7 +96,7 @@ public class AdminEndpoint {
     @Secured("ROLE_ADMIN")
     @DeleteMapping("{id}")
     public void removeSubject(@PathVariable("id") Long id) {
-        LOGGER.info("PUT /api/v1/admin/{}", id);
+        LOGGER.info("DELETE /api/v1/admin/{}", id);
         subjectService.deleteSubject(id);
     }
 }

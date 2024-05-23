@@ -115,7 +115,11 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public Subject getSubjectById(Long id) {
-        return subjectRepository.findSubjectById(id);
+        Subject subject = subjectRepository.findSubjectById(id);
+        if (subject == null){
+            throw new NotFoundException("Subject not found");
+        }
+        return subject;
     }
 
     private void saveSubjectDetailDto(SubjectCreateDto subject, Subject s) {
