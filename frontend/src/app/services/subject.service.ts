@@ -4,6 +4,7 @@ import { Globals } from "../global/globals";
 import { Observable } from 'rxjs';
 import { Subject } from '../dtos/user';
 import { Page } from '../dtos/page'
+import {SubjectDetailDto} from "../dtos/subject";
 
 
 @Injectable({
@@ -22,5 +23,9 @@ export class SubjectService {
     .set('page', page)
     .set('size', size);
     return this.httpClient.get<Page<Subject>>(this.subjectUri, { params })
+  }
+
+  getSubjectById(id:number):Observable<SubjectDetailDto>{
+    return this.httpClient.get<SubjectDetailDto>(this.subjectUri  + `/${id}`);
   }
 }
