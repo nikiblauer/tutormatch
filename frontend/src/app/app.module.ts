@@ -22,6 +22,7 @@ import {SubjectComponent} from "./components/admin/subjects/subjects.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
 import {RegisterComponent} from "./components/register/register.component";
+import {NgxSpinnerModule} from "ngx-spinner";
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import {RegisterComponent} from "./components/register/register.component";
     FormsModule,
     NgOptimizedImage,
     BrowserAnimationsModule,
+    NgxSpinnerModule,
     ToastrModule.forRoot()
   ],
   providers: [httpInterceptorProviders],

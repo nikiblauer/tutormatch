@@ -8,6 +8,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { SubjectDetailDto } from "../../../dtos/subject";
 import {isError} from "lodash";
 import {ToastrService} from "ngx-toastr";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: "app-subjects",
@@ -15,7 +16,7 @@ import {ToastrService} from "ngx-toastr";
   styleUrls: ["./subjects.component.scss"],
 })
 export class SubjectComponent implements OnInit {
-  constructor(private subjectService: SubjectService, private adminService: AdminService, private notification: ToastrService) {
+  constructor(private subjectService: SubjectService, private adminService: AdminService, private notification: ToastrService, private spinner: NgxSpinnerService) {
   }
 
   searchSubject$ = new RxSubject<string>();
@@ -54,13 +55,20 @@ export class SubjectComponent implements OnInit {
   }
 
   searchSubjects(query: string = ''): void {
+    let timeout = setTimeout(() => {
+      this.spinner.show();
+    }, 1500);
     this.subjectService.getSubjects(query, 0, 100)
       .subscribe({
         next: subjects => {
+          clearTimeout(timeout);
+          this.spinner.hide();
           this.subjects = subjects.content;
           this.loadSubjects = true;
         },
         error: error => {
+          clearTimeout(timeout);
+          this.spinner.hide();
           console.error("Error when loading subjects", error);
           this.notification.error(error.error, "Loading subjects failed!");
         }
@@ -79,7 +87,12 @@ export class SubjectComponent implements OnInit {
 
   onInfo(subject: Subject) {
     if (!this.selectedSubject) {
+      let timeout = setTimeout(() => {
+        this.spinner.show();
+      }, 1500);
       this.subjectService.getSubjectById(subject.id).subscribe(s => {
+        clearTimeout(timeout);
+        this.spinner.hide();
         this.selectedSubject = s;
       });
     }
@@ -88,7 +101,12 @@ export class SubjectComponent implements OnInit {
 
   onEdit(subject: Subject) {
     if (this.info != true) {
+      let timeout = setTimeout(() => {
+        this.spinner.show();
+      }, 1500);
       this.subjectService.getSubjectById(subject.id).subscribe(s => {
+        clearTimeout(timeout);
+        this.spinner.hide();
         this.selectedSubject = s;
       });
     }
@@ -98,12 +116,19 @@ export class SubjectComponent implements OnInit {
 
   onDelete(id: number, event: Event) {
     event.stopPropagation();
+    let timeout = setTimeout(() => {
+      this.spinner.show();
+    }, 1500);
     this.subjectService.getSubjectById(id).subscribe({
       next: subject =>{
+        clearTimeout(timeout);
+        this.spinner.hide();
       this.subjectToDelete = subject;
       this.delete = true;
     },
       error: (e =>{
+        clearTimeout(timeout);
+        this.spinner.hide();
         this.notification.error(e.error,"Maybe it was already deleted?")
       })
     }
@@ -111,13 +136,16 @@ export class SubjectComponent implements OnInit {
   }
 
   confirmDelete() {
+    this.spinner.show();
     this.adminService.deleteSubject(this.subjectToDelete.id).subscribe({
       next: _ => {
+        this.spinner.hide();
         this.delete = false;
         this.updateSubjectList();
         this.notification.success("Successfully deleted subject", "Deleted subject!");
       },
       error: (e => {
+        this.spinner.hide();
         if (e.status != 404){
           this.handleError(e);
         }
@@ -156,24 +184,34 @@ export class SubjectComponent implements OnInit {
   }
 
   saveSelectedSubject(event: Event) {
+    this.spinner.show();
     this.adminService.updateSubject(this.selectedSubject).subscribe({
       next: _ => {
+        this.spinner.hide();
         event.stopPropagation();
         this.edit = false;
         this.notification.success("Successfully updated subject information", "Updated subject information!")
       },
-      error: (e) => this.handleError(e)
+      error: (e) => {
+        this.spinner.hide();
+        this.handleError(e)
+      }
     });
   }
 
   saveNewSubject(subject: SubjectDetailDto, event: Event) {
+    this.spinner.show();
     this.adminService.createSubject(subject).subscribe({
       next: _ => {
+        this.spinner.hide();
         event.stopPropagation();
         this.create = false;
         this.notification.success("Successfully created subject", "Created subject!")
       },
-      error: (e) => this.handleError(e)
+      error: (e) => {
+        this.spinner.hide();
+        this.handleError(e)
+      }
     });
   }
 }

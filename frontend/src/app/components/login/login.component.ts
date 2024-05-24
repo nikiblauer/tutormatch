@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AuthRequest } from '../../dtos/auth-request';
 import {ToastrService} from "ngx-toastr";
+import {NgxSpinnerService} from "ngx-spinner";
 
 export enum LoginMode {
   admin,
@@ -22,7 +23,7 @@ export class LoginComponent implements OnInit {
   submitted = false;
   // Error flag
 
-  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router, private route: ActivatedRoute, private notification: ToastrService) {
+  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router, private route: ActivatedRoute, private notification: ToastrService, private spinner: NgxSpinnerService) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
@@ -49,8 +50,11 @@ export class LoginComponent implements OnInit {
    */
   authenticateUser(authRequest: AuthRequest) {
     console.log('Try to authenticate user: ' + authRequest.email);
+
+    this.spinner.show();
     this.authService.loginUser(authRequest).subscribe({
       next: () => {
+        this.spinner.hide();
         if (this.mode === LoginMode.admin && this.isAdmin()) {
           console.log('Successfully logged in admin: ' + authRequest.email);
           this.router.navigate(['admin/dashboard']);
@@ -65,6 +69,7 @@ export class LoginComponent implements OnInit {
         }
       },
       error: error => {
+        this.spinner.hide();
         this.handleError(error);
       }
     });

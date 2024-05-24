@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject as RxSubject } from 'rxjs';
 import {ToastrService} from "ngx-toastr";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-user-profile',
@@ -14,7 +15,7 @@ import {ToastrService} from "ngx-toastr";
 })
 export class UserProfileComponent implements OnInit {
 
-  constructor(private userService: UserService, private subjectService: SubjectService, private notification: ToastrService) {
+  constructor(private userService: UserService, private subjectService: SubjectService, private notification: ToastrService, private spinner: NgxSpinnerService) {
   }
 
   searchSubject$ = new RxSubject<string>();
@@ -120,31 +121,52 @@ export class UserProfileComponent implements OnInit {
   }
 
   saveProfile(): void {
+    this.spinner.show();
     this.userService.addSubjectToUser(this.userOffer.map(item => item.id), this.userNeed.map(item => item.id))
       .subscribe({
-        next: _ => this.updateUser(),
-        error: (e) => this.handleError(e),
+        next: _ => {
+          this.spinner.hide();
+          this.updateUser()
+        },
+        error: (e) => {
+          this.spinner.hide();
+          this.handleError(e)
+        },
         complete: () => this.notification.success("Successfully updated user subjects", "Updated user subjects!")
       });
   }
 
   updateInfo(): void {
     this.userInfoChanged = true;
+    let timeout = setTimeout(() => {
+      this.spinner.show();
+    }, 1500);
     this.userService.updateUser(this.editedUser)
       .subscribe({
         next: _ => {
+          clearTimeout(timeout);
+          this.spinner.hide();
           this.updateUser()
           this.userInfoChanged = false;
         },
-        error: (e) => this.handleError(e),
+        error: (e) => {
+          clearTimeout(timeout);
+          this.spinner.hide();
+          this.handleError(e)
+        },
         complete: () => this.notification.success("Successfully updated user information!", "Updated user information!")
       });
   }
 
   updateUser() {
+    let timeout = setTimeout(() => {
+      this.spinner.show();
+    }, 1500);
     this.userService.getUserSubjects()
       .subscribe({
         next: userProfile => {
+          clearTimeout(timeout);
+          this.spinner.hide();
           this.loadUser = true;
           this.user = userProfile;
           this.userOffer = userProfile.subjects.filter(item => item.role == "trainee");
@@ -153,7 +175,11 @@ export class UserProfileComponent implements OnInit {
           this.editedUser = { ...this.user };
           this.updateFilterSubjects();
         },
-        error: (e) => this.handleError(e)
+        error: (e) => {
+          clearTimeout(timeout);
+          this.spinner.hide();
+          this.handleError(e)
+        }
       });
   }
 

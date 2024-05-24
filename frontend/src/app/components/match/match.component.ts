@@ -3,6 +3,7 @@ import {UserService} from "../../services/user.service";
 import {UserMatchDto} from "../../dtos/user-match";
 import {ApplicationUserDetailDto} from "../../dtos/user";
 import {ToastrService} from "ngx-toastr";
+import {NgxSpinnerService} from "ngx-spinner";
 
 
 @Component({
@@ -15,15 +16,22 @@ export class MatchComponent implements OnInit {
     public selectedMatch: UserMatchDto;
     public selectedUser: ApplicationUserDetailDto;
 
-    constructor(private userService: UserService, private notification: ToastrService) {
+    constructor(private userService: UserService, private notification: ToastrService, private spinner: NgxSpinnerService) {
     }
 
     ngOnInit() {
+      let timeout = setTimeout(() => {
+        this.spinner.show();
+      }, 1500);
         this.userService.getUserMatcher().subscribe({
           next: (matches) => {
+            clearTimeout(timeout);
+            this.spinner.hide();
             this.matches = matches;
           },
           error: error => {
+            clearTimeout(timeout);
+            this.spinner.hide();
             console.error("Error when retrieving matches", error);
             this.notification.error(error.error, "Something went wrong!");
           }
@@ -44,12 +52,18 @@ export class MatchComponent implements OnInit {
 
     public openMatch(match: UserMatchDto) {
         this.selectedMatch = match;
-
+        let timeout = setTimeout(() => {
+          this.spinner.show();
+        }, 1500);
         this.userService.getUser(match.id).subscribe({
           next: (user) => {
+            clearTimeout(timeout);
+            this.spinner.hide();
             this.selectedUser = user;
           },
           error: error => {
+            clearTimeout(timeout);
+            this.spinner.hide();
             console.error("Error when user match details", error);
             this.notification.error(error.error, "Something went wrong!");
           }
