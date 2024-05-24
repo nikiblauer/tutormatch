@@ -115,7 +115,7 @@ export class SubjectComponent implements OnInit {
       next: _ => {
         this.delete = false;
         this.updateSubjectList();
-        this.notification.success("Successfully deleted subject", "Delted subject!");
+        this.notification.success("Successfully deleted subject", "Deleted subject!");
       },
       error: (e => {
         if (e.status != 404){
