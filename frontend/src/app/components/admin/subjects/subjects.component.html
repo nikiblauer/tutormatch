@@ -26,16 +26,17 @@
             <div class="btn-group">
               <a class="btn btn-sm responsive-danger-button" data-bs-toggle="popup"
                  data-bs-target="#openDeleteDialog" type="button" (click)="onDelete(subject.id, $event)">
-                <i class="bi bi-trash">delete</i>
+                <i class="bi bi-trash"></i>
               </a>
               <a (click)="onInfo(subject)" data-bs-toggle="popup"
                  data-bs-target="#openSubjectInfo" type="button" class="btn btn-sm responsive-info-button ">
-                <i class="bi bi-info-lg"> &#9432;</i>
+                <i class="bi bi-info-circle"></i>
+
               </a>
               <a (click)="onEdit(subject)" data-bs-toggle="popup"
                  data-bs-target="#openSubjectEdit" type="button" class="btn btn-sm responsive-warning-button"
                  aria-label="Edit Subject">
-                <i class="bi bi-pencil">&#x270F;</i>
+                <i class="bi bi-pencil"></i>
               </a>
             </div>
           </td>
