@@ -4,8 +4,9 @@ import { ApplicationUserDto } from "src/app/dtos/user";
 import { AdminService } from "src/app/services/admin.service";
 import { UserDetailWithSubjectsDto } from "src/app/dtos/user";
 import { Subject } from "rxjs";
-import { debounceTime } from "rxjs/operators"; 
+import { debounceTime } from "rxjs/operators";
 import { Page } from "src/app/dtos/page";
+import {ToastrService} from "ngx-toastr";
 
 interface StudentListing {
   id: number;
@@ -27,12 +28,10 @@ export class StudentsComponent implements OnInit {
   matrNumber: string = '';
   selectedStudent: StudentListing | null = null;
   selectedStudentDetails: UserDetailWithSubjectsDto | null = null;
-  showError: boolean = false;
-  errorMessage: string = '';
   searchTerm$ = new Subject<string>();
   noMoreResults: boolean = false;
 
-  constructor(private modalService: NgbModal, private adminService: AdminService) {
+  constructor(private modalService: NgbModal, private adminService: AdminService, private notification: ToastrService) {
     this.searchTerm$.pipe(
       debounceTime(400)
     ).subscribe(() => this.search());
@@ -50,13 +49,13 @@ export class StudentsComponent implements OnInit {
       this.page = 0;
       this.filteredStudents = []; // Clear the list of filtered students
     }
-  
+
     this.adminService.searchUsers(this.searchName, Number(this.matrNumber), this.page, 5).subscribe({
       next: (response: Page<ApplicationUserDto>) => {
         if (response.content.length === 0) {
           this.noMoreResults = true; // Set noMoreResults to true when there are no more results
         } else {
-          this.noMoreResults = false; 
+          this.noMoreResults = false;
           this.filteredStudents = [...this.filteredStudents, ...response.content.map(user => ({
             firstname: user.firstname,
             lastname: user.lastname,
@@ -67,33 +66,26 @@ export class StudentsComponent implements OnInit {
       },
       error: (error: any) => {
         console.error('Error:', error);
-        this.showError = true;
         this.page -= 0; // Reset the page count if there was an error
-        this.errorMessage = "Error in fetching students. Please try again.";
-        setTimeout(() => this.showError = false, 3000); // hide error after 5 seconds
+        this.notification.error(error.error, "Error in fetching student details!");
+
       }
     });
   }
 
   viewDetails(student: StudentListing, content: any): void {
     this.selectedStudent = student;
-    this.adminService.getUserDetails(student.id).subscribe({ //call getUserDetails endpoint with selected User ID 
+    this.adminService.getUserDetails(student.id).subscribe({ //call getUserDetails endpoint with selected User ID
       next: (response: UserDetailWithSubjectsDto) => {
         this.selectedStudentDetails = response;
         this.modalService.open(content);
       },
       error: (error: any) => {
         console.error('Error:', error);
-        this.showError = true;
         this.page -= 0; // Reset the page count if there was an error
-        this.errorMessage = "Error in fetching student details. Please try again.";
-        setTimeout(() => this.showError = false, 3000); // hide error after 5 seconds
+        this.notification.error(error.error, "Error in fetching student details!");
       }
     });
-  }
-
-  hideError(): void {
-    this.showError = false;
   }
 
   loadMore(): void {

@@ -10,7 +10,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "17.3.4",
+    "@angular/animations": "^17.3.4",
     "@angular/common": "17.3.4",
     "@angular/compiler": "17.3.4",
     "@angular/core": "17.3.4",
@@ -22,10 +22,12 @@
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
     "@popperjs/core": "2.11.8",
     "bootstrap": "5.3.3",
+    "bootstrap-icons": "^1.11.3",
     "core-js": "3.36.1",
     "jquery": "3.7.1",
     "jwt-decode": "4.0.0",
     "lodash": "4.17.21",
+    "ngx-toastr": "^18.0.0",
     "rxjs": "7.8.1",
     "tslib": "2.6.2",
     "zone.js": "0.14.4"

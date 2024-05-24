@@ -1,33 +1,4 @@
 <div class="pt-5">
-  <!-- Add this alert to display error messages -->
-  <div class="row p-2 justify-content-center error-pos" *ngIf="showErrorMessage">
-    <div class="card col-11 col-sm-10 col-md-8 shadow alert alert-danger" role="alert" style="border: none;">
-      <div class="row justify-content-end">
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorMessage()"></button>
-      </div>
-      <div class="card-body p-2 p-md-3">
-        <div class="row justify-content-center">
-          <h2 class="mb-2 px-3 px-md-5 text-center">Error </h2>
-          <p class="mb-3 mb-md-5 px-3 px-md-5  text-center text-muted">{{ message }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Add this alert to display success messages -->
-  <div class="row p-2 justify-content-center error-pos" *ngIf="showSuccessMessage">
-    <div class="card col-11 col-sm-10 col-md-8 shadow alert alert-success" role="alert" style="border: none;">
-      <div class="row justify-content-end">
-        <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessMessage()"></button>
-      </div>
-      <div class="card-body p-2 p-md-3">
-        <div class="row justify-content-center">
-          <h2 class="mb-2 px-3 px-md-5 text-center">Success </h2>
-          <p class="mb-3 mb-md-5 px-3 px-md-5  text-center text-muted">{{ message }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
   <div class="row align-items-center justify-content-between">
     <div>
       <a class="mb-5 btn btn-123 btn-primary float-end" data-bs-toggle="popup"
@@ -55,16 +26,17 @@
             <div class="btn-group">
               <a class="btn btn-sm responsive-danger-button" data-bs-toggle="popup"
                  data-bs-target="#openDeleteDialog" type="button" (click)="onDelete(subject.id, $event)">
-                <i class="bi bi-trash">delete</i>
+                <i class="bi bi-trash"></i>
               </a>
               <a (click)="onInfo(subject)" data-bs-toggle="popup"
                  data-bs-target="#openSubjectInfo" type="button" class="btn btn-sm responsive-info-button ">
-                <i class="bi bi-info-lg"> &#9432;</i>
+                <i class="bi bi-info-circle"></i>
+
               </a>
               <a (click)="onEdit(subject)" data-bs-toggle="popup"
                  data-bs-target="#openSubjectEdit" type="button" class="btn btn-sm responsive-warning-button"
                  aria-label="Edit Subject">
-                <i class="bi bi-pencil">&#x270F;</i>
+                <i class="bi bi-pencil"></i>
               </a>
             </div>
           </td>
