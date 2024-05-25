@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.HttpStatus;
@@ -84,8 +83,6 @@ public class UserEndpoint {
         ApplicationUser student = userService.findApplicationUserByEmail(userEmail);
         subjectService.setUserSubjects(student, listDto.traineeSubjects, listDto.tutorSubjects);
     }
-
-
 
     @Secured("ROLE_USER")
     @PutMapping

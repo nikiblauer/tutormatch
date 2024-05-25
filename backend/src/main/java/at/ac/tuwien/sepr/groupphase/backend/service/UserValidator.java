@@ -77,7 +77,6 @@ public class UserValidator {
     public void verifyUserData(UpdateApplicationUserDto user) throws ValidationException {
         LOGGER.trace("Validation of user: {}", user);
         List<String> errors = new ArrayList<>();
-
         validateUserData(user.firstname, user.lastname, user.telNr, errors);
     }
 
@@ -96,6 +95,7 @@ public class UserValidator {
         if (lastname.matches(VALIDATION_PATTERN_3)) {
             errors.add("Name cannot be whitespace");
         }
+
         if (!telNr.matches(VALIDATION_PATTERN_4)) {
             if (!telNr.isEmpty()) {
                 errors.add("Telephone number has to be a valid phone number");
@@ -103,8 +103,7 @@ public class UserValidator {
         }
 
         if (!errors.isEmpty()) {
-            throw new ValidationException("Errors while verifying user Data:", errors);
+            throw new ValidationException(errors.toString());
         }
     }
-
 }

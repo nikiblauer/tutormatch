@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.USER_COUNT;
-
 
 @Slf4j
 @Profile("generateData")
@@ -52,6 +50,10 @@ public class UserSubjectDataGenerator {
         int i = 0;
         // user and subjects are already inserted at this point
         for (ApplicationUser applicationUser : userRepository.findAll()) {
+
+            if (applicationUser.getAdmin()) {
+                continue;
+            }
 
             var role1 = i % 2 == 1 ? "tutor" : "trainee";
             //first four subjects as tutor
