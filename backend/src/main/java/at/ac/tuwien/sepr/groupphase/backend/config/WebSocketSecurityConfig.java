@@ -1,5 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.config;
-
+/*
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
@@ -44,3 +44,5 @@ public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBro
         return true;
     }
 }
+
+ */
