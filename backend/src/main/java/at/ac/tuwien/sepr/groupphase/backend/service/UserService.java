@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
@@ -35,15 +36,6 @@ public interface UserService extends UserDetailsService {
      * @return a application user
      */
     ApplicationUser findApplicationUserByEmail(String email);
-
-    /**
-     * Log in a user.
-     *
-     * @param userLoginDto login credentials
-     * @return the JWT, if successful
-     * @throws org.springframework.security.authentication.BadCredentialsException if credentials are bad
-     */
-    String login(UserLoginDto userLoginDto);
 
     /**
      * Update a user.

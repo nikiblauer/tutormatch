@@ -12,6 +12,8 @@ import {DashboardComponent} from './components/admin/dashboard/dashboard.compone
 import {StudentsComponent} from './components/admin/students/students.component';
 import {UserProfileComponent} from './components/user-profile/user-profile.component';
 import {SubjectComponent} from "./components/admin/subjects/subjects.component";
+import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
+import {RequestResetComponent} from "./components/password-reset/request-reset/request-reset.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -20,6 +22,11 @@ const routes: Routes = [
     path: 'register', children: [
       {path: '', component: RegisterComponent},
       {path: 'verify/:token', component: VerifyComponent}
+    ]
+  },
+  {    path: 'password_reset', children: [
+      {path: '', component: RequestResetComponent},
+      {path: ':token', component: PasswordResetComponent}
     ]
   },
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},

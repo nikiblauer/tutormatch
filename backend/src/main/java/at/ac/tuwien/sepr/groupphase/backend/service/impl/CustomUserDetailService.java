@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
@@ -78,37 +79,6 @@ public class CustomUserDetailService implements UserService {
             return applicationUser;
         }
         throw new NotFoundException("No user found with this email");
-    }
-
-    @Override
-    public String login(UserLoginDto userLoginDto) {
-        LOGGER.trace("Login as User: {}", userLoginDto);
-        UserDetails userDetails;
-        ApplicationUser applicationUser;
-        try {
-            userDetails = loadUserByUsername(userLoginDto.getEmail());
-            applicationUser = findApplicationUserByEmail(userLoginDto.getEmail());
-        } catch (NotFoundException e) {
-            throw new NotFoundException("No user found with this email");
-        }
-        if (!applicationUser.getVerified()) {
-            this.resendVerificationEmail(userLoginDto.getEmail());
-            throw new UnverifiedAccountException("Account is not verified yet. Please verify your account to log in.");
-        }
-        if (userDetails != null
-            && userDetails.isAccountNonExpired()
-            && userDetails.isAccountNonLocked()
-            && userDetails.isCredentialsNonExpired()
-            && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
-            && applicationUser.getVerified()
-        ) {
-            List<String> roles = userDetails.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
-            return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
-        }
-        throw new BadCredentialsException("Username or password is incorrect");
     }
 
     @Override

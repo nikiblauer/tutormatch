@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -16,18 +15,24 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
 @ActiveProfiles({"test", "generateData"})
 @Transactional
-public class UserServiceTest {
+public class LoginServiceTest {
+
     @Autowired
     private ApplicationUserMapper userMapper;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LoginService loginService;
 
     @Autowired
     private UserRepository userRepository;
@@ -39,24 +44,20 @@ public class UserServiceTest {
     private JwtTokenizer jwtTokenizer;
 
     @Test
-    public void createNewValidUser() throws Exception {
-        ApplicationUser user = new ApplicationUser("password", false, "Franz", "U", 133465L, new ContactDetails("+438881919190", "franz@student.tuwien.ac.at", new Address( "Teststraße 2", 1200, "Wien")), false);
-        CreateStudentDto applicationUserDto = userMapper.mapUserToCreateApplicationUserDto(user);
-
-
-        ApplicationUser createdApplicationUser = userService.create(applicationUserDto);
-
-        assertTrue(passwordEncoder.matches(user.getPassword(), createdApplicationUser.getPassword()));
-
-        assertAll(
-            () -> assertNotNull(createdApplicationUser),
-            () -> assertEquals(createdApplicationUser.getDetails().getEmail(), applicationUserDto.getEmail()),
-            () -> assertEquals(createdApplicationUser.getFirstname(), applicationUserDto.getFirstname()),
-            () -> assertEquals(createdApplicationUser.getLastname(), applicationUserDto.getLastname()),
-            () -> assertEquals(createdApplicationUser.getMatrNumber(), applicationUserDto.getMatrNumber()),
-            () -> assertTrue(passwordEncoder.matches(applicationUserDto.getPassword(), createdApplicationUser.getPassword()))
-        );
-
+    public void userCannotUseOldPasswordAfterPasswordChange() throws Exception {
+        String oldPassword = "password";
+        ApplicationUser user = new ApplicationUser(oldPassword, false, "Franz", "U", 133465L, new ContactDetails("+438881919190", "franz@student.tuwien.ac.at", new Address( "Teststraße 2", 1200, "Wien")), true);
+        userRepository.save(user);
+        PasswordResetDto passwordChangeDto = new PasswordResetDto();
+        String newPassword = "password1";
+        passwordChangeDto.setPassword(newPassword);
+        passwordChangeDto.setRepeatPassword(newPassword);
+        String token = jwtTokenizer.buildVerificationToken(user.getDetails().getEmail());
+        boolean changed = loginService.changePasswordWithToken(token, passwordChangeDto);
+        ApplicationUser updatedUser = userService.findApplicationUserByEmail(user.getDetails().getEmail());
+        assertTrue(changed);
+        assertTrue(passwordEncoder.matches(newPassword, updatedUser.getPassword()));
+        assertFalse(passwordEncoder.matches(oldPassword, updatedUser.getPassword()));
     }
 
 }

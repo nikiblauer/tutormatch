@@ -24,6 +24,14 @@ export interface CreateStudentDto extends BaseUser {
   password: string;
   matrNumber: number;
 }
+export interface SendPasswordResetDto {
+  email: string;
+}
+export interface PasswordResetDto {
+  password: string;
+  repeatPassword: string;
+}
+
 export class StudentSubjectInfoDto {
   firstname: string;
   lastname: string;

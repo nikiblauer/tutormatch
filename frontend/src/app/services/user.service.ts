@@ -2,7 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Globals } from "../global/globals";
 import { Observable } from "rxjs";
-import { StudentDto, CreateStudentDto, Subject, UserProfile, UserSubject } from "../dtos/user";
+import {
+  PasswordResetDto,
+  SendPasswordResetDto,
+  StudentDto,
+  CreateStudentDto,
+  UserProfile,
+} from "../dtos/user";
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +31,14 @@ export class UserService {
   verifyUser(token: string) {
     return this.httpClient.get((this.userUri + "/verify/" + token));
   }
+  requestPasswordReset(emailSendPasswordResetDto: SendPasswordResetDto): Observable<any> {
+    console.log(emailSendPasswordResetDto)
+    return this.httpClient.post(this.userUri + '/reset_password', emailSendPasswordResetDto);
+  }
+  changePasswordWithResetToken(token: String, passwordResetDto: PasswordResetDto): Observable<any> {
+    return this.httpClient.post(this.userUri + '/reset_password/'+ token, passwordResetDto);
+  }
+
   getUserMatcher(): Observable<any> {
     return this.httpClient.get(this.userUri + "/matches");
   }
