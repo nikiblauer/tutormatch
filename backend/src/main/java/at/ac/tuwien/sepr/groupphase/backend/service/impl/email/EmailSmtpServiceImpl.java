@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl.email;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.ThymeleafService;
@@ -44,7 +43,7 @@ public class EmailSmtpServiceImpl implements EmailSmtpService {
     }
 
     @Override
-    public void sendVerificationEmail(CreateApplicationUserDto dto) {
+    public void sendVerificationEmail(CreateStudentDto dto) {
         LOG.trace("Send verification email {}", dto);
         try {
             MimeMessage message = mailSender.createMimeMessage();

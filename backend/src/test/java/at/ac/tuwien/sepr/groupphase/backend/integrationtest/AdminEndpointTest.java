@@ -3,10 +3,10 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestUtils;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailsWithSubjectDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.helper.RestResponsePage;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
@@ -65,9 +65,9 @@ public class AdminEndpointTest extends BaseTest {
             .andReturn();
 
         String responseBody = mvcResult.getResponse().getContentAsString();
-        RestResponsePage<ApplicationUserDto> returnedPage = objectMapper.readValue(responseBody, new TypeReference<RestResponsePage<ApplicationUserDto>>() {
+        RestResponsePage<StudentDto> returnedPage = objectMapper.readValue(responseBody, new TypeReference<RestResponsePage<StudentDto>>() {
         });
-        List<ApplicationUserDto> returnedUsers = returnedPage.getContent();
+        List<StudentDto> returnedUsers = returnedPage.getContent();
 
         assertEquals(1, returnedUsers.size());
         assertEquals("User2", returnedUsers.get(0).getFirstname());
@@ -85,9 +85,9 @@ public class AdminEndpointTest extends BaseTest {
             .andReturn();
 
         String responseBody = mvcResult.getResponse().getContentAsString();
-        RestResponsePage<ApplicationUserDto> returnedPage = objectMapper.readValue(responseBody, new TypeReference<RestResponsePage<ApplicationUserDto>>() {
+        RestResponsePage<StudentDto> returnedPage = objectMapper.readValue(responseBody, new TypeReference<RestResponsePage<StudentDto>>() {
         });
-        List<ApplicationUserDto> returnedUsers = returnedPage.getContent();
+        List<StudentDto> returnedUsers = returnedPage.getContent();
 
         assertEquals(0, returnedUsers.size()); //empty list
     }
@@ -106,7 +106,7 @@ public class AdminEndpointTest extends BaseTest {
             .andReturn();
 
         String responseBody = mvcResult.getResponse().getContentAsString();
-        UserDetailsWithSubjectDto returnedUser = objectMapper.readValue(responseBody, UserDetailsWithSubjectDto.class);
+        StudentSubjectInfoDto returnedUser = objectMapper.readValue(responseBody, StudentSubjectInfoDto.class);
 
         assertAll("User",
             () -> assertEquals("User1", returnedUser.getFirstname()),
