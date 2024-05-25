@@ -2,8 +2,8 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserSubjectsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectsListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
@@ -11,19 +11,16 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMappe
 import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
-import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,12 +32,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -92,8 +87,8 @@ public class UserEndpointTest extends BaseTest {
     @Test
     public void createNewValidUser() throws Exception {
         ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+438881919190", "konsti@tuwien.ac.at",new Address("Teststraße 2", 1100, "Wien")), false);
-        ApplicationUserDto applicationUserDto = userMapper.applicationUserToDto(user);
-        String body = objectMapper.writeValueAsString(applicationUserDto);
+        StudentDto studentDto = userMapper.applicationUserToDto(user);
+        String body = objectMapper.writeValueAsString(studentDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -107,16 +102,16 @@ public class UserEndpointTest extends BaseTest {
             () -> assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType())
         );
 
-        ApplicationUserDto createdApplicationUserDto = objectMapper.readValue(response.getContentAsString(),
-            ApplicationUserDto.class);
+        StudentDto createdStudentDto = objectMapper.readValue(response.getContentAsString(),
+            StudentDto.class);
 
         assertAll(
-            () -> assertNotNull(createdApplicationUserDto),
-            () -> assertEquals(createdApplicationUserDto.getEmail(), applicationUserDto.getEmail()),
-            () -> assertEquals(createdApplicationUserDto.getFirstname(), applicationUserDto.getFirstname()),
-            () -> assertEquals(createdApplicationUserDto.getLastname(), applicationUserDto.getLastname()),
-            () -> assertEquals(createdApplicationUserDto.getMatrNumber(), applicationUserDto.getMatrNumber()),
-            () -> assertTrue(passwordEncoder.matches(applicationUserDto.getPassword(), createdApplicationUserDto.getPassword()))
+            () -> assertNotNull(createdStudentDto),
+            () -> assertEquals(createdStudentDto.getEmail(), studentDto.getEmail()),
+            () -> assertEquals(createdStudentDto.getFirstname(), studentDto.getFirstname()),
+            () -> assertEquals(createdStudentDto.getLastname(), studentDto.getLastname()),
+            () -> assertEquals(createdStudentDto.getMatrNumber(), studentDto.getMatrNumber()),
+            () -> assertTrue(passwordEncoder.matches(studentDto.getPassword(), createdStudentDto.getPassword()))
         );
 
     }
@@ -124,8 +119,8 @@ public class UserEndpointTest extends BaseTest {
     @Test
     public void createNewInvalidUser_422() throws Exception {
         ApplicationUser user = new ApplicationUser("", false, "", "", 123465L, new ContactDetails("+438881919190", "konsti@tuswien.ac.at", new Address( "Teststraße 2", 1200, "Wien")), false);
-        ApplicationUserDto applicationUserDto = userMapper.applicationUserToDto(user);
-        String body = objectMapper.writeValueAsString(applicationUserDto);
+        StudentDto studentDto = userMapper.applicationUserToDto(user);
+        String body = objectMapper.writeValueAsString(studentDto);
 
         MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -219,7 +214,7 @@ public class UserEndpointTest extends BaseTest {
             .andReturn();
 
         // Parse the response
-        ApplicationUserSubjectsDto returnedUser = objectMapper.readValue(result.getResponse().getContentAsString(StandardCharsets.UTF_8), ApplicationUserSubjectsDto.class);
+        StudentSubjectsDto returnedUser = objectMapper.readValue(result.getResponse().getContentAsString(StandardCharsets.UTF_8), StudentSubjectsDto.class);
         long[] returnedUserSubjects = returnedUser.getSubjects().stream().map(SubjectDto::getId).mapToLong(Long::longValue)
             .toArray();
 
@@ -272,7 +267,7 @@ public class UserEndpointTest extends BaseTest {
     void testUpdateUserWithoutUserTokenReturns403() throws Exception {
 
         // Create an ApplicationUserDto object with the updated user details
-        ApplicationUserDto updatedUser = new ApplicationUserDto();
+        StudentDto updatedUser = new StudentDto();
         updatedUser.setFirstname("UserUpdated");
         updatedUser.setLastname("SurnameUpdated");
         updatedUser.setPassword("NewPassword123");
@@ -291,7 +286,7 @@ public class UserEndpointTest extends BaseTest {
     @Test
     void testUpdateUserWithAdminTokenReturns403() throws Exception {
         // Create an ApplicationUserDto object with the updated user details
-        ApplicationUserDto updatedUser = new ApplicationUserDto();
+        StudentDto updatedUser = new StudentDto();
         updatedUser.setFirstname("UserUpdated");
         updatedUser.setLastname("SurnameUpdated");
         updatedUser.setPassword("NewPassword123");
@@ -327,7 +322,7 @@ public class UserEndpointTest extends BaseTest {
             .andReturn();
 
         // Parse the response
-        ApplicationUserSubjectsDto returnedUser = objectMapper.readValue(result.getResponse().getContentAsString(StandardCharsets.UTF_8), ApplicationUserSubjectsDto.class);
+        StudentSubjectsDto returnedUser = objectMapper.readValue(result.getResponse().getContentAsString(StandardCharsets.UTF_8), StudentSubjectsDto.class);
         long[] returnedUserSubjects = returnedUser.getSubjects().stream().map(SubjectDto::getId).mapToLong(Long::longValue)
             .toArray();
 
@@ -348,7 +343,7 @@ public class UserEndpointTest extends BaseTest {
     @Test
     void testUpdateUser() throws Exception {
         // Create an ApplicationUserDto object with the updated user details
-        ApplicationUserDto updatedUser = new ApplicationUserDto();
+        StudentDto updatedUser = new StudentDto();
         updatedUser.setFirstname("UserUpdated");
         updatedUser.setLastname("SurnameUpdated");
         updatedUser.setPassword("NewPassword123");
@@ -368,7 +363,7 @@ public class UserEndpointTest extends BaseTest {
             .andReturn();
 
         // Parse the response
-        ApplicationUserDto returnedUser = objectMapper.readValue(result.getResponse().getContentAsString(), ApplicationUserDto.class);
+        StudentDto returnedUser = objectMapper.readValue(result.getResponse().getContentAsString(), StudentDto.class);
 
         // Assert that the returned user has the updated details
         assertAll(

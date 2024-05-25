@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailsWithSubjectDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
@@ -11,7 +11,6 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.SubjectService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +52,7 @@ public class AdminEndpoint {
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/users")
-    public Page<ApplicationUserDto> searchUsers(
+    public Page<StudentDto> searchUsers(
         @RequestParam(name = "fullname", required = false) String fullname,
         @RequestParam(name = "matrNumber", required = false) Long matrNumber,
         Pageable pageable) {
@@ -63,10 +62,10 @@ public class AdminEndpoint {
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/users/{id}")
-    public UserDetailsWithSubjectDto getUserDetails(@PathVariable(name = "id") Long id) {
+    public StudentSubjectInfoDto getUserDetails(@PathVariable(name = "id") Long id) {
         //get user by id and map to UserDetailsWithSubjectDto
         ApplicationUser user = userService.findApplicationUserById(id);
-        UserDetailsWithSubjectDto resultingUser = userMapper.applicationUserToSubjectsDto(user);
+        StudentSubjectInfoDto resultingUser = userMapper.applicationUserToSubjectsDto(user);
 
         //get subjects for user id and set them in the resultingUser
         List<String> tutorSubjects = userService.getUserSubjectsByRole(id, "tutor");

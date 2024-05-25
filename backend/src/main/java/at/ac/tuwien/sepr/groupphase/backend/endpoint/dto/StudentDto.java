@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.validation.constraints.Email;
@@ -10,7 +9,7 @@ import jakarta.validation.constraints.Size;
 
 @Getter
 @Setter
-public class ApplicationUserDto {
+public class StudentDto {
 
     public Long id;
 
@@ -55,7 +54,7 @@ public class ApplicationUserDto {
             + '}';
     }
 
-    public ApplicationUserDto() {
+    public StudentDto() {
 
     }
 
@@ -77,66 +76,66 @@ public class ApplicationUserDto {
         private ApplicationUserDtoBuilder() {
         }
 
-        public static ApplicationUserDto.ApplicationUserDtoBuilder aApplicationUserDto() {
-            return new ApplicationUserDto.ApplicationUserDtoBuilder();
+        public static StudentDto.ApplicationUserDtoBuilder aApplicationUserDto() {
+            return new StudentDto.ApplicationUserDtoBuilder();
         }
 
-        public ApplicationUserDto.ApplicationUserDtoBuilder withPassword(String password) {
+        public StudentDto.ApplicationUserDtoBuilder withPassword(String password) {
             this.password = password;
             return this;
         }
 
-        public ApplicationUserDto.ApplicationUserDtoBuilder withFirstname(String firstname) {
+        public StudentDto.ApplicationUserDtoBuilder withFirstname(String firstname) {
             this.firstname = firstname;
             return this;
         }
 
-        public ApplicationUserDto.ApplicationUserDtoBuilder withLastname(String lastname) {
+        public StudentDto.ApplicationUserDtoBuilder withLastname(String lastname) {
             this.lastname = lastname;
             return this;
         }
 
-        public ApplicationUserDto.ApplicationUserDtoBuilder withMatrNumber(Long matrNumber) {
+        public StudentDto.ApplicationUserDtoBuilder withMatrNumber(Long matrNumber) {
             this.matrNumber = matrNumber;
             return this;
         }
 
-        public ApplicationUserDto.ApplicationUserDtoBuilder withEmail(String email) {
+        public StudentDto.ApplicationUserDtoBuilder withEmail(String email) {
             this.email = email;
             return this;
         }
 
-        public ApplicationUserDto.ApplicationUserDtoBuilder withTelNr(String telNr) {
+        public StudentDto.ApplicationUserDtoBuilder withTelNr(String telNr) {
             this.telNr = telNr;
             return this;
         }
 
-        public ApplicationUserDto.ApplicationUserDtoBuilder withStreet(String street) {
+        public StudentDto.ApplicationUserDtoBuilder withStreet(String street) {
             this.street = street;
             return this;
         }
 
-        public ApplicationUserDto.ApplicationUserDtoBuilder withAreaCode(Integer areaCode) {
+        public StudentDto.ApplicationUserDtoBuilder withAreaCode(Integer areaCode) {
             this.areaCode = areaCode;
             return this;
         }
 
-        public ApplicationUserDto.ApplicationUserDtoBuilder withCity(String city) {
+        public StudentDto.ApplicationUserDtoBuilder withCity(String city) {
             this.city = city;
             return this;
         }
 
-        public ApplicationUserDto build() {
-            ApplicationUserDto applicationUserDto = new ApplicationUserDto();
-            applicationUserDto.setEmail(email);
-            applicationUserDto.setFirstname(firstname);
-            applicationUserDto.setLastname(lastname);
-            applicationUserDto.setPassword(password);
-            applicationUserDto.setMatrNumber(matrNumber);
-            applicationUserDto.setStreet(street);
-            applicationUserDto.setAreaCode(areaCode);
-            applicationUserDto.setCity(city);
-            return applicationUserDto;
+        public StudentDto build() {
+            StudentDto studentDto = new StudentDto();
+            studentDto.setEmail(email);
+            studentDto.setFirstname(firstname);
+            studentDto.setLastname(lastname);
+            studentDto.setPassword(password);
+            studentDto.setMatrNumber(matrNumber);
+            studentDto.setStreet(street);
+            studentDto.setAreaCode(areaCode);
+            studentDto.setCity(city);
+            return studentDto;
         }
     }
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../services/user.service";
-import {CreateApplicationUserDto} from "../../dtos/user";
+import {CreateStudentDto} from "../../dtos/user";
 import {Router, RouterLink} from "@angular/router";
 import {NgIf} from "@angular/common";
 import {ToastrService} from "ngx-toastr";
@@ -16,7 +16,7 @@ export class RegisterComponent {
   form: FormGroup;
   created: boolean = false;
 
-  createUser: CreateApplicationUserDto = {
+  createUser: CreateStudentDto = {
       firstname: "",
       lastname: "",
       matrNumber: null,

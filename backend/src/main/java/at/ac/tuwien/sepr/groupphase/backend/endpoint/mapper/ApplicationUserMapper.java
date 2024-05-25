@@ -1,11 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserBaseInfoDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailsWithSubjectDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserSubjectsDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentBaseInfoDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserSubjectDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
@@ -16,86 +16,86 @@ import java.util.List;
 @Mapper
 
 public interface ApplicationUserMapper {
-    default ApplicationUserDto applicationUserToDto(ApplicationUser applicationUser) {
-        ApplicationUserDto applicationUserDto = new ApplicationUserDto();
+    default StudentDto applicationUserToDto(ApplicationUser applicationUser) {
+        StudentDto studentDto = new StudentDto();
 
         if (applicationUser != null) {
-            applicationUserDto.setPassword(applicationUser.getPassword());
-            applicationUserDto.setFirstname(applicationUser.getFirstname());
-            applicationUserDto.setLastname(applicationUser.getLastname());
-            applicationUserDto.setMatrNumber(applicationUser.getMatrNumber());
-            applicationUserDto.setId(applicationUser.getId());
+            studentDto.setPassword(applicationUser.getPassword());
+            studentDto.setFirstname(applicationUser.getFirstname());
+            studentDto.setLastname(applicationUser.getLastname());
+            studentDto.setMatrNumber(applicationUser.getMatrNumber());
+            studentDto.setId(applicationUser.getId());
             if (applicationUser.getDetails() != null) {
-                applicationUserDto.setEmail(applicationUser.getDetails().getEmail());
-                applicationUserDto.setTelNr(applicationUser.getDetails().getTelNr());
+                studentDto.setEmail(applicationUser.getDetails().getEmail());
+                studentDto.setTelNr(applicationUser.getDetails().getTelNr());
                 if (applicationUser.getDetails().getAddress() != null) {
-                    applicationUserDto.setStreet(applicationUser.getDetails().getAddress().getStreet());
-                    applicationUserDto.setAreaCode(applicationUser.getDetails().getAddress().getAreaCode());
-                    applicationUserDto.setCity(applicationUser.getDetails().getAddress().getCity());
+                    studentDto.setStreet(applicationUser.getDetails().getAddress().getStreet());
+                    studentDto.setAreaCode(applicationUser.getDetails().getAddress().getAreaCode());
+                    studentDto.setCity(applicationUser.getDetails().getAddress().getCity());
                 }
             }
         } else {
             return null;
         }
 
-        return applicationUserDto;
+        return studentDto;
     }
 
-    default CreateApplicationUserDto mapUserToCreateApplicationUserDto(ApplicationUser applicationUser) {
+    default CreateStudentDto mapUserToCreateApplicationUserDto(ApplicationUser applicationUser) {
 
-        CreateApplicationUserDto createApplicationUserDto = new CreateApplicationUserDto();
+        CreateStudentDto createStudentDto = new CreateStudentDto();
 
         if (applicationUser != null) {
-            createApplicationUserDto.setPassword(applicationUser.getPassword());
-            createApplicationUserDto.setFirstname(applicationUser.getFirstname());
-            createApplicationUserDto.setLastname(applicationUser.getLastname());
-            createApplicationUserDto.setMatrNumber(applicationUser.getMatrNumber());
+            createStudentDto.setPassword(applicationUser.getPassword());
+            createStudentDto.setFirstname(applicationUser.getFirstname());
+            createStudentDto.setLastname(applicationUser.getLastname());
+            createStudentDto.setMatrNumber(applicationUser.getMatrNumber());
             if (applicationUser.getDetails() != null) {
-                createApplicationUserDto.setEmail(applicationUser.getDetails().getEmail());
+                createStudentDto.setEmail(applicationUser.getDetails().getEmail());
             }
         }
 
-        return createApplicationUserDto;
+        return createStudentDto;
     }
 
-    default UserBaseInfoDto mapApplicationUserToApplicationUserDto(ApplicationUser user) {
+    default StudentBaseInfoDto mapApplicationUserToApplicationUserDto(ApplicationUser user) {
         if (user == null || user.getDetails() == null) {
             return null;
         }
-        UserBaseInfoDto userBaseInfoDto = new UserBaseInfoDto();
+        StudentBaseInfoDto studentBaseInfoDto = new StudentBaseInfoDto();
 
         if (user.getDetails().getAddress() != null) {
-            userBaseInfoDto.setCity(user.getDetails().getAddress().getCity() == null ? "" : user.getDetails().getAddress().getCity());
-            userBaseInfoDto.setStreet(user.getDetails().getAddress().getStreet() == null ? "" : user.getDetails().getAddress().getStreet());
-            userBaseInfoDto.setAreaCode(user.getDetails().getAddress().getAreaCode() == null ? 0 : user.getDetails().getAddress().getAreaCode());
+            studentBaseInfoDto.setCity(user.getDetails().getAddress().getCity() == null ? "" : user.getDetails().getAddress().getCity());
+            studentBaseInfoDto.setStreet(user.getDetails().getAddress().getStreet() == null ? "" : user.getDetails().getAddress().getStreet());
+            studentBaseInfoDto.setAreaCode(user.getDetails().getAddress().getAreaCode() == null ? 0 : user.getDetails().getAddress().getAreaCode());
         } else {
-            userBaseInfoDto.setCity("");
-            userBaseInfoDto.setAreaCode(0);
-            userBaseInfoDto.setStreet("");
+            studentBaseInfoDto.setCity("");
+            studentBaseInfoDto.setAreaCode(0);
+            studentBaseInfoDto.setStreet("");
         }
-        userBaseInfoDto.setEmail(user.getDetails().getEmail());
+        studentBaseInfoDto.setEmail(user.getDetails().getEmail());
         if (user.getDetails().getTelNr() != null) {
-            userBaseInfoDto.setTelNr(user.getDetails().getTelNr());
+            studentBaseInfoDto.setTelNr(user.getDetails().getTelNr());
         } else {
-            userBaseInfoDto.setTelNr("");
+            studentBaseInfoDto.setTelNr("");
         }
-        userBaseInfoDto.setFirstname(user.getFirstname());
-        userBaseInfoDto.setLastname(user.getLastname());
+        studentBaseInfoDto.setFirstname(user.getFirstname());
+        studentBaseInfoDto.setLastname(user.getLastname());
 
-        return userBaseInfoDto;
+        return studentBaseInfoDto;
     }
 
-    default UserDetailsWithSubjectDto applicationUserToSubjectsDto(ApplicationUser user) {
+    default StudentSubjectInfoDto applicationUserToSubjectsDto(ApplicationUser user) {
         if (user == null || user.getDetails() == null) {
             return null;
         }
 
-        UserDetailsWithSubjectDto applicationUserDetailDto = new UserDetailsWithSubjectDto();
+        StudentSubjectInfoDto applicationUserDetailDto = new StudentSubjectInfoDto();
 
         applicationUserDetailDto.setFirstname(user.getFirstname());
         applicationUserDetailDto.setLastname(user.getLastname());
 
-        UserDetailsWithSubjectDto userDetailWithSubjectInfo = new UserDetailsWithSubjectDto();
+        StudentSubjectInfoDto userDetailWithSubjectInfo = new StudentSubjectInfoDto();
 
         userDetailWithSubjectInfo.setFirstname(user.getFirstname());
         userDetailWithSubjectInfo.setLastname(user.getLastname());
@@ -108,35 +108,35 @@ public interface ApplicationUserMapper {
         return userDetailWithSubjectInfo;
     }
 
-    default ApplicationUserSubjectsDto mapUserAndSubjectsToUserSubjectDto(ApplicationUser user, List<UserSubject> userSubjects) {
+    default StudentSubjectsDto mapUserAndSubjectsToUserSubjectDto(ApplicationUser user, List<UserSubject> userSubjects) {
         if (user == null || user.getDetails() == null) {
             return null;
         }
 
-        ApplicationUserSubjectsDto applicationUserSubjectsDto = new ApplicationUserSubjectsDto();
+        StudentSubjectsDto studentSubjectsDto = new StudentSubjectsDto();
 
         var address = user.getDetails().getAddress();
         if (address != null) {
-            applicationUserSubjectsDto.setCity(address.getCity());
-            applicationUserSubjectsDto.setStreet(address.getStreet());
-            applicationUserSubjectsDto.setAreaCode(address.getAreaCode());
+            studentSubjectsDto.setCity(address.getCity());
+            studentSubjectsDto.setStreet(address.getStreet());
+            studentSubjectsDto.setAreaCode(address.getAreaCode());
         } else {
-            applicationUserSubjectsDto.setCity("");
-            applicationUserSubjectsDto.setStreet("");
-            applicationUserSubjectsDto.setAreaCode(0);
+            studentSubjectsDto.setCity("");
+            studentSubjectsDto.setStreet("");
+            studentSubjectsDto.setAreaCode(0);
         }
 
-        applicationUserSubjectsDto.setEmail(user.getDetails().getEmail());
-        applicationUserSubjectsDto.setTelNr(user.getDetails().getTelNr());
+        studentSubjectsDto.setEmail(user.getDetails().getEmail());
+        studentSubjectsDto.setTelNr(user.getDetails().getTelNr());
 
-        applicationUserSubjectsDto.setFirstname(user.getFirstname());
-        applicationUserSubjectsDto.setLastname(user.getLastname());
-        applicationUserSubjectsDto.setMatrNumber(user.getMatrNumber());
-        applicationUserSubjectsDto.setTelNr(user.getDetails().getTelNr());
+        studentSubjectsDto.setFirstname(user.getFirstname());
+        studentSubjectsDto.setLastname(user.getLastname());
+        studentSubjectsDto.setMatrNumber(user.getMatrNumber());
+        studentSubjectsDto.setTelNr(user.getDetails().getTelNr());
 
         List<UserSubjectDto> subjects = userSubjects.stream().map(this::userSubjectToDto).toList();
-        applicationUserSubjectsDto.setSubjects(subjects);
-        return applicationUserSubjectsDto;
+        studentSubjectsDto.setSubjects(subjects);
+        return studentSubjectsDto;
     }
 
     default UserSubjectDto userSubjectToDto(UserSubject userSubject) {
@@ -149,8 +149,8 @@ public interface ApplicationUserMapper {
         return dto;
     }
 
-    default UpdateApplicationUserDto toUpdateDto(ApplicationUser applicationUserUpdated) {
-        UpdateApplicationUserDto dto = new UpdateApplicationUserDto();
+    default UpdateStudentDto toUpdateDto(ApplicationUser applicationUserUpdated) {
+        UpdateStudentDto dto = new UpdateStudentDto();
         dto.setId(applicationUserUpdated.getId());
         dto.setFirstname(applicationUserUpdated.getFirstname());
         dto.setLastname(applicationUserUpdated.getLastname());

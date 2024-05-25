@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -30,7 +30,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -113,7 +112,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser create(CreateApplicationUserDto toCreate) throws ValidationException {
+    public ApplicationUser create(CreateStudentDto toCreate) throws ValidationException {
         LOGGER.trace("Create user by applicationUserDto: {}", toCreate);
         validator.validateForCreate(toCreate);
         if (!userRepository.findAllByDetails_Email(toCreate.email).isEmpty()) {
@@ -218,7 +217,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser updateUser(String userEmail, UpdateApplicationUserDto applicationUserDto) throws ValidationException {
+        public ApplicationUser updateUser(String userEmail, UpdateStudentDto applicationUserDto) throws ValidationException {
         LOGGER.trace("Updating user with email: {}", userEmail);
         //remove whitespaces from telNr
         applicationUserDto.telNr = applicationUserDto.telNr != null ? applicationUserDto.telNr.replace(" ", "") : null;

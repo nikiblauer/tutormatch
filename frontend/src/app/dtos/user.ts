@@ -20,7 +20,7 @@ export interface Subject {
   id: number
 }
 
-export interface CreateApplicationUserDto extends BaseUser {
+export interface CreateStudentDto extends BaseUser {
   password: string;
   matrNumber: number;
 }
@@ -44,7 +44,7 @@ export interface ApplicationUserDto extends BaseUser {
   city: string;
 }
 
-export class UserDetailWithSubjectsDto {
+export class StudentSubjectInfoDto {
   firstname: string;
   lastname: string;
   email: string;
@@ -56,17 +56,18 @@ export class UserDetailWithSubjectsDto {
   traineeSubjects: string[];
 }
 
-export class ApplicationUserDetailDto implements BaseUser {
+export class StudentDto implements BaseUser {
   id: number;
   firstname: string;
   lastname: string;
+  matrNumber: number;
   email: string;
   telNr: string;
   street: string;
   areaCode: number;
   city: string;
 
-  public static getAddressAsString(user: ApplicationUserDetailDto): string {
+  public static getAddressAsString(user: StudentDto): string {
 
     let addressParts = [];
     if (user.street) {
@@ -85,7 +86,7 @@ export class ApplicationUserDetailDto implements BaseUser {
   }
 }
 
-export class UserProfile extends ApplicationUserDetailDto {
+export class UserProfile extends StudentDto {
   matrNumber: number;
   subjects: UserSubject[];
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { SubjectService } from 'src/app/services/subject.service';
-import { ApplicationUserDetailDto, UserProfile, UserSubject, Subject, ApplicationUserDto } from 'src/app/dtos/user';
+import { UserProfile, UserSubject, Subject, StudentDto } from 'src/app/dtos/user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject as RxSubject } from 'rxjs';
@@ -171,7 +171,7 @@ export class UserProfileComponent implements OnInit {
           this.user = userProfile;
           this.userOffer = userProfile.subjects.filter(item => item.role == "trainee");
           this.userNeed = userProfile.subjects.filter(item => item.role == "tutor");
-          this.userAddress = ApplicationUserDetailDto.getAddressAsString(userProfile);
+          this.userAddress = StudentDto.getAddressAsString(userProfile);
           this.editedUser = { ...this.user };
           this.updateFilterSubjects();
         },

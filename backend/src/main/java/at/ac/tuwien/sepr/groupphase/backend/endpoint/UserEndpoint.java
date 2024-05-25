@@ -2,12 +2,12 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.EmailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserBaseInfoDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserSubjectsDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentBaseInfoDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectsListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -58,7 +58,7 @@ public class UserEndpoint {
 
     @PermitAll
     @PostMapping
-    public ApplicationUserDto create(@RequestBody CreateApplicationUserDto toCreate) throws ValidationException {
+    public StudentDto create(@RequestBody CreateStudentDto toCreate) throws ValidationException {
         LOGGER.info("POST /api/v1/user/ body: {}", toCreate);
         ApplicationUser user = userService.create(toCreate);
         return mapper.applicationUserToDto(user);
@@ -107,7 +107,7 @@ public class UserEndpoint {
     @Secured("ROLE_USER")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public UpdateApplicationUserDto updateUser(@Valid @RequestBody UpdateApplicationUserDto applicationUserDto) throws Exception {
+    public UpdateStudentDto updateUser(@Valid @RequestBody UpdateStudentDto applicationUserDto) throws Exception {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         LOGGER.info("PUT /api/v1/user with email: {}, body: {}", userEmail, applicationUserDto);
 
@@ -124,7 +124,7 @@ public class UserEndpoint {
 
     @PermitAll
     @GetMapping("{id}")
-    public UserBaseInfoDto getUserDetailsById(@PathVariable("id") Long id) {
+    public StudentBaseInfoDto getUserDetailsById(@PathVariable("id") Long id) {
         ApplicationUser user = userService.findApplicationUserById(id);
         return mapper.mapApplicationUserToApplicationUserDto(user);
     }
@@ -132,7 +132,7 @@ public class UserEndpoint {
     @PermitAll
     @GetMapping("{id}/subjects")
     @ResponseStatus(HttpStatus.OK)
-    public ApplicationUserSubjectsDto getUserSubjectsById(@PathVariable("id") Long id) {
+    public StudentSubjectsDto getUserSubjectsById(@PathVariable("id") Long id) {
         LOGGER.info("GET /api/v1/user/{}/subjects", id);
         ApplicationUser user = userService.findApplicationUserById(id);
         List<UserSubject> subjects = subjectService.findSubjectsByUser(user);
@@ -142,7 +142,7 @@ public class UserEndpoint {
     @PermitAll
     @GetMapping("subjects")
     @ResponseStatus(HttpStatus.OK)
-    public ApplicationUserSubjectsDto getUserSubjectsByEmail() {
+    public StudentSubjectsDto getUserSubjectsByEmail() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         ApplicationUser user = userService.findApplicationUserByEmail(userEmail);
         List<UserSubject> subjects = subjectService.findSubjectsByUser(user);
