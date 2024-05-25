@@ -1,21 +1,27 @@
-/*package at.ac.tuwien.sepr.groupphase.backend.endpoint;
+package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.entity.ChatMessage;
+import at.ac.tuwien.sepr.groupphase.backend.service.ChatMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+
+import java.time.LocalDateTime;
 
 @Controller
 public class ChatController {
 
-    ///@Autowired
-    //private ChatMessageService chatMessageService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    private ChatMessageService chatMessageService;
 
     @MessageMapping("/chat")
-    @SendTo("/topic/messages")
-    public ChatMessage send(ChatMessage message) {
+    public void send(ChatMessage message) {
         message.setTimestamp(LocalDateTime.now());
-        return chatMessageService.saveChatMessage(message);
+        chatMessageService.saveChatMessage(message);
+        messagingTemplate.convertAndSendToUser(message.getReceiver(), "/queue/messages", message);
     }
 }
-*/

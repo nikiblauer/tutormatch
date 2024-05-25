@@ -1,10 +1,12 @@
-/*package at.ac.tuwien.sepr.groupphase.backend.config;
+package at.ac.tuwien.sepr.groupphase.backend.config;
 
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -12,7 +14,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic");
+        config.enableSimpleBroker("/user"); // Enable user-specific message broker
         config.setApplicationDestinationPrefixes("/app");
     }
 
@@ -21,4 +23,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
     }
 }
-*/
+
