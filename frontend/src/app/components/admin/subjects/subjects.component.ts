@@ -159,8 +159,16 @@ export class SubjectComponent implements OnInit {
   }
 
   private handleError(error: HttpErrorResponse) {
-    console.log(error.error);
-    this.notification.error(error.error, "Something went wrong. Please try again later.")
+    if (error.error) {
+      let errorMessage = error.error;
+      errorMessage = errorMessage.replace(/[\[\]]/g, ''); // remove brackets
+      const errorMessages = errorMessage.split(', ');
+      for (const message of errorMessages) {
+        this.notification.error(message.trim(), "Validation Error");
+      }
+    } else {
+      this.notification.error("Something went wrong. Please try again later.")
+    }
   }
 
   private updateSubjectList() {

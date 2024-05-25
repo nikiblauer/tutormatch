@@ -57,7 +57,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> errors = ex.getBindingResult()
             .getFieldErrors()
             .stream()
-            .map(err -> err.getField() + " " + err.getDefaultMessage())
+            .map(err -> {
+                String fieldName = err.getField();
+                String errorMessage = err.getDefaultMessage();
+                if (errorMessage != null && errorMessage.toLowerCase().startsWith(fieldName.toLowerCase() + " ")) {
+                    return err.getDefaultMessage();
+                }
+
+                return fieldName + " " + errorMessage;
+            })
             .collect(Collectors.toList());
         body.put("Validation errors", errors);
 

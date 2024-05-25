@@ -20,7 +20,7 @@
               <h3>Welcome back!</h3>
               <p class="text-muted">{{description}}</p>
             </div>
-            <form #form="ngForm" [formGroup]="loginForm" (ngSubmit)="loginUser()">
+            <form #form="ngForm" [formGroup]="loginForm">
               <div class="mb-3 form-group">
                 <label for="inputUsername" class="form-label text-muted">Email</label>
                 <input type="text" name="username" formControlName="username" class="form-control" id="inputUsername"

@@ -152,7 +152,7 @@ export class UserProfileComponent implements OnInit {
         error: (e) => {
           clearTimeout(timeout);
           this.spinner.hide();
-          this.handleError(e)
+          this.handleError(e);
         },
         complete: () => this.notification.success("Successfully updated user information!", "Updated user information!")
       });
@@ -198,17 +198,19 @@ export class UserProfileComponent implements OnInit {
 
 
   private handleError(error: HttpErrorResponse) {
-    console.log(error);
+    console.log(error.error);
     if (error.status === 400 || error.status === 422) {
       const errorString = error.error;
       const startIndex = errorString.indexOf("[");
       const endIndex = errorString.lastIndexOf("]");
       const contents = errorString.substring(startIndex + 1, endIndex);
-
-      this.notification.error(contents, "Error");
+      const errorMessages = contents.split(', ');
+  
+      for (const message of errorMessages) {
+        this.notification.error(message.trim(), "Error"); // trim to remove leading/trailing whitespaces
+      }
     } else {
       this.notification.error(error.error, "Error")
     }
   }
-
 }

@@ -74,6 +74,7 @@ export class LoginComponent implements OnInit {
       }
     });
   }
+
   private handleError(error: any): void {
     console.log('Could not log in due to:');
     console.log(error);

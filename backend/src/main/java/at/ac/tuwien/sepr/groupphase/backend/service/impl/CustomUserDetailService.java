@@ -88,8 +88,14 @@ public class CustomUserDetailService implements UserService {
     @Override
     public String login(UserLoginDto userLoginDto) {
         LOGGER.trace("Login as User: {}", userLoginDto);
-        UserDetails userDetails = loadUserByUsername(userLoginDto.getEmail());
-        ApplicationUser applicationUser = findApplicationUserByEmail(userLoginDto.getEmail());
+        UserDetails userDetails;
+        ApplicationUser applicationUser;
+        try {
+            userDetails = loadUserByUsername(userLoginDto.getEmail());
+            applicationUser = findApplicationUserByEmail(userLoginDto.getEmail());
+        } catch (NotFoundException e) {
+            throw new NotFoundException("No user found with this email");
+        }
         if (!applicationUser.getVerified()) {
             throw new UnverifiedAccountException("Account is not verified yet. Please verify your account to log in.");
         }
@@ -114,7 +120,7 @@ public class CustomUserDetailService implements UserService {
         LOGGER.trace("Create user by applicationUserDto: {}", toCreate);
         validator.validateForCreate(toCreate);
         if (!userRepository.findAllByDetails_Email(toCreate.email).isEmpty()) {
-            throw new ValidationException("Email already exits please try an other one", new ArrayList<>());
+            throw new ValidationException("Email already exits please try an other one");
         }
         ContactDetails details = new ContactDetails("", toCreate.email, new Address("", 0, ""));
 
