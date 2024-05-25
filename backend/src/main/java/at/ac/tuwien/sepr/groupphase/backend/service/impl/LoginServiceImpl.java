@@ -58,6 +58,7 @@ public class LoginServiceImpl implements LoginService {
             throw new NotFoundException("No user found with this email");
         }
         if (!applicationUser.getVerified()) {
+            userService.resendVerificationEmail(userLoginDto.getEmail());
             throw new UnverifiedAccountException("Account is not verified yet. Please verify your account to log in.");
         }
         if (userDetails != null

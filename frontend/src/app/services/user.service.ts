@@ -25,7 +25,9 @@ export class UserService {
     console.log('Create user');
     return this.httpClient.post<StudentDto>(this.userUri, toCreate, { responseType: 'json' });
   }
-
+  resendVerification(email: string) {
+    return this.httpClient.post(this.userUri + "/verify/resend", {email});
+  }
   verifyUser(token: string) {
     return this.httpClient.get((this.userUri + "/verify/" + token));
   }

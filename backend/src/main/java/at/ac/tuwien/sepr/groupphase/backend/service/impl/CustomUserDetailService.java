@@ -81,7 +81,6 @@ public class CustomUserDetailService implements UserService {
         throw new NotFoundException("No user found with this email");
     }
 
-
     @Override
     public ApplicationUser create(CreateStudentDto toCreate) throws ValidationException {
         LOGGER.trace("Create user by applicationUserDto: {}", toCreate);
@@ -146,7 +145,31 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-        public ApplicationUser updateUser(String userEmail, UpdateStudentDto applicationUserDto) throws ValidationException {
+    public void resendVerificationEmail(String email) {
+        LOGGER.trace("Resend verification email :{}", email);
+        try {
+            UserDetails userDetails = loadUserByUsername(email);
+            if (userDetails != null
+                    && userDetails.isAccountNonExpired()
+                    && userDetails.isAccountNonLocked()
+                    && userDetails.isCredentialsNonExpired()
+            ) {
+                ApplicationUser applicationUser = findApplicationUserByEmail(email);
+                if (!applicationUser.getVerified()) {
+                    CreateStudentDto studentDto = new CreateStudentDto();
+                    studentDto.setEmail(email);
+                    studentDto.setFirstname(applicationUser.getFirstname());
+                    studentDto.setLastname(applicationUser.getLastname());
+                    emailService.sendVerificationEmail(studentDto);
+                }
+            }
+        } catch (UsernameNotFoundException | NotFoundException e) {
+            throw new NotFoundException(String.format("User with email %s not found", email));
+        }
+    }
+
+    @Override
+    public ApplicationUser updateUser(String userEmail, UpdateStudentDto applicationUserDto) throws ValidationException {
         LOGGER.trace("Updating user with email: {}", userEmail);
         //remove whitespaces from telNr
         applicationUserDto.telNr = applicationUserDto.telNr != null ? applicationUserDto.telNr.replace(" ", "") : null;
