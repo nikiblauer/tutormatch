@@ -1,8 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -53,7 +52,7 @@ public interface UserService extends UserDetailsService {
      * @param applicationUserDto the updated user
      * @return the updated user
      */
-    ApplicationUser updateUser(String userEmail, UpdateApplicationUserDto applicationUserDto) throws ValidationException;
+    ApplicationUser updateUser(String userEmail, UpdateStudentDto applicationUserDto) throws ValidationException;
 
     /**
      * Get all users.
@@ -63,7 +62,7 @@ public interface UserService extends UserDetailsService {
      */
     Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Pageable pageable);
 
-    ApplicationUser create(CreateApplicationUserDto applicationUserDto) throws ValidationException;
+    ApplicationUser create(CreateStudentDto applicationUserDto) throws ValidationException;
 
     ApplicationUser findApplicationUserById(Long id);
 

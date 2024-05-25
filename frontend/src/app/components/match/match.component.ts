@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../services/user.service";
 import {UserMatchDto} from "../../dtos/user-match";
-import {ApplicationUserDetailDto} from "../../dtos/user";
+import {StudentDto} from "../../dtos/user";
 import {ToastrService} from "ngx-toastr";
 import {NgxSpinnerService} from "ngx-spinner";
 
@@ -14,7 +14,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 export class MatchComponent implements OnInit {
     public matches: UserMatchDto[] = [];
     public selectedMatch: UserMatchDto;
-    public selectedUser: ApplicationUserDetailDto;
+    public selectedUser: StudentDto;
 
     constructor(private userService: UserService, private notification: ToastrService, private spinner: NgxSpinnerService) {
     }
@@ -78,7 +78,7 @@ export class MatchComponent implements OnInit {
         //TODO later Sprint
     }
 
-    public getSelectedUserAddressAsString(user: ApplicationUserDetailDto) {
-        return ApplicationUserDetailDto.getAddressAsString(user);
+    public getSelectedUserAddressAsString(user: StudentDto) {
+        return StudentDto.getAddressAsString(user);
     }
 }

@@ -1,24 +1,22 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
-public class UserBaseInfoDto {
+@Setter
+public class UpdateStudentDto {
+
+    public Long id;
+
     @NotBlank(message = "Firstname is mandatory")
-    private String firstname;
+    public String firstname;
 
     @NotBlank(message = "Lastname is mandatory")
-    private String lastname;
+    public String lastname;
 
-    @NotBlank(message = "Email is mandatory")
-    @Email(message = "Email should be valid")
-    private String email;
-
-    private String telNr;
+    public String telNr;
 
     public String street;
 
@@ -28,12 +26,17 @@ public class UserBaseInfoDto {
 
     @Override
     public String toString() {
-        return "ApplicationUserDetailDto{"
-            + "firstname='" + firstname + '\''
+        return "ApplicationUserDto{"
+            + ", firstname='" + firstname + '\''
             + ", lastname='" + lastname + '\''
-            + ", email='" + email + '\''
             + ", telNr='" + telNr + '\''
-            + ", address='" + street + " " + areaCode + " " + city + '\''
+            + ", street='" + street + '\''
+            + ", areaCode='" + areaCode + '\''
+            + ", city='" + city + '\''
             + '}';
+    }
+
+    public UpdateStudentDto() {
+
     }
 }

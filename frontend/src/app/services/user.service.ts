@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Globals } from "../global/globals";
 import { Observable } from "rxjs";
-import { ApplicationUserDto, CreateApplicationUserDto, Subject, UserProfile, UserSubject } from "../dtos/user";
+import { StudentDto, CreateStudentDto, Subject, UserProfile, UserSubject } from "../dtos/user";
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +15,9 @@ export class UserService {
 
   }
 
-  createUser(toCreate: CreateApplicationUserDto): Observable<ApplicationUserDto> {
+  createUser(toCreate: CreateStudentDto): Observable<StudentDto> {
     console.log('Create user');
-    return this.httpClient.post<ApplicationUserDto>(this.userUri, toCreate, { responseType: 'json' });
+    return this.httpClient.post<StudentDto>(this.userUri, toCreate, { responseType: 'json' });
   }
 
   verifyUser(token: string) {
@@ -35,8 +35,8 @@ export class UserService {
     return this.httpClient.get(this.userUri + `/${id}`);
   }
 
-  updateUser(toUpdate: ApplicationUserDto) : Observable<ApplicationUserDto> {
-    return this.httpClient.put<ApplicationUserDto>(this.userUri, toUpdate, { responseType: 'json' });
+  updateUser(toUpdate: StudentDto) : Observable<StudentDto> {
+    return this.httpClient.put<StudentDto>(this.userUri, toUpdate, { responseType: 'json' });
   }
 
   addSubjectToUser(traineeSubjects: number[], tutorSubjects: number[]): Observable<any> {

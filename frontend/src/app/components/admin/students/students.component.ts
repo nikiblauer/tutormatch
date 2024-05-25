@@ -1,8 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { ApplicationUserDto } from "src/app/dtos/user";
+import { StudentDto } from "src/app/dtos/user";
 import { AdminService } from "src/app/services/admin.service";
-import { UserDetailWithSubjectsDto } from "src/app/dtos/user";
+import { StudentSubjectInfoDto } from "src/app/dtos/user";
 import { Subject } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { Page } from "src/app/dtos/page";
@@ -28,7 +28,7 @@ export class StudentsComponent implements OnInit {
   searchName: string = '';
   matrNumber: string = '';
   selectedStudent: StudentListing | null = null;
-  selectedStudentDetails: UserDetailWithSubjectsDto | null = null;
+  selectedStudentDetails: StudentSubjectInfoDto | null = null;
   searchTerm$ = new Subject<string>();
   noMoreResults: boolean = false;
 
@@ -55,7 +55,7 @@ export class StudentsComponent implements OnInit {
       this.spinner.show();
     }, 1500);
     this.adminService.searchUsers(this.searchName, Number(this.matrNumber), this.page, 5).subscribe({
-      next: (response: Page<ApplicationUserDto>) => {
+      next: (response: Page<StudentDto>) => {
         clearTimeout(timeout);
         this.spinner.hide();
         if (response.content.length === 0) {
@@ -87,7 +87,7 @@ export class StudentsComponent implements OnInit {
       this.spinner.show();
     }, 1500);
     this.adminService.getUserDetails(student.id).subscribe({ //call getUserDetails endpoint with selected User ID
-      next: (response: UserDetailWithSubjectsDto) => {
+      next: (response: StudentSubjectInfoDto) => {
         clearTimeout(timeout);
         this.spinner.hide();
         this.selectedStudentDetails = response;

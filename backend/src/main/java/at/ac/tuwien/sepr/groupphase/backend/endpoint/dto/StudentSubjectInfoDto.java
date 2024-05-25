@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class UserDetailsWithSubjectDto {
+public class StudentSubjectInfoDto {
 
     private String firstname;
 

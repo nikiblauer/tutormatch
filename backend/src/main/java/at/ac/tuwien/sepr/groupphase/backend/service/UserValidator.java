@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class UserValidator {
         return email.matches(VALIDATION_PATTERN_1) || email.matches(VALIDATION_PATTERN_2);
     }
 
-    public void validateForCreate(CreateApplicationUserDto toCreate) throws ValidationException {
+    public void validateForCreate(CreateStudentDto toCreate) throws ValidationException {
         LOGGER.trace("validateForCreate({})", toCreate);
 
         List<String> errors = new ArrayList<>();
@@ -63,7 +63,7 @@ public class UserValidator {
         }
     }
 
-    public void verifyUserData(ApplicationUserDto user) throws ValidationException {
+    public void verifyUserData(StudentDto user) throws ValidationException {
         LOGGER.trace("Validation of user: {}", user);
         List<String> errors = new ArrayList<>();
 
@@ -74,7 +74,7 @@ public class UserValidator {
         validateUserData(user.firstname, user.lastname, user.telNr, errors);
     }
 
-    public void verifyUserData(UpdateApplicationUserDto user) throws ValidationException {
+    public void verifyUserData(UpdateStudentDto user) throws ValidationException {
         LOGGER.trace("Validation of user: {}", user);
         List<String> errors = new ArrayList<>();
         validateUserData(user.firstname, user.lastname, user.telNr, errors);
