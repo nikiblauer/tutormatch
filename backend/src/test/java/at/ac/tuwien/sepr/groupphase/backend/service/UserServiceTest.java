@@ -2,10 +2,13 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -29,7 +32,13 @@ public class UserServiceTest {
     private UserService userService;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtTokenizer jwtTokenizer;
 
     @Test
     public void createNewValidUser() throws Exception {
@@ -50,6 +59,22 @@ public class UserServiceTest {
             () -> assertTrue(passwordEncoder.matches(applicationUserDto.getPassword(), createdApplicationUser.getPassword()))
         );
 
+    }
+    @Test
+    public void userCannotUseOldPasswordAfterPasswordChange() throws Exception {
+        String oldPassword = "password";
+        ApplicationUser user = new ApplicationUser(oldPassword, false, "Franz", "U", 133465L, new ContactDetails("+438881919190", "franz@student.tuwien.ac.at", new Address( "Teststraße 2", 1200, "Wien")), true);
+        userRepository.save(user);
+        PasswordResetDto passwordChangeDto = new PasswordResetDto();
+        String newPassword = "password1";
+        passwordChangeDto.setPassword(newPassword);
+        passwordChangeDto.setRepeatPassword(newPassword);
+        String token = jwtTokenizer.buildVerificationToken(user.getDetails().getEmail());
+        boolean changed = userService.changePasswordWithToken(token, passwordChangeDto);
+        ApplicationUser updatedUser = userService.findApplicationUserByEmail(user.getDetails().getEmail());
+        assertTrue(changed);
+        assertTrue(passwordEncoder.matches(newPassword, updatedUser.getPassword()));
+        assertFalse(passwordEncoder.matches(oldPassword, updatedUser.getPassword()));
     }
 
 }

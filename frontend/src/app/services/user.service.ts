@@ -4,7 +4,7 @@ import { Globals } from "../global/globals";
 import { Observable } from "rxjs";
 import {
   ApplicationUserDto,
-  CreateApplicationUserDto,
+  CreateApplicationUserDto, PasswordResetDto,
   SendPasswordResetDto,
   Subject,
   UserProfile,
@@ -34,8 +34,8 @@ export class UserService {
     console.log(emailSendPasswordResetDto)
     return this.httpClient.post(this.userUri + '/reset_password', emailSendPasswordResetDto);
   }
-  changePasswordWithResetToken(token: String, password: String, repeat_password: String): Observable<any> {
-    return this.httpClient.post(this.userUri + '/reset_password/'+ token, {password: password, repeat_password: repeat_password});
+  changePasswordWithResetToken(token: String, passwordResetDto: PasswordResetDto): Observable<any> {
+    return this.httpClient.post(this.userUri + '/reset_password/'+ token, passwordResetDto);
   }
 
   getUserMatcher(): Observable<any> {

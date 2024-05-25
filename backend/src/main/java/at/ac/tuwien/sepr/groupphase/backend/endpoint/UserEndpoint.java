@@ -85,7 +85,7 @@ public class UserEndpoint {
 
     @PostMapping(value = "/reset_password/{token}")
     @PermitAll
-    public ResponseEntity changePasswordWithToken(@PathVariable("token") String token, PasswordResetDto resetDto) throws ValidationException {
+    public ResponseEntity changePasswordWithToken(@PathVariable("token") String token, @RequestBody PasswordResetDto resetDto) throws ValidationException {
         LOGGER.info("PUT /api/v1/user/verify/{}", token);
         if (userService.changePasswordWithToken(token, resetDto)) {
             return ResponseEntity.status(HttpStatus.OK).build();

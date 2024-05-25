@@ -12,6 +12,8 @@ import {
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../../../services/user.service";
 import {SendPasswordResetDto} from "../../../dtos/user";
+import {ToastrService} from "ngx-toastr";
+import {NgxSpinnerComponent, NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-request-reset',
@@ -19,34 +21,37 @@ import {SendPasswordResetDto} from "../../../dtos/user";
   imports: [
     NgIf,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgxSpinnerComponent
   ],
   templateUrl: './request-reset.component.html',
   styleUrl: './request-reset.component.scss'
 })
 export class RequestResetComponent {
   form: FormGroup;
-  emailSendPasswordResetDto = {
+  emailSendPasswordResetDto: SendPasswordResetDto = {
     email: '',
   };
-  // After first submission attempt, form validation will start
   submitted = false;
   // Error flag
   error = false;
-  errorMessage = '';
 
-  constructor(private userService: UserService, private router: Router, private route: ActivatedRoute) {
+  constructor(private userService: UserService, private router: Router, private route: ActivatedRoute, private notification: ToastrService, private spinner: NgxSpinnerService) {
   }
 
   onSubmit(form: NgForm) {
+    this.spinner.show();
     if (form.valid) {
       this.userService.requestPasswordReset(this.emailSendPasswordResetDto).subscribe({
           next: () => {
+            this.spinner.hide();
             this.submitted = true
           },
           error: error => {
-            error = true;
-            console.log("Error when creating user");
+            this.spinner.hide();
+            this.notification.error(error.error, "Sending password reset email failed");
+            this.submitted = false;
+            console.log("Error sending password reset email",error.error);
           }
         }
       );

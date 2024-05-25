@@ -1,3 +1,4 @@
+<ngx-spinner type="square-jelly-box"></ngx-spinner>
 <div class="pt-5" *ngIf="!submitted">
   <div class="row align-items-center justify-content-center" >
     <div class="card col-md-8 shadow" style="border: none;">
@@ -32,7 +33,7 @@
                 <a href="#login">Login</a>
               </div>
               <div class="row mb-3">
-                <button (click)="onSubmit(form)" class="btn primary-btn w-100" [disabled]="form.invalid">Send password reset email</button>
+                <button type="submit" class="btn primary-btn w-100" [disabled]="form.invalid">Send password reset email</button>
               </div>
             </form>
             <div>
@@ -51,7 +52,7 @@
       <div class="card-body m-4">
         <div class="row justify-content-center">
           <img class="w-25 mb-5" src="/assets/logo.jpg">
-          <h2 class="mb-3 px-5 text-center">Password reset successful! If an account exists for the email, a password reset link was sent.</h2>
+          <h2 class="mb-3 px-5 text-center" *ngIf="!error">Password reset successful! If an account exists for the email, a password reset link was sent.</h2>
           <p class="mb-5 px-5 text-center text-muted">Go to login <a href="#login">Login</a>
           </p>
         </div>

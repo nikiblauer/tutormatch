@@ -84,7 +84,7 @@ public class EmailSmtpServiceImpl implements EmailSmtpService {
             Map<String, Object> variables = new HashMap<>();
             variables.put("full_name", dto.getFirstname() + " " + dto.getLastname());
             String token = jwtTokenizer.buildVerificationToken(dto.getDetails().getEmail());
-            variables.put("password_reset_link", "http://localhost:4200/#/register/password_reset/" + token);
+            variables.put("password_reset_link", "http://localhost:4200/#/password_reset/" + token);
             helper.setText(thymeleafService.createContent("password_reset_email.html", variables), true);
             helper.setFrom(senderEmail);
             mailSender.send(message);
