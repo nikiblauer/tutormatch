@@ -92,6 +92,7 @@ public class CustomUserDetailService implements UserService {
             throw new NotFoundException("No user found with this email");
         }
         if (!applicationUser.getVerified()) {
+            this.resendVerificationEmail(userLoginDto.getEmail());
             throw new UnverifiedAccountException("Account is not verified yet. Please verify your account to log in.");
         }
         if (userDetails != null
@@ -171,6 +172,30 @@ public class CustomUserDetailService implements UserService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void resendVerificationEmail(String email) {
+        LOGGER.trace("Resend verification email :{}", email);
+        try {
+            UserDetails userDetails = loadUserByUsername(email);
+            if (userDetails != null
+                    && userDetails.isAccountNonExpired()
+                    && userDetails.isAccountNonLocked()
+                    && userDetails.isCredentialsNonExpired()
+            ) {
+                ApplicationUser applicationUser = findApplicationUserByEmail(email);
+                if (!applicationUser.getVerified()) {
+                    CreateStudentDto studentDto = new CreateStudentDto();
+                    studentDto.setEmail(email);
+                    studentDto.setFirstname(applicationUser.getFirstname());
+                    studentDto.setLastname(applicationUser.getLastname());
+                    emailService.sendVerificationEmail(studentDto);
+                }
+            }
+        } catch (UsernameNotFoundException | NotFoundException e) {
+            throw new NotFoundException(String.format("User with email %s not found", email));
+        }
     }
 
     @Override

@@ -74,4 +74,10 @@ public interface UserService extends UserDetailsService {
      * @return true if user was verified this way or false if the token was invalid (e.g. expired, wrong format)
      */
     boolean verifyEmail(String token);
+
+    /**
+     * sends a new verification email if user with this email exists and is not verified yet.
+     *
+     */
+    void resendVerificationEmail(String email);
 }

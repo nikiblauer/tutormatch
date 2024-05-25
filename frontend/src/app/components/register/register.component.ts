@@ -51,4 +51,23 @@ export class RegisterComponent {
     );
 
   }
+
+  resendEmail() {
+    this.spinner.show();
+    console.log(this.createUser.email)
+
+    this.userService.resendVerification(this.createUser.email).subscribe({
+        next: () => {
+          this.spinner.hide();
+          this.notification.success("Verification email resent.");
+        },
+        error: error => {
+          this.spinner.hide();
+          console.error("Error when creating user", error);
+          this.notification.error(error.error, "Could not resend verification email");
+        }
+      }
+    );
+
+  }
 }

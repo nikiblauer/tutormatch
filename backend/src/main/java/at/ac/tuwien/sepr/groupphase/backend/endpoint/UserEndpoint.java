@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 @RestController
@@ -60,6 +61,14 @@ public class UserEndpoint {
         LOGGER.info("POST /api/v1/user/ body: {}", toCreate);
         ApplicationUser user = userService.create(toCreate);
         return mapper.applicationUserToDto(user);
+    }
+
+    @PermitAll
+    @PostMapping(value = "/verify/resend")
+    public ResponseEntity resendVerificationEmail(@RequestBody Map<String, String> payload) throws ValidationException {
+        LOGGER.info("POST /api/v1/user/ body: {}", payload);
+        userService.resendVerificationEmail(payload.get("email"));
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping(value = "/verify/{token}")
@@ -128,4 +137,5 @@ public class UserEndpoint {
         List<UserSubject> subjects = subjectService.findSubjectsByUser(user);
         return mapper.mapUserAndSubjectsToUserSubjectDto(user, subjects);
     }
+
 }
