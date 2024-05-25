@@ -1,0 +1,81 @@
+@use "sass:map";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+$base-color: #33709C;
+
+.list-group-item {
+  border: none;
+  border-radius: 0;
+}
+
+
+.btn-search {
+  margin-left: 10px;
+}
+
+.btn-container {
+  white-space: nowrap;
+}
+
+.btn-123 {
+  background-color: #33709c;
+  border-color: #33709c;
+  margin-top: auto;
+}
+
+.btn-123:hover {
+  background-color: #143349; /* Ändert die Hintergrundfarbe beim Hovern */
+  border-color: #FFFFFF; /* Ändert die Randfarbe beim Hovern */
+  color: #FFF;
+}
+
+
+.min-width {
+  width: 0;
+}
+
+.center-td > td {
+  vertical-align: middle;
+}
+
+.responsive-info-button, .responsive-warning-button, .responsive-danger-button, .responsive-dark-button, .responsive-tree-button {
+  @include button-variant($light, $light);
+}
+
+@each $color in (info, warning, danger) {
+  $value: map.get($theme-colors, $color);
+  tr:hover .responsive-#{$color}-button {
+    @include button-variant($value, $value);
+  }
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 40px; /* Adjust the gap as needed */
+  margin-top: 40px; /* Add margin top if needed to space from the above content */
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+#table-header {
+  z-index: 1; /* Ensure the table header has a lower z-index than the popup */
+}
+
+.popup-overlay {
+  z-index: 10; /* Ensure the popup has a higher z-index than the table header */
+}
+
+.disable-sticky {
+  position: static !important;
+}
+
+
+

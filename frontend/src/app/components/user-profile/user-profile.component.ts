@@ -5,6 +5,8 @@ import { ApplicationUserDetailDto, UserProfile, UserSubject, Subject, Applicatio
 import { HttpErrorResponse } from '@angular/common/http';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject as RxSubject } from 'rxjs';
+import {ToastrService} from "ngx-toastr";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-user-profile',
@@ -13,7 +15,7 @@ import { Subject as RxSubject } from 'rxjs';
 })
 export class UserProfileComponent implements OnInit {
 
-  constructor(private userService: UserService, private subjectService: SubjectService) {
+  constructor(private userService: UserService, private subjectService: SubjectService, private notification: ToastrService, private spinner: NgxSpinnerService) {
   }
 
   searchSubject$ = new RxSubject<string>();
@@ -41,11 +43,6 @@ export class UserProfileComponent implements OnInit {
 
   //flag to check if profile was edited
   userInfoChanged = false;
-
-  // message to display error or success messages
-  message: string = '';
-  showErrorMessage: boolean;
-  showSuccessMessage: boolean;
 
 
   //Subject for info modal
@@ -124,31 +121,52 @@ export class UserProfileComponent implements OnInit {
   }
 
   saveProfile(): void {
+    this.spinner.show();
     this.userService.addSubjectToUser(this.userOffer.map(item => item.id), this.userNeed.map(item => item.id))
       .subscribe({
-        next: _ => this.updateUser(),
-        error: (e) => this.handleError(e),
-        complete: () => this.showMessageWithTimeout("Successfully updated user subjects!", false)
+        next: _ => {
+          this.spinner.hide();
+          this.updateUser()
+        },
+        error: (e) => {
+          this.spinner.hide();
+          this.handleError(e)
+        },
+        complete: () => this.notification.success("Successfully updated user subjects", "Updated user subjects!")
       });
   }
 
   updateInfo(): void {
     this.userInfoChanged = true;
+    let timeout = setTimeout(() => {
+      this.spinner.show();
+    }, 1500);
     this.userService.updateUser(this.editedUser)
       .subscribe({
         next: _ => {
+          clearTimeout(timeout);
+          this.spinner.hide();
           this.updateUser()
           this.userInfoChanged = false;
         },
-        error: (e) => this.handleError(e),
-        complete: () => this.showMessageWithTimeout("Successfully updated user information!", false)
+        error: (e) => {
+          clearTimeout(timeout);
+          this.spinner.hide();
+          this.handleError(e);
+        },
+        complete: () => this.notification.success("Successfully updated user information!", "Updated user information!")
       });
   }
 
   updateUser() {
+    let timeout = setTimeout(() => {
+      this.spinner.show();
+    }, 1500);
     this.userService.getUserSubjects()
       .subscribe({
         next: userProfile => {
+          clearTimeout(timeout);
+          this.spinner.hide();
           this.loadUser = true;
           this.user = userProfile;
           this.userOffer = userProfile.subjects.filter(item => item.role == "trainee");
@@ -157,7 +175,11 @@ export class UserProfileComponent implements OnInit {
           this.editedUser = { ...this.user };
           this.updateFilterSubjects();
         },
-        error: (e) => this.handleError(e)
+        error: (e) => {
+          clearTimeout(timeout);
+          this.spinner.hide();
+          this.handleError(e)
+        }
       });
   }
 
@@ -174,38 +196,21 @@ export class UserProfileComponent implements OnInit {
     this.selectedSubject = subject;
   }
 
-  closeErrorMessage() {
-    this.showErrorMessage = false;
-  }
-
-  closeSuccessMessage() {
-    this.showSuccessMessage = false;
-  }
 
   private handleError(error: HttpErrorResponse) {
-    console.log(error);
+    console.log(error.error);
     if (error.status === 400 || error.status === 422) {
       const errorString = error.error;
       const startIndex = errorString.indexOf("[");
       const endIndex = errorString.lastIndexOf("]");
       const contents = errorString.substring(startIndex + 1, endIndex);
-
-      this.showMessageWithTimeout(contents, true);
+      const errorMessages = contents.split(', ');
+  
+      for (const message of errorMessages) {
+        this.notification.error(message.trim(), "Error"); // trim to remove leading/trailing whitespaces
+      }
     } else {
-      this.showMessageWithTimeout(error.error, true); "Something went wrong. Please try again later.";
+      this.notification.error(error.error, "Error")
     }
-  }
-
-  private showMessageWithTimeout(message: string, isError: boolean) {
-    this.message = message;
-    if (isError) {
-      this.showErrorMessage = true;
-    } else {
-      this.showSuccessMessage = true;
-    }
-    setTimeout(() => {
-      this.showErrorMessage = false;
-      this.showSuccessMessage = false;
-    }, 5000); // Hide the message after 5 seconds
   }
 }

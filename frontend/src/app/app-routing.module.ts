@@ -11,6 +11,7 @@ import {AdminComponent} from './components/admin/admin.component';
 import {DashboardComponent} from './components/admin/dashboard/dashboard.component';
 import {StudentsComponent} from './components/admin/students/students.component';
 import {UserProfileComponent} from './components/user-profile/user-profile.component';
+import {SubjectComponent} from "./components/admin/subjects/subjects.component";
 import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
 import {RequestResetComponent} from "./components/password-reset/request-reset/request-reset.component";
 
@@ -28,7 +29,6 @@ const routes: Routes = [
       {path: ':token', component: PasswordResetComponent}
     ]
   },
-
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {path: 'matches', component: MatchComponent},
   {path: 'myprofile', component: UserProfileComponent},
@@ -36,7 +36,8 @@ const routes: Routes = [
     path: 'admin', component: AdminComponent, children: [
       {path: 'login', component: LoginComponent, data: {mode: LoginMode.admin}},
       {path: 'dashboard', component: DashboardComponent},
-      {path: 'students', component: StudentsComponent}
+      {path: 'students', component: StudentsComponent},
+      {path: 'subjects', component: SubjectComponent}
     ]
   }
 ];

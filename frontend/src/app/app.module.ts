@@ -18,6 +18,11 @@ import {NgOptimizedImage} from "@angular/common";
 import {StudentsComponent} from './components/admin/students/students.component';
 import {DashboardComponent} from './components/admin/dashboard/dashboard.component';
 import {AdminComponent} from './components/admin/admin.component';
+import {SubjectComponent} from "./components/admin/subjects/subjects.component";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ToastrModule} from "ngx-toastr";
+import {RegisterComponent} from "./components/register/register.component";
+import {NgxSpinnerModule} from "ngx-spinner";
 
 
 @NgModule({
@@ -26,13 +31,15 @@ import {AdminComponent} from './components/admin/admin.component';
     HeaderComponent,
     FooterComponent,
     HomeComponent,
+    RegisterComponent,
     LoginComponent,
     MessageComponent,
     MatchComponent,
     AdminComponent,
     DashboardComponent,
     StudentsComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    SubjectComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +49,9 @@ import {AdminComponent} from './components/admin/admin.component';
     NgbModule,
     FormsModule,
     NgOptimizedImage,
+    BrowserAnimationsModule,
+    NgxSpinnerModule,
+    ToastrModule.forRoot()
   ],
   providers: [httpInterceptorProviders],
   bootstrap: [AppComponent]

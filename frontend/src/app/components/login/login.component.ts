@@ -3,6 +3,8 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { AuthRequest } from '../../dtos/auth-request';
+import {ToastrService} from "ngx-toastr";
+import {NgxSpinnerService} from "ngx-spinner";
 
 export enum LoginMode {
   admin,
@@ -20,10 +22,8 @@ export class LoginComponent implements OnInit {
   // After first submission attempt, form validation will start
   submitted = false;
   // Error flag
-  error = false;
-  errorMessage = '';
 
-  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router, private route: ActivatedRoute) {
+  constructor(private formBuilder: UntypedFormBuilder, private authService: AuthService, private router: Router, private route: ActivatedRoute, private notification: ToastrService, private spinner: NgxSpinnerService) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]]
@@ -50,8 +50,11 @@ export class LoginComponent implements OnInit {
    */
   authenticateUser(authRequest: AuthRequest) {
     console.log('Try to authenticate user: ' + authRequest.email);
+
+    this.spinner.show();
     this.authService.loginUser(authRequest).subscribe({
       next: () => {
+        this.spinner.hide();
         if (this.mode === LoginMode.admin && this.isAdmin()) {
           console.log('Successfully logged in admin: ' + authRequest.email);
           this.router.navigate(['admin/dashboard']);
@@ -66,29 +69,26 @@ export class LoginComponent implements OnInit {
         }
       },
       error: error => {
+        this.spinner.hide();
         this.handleError(error);
       }
     });
   }
+
   private handleError(error: any): void {
     console.log('Could not log in due to:');
     console.log(error);
-    this.error = true;
+    let errorMessage = ""
     if (typeof error.error === 'object') {
-      this.errorMessage = error.error.error;
+      errorMessage = error.error.error;
     } else {
-      this.errorMessage = error.error;
+      errorMessage = error.error;
     }
+
+    this.notification.error(errorMessage, "Sign in failed!")
   }
   isAdmin(): boolean {
     return this.authService.getUserRole() === 'ADMIN';
-  }
-
-  /**
-   * Error flag will be deactivated, which clears the error message
-   */
-  vanishError() {
-    this.error = false;
   }
 
   ngOnInit() {

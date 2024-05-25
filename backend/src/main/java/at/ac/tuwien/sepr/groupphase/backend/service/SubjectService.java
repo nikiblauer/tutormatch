@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
@@ -28,8 +30,40 @@ public interface SubjectService {
      * find subjects by queryString, included are Typ, title and number of subject.
      *
      * @param searchParam the query for search
-     * @param pageable the page filter
+     * @param pageable    the page filter
      * @return subjects by queryString
      */
     Page<Subject> findSubjectsBySearchParam(String searchParam, Pageable pageable);
+
+    /**
+     * updates a single subject.
+     *
+     * @param subject the values to be updated
+     */
+    Subject updateSubject(SubjectDetailDto subject) throws Exception;
+
+
+    /**
+     * deletes a Subject form the Database.
+     *
+     * @param id the Subject that is deleted
+     */
+    void deleteSubject(Long id);
+
+    /**
+     * creates a new Subject.
+     *
+     * @param subjectDetailDto Subject to create
+     * @return created Subject
+     * @throws ValidationException if Subject is not valid
+     */
+    Subject createSubject(SubjectCreateDto subjectDetailDto) throws ValidationException;
+
+    /**
+     * finds a Subject by its id.
+     *
+     * @param id the subject is
+     * @return the persisted Subject for the corresponding id
+     */
+    Subject getSubjectById(Long id);
 }

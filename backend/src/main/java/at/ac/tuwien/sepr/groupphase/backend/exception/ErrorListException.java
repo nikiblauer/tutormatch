@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.exception;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +20,13 @@ public abstract class ErrorListException extends Exception {
         this.errors = errors;
     }
 
+    public ErrorListException(String messageSummary) {
+        super(messageSummary);
+        this.errorListDescriptor = "";
+        this.messageSummary = messageSummary;
+        this.errors = new ArrayList<>();
+    }
+
     /**
      * See {@link Throwable#getMessage()} for general information about this method.
      *
@@ -27,8 +35,12 @@ public abstract class ErrorListException extends Exception {
      */
     @Override
     public String getMessage() {
-        return "%s. %s: %s."
-            .formatted(messageSummary, errorListDescriptor, String.join(", ", errors));
+        if (errors.isEmpty()) {
+            return messageSummary;
+        } else {
+            return "%s. %s: %s."
+                .formatted(messageSummary, errorListDescriptor, String.join(", ", errors));
+        }
     }
 
     public String summary() {

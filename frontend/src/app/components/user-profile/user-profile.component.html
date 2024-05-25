@@ -1,32 +1,5 @@
+<ngx-spinner type="square-jelly-box"></ngx-spinner>
 <div class="pt-5">
-    <!-- Add this alert to display error messages -->
-    <div class="row p-2 justify-content-center error-pos" *ngIf="showErrorMessage">
-        <div class="card col-11 col-sm-10 col-md-8 shadow alert alert-danger" role="alert" style="border: none;">
-            <div class="row justify-content-end">
-                <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorMessage()"></button>
-            </div>
-            <div class="card-body p-2 p-md-3">
-                <div class="row justify-content-center">
-                    <h2 class="mb-2 px-3 px-md-5 text-center">Error </h2>
-                    <p class="mb-3 mb-md-5 px-3 px-md-5  text-center text-muted">{{ message }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Add this alert to display success messages -->
-    <div class="row p-2 justify-content-center error-pos" *ngIf="showSuccessMessage">
-        <div class="card col-11 col-sm-10 col-md-8 shadow alert alert-success" role="alert" style="border: none;">
-            <div class="row justify-content-end">
-                <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessMessage()"></button>
-            </div>
-            <div class="card-body p-2 p-md-3">
-                <div class="row justify-content-center">
-                    <h2 class="mb-2 px-3 px-md-5 text-center">Success </h2>
-                    <p class="mb-3 mb-md-5 px-3 px-md-5  text-center text-muted">{{ message }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="row align-items-center justify-content-center">
         <h2 class="col-md-8 mb-4">My Profile</h2>
         <div class="card col-md-8 box-shadow" style="border: none; margin-bottom: 40px;" *ngIf="loadUser">
@@ -66,7 +39,7 @@
                 </div>
                 <!-- Add horizontal line here -->
                 <hr class="my-4">
-                <h3 class="row mb-5" mb-5>My Subjects:</h3>
+                <h3 class="row mb-5">My Subjects:</h3>
                 <div class="row mb-5">
                     <div class="col">
                         <h5>I need subjects:</h5>
@@ -75,7 +48,7 @@
                                 class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ need.name }}
                                 <button class="btn btn-outline-primary btn-sm del-button"
-                                    (click)="removeSubject(need)">✖</button>
+                                    (click)="removeSubject(need)"><i class="bi bi-trash"></i></button>
                             </li>
                         </ul>
                     </div>
@@ -86,7 +59,7 @@
                                 class="list-group-item d-flex justify-content-between align-items-center ">
                                 {{ offer.name }}
                                 <button class="btn btn-outline-primary btn-sm del-button"
-                                    (click)="removeSubject(offer)">✖</button>
+                                    (click)="removeSubject(offer)"><i class="bi bi-trash"></i></button>
                             </li>
                         </ul>
                     </div>
