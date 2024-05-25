@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.service.LoginService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import jakarta.annotation.security.PermitAll;
 import org.slf4j.Logger;
@@ -23,16 +24,17 @@ import java.lang.invoke.MethodHandles;
 public class LoginEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final UserService userService;
+    private final LoginService loginService;
 
-    public LoginEndpoint(UserService userService) {
-        this.userService = userService;
+    public LoginEndpoint(LoginService loginService) {
+        this.loginService = loginService;
     }
 
     @PermitAll
     @PostMapping
     public String login(@RequestBody UserLoginDto userLoginDto) {
-        return userService.login(userLoginDto);
+        LOGGER.info("POST /api/v1/authentication, user = {}", userLoginDto.getEmail());
+        return loginService.login(userLoginDto);
     }
 
 

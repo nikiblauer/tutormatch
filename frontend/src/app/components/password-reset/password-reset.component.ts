@@ -49,7 +49,7 @@ export class PasswordResetComponent {
     this.spinner.show();
     if (this.passwordResetDto.password != '' && this.passwordResetDto.password != this.passwordResetDto.repeatPassword) {
       this.spinner.hide();
-      this.notification.error( "Password field and repeat password don't match");
+      this.notification.error( "Passwords don't match");
       return;
     }
     if (form.valid) {

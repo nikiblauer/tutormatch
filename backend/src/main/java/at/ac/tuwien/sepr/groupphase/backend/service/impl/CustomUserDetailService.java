@@ -81,35 +81,6 @@ public class CustomUserDetailService implements UserService {
         throw new NotFoundException("No user found with this email");
     }
 
-    @Override
-    public String login(UserLoginDto userLoginDto) {
-        LOGGER.trace("Login as User: {}", userLoginDto);
-        UserDetails userDetails;
-        ApplicationUser applicationUser;
-        try {
-            userDetails = loadUserByUsername(userLoginDto.getEmail());
-            applicationUser = findApplicationUserByEmail(userLoginDto.getEmail());
-        } catch (NotFoundException e) {
-            throw new NotFoundException("No user found with this email");
-        }
-        if (!applicationUser.getVerified()) {
-            throw new UnverifiedAccountException("Account is not verified yet. Please verify your account to log in.");
-        }
-        if (userDetails != null
-            && userDetails.isAccountNonExpired()
-            && userDetails.isAccountNonLocked()
-            && userDetails.isCredentialsNonExpired()
-            && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
-            && applicationUser.getVerified()
-        ) {
-            List<String> roles = userDetails.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
-            return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
-        }
-        throw new BadCredentialsException("Username or password is incorrect");
-    }
 
     @Override
     public ApplicationUser create(CreateStudentDto toCreate) throws ValidationException {
@@ -172,48 +143,6 @@ public class CustomUserDetailService implements UserService {
             return false;
         }
         return true;
-    }
-
-    @Override
-    public void requestPasswordReset(String email) {
-        LOGGER.trace("Send Password Reset Email to :{}", email);
-        try {
-            UserDetails userDetails = loadUserByUsername(email);
-            if (userDetails != null
-                    && userDetails.isAccountNonExpired()
-                    && userDetails.isAccountNonLocked()
-                    && userDetails.isCredentialsNonExpired()
-            ) {
-                ApplicationUser applicationUser = findApplicationUserByEmail(email);
-                emailService.sendPasswordResetEmail(applicationUser);
-            }
-        } catch (UsernameNotFoundException | NotFoundException ignored) {
-            LOGGER.warn("Password Reset Email Request with non-existent User: {}", email);
-        }
-    }
-
-    @Override
-    public boolean changePasswordWithToken(String token, PasswordResetDto resetDto) throws ValidationException {
-        LOGGER.trace("Change Password using token :{}", token);
-        String tokenEmail = jwtTokenizer.extractUsernameFromVerificationToken(token);
-        try {
-            UserDetails userDetails = loadUserByUsername(tokenEmail);
-            if (userDetails != null
-                    && userDetails.isAccountNonExpired()
-                    && userDetails.isAccountNonLocked()
-                    && userDetails.isCredentialsNonExpired()
-            ) {
-                ApplicationUser applicationUser = findApplicationUserByEmail(tokenEmail);
-                validator.validatePasswordChange(resetDto);
-                String encodedPassword = passwordEncoder.encode(resetDto.password);
-                applicationUser.setPassword(encodedPassword);
-                userRepository.save(applicationUser);
-                return true;
-            }
-        } catch (UsernameNotFoundException | NotFoundException ignored) {
-            LOGGER.warn("Password Reset submitted with invalid token: {}", token);
-        }
-        return false;
     }
 
     @Override

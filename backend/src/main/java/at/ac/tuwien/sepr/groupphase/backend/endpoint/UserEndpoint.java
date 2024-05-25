@@ -13,6 +13,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMappe
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.service.LoginService;
 import at.ac.tuwien.sepr.groupphase.backend.service.SubjectService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -43,14 +44,16 @@ import java.util.stream.Stream;
 @RequestMapping(value = "/api/v1/user")
 public class UserEndpoint {
     private final UserService userService;
+    private final LoginService loginService;
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ApplicationUserMapper mapper;
     private final SubjectService subjectService;
 
     private final UserMatchService userMatchService;
 
-    public UserEndpoint(UserService userService, ApplicationUserMapper mapper, SubjectService subjectService, UserMatchService userMatchService) {
+    public UserEndpoint(UserService userService, LoginService loginService, ApplicationUserMapper mapper, SubjectService subjectService, UserMatchService userMatchService) {
         this.userService = userService;
+        this.loginService = loginService;
         this.mapper = mapper;
         this.subjectService = subjectService;
         this.userMatchService = userMatchService;
@@ -79,7 +82,7 @@ public class UserEndpoint {
     @PermitAll
     public ResponseEntity requestPasswordReset(@RequestBody EmailDto emailDto) {
         LOGGER.info("GET api/v1/authentication/reset_password with email: {}", emailDto.email);
-        userService.requestPasswordReset(emailDto.email);
+        loginService.requestPasswordReset(emailDto.email);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -87,7 +90,7 @@ public class UserEndpoint {
     @PermitAll
     public ResponseEntity changePasswordWithToken(@PathVariable("token") String token, @RequestBody PasswordResetDto resetDto) throws ValidationException {
         LOGGER.info("PUT /api/v1/user/verify/{}", token);
-        if (userService.changePasswordWithToken(token, resetDto)) {
+        if (loginService.changePasswordWithToken(token, resetDto)) {
             return ResponseEntity.status(HttpStatus.OK).build();
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

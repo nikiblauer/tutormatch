@@ -32,18 +32,6 @@ export interface PasswordResetDto {
   repeatPassword: string;
 }
 
-export interface ApplicationUserDto extends BaseUser {
-  id: number;
-  firstname: string;
-  lastname: string;
-  matrNumber: number;
-  email: string;
-  telNr: string;
-  street: string;
-  areaCode: number;
-  city: string;
-}
-
 export class StudentSubjectInfoDto {
   firstname: string;
   lastname: string;

@@ -8,6 +8,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
@@ -21,6 +23,13 @@ public class UserValidator {
     private static final String VALIDATION_PATTERN_2 = "^[a-zA-Z0-9.+-]+@tuwien\\.ac\\.at$";
     private static final String VALIDATION_PATTERN_3 = "^\\s+";
     private static final String VALIDATION_PATTERN_4 = "^(?:\\+?\\d⋅?){6,14}\\d$";
+
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserValidator(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     public boolean validate(String email) {
@@ -109,7 +118,7 @@ public class UserValidator {
         }
     }
 
-    public void validatePasswordChange(PasswordResetDto resetDto) throws ValidationException {
+    public void validatePasswordChange(PasswordResetDto resetDto, String oldEncodedPassword) throws ValidationException {
         List<String> errors = new ArrayList<>();
         if (!resetDto.password.equals(resetDto.repeatPassword)) {
             errors.add("Passwords must match");
@@ -118,7 +127,9 @@ public class UserValidator {
         if (resetDto.password.length() < 8) {
             errors.add("Password has to be at least of length 8");
         }
-
+        if (passwordEncoder.matches(resetDto.getPassword(), oldEncodedPassword)) {
+            errors.add("New password can not be equal to old password");
+        }
         if (!errors.isEmpty()) {
             throw new ValidationException("Errors while verifying password change:", errors);
         }
