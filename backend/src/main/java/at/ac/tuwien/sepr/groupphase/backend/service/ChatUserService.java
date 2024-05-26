@@ -1,3 +1,4 @@
+/*
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 
@@ -32,3 +33,4 @@ public class ChatUserService {
         return userRepository.findAllByStatus("ONLINE");
     }
 }
+*/

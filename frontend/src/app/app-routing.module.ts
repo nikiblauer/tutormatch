@@ -12,6 +12,7 @@ import {DashboardComponent} from './components/admin/dashboard/dashboard.compone
 import {StudentsComponent} from './components/admin/students/students.component';
 import {UserProfileComponent} from './components/user-profile/user-profile.component';
 import {SubjectComponent} from "./components/admin/subjects/subjects.component";
+import {ChatComponent} from "./components/chat/chat.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -25,6 +26,7 @@ const routes: Routes = [
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {path: 'matches', component: MatchComponent},
   {path: 'myprofile', component: UserProfileComponent},
+  {path: 'chat', component: ChatComponent},
   {
     path: 'admin', component: AdminComponent, children: [
       {path: 'login', component: LoginComponent, data: {mode: LoginMode.admin}},

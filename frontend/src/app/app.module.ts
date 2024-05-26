@@ -23,6 +23,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
 import {RegisterComponent} from "./components/register/register.component";
 import {NgxSpinnerModule} from "ngx-spinner";
+import {ChatComponent} from "./components/chat/chat.component";
+import {WebSocketService} from "./services/web-socket.service";
 
 
 @NgModule({
@@ -39,7 +41,8 @@ import {NgxSpinnerModule} from "ngx-spinner";
     DashboardComponent,
     StudentsComponent,
     UserProfileComponent,
-    SubjectComponent
+    SubjectComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +56,7 @@ import {NgxSpinnerModule} from "ngx-spinner";
     NgxSpinnerModule,
     ToastrModule.forRoot()
   ],
-  providers: [httpInterceptorProviders],
+  providers: [httpInterceptorProviders, WebSocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
