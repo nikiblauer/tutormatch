@@ -169,7 +169,7 @@ public class CustomUserDetailService implements UserService {
     public ApplicationUser updateUser(String userEmail, UpdateStudentDto applicationUserDto) throws ValidationException {
         LOGGER.trace("Updating user with email: {}", userEmail);
         //remove whitespaces from telNr
-        applicationUserDto.telNr = applicationUserDto.telNr != null ? applicationUserDto.telNr.replace(" ", "") : null;
+        applicationUserDto.telNr = applicationUserDto.telNr.trim();
         validator.verifyUserData(applicationUserDto);
 
         ApplicationUser applicationUser = userRepository.findApplicationUserByDetails_Email(userEmail);
@@ -192,7 +192,7 @@ public class CustomUserDetailService implements UserService {
     public ApplicationUser updateUserIncludingMatrNr(String userEmail, UpdateStudentAsAdminDto applicationUserDto) throws ValidationException {
         LOGGER.trace("Updating user with email: {}", userEmail);
         //remove whitespaces from telNr
-        applicationUserDto.telNr = applicationUserDto.telNr != null ? applicationUserDto.telNr.replace(" ", "") : null;
+        applicationUserDto.telNr = applicationUserDto.telNr.trim();
         validator.verifyUserData(applicationUserDto);
 
         ApplicationUser applicationUser = userRepository.findApplicationUserByDetails_Email(userEmail);
