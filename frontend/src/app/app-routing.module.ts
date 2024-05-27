@@ -16,7 +16,7 @@ import {PasswordResetComponent} from "./components/password-reset/password-reset
 import {RequestResetComponent} from "./components/password-reset/request-reset/request-reset.component";
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+  {path: '', component: HomeComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent, data: {mode: LoginMode.user} },
   {
     path: 'register', children: [

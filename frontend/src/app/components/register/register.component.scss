@@ -1,0 +1,9 @@
+$link-color: #436F9C;
+$link-hover-color: #FFA500;
+
+a {
+  color: $link-color;
+  &:hover {
+    color: $link-hover-color;
+  }
+}

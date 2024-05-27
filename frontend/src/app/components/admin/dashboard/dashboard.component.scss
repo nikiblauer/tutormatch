@@ -1,0 +1,33 @@
+.card {
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+}
+
+.card .card-body .card-text {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Color classes for the ratio value */
+.text-good {
+  color: green;
+}
+
+.text-warning {
+  color: orange;
+}
+
+.text-danger {
+  color: red;
+} 

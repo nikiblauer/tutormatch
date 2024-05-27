@@ -104,6 +104,7 @@ public interface ApplicationUserMapper {
         userDetailWithSubjectInfo.setStreet(user.getDetails().getAddress().getStreet());
         userDetailWithSubjectInfo.setAreaCode(user.getDetails().getAddress().getAreaCode());
         userDetailWithSubjectInfo.setCity(user.getDetails().getAddress().getCity());
+        userDetailWithSubjectInfo.setMatrNumber(user.getMatrNumber());
 
         return userDetailWithSubjectInfo;
     }
