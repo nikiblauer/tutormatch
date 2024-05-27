@@ -18,4 +18,8 @@ export class HeaderComponent implements OnInit {
     return this.authService.getUserRole() === 'ADMIN';
   }
 
+  getLink() { 
+    return this.isAdmin() ? '/admin/dashboard' : '/matches';
+  }
+
 }
