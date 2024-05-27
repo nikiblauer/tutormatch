@@ -22,15 +22,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/chatUser"); // Enable user-specific message broker
+        config.enableSimpleBroker("/user"); // Enable user-specific message broker
         config.setApplicationDestinationPrefixes("/app");
-        config.setUserDestinationPrefix(("/chatUser"));
+        config.setUserDestinationPrefix(("/user"));
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-            .setAllowedOrigins("http://localhost:4200", "http://localhost:63342")
+            .setAllowedOrigins("http://localhost:4200")
             .withSockJS();
     }
 

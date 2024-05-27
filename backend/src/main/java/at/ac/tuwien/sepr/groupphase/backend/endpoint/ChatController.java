@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.ChatMessage;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ChatNotification;
+//import at.ac.tuwien.sepr.groupphase.backend.entity.ChatNotification;
 //import at.ac.tuwien.sepr.groupphase.backend.service.ChatMessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,33 +20,26 @@ public class ChatController {
 
     //private final ChatMessageService chatMessageService;
 
-    public ChatController(SimpMessagingTemplate messagingTemplate/*, ChatMessageService chatMessageService*/) {
+    public ChatController(SimpMessagingTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
-        //this.chatMessageService = chatMessageService;
     }
 
     @MessageMapping("/chat")
     public void processMessage(
         @Payload ChatMessage chatMessage
     ) {
-        ChatMessage savedMsg = chatMessage; //chatMessageService.save(chatMessage);
+        ChatMessage savedMsg = chatMessage; //here should be something like chatMessageService.save(chatMessage);
+
+        // This sends the received message to the specified recipient
         messagingTemplate.convertAndSendToUser(
-            chatMessage.getRecipientId(), "/queue/messages",
-            ChatNotification.builder()
+            chatMessage.getRecipientId().toString(), "/queue/messages",
+            ChatMessage.builder()
                 .id(savedMsg.getId())
                 .senderId(savedMsg.getSenderId())
                 .recipientId(savedMsg.getRecipientId())
+                .timestamp(savedMsg.getTimestamp())
                 .content(savedMsg.getContent())
                 .build()
         );
-    }
-
-
-    @GetMapping("/chatMessages/{senderId}/{recipientId}")
-    public ResponseEntity<List<ChatMessage>>findChatMessages(
-        @PathVariable("senderId") String senderId,
-        @PathVariable("recipientId") String recipientId
-    ) {
-        return null; //return ResponseEntity.ok(chatMessageService.findChatMessages(senderId, recipientId));
     }
 }

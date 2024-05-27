@@ -11,19 +11,19 @@ import java.util.Date;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class ChatMessage {
-
     @Id
-    private String id;
-    private String chatId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private String senderId;
-    private String recipientId;
+    private Long chatId;
+
+    private Long senderId;
+    private Long recipientId;
     private String content;
     private Date timestamp;
-
 }

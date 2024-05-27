@@ -13,7 +13,6 @@ import lombok.*;
 public class ChatRoom {
     @Id
     private String id;
-    private String chatId;
-    private String senderId;
-    private String recipientId;
+    private Long senderId;
+    private Long recipientId;
 }
