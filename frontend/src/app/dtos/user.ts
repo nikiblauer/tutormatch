@@ -34,7 +34,8 @@ export interface PasswordResetDto {
 
 export class StudentSubjectInfoDto {
   firstname: string;
-  lastname: string;
+  lastname: string; 
+  matrNumber: number;
   email: string;
   telNr: string;
   street: string;

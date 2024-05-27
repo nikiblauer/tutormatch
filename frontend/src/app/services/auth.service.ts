@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
-import { Globals } from '../global/globals';
+import { Globals } from '../global/globals'; 
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class AuthService {
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
 
-  constructor(private httpClient: HttpClient, private globals: Globals) {
+  constructor(private httpClient: HttpClient, private globals: Globals, private router: Router) {
   }
 
   /**
@@ -38,8 +39,9 @@ export class AuthService {
   }
 
   logoutUser() {
-    console.log('Logout');
-    localStorage.removeItem('authToken');
+    console.log('Logout'); 
+    localStorage.removeItem('authToken'); 
+    this.router.navigate(['/login']);
   }
 
   getToken() {

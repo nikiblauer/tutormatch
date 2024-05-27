@@ -3,10 +3,12 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestUtils;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TopStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.helper.RestResponsePage;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
@@ -22,6 +24,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -126,6 +132,7 @@ public class AdminEndpointTest extends BaseTest {
         expectedRole.add("ROLE_ADMIN");
         return TestUtils.validLoginTest(mockMvc, loginData, expectedRole, ADMIN_EMAIL, securityProperties);
     }
+
     @Test
     void CreateNewValidSubjectReturnsSubject_200() throws Exception {
         // get the first user from the database
@@ -160,6 +167,7 @@ public class AdminEndpointTest extends BaseTest {
             () -> assertEquals("Title", returnedUser.getTitle())
         );
     }
+
     @Test
     void UpdateNewValidSubjectReturnsSubject_200() throws Exception {
         // get the first user from the database
@@ -197,6 +205,7 @@ public class AdminEndpointTest extends BaseTest {
 
         );
     }
+
     @Test
     void DeleteValidSubjectReturnsSubject_200() throws Exception {
 
@@ -209,5 +218,56 @@ public class AdminEndpointTest extends BaseTest {
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn();
+    }
+
+    @Test
+    void testGetSimpleStatistics() throws Exception {
+        String token = loginAsAdmin();
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/statistics/simple")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        SimpleStatisticsDto returnedStatistics = objectMapper.readValue(responseBody, SimpleStatisticsDto.class);
+
+        assertAll("Statistics",
+            () -> assertEquals(5, returnedStatistics.getRegisteredVerifiedUsers()),
+            () -> assertEquals(1.0, returnedStatistics.getRatioOfferedNeededSubjects(), 0.01) // delta is used to compare doubles
+        );
+    }
+
+    @Test
+    void testGetTop5Statistics() throws Exception {
+        String token = loginAsAdmin();
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/statistics/extended?x=5")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        TopStatisticsDto returnedStatistics = objectMapper.readValue(responseBody, TopStatisticsDto.class);
+
+        List<String> top5OfferedSubjects = Arrays.asList(
+            "SE Advanced Model Engineering", "VU Advanced Modeling and Simulation", "PR Advanced Software Engineering",
+            "PR Advanced Software Engineering", "SE Advanced Topics in Recommender Systems and Generative AI"
+        );
+        List<String> top5NeededSubjects = Arrays.asList(
+            "VU Advanced Modeling and Simulation","PR Advanced Software Engineering",
+            "PR Advanced Software Engineering","SE Advanced Model Engineering","VU Advanced Model Engineering"
+        );
+
+        List<Integer> top5OfferedAmount = Arrays.asList(4, 4, 4, 4, 4);
+        List<Integer> top5NeededAmount = Arrays.asList(4, 4, 4, 3, 3);
+        assertAll("Statistics",
+            () -> assertEquals(5, returnedStatistics.getTopXofferedSubjects().size()),
+            () -> assertEquals(5, returnedStatistics.getTopXneededSubjects().size()),
+            () -> assertEquals(top5OfferedAmount, returnedStatistics.getTopXofferedAmount()),
+            () -> assertEquals(top5NeededAmount, returnedStatistics.getTopXneededAmount()),
+            () -> assertThat(returnedStatistics.getTopXofferedSubjects(), containsInAnyOrder(top5OfferedSubjects.toArray())),
+            () -> assertThat(returnedStatistics.getTopXneededSubjects(), containsInAnyOrder(top5NeededSubjects.toArray()))
+        );
     }
 }

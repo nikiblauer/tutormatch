@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" [class.admin-header]="isAdmin()">
   <div class="container-fluid">
-    <a class="navbar-brand m-1" href="">
+    <a class="navbar-brand m-1" [routerLink]="['/matches']">
       <img ngSrc="../../../assets/logo-removed-bg.png" alt="Logo image" width="80" height="80" class="d-inline-block"
         priority="1">
       TutorMatch
@@ -39,7 +39,6 @@
     </ul>
     <ul class="navbar-nav m-3">
       <a class="nav-link" *ngIf="!authService.isLoggedIn()" routerLink="/login" routerLinkActive="active">Login</a>
-      <a class="nav-link" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>
-    </ul>
+      <a class="nav-link logout-button" *ngIf="authService.isLoggedIn()" routerLink="/" (click)="authService.logoutUser()">Logout</a>    </ul>
   </div>
 </nav>

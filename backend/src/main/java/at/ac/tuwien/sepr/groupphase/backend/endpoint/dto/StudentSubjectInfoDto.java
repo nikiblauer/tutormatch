@@ -13,6 +13,8 @@ public class StudentSubjectInfoDto {
 
     private String lastname;
 
+    private long matrNumber;
+
     private String email;
 
     private String telNr;

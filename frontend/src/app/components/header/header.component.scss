@@ -10,3 +10,14 @@
 .m-3{
   margin-right: 80px !important;
 }
+
+.logout-button {
+  background-color: #33709C;
+  color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
+
+  &:hover {
+    background-color: darkblue;
+  }
+}
