@@ -6,9 +6,10 @@ import { Subject as RxSubject } from 'rxjs';
 import { SubjectService } from "../../../services/subject.service";
 import { HttpErrorResponse } from "@angular/common/http";
 import { SubjectDetailDto } from "../../../dtos/subject";
-import {isError} from "lodash";
-import {ToastrService} from "ngx-toastr";
-import {NgxSpinnerService} from "ngx-spinner";
+import { ToastrService } from "ngx-toastr";
+import { NgxSpinnerService } from "ngx-spinner";
+import { Router } from '@angular/router';
+import { AuthService } from "src/app/services/auth.service";
 
 @Component({
   selector: "app-subjects",
@@ -16,7 +17,9 @@ import {NgxSpinnerService} from "ngx-spinner";
   styleUrls: ["./subjects.component.scss"],
 })
 export class SubjectComponent implements OnInit {
-  constructor(private subjectService: SubjectService, private adminService: AdminService, private notification: ToastrService, private spinner: NgxSpinnerService) {
+  constructor(private subjectService: SubjectService, private adminService: AdminService,
+    private notification: ToastrService, private spinner: NgxSpinnerService,
+    private authService: AuthService, private router: Router) {
   }
 
   searchSubject$ = new RxSubject<string>();
@@ -35,14 +38,20 @@ export class SubjectComponent implements OnInit {
   subjectToDelete: SubjectDetailDto = null;
 
   ngOnInit() {
+
+    if (this.authService.getUserRole() !== 'ADMIN' || !this.authService.isLoggedIn()) {
+      this.router.navigate(['/']);
+      return;
+    }
+
     this.searchSubjects();
     this.searchSubject$.pipe(
       debounceTime(300),
       distinctUntilChanged()
-    ).subscribe( {
+    ).subscribe({
       next: (query) => {
         this.searchSubjects(query);
-        },
+      },
       error: error => {
         console.error("Error when loading subjects", error);
         this.notification.error(error.error, "Loading subjects failed!");
@@ -120,19 +129,19 @@ export class SubjectComponent implements OnInit {
       this.spinner.show();
     }, 1500);
     this.subjectService.getSubjectById(id).subscribe({
-      next: subject =>{
+      next: subject => {
         clearTimeout(timeout);
         this.spinner.hide();
-      this.subjectToDelete = subject;
-      this.delete = true;
-    },
-      error: (e =>{
+        this.subjectToDelete = subject;
+        this.delete = true;
+      },
+      error: (e => {
         clearTimeout(timeout);
         this.spinner.hide();
-        this.notification.error(e.error,"Maybe it was already deleted?")
+        this.notification.error(e.error, "Maybe it was already deleted?")
       })
     }
-  );
+    );
   }
 
   confirmDelete() {
@@ -146,7 +155,7 @@ export class SubjectComponent implements OnInit {
       },
       error: (e => {
         this.spinner.hide();
-        if (e.status != 404){
+        if (e.status != 404) {
           this.handleError(e);
         }
       })

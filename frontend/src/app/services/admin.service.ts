@@ -6,6 +6,7 @@ import {StudentDto, UserProfile} from '../dtos/user';
 import { StudentSubjectInfoDto } from '../dtos/user';
 import { Page } from '../dtos/page';
 import {SubjectCreateDto, SubjectDetailDto} from "../dtos/subject";
+import { SimpleStaticticsDto, ExtendedStatisticsDto } from '../dtos/statistics';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,16 @@ export class AdminService {
   }
   deleteSubject(id: number){
     return this.http.delete<StudentSubjectInfoDto>(this.baseUri + `/${id}`, { responseType: 'json' });
+  } 
+
+  getStatistics(): Observable<SimpleStaticticsDto> {
+    const url = `${this.baseUri}/statistics/simple`; 
+    return this.http.get<SimpleStaticticsDto>(url);
+  } 
+
+  getExtendedStatistics(x: number): Observable<ExtendedStatisticsDto> {
+    const url = `${this.baseUri}/statistics/extended?x=${x}`; 
+    return this.http.get<ExtendedStatisticsDto>(url);
   }
 
   getUserSubjects(id: number) {
