@@ -141,7 +141,6 @@ public class AdminEndpoint {
         ApplicationUser student = userService.findApplicationUserById(id);
         subjectService.setUserSubjects(student, listDto.traineeSubjects, listDto.tutorSubjects);
     }
-
     @Secured("ROLE_ADMIN")
     @GetMapping("/statistics/simple")
     public SimpleStatisticsDto getSimpleStatistics() {
@@ -150,7 +149,6 @@ public class AdminEndpoint {
     }
 
     @Secured("ROLE_ADMIN")
-    @PermitAll
     @GetMapping(value = "/statistics/extended")
     public TopStatisticsDto getExtendedStatisticsList(@RequestParam(name = "x") int x) {
         LOGGER.info("GET /api/v1/admin/statistics/extended");
