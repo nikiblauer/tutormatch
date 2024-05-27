@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TopStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -256,11 +257,12 @@ public class AdminEndpointTest extends BaseTest {
 
         ApplicationUser userBefore = userRepository.findAll().get(0);
 
-        UpdateStudentDto updatedUser = new UpdateStudentDto();
+        UpdateStudentAsAdminDto updatedUser = new UpdateStudentAsAdminDto();
         updatedUser.setId(userBefore.getId());
         updatedUser.setFirstname("UserUpdated");
         updatedUser.setLastname("SurnameUpdated");
         updatedUser.setTelNr("+4367675553");
+        updatedUser.setMatrNumber(1111111111L);
         updatedUser.setStreet("newStreet 54");
         updatedUser.setAreaCode(1310);
         updatedUser.setCity("Graz");
@@ -275,7 +277,7 @@ public class AdminEndpointTest extends BaseTest {
                                   .andReturn();
 
         String responseBody = mvcResult.getResponse().getContentAsString();
-        UpdateStudentDto returnedUser = objectMapper.readValue(responseBody, UpdateStudentDto.class);
+        UpdateStudentAsAdminDto returnedUser = objectMapper.readValue(responseBody, UpdateStudentAsAdminDto.class);
         assertAll(
             () -> assertEquals(updatedUser.getFirstname(), returnedUser.getFirstname()),
             () -> assertEquals(updatedUser.getLastname(), returnedUser.getLastname()),
@@ -283,6 +285,7 @@ public class AdminEndpointTest extends BaseTest {
             () -> assertEquals(updatedUser.getStreet(), returnedUser.getStreet()),
             () -> assertEquals(updatedUser.getAreaCode(), returnedUser.getAreaCode()),
             () -> assertEquals(updatedUser.getCity(), returnedUser.getCity()),
+            () -> assertEquals(updatedUser.getMatrNumber(), returnedUser.getMatrNumber()),
             () -> assertNotEquals(userBefore.getFirstname(), returnedUser.getFirstname()),
             () -> assertNotEquals(userBefore.getLastname(), returnedUser.getLastname()),
             () -> assertNotEquals(userBefore.getDetails().getTelNr(), returnedUser.getTelNr()),
