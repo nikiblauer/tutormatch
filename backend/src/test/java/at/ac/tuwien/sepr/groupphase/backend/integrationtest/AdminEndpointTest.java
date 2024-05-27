@@ -7,7 +7,10 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.helper.RestResponsePage;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -28,8 +31,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.ADMIN_EMAIL;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER_EMAIL;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -126,6 +129,14 @@ public class AdminEndpointTest extends BaseTest {
         expectedRole.add("ROLE_ADMIN");
         return TestUtils.validLoginTest(mockMvc, loginData, expectedRole, ADMIN_EMAIL, securityProperties);
     }
+
+    private String loginAsUser() throws Exception {
+        String loginData = "{\"password\": \"Password123\", \"email\": \"" + DEFAULT_USER_EMAIL + "\"}";
+        ArrayList<String> expectedRole = new ArrayList<>();
+        expectedRole.add("ROLE_USER");
+        return TestUtils.validLoginTest(mockMvc, loginData, expectedRole, DEFAULT_USER_EMAIL, securityProperties);
+    }
+
     @Test
     void CreateNewValidSubjectReturnsSubject_200() throws Exception {
         // get the first user from the database
@@ -209,5 +220,85 @@ public class AdminEndpointTest extends BaseTest {
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn();
+    }
+
+    @Test
+    void getValidUserReturnsUser_200() throws Exception {
+
+        ApplicationUser user = userRepository.findAll().get(0);
+        Long id = user.getId();
+
+        String token = loginAsAdmin();
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users/" + id)
+                                                  .header("Authorization", "Bearer " + token)
+                                                  .contentType(MediaType.APPLICATION_JSON))
+                                  .andExpect(status().isOk())
+                                  .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        StudentSubjectInfoDto returnedUser = objectMapper.readValue(responseBody, StudentSubjectInfoDto.class);
+        assertAll(
+            () -> assertEquals(user.getFirstname(), returnedUser.getFirstname()),
+            () -> assertEquals(user.getLastname(), returnedUser.getLastname()),
+            () -> assertEquals(user.getDetails().getTelNr(), returnedUser.getTelNr()),
+            () -> assertEquals(user.getDetails().getEmail(), returnedUser.getEmail())
+        );
+
+    }
+
+    @Test
+    void changeValidUserDetailsReturnsChangedUser_200() throws Exception {
+
+        ApplicationUser userBefore = userRepository.findAll().get(0);
+
+        UpdateStudentDto updatedUser = new UpdateStudentDto();
+        updatedUser.setId(userBefore.getId());
+        updatedUser.setFirstname("UserUpdated");
+        updatedUser.setLastname("SurnameUpdated");
+        updatedUser.setTelNr("+4367675553");
+        updatedUser.setStreet("newStreet 54");
+        updatedUser.setAreaCode(1310);
+        updatedUser.setCity("Graz");
+
+        String token = loginAsAdmin();
+
+        MvcResult mvcResult = mockMvc.perform(put("/api/v1/admin/users/edit")
+                                                  .header("Authorization", "Bearer " + token)
+                                                  .contentType(MediaType.APPLICATION_JSON)
+                                                  .content(objectMapper.writeValueAsString(updatedUser)))
+                                  .andExpect(status().isOk())
+                                  .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        UpdateStudentDto returnedUser = objectMapper.readValue(responseBody, UpdateStudentDto.class);
+        assertAll(
+            () -> assertEquals(updatedUser.getFirstname(), returnedUser.getFirstname()),
+            () -> assertEquals(updatedUser.getLastname(), returnedUser.getLastname()),
+            () -> assertEquals(updatedUser.getTelNr(), returnedUser.getTelNr()),
+            () -> assertEquals(updatedUser.getStreet(), returnedUser.getStreet()),
+            () -> assertEquals(updatedUser.getAreaCode(), returnedUser.getAreaCode()),
+            () -> assertEquals(updatedUser.getCity(), returnedUser.getCity()),
+            () -> assertNotEquals(userBefore.getFirstname(), returnedUser.getFirstname()),
+            () -> assertNotEquals(userBefore.getLastname(), returnedUser.getLastname()),
+            () -> assertNotEquals(userBefore.getDetails().getTelNr(), returnedUser.getTelNr()),
+            () -> assertNotEquals(userBefore.getDetails().getAddress().getStreet(), returnedUser.getStreet()),
+            () -> assertNotEquals(userBefore.getDetails().getAddress().getAreaCode(), returnedUser.getAreaCode()),
+            () -> assertNotEquals(userBefore.getDetails().getAddress().getCity(), returnedUser.getCity())
+        );
+
+    }
+
+    @Test
+    void getUserWithNonAdminTokenReturns_403() throws Exception {
+
+        Long id = subjectRepository.findAll().get(0).getId();
+
+        String token = loginAsUser();
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users/" + id)
+                                                  .header("Authorization", "Bearer " + token)
+                                                  .contentType(MediaType.APPLICATION_JSON))
+                                  .andExpect(status().isForbidden())
+                                  .andReturn();
     }
 }
