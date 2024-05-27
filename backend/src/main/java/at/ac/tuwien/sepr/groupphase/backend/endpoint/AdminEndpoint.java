@@ -141,8 +141,8 @@ public class AdminEndpoint {
         ApplicationUser student = userService.findApplicationUserById(id);
         subjectService.setUserSubjects(student, listDto.traineeSubjects, listDto.tutorSubjects);
     }
+
     @Secured("ROLE_ADMIN")
-    @PutMapping("/users/subjects/{id}")
     @GetMapping("/statistics/simple")
     public SimpleStatisticsDto getSimpleStatistics() {
         LOGGER.info("GET /api/v1/admin/statistics/simple");
