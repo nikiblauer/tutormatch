@@ -7,6 +7,14 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject as RxSubject } from 'rxjs';
 import {ToastrService} from "ngx-toastr";
 import {NgxSpinnerService} from "ngx-spinner";
+import {LoginMode} from "../login/login.component";
+import {AdminService} from "../../services/admin.service";
+import {ActivatedRoute, Router} from "@angular/router";
+
+export enum UserMode {
+  admin,
+  user,
+}
 
 @Component({
   selector: 'app-user-profile',
@@ -14,8 +22,9 @@ import {NgxSpinnerService} from "ngx-spinner";
   styleUrl: './user-profile.component.scss'
 })
 export class UserProfileComponent implements OnInit {
+  mode: UserMode = UserMode.user;
 
-  constructor(private userService: UserService, private subjectService: SubjectService, private notification: ToastrService, private spinner: NgxSpinnerService) {
+  constructor(private userService: UserService, private adminService: AdminService, private router: Router, private route: ActivatedRoute, private subjectService: SubjectService, private notification: ToastrService, private spinner: NgxSpinnerService) {
   }
 
   searchSubject$ = new RxSubject<string>();
@@ -43,12 +52,18 @@ export class UserProfileComponent implements OnInit {
 
   //flag to check if profile was edited
   userInfoChanged = false;
-
+  id: number;
 
   //Subject for info modal
   selectedSubject: Subject;
 
   ngOnInit() {
+    this.route.data.subscribe(data => {
+      this.mode = data.mode;
+    });
+    this.route.paramMap.subscribe(params => {
+      this.id = Number(params.get('id'));
+    });
     this.updateUser()
     this.searchSubjects();
     this.searchSubject$.pipe(
@@ -121,19 +136,34 @@ export class UserProfileComponent implements OnInit {
   }
 
   saveProfile(): void {
-    this.spinner.show();
-    this.userService.addSubjectToUser(this.userOffer.map(item => item.id), this.userNeed.map(item => item.id))
-      .subscribe({
-        next: _ => {
-          this.spinner.hide();
-          this.updateUser()
-        },
-        error: (e) => {
-          this.spinner.hide();
-          this.handleError(e)
-        },
-        complete: () => this.notification.success("Successfully updated user subjects", "Updated user subjects!")
-      });
+      this.spinner.show();
+      if (this.mode == UserMode.admin){
+        this.adminService.addSubjectToUser(this.id, this.userOffer.map(item => item.id), this.userNeed.map(item => item.id))
+          .subscribe({
+            next: _ => {
+              this.spinner.hide();
+              this.updateUser()
+            },
+            error: (e) => {
+              this.spinner.hide();
+              this.handleError(e)
+            },
+            complete: () => this.notification.success("Successfully updated user subjects for user " + this.user.id, "Updated user subjects!")
+          });
+      } else {
+        this.userService.addSubjectToUser(this.userOffer.map(item => item.id), this.userNeed.map(item => item.id))
+          .subscribe({
+            next: _ => {
+              this.spinner.hide();
+              this.updateUser()
+            },
+            error: (e) => {
+              this.spinner.hide();
+              this.handleError(e)
+            },
+            complete: () => this.notification.success("Successfully updated user subjects", "Updated user subjects!")
+        });
+      }
   }
 
   updateInfo(): void {
@@ -141,7 +171,25 @@ export class UserProfileComponent implements OnInit {
     let timeout = setTimeout(() => {
       this.spinner.show();
     }, 1500);
-    this.userService.updateUser(this.editedUser)
+    if (this.mode == UserMode.admin) {
+      this.adminService.updateUserDetails(this.editedUser)
+        .subscribe({
+          next: _ => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            this.updateUser()
+            this.userInfoChanged = false;
+          },
+          error: (e) => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            this.handleError(e);
+          },
+          complete: () => this.notification.success("Successfully updated user information!", "Updated user information!")
+        });
+
+    } else {
+      this.userService.updateUser(this.editedUser)
       .subscribe({
         next: _ => {
           clearTimeout(timeout);
@@ -156,13 +204,36 @@ export class UserProfileComponent implements OnInit {
         },
         complete: () => this.notification.success("Successfully updated user information!", "Updated user information!")
       });
+    }
   }
 
   updateUser() {
     let timeout = setTimeout(() => {
       this.spinner.show();
     }, 1500);
-    this.userService.getUserSubjects()
+    if (this.mode == UserMode.admin) {
+      this.adminService.getUserSubjects(this.id)
+        .subscribe({
+          next: userProfile => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            this.loadUser = true;
+            this.user = userProfile;
+            this.userOffer = userProfile.subjects.filter(item => item.role == "trainee");
+            this.userNeed = userProfile.subjects.filter(item => item.role == "tutor");
+            this.userAddress = StudentDto.getAddressAsString(userProfile);
+            this.editedUser = { ...this.user };
+            this.user.id  = this.id;
+            this.updateFilterSubjects();
+          },
+          error: (e) => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            this.handleError(e)
+          }
+        });
+    } else {
+      this.userService.getUserSubjects()
       .subscribe({
         next: userProfile => {
           clearTimeout(timeout);
@@ -173,6 +244,7 @@ export class UserProfileComponent implements OnInit {
           this.userNeed = userProfile.subjects.filter(item => item.role == "tutor");
           this.userAddress = StudentDto.getAddressAsString(userProfile);
           this.editedUser = { ...this.user };
+          this.user.id  = this.id;
           this.updateFilterSubjects();
         },
         error: (e) => {
@@ -181,6 +253,7 @@ export class UserProfileComponent implements OnInit {
           this.handleError(e)
         }
       });
+    }
   }
 
   editUser() {
@@ -205,12 +278,23 @@ export class UserProfileComponent implements OnInit {
       const endIndex = errorString.lastIndexOf("]");
       const contents = errorString.substring(startIndex + 1, endIndex);
       const errorMessages = contents.split(', ');
-  
+
       for (const message of errorMessages) {
         this.notification.error(message.trim(), "Error"); // trim to remove leading/trailing whitespaces
       }
     } else {
       this.notification.error(error.error, "Error")
+    }
+  }
+
+  public get getHeadline() {
+    switch (this.mode) {
+      case UserMode.admin:
+        return 'Profile of ' + this.user.firstname + ' ' + this.user.lastname;
+      case UserMode.user:
+        return 'My Profile'
+      default:
+        return '?';
     }
   }
 }

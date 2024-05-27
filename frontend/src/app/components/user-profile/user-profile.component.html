@@ -1,8 +1,8 @@
 <ngx-spinner type="square-jelly-box"></ngx-spinner>
-<div class="pt-5">
+<div class="pt-5" *ngIf="loadUser">
     <div class="row align-items-center justify-content-center">
-        <h2 class="col-md-8 mb-4">My Profile</h2>
-        <div class="card col-md-8 box-shadow" style="border: none; margin-bottom: 40px;" *ngIf="loadUser">
+        <h2 class="col-md-8 mb-4">{{ getHeadline }}</h2>
+        <div class="card col-md-8 box-shadow" style="border: none; margin-bottom: 40px;" >
             <h3 class="m-4">Personal Data</h3>
             <button class="btn btn-edit position-absolute top-0 end-0 mt-3 me-3" (click)="editUser()"
                 data-bs-toggle="modal" data-bs-target="#editProfileModal">
