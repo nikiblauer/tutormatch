@@ -42,7 +42,7 @@ export class AdminService {
   }
 
   updateUserDetails(toUpdate: StudentDto) : Observable<StudentDto> {
-    const url = `${this.baseUri}/users/edit`
+    const url = `${this.baseUri}/users/update`
     return this.http.put<StudentDto>(url, toUpdate, { responseType: 'json' });
   }
 
@@ -54,15 +54,15 @@ export class AdminService {
   }
   deleteSubject(id: number){
     return this.http.delete<StudentSubjectInfoDto>(this.baseUri + `/${id}`, { responseType: 'json' });
-  } 
+  }
 
   getStatistics(): Observable<SimpleStaticticsDto> {
-    const url = `${this.baseUri}/statistics/simple`; 
+    const url = `${this.baseUri}/statistics/simple`;
     return this.http.get<SimpleStaticticsDto>(url);
-  } 
+  }
 
   getExtendedStatistics(x: number): Observable<ExtendedStatisticsDto> {
-    const url = `${this.baseUri}/statistics/extended?x=${x}`; 
+    const url = `${this.baseUri}/statistics/extended?x=${x}`;
     return this.http.get<ExtendedStatisticsDto>(url);
   }
 

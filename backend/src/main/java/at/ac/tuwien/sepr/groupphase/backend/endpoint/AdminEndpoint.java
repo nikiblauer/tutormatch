@@ -7,6 +7,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectsListDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TopStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
@@ -91,13 +92,13 @@ public class AdminEndpoint {
     }
 
     @Secured("ROLE_ADMIN")
-    @PutMapping("/users/edit")
-    public UpdateStudentDto updateUserDetails(@Valid @RequestBody UpdateStudentDto applicationUserDto) throws ValidationException {
-        LOGGER.info("PUT /api/v1/admin/users/edit with body {}", applicationUserDto);
+    @PutMapping("/users/update")
+    public UpdateStudentAsAdminDto updateUserDetails(@Valid @RequestBody UpdateStudentAsAdminDto applicationUserDto) throws ValidationException {
+        LOGGER.info("PUT /api/v1/admin/users/update with body {}", applicationUserDto);
         Long id = applicationUserDto.id;
         String userEmail = userService.findApplicationUserById(id).getDetails().getEmail();
-        var user = userService.updateUser(userEmail, applicationUserDto);
-        return userMapper.toUpdateDto(user);
+        var user = userService.updateUserIncludingMatrNr(userEmail, applicationUserDto);
+        return userMapper.toAdminUpdateDto(user);
     }
 
     @Secured("ROLE_ADMIN")

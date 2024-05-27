@@ -1,14 +1,12 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.UnverifiedAccountException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
@@ -20,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -190,6 +187,31 @@ public class CustomUserDetailService implements UserService {
         // Save the updated ApplicationUser in the database
         return userRepository.save(applicationUser);
     }
+
+    @Override
+    public ApplicationUser updateUserIncludingMatrNr(String userEmail, UpdateStudentAsAdminDto applicationUserDto) throws ValidationException {
+        LOGGER.trace("Updating user with email: {}", userEmail);
+        //remove whitespaces from telNr
+        applicationUserDto.telNr = applicationUserDto.telNr != null ? applicationUserDto.telNr.replace(" ", "") : null;
+        validator.verifyUserData(applicationUserDto);
+
+        ApplicationUser applicationUser = userRepository.findApplicationUserByDetails_Email(userEmail);
+        if (applicationUser == null) {
+            throw new NotFoundException(String.format("User with email %s not found", userEmail));
+        }
+
+        applicationUser.setFirstname(applicationUserDto.firstname);
+        applicationUser.setLastname(applicationUserDto.lastname);
+        applicationUser.setMatrNumber(applicationUserDto.matrNumber);
+        applicationUser.getDetails().setTelNr(applicationUserDto.telNr);
+        applicationUser.getDetails().getAddress().setStreet(applicationUserDto.street);
+        applicationUser.getDetails().getAddress().setAreaCode(applicationUserDto.areaCode);
+        applicationUser.getDetails().getAddress().setCity(applicationUserDto.city);
+
+        // Save the updated ApplicationUser in the database
+        return userRepository.save(applicationUser);
+    }
+
 
     @Override
     public Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Pageable pageable) {

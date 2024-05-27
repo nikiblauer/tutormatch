@@ -267,7 +267,7 @@ public class AdminEndpointTest extends BaseTest {
 
         String token = loginAsAdmin();
 
-        MvcResult mvcResult = mockMvc.perform(put("/api/v1/admin/users/edit")
+        MvcResult mvcResult = mockMvc.perform(put("/api/v1/admin/users/update")
                                                   .header("Authorization", "Bearer " + token)
                                                   .contentType(MediaType.APPLICATION_JSON)
                                                   .content(objectMapper.writeValueAsString(updatedUser)))

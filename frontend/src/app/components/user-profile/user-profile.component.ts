@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { SubjectService } from 'src/app/services/subject.service';
-import { UserProfile, UserSubject, Subject, StudentDto } from 'src/app/dtos/user';
+import { UserProfile, Subject, StudentDto } from 'src/app/dtos/user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject as RxSubject } from 'rxjs';
 import {ToastrService} from "ngx-toastr";
 import {NgxSpinnerService} from "ngx-spinner";
-import {LoginMode} from "../login/login.component";
 import {AdminService} from "../../services/admin.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
@@ -22,7 +21,6 @@ export enum UserMode {
   styleUrl: './user-profile.component.scss'
 })
 export class UserProfileComponent implements OnInit {
-  mode: UserMode = UserMode.user;
 
   constructor(private userService: UserService, private adminService: AdminService, private router: Router, private route: ActivatedRoute, private subjectService: SubjectService, private notification: ToastrService, private spinner: NgxSpinnerService) {
   }
@@ -32,6 +30,7 @@ export class UserProfileComponent implements OnInit {
   // view ist loaded it this variables is true
   loadUser = false;
   loadSubjects = false
+  mode: UserMode = UserMode.user;
 
   //profile information
   userAddress = '';
@@ -270,6 +269,7 @@ export class UserProfileComponent implements OnInit {
   }
 
 
+
   private handleError(error: HttpErrorResponse) {
     console.log(error.error);
     if (error.status === 400 || error.status === 422) {
@@ -295,6 +295,17 @@ export class UserProfileComponent implements OnInit {
         return 'My Profile'
       default:
         return '?';
+    }
+  }
+
+  public get admin(){
+    switch (this.mode) {
+      case UserMode.admin:
+        return 1;
+      case UserMode.user:
+        return 0;
+      default:
+        return 0;
     }
   }
 }
