@@ -25,7 +25,11 @@
                 <td>{{ student.firstname }} {{ student.lastname }}</td>
                 <td>{{ student.email }}</td>
                 <td>
-                    <button class="btn btn-info custom-button" (click)="viewDetails(student, detailsModal)">
+                  <button class="btn btn-info custom-button" routerLink="./{{student.id}}">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+
+                  <button class="btn btn-info custom-button" (click)="viewDetails(student, detailsModal)">
                         <i class="bi bi-info-circle"></i>
                     </button>
                 </td>
@@ -45,7 +49,7 @@
             <h5 class="modal-title" style="font-size: 2em; color: #33709c;">Student Details</h5>
         </div>
         <div class="modal-body">
-            <p>Name: {{selectedStudentDetails?.firstname}} {{selectedStudentDetails?.lastname}}</p> 
+            <p>Name: {{selectedStudentDetails?.firstname}} {{selectedStudentDetails?.lastname}}</p>
             <p>Student ID: {{selectedStudentDetails?.matrNumber}}</p>
             <p>Email: {{selectedStudentDetails?.email}}</p>
             <p>Telephone: {{selectedStudentDetails?.telNr}}</p>
@@ -56,7 +60,8 @@
             <p><em>Tutor Subjects: </em> {{selectedStudentDetails?.tutorSubjects.join(', ')}}</p>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+          <button type="button" class="btn btn-secondary justify-content-start" routerLink="./{{selectedStudent.id}}" (click)="modal.close('Close click')">Edit</button>
+          <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
         </div>
     </ng-template>
 </div>

@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -45,6 +46,8 @@ public interface UserService extends UserDetailsService {
      * @return the updated user
      */
     ApplicationUser updateUser(String userEmail, UpdateStudentDto applicationUserDto) throws ValidationException;
+
+    ApplicationUser updateUserIncludingMatrNr(String userEmail, UpdateStudentAsAdminDto applicationUserDto) throws ValidationException;
 
     /**
      * Get all users.

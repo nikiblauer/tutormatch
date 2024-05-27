@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserSubjectDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -153,6 +154,19 @@ public interface ApplicationUserMapper {
     default UpdateStudentDto toUpdateDto(ApplicationUser applicationUserUpdated) {
         UpdateStudentDto dto = new UpdateStudentDto();
         dto.setId(applicationUserUpdated.getId());
+        dto.setFirstname(applicationUserUpdated.getFirstname());
+        dto.setLastname(applicationUserUpdated.getLastname());
+        dto.setTelNr(applicationUserUpdated.getDetails().getTelNr());
+        dto.setCity(applicationUserUpdated.getDetails().getAddress().getCity());
+        dto.setStreet(applicationUserUpdated.getDetails().getAddress().getStreet());
+        dto.setAreaCode(applicationUserUpdated.getDetails().getAddress().getAreaCode());
+        return dto;
+    }
+
+    default UpdateStudentAsAdminDto toAdminUpdateDto(ApplicationUser applicationUserUpdated) {
+        UpdateStudentAsAdminDto dto = new UpdateStudentAsAdminDto();
+        dto.setId(applicationUserUpdated.getId());
+        dto.setMatrNumber(applicationUserUpdated.getMatrNumber());
         dto.setFirstname(applicationUserUpdated.getFirstname());
         dto.setLastname(applicationUserUpdated.getLastname());
         dto.setTelNr(applicationUserUpdated.getDetails().getTelNr());

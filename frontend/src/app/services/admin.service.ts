@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Globals } from "../global/globals";
-import { StudentDto } from '../dtos/user';
+import {StudentDto, UserProfile} from '../dtos/user';
 import { StudentSubjectInfoDto } from '../dtos/user';
 import { Page } from '../dtos/page';
 import {SubjectCreateDto, SubjectDetailDto} from "../dtos/subject";
@@ -41,6 +41,11 @@ export class AdminService {
     return this.http.get<StudentSubjectInfoDto>(url);
   }
 
+  updateUserDetails(toUpdate: StudentDto) : Observable<StudentDto> {
+    const url = `${this.baseUri}/users/update`
+    return this.http.put<StudentDto>(url, toUpdate, { responseType: 'json' });
+  }
+
   createSubject(subject: SubjectCreateDto){
     return this.http.post<StudentSubjectInfoDto>(this.baseUri + `/subject`, subject, { responseType: 'json' });
   }
@@ -49,15 +54,26 @@ export class AdminService {
   }
   deleteSubject(id: number){
     return this.http.delete<StudentSubjectInfoDto>(this.baseUri + `/${id}`, { responseType: 'json' });
-  } 
+  }
 
   getStatistics(): Observable<SimpleStaticticsDto> {
-    const url = `${this.baseUri}/statistics/simple`; 
+    const url = `${this.baseUri}/statistics/simple`;
     return this.http.get<SimpleStaticticsDto>(url);
-  } 
+  }
 
   getExtendedStatistics(x: number): Observable<ExtendedStatisticsDto> {
-    const url = `${this.baseUri}/statistics/extended?x=${x}`; 
+    const url = `${this.baseUri}/statistics/extended?x=${x}`;
     return this.http.get<ExtendedStatisticsDto>(url);
+  }
+
+  getUserSubjects(id: number) {
+    return this.http.get<UserProfile>(this.baseUri + `/users/subjects` + `/${id}`);
+  }
+
+  addSubjectToUser(id: number, traineeSubjects: number[], tutorSubjects: number[]): Observable<any> {
+    return this.http.put(this.baseUri + `/users/subjects`+ `/${id}`, {
+      traineeSubjects: traineeSubjects,
+      tutorSubjects: tutorSubjects
+    })
   }
 }
