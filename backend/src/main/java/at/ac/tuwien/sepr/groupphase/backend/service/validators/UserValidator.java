@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepr.groupphase.backend.service;
+package at.ac.tuwien.sepr.groupphase.backend.service.validators;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
 

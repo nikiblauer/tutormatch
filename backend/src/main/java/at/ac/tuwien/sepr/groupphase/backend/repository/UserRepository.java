@@ -25,6 +25,9 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
 
     @Query("SELECT s.title FROM ApplicationUser u JOIN u.userSubjects us JOIN us.subject s WHERE u.id = :userId AND us.role = :role")
     List<String> getUserSubjectsByRole(@Param("userId") Long id, @Param("role") String role);
+
+    @Query("SELECT COUNT(u) FROM ApplicationUser u WHERE u.admin = false AND u.verified = true")
+    long countNonAdminUsers();
 }
 
 
