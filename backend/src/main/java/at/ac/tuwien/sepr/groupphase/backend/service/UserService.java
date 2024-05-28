@@ -1,8 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -38,22 +39,15 @@ public interface UserService extends UserDetailsService {
     ApplicationUser findApplicationUserByEmail(String email);
 
     /**
-     * Log in a user.
-     *
-     * @param userLoginDto login credentials
-     * @return the JWT, if successful
-     * @throws org.springframework.security.authentication.BadCredentialsException if credentials are bad
-     */
-    String login(UserLoginDto userLoginDto);
-
-    /**
      * Update a user.
      *
      * @param userEmail the email of the user
      * @param applicationUserDto the updated user
      * @return the updated user
      */
-    ApplicationUser updateUser(String userEmail, UpdateApplicationUserDto applicationUserDto) throws ValidationException;
+    ApplicationUser updateUser(String userEmail, UpdateStudentDto applicationUserDto) throws ValidationException;
+
+    ApplicationUser updateUserIncludingMatrNr(String userEmail, UpdateStudentAsAdminDto applicationUserDto) throws ValidationException;
 
     /**
      * Get all users.
@@ -63,7 +57,7 @@ public interface UserService extends UserDetailsService {
      */
     Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Pageable pageable);
 
-    ApplicationUser create(CreateApplicationUserDto applicationUserDto) throws ValidationException;
+    ApplicationUser create(CreateStudentDto applicationUserDto) throws ValidationException;
 
     ApplicationUser findApplicationUserById(Long id);
 
@@ -75,4 +69,10 @@ public interface UserService extends UserDetailsService {
      * @return true if user was verified this way or false if the token was invalid (e.g. expired, wrong format)
      */
     boolean verifyEmail(String token);
+
+    /**
+     * sends a new verification email if user with this email exists and is not verified yet.
+     *
+     */
+    void resendVerificationEmail(String email);
 }

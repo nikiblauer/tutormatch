@@ -1,8 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.unittests.email;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
@@ -50,7 +51,7 @@ public class EmailSmtpServiceTest extends BaseTest {
 
         String mailSubject = "TutorMatch - Verify your email";
         String mailTo = "test@excaple.com";
-        CreateApplicationUserDto testDto = new CreateApplicationUserDto();
+        CreateStudentDto testDto = new CreateStudentDto();
 
         testDto.setEmail(mailTo);
         testDto.setFirstname("Max");
@@ -63,5 +64,27 @@ public class EmailSmtpServiceTest extends BaseTest {
         assertEquals(mailSubject, messages[0].getSubject());
         String body = GreenMailUtil.getBody(messages[0]).replaceAll("=\r?\n", "");
         assertThat(body, containsString("Max Mustermann"));
+        assertThat(body, containsString("/register/verify/"));
+    }
+    @Test
+
+    public void testPasswordResetEmailSent()
+        throws InterruptedException, MessagingException {
+
+        String mailSubject = "TutorMatch - Reset Password";
+        String mailTo = "test@excaple.com";
+        ApplicationUser testDto = new ApplicationUser();
+        testDto.setDetails(new ContactDetails(null,mailTo,null));
+        testDto.setFirstname("Max");
+        testDto.setLastname("Mustermann");
+        emailService.sendPasswordResetEmail(testDto);
+
+        assertTrue(greenMail.waitForIncomingEmail(5000, 1));
+        MimeMessage[] messages = greenMail.getReceivedMessagesForDomain(mailTo);
+        assertEquals(1, messages.length);
+        assertEquals(mailSubject, messages[0].getSubject());
+        String body = GreenMailUtil.getBody(messages[0]).replaceAll("=\r?\n", "");
+        assertThat(body, containsString("Max Mustermann"));
+        assertThat(body, containsString("/password_reset/"));
     }
 }

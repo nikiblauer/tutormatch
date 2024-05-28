@@ -10,12 +10,14 @@ import {MatchComponent} from "./components/match/match.component";
 import {AdminComponent} from './components/admin/admin.component';
 import {DashboardComponent} from './components/admin/dashboard/dashboard.component';
 import {StudentsComponent} from './components/admin/students/students.component';
-import {UserProfileComponent} from './components/user-profile/user-profile.component';
+import {UserMode, UserProfileComponent} from './components/user-profile/user-profile.component';
 import {SubjectComponent} from "./components/admin/subjects/subjects.component";
+import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
+import {RequestResetComponent} from "./components/password-reset/request-reset/request-reset.component";
 import {ChatComponent} from "./components/chat/chat.component";
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+  {path: '', component: HomeComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent, data: {mode: LoginMode.user} },
   {
     path: 'register', children: [
@@ -23,15 +25,22 @@ const routes: Routes = [
       {path: 'verify/:token', component: VerifyComponent}
     ]
   },
+  {    path: 'password_reset', children: [
+      {path: '', component: RequestResetComponent},
+      {path: ':token', component: PasswordResetComponent}
+    ]
+  },
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {path: 'matches', component: MatchComponent},
   {path: 'myprofile', component: UserProfileComponent},
   {path: 'chat', component: ChatComponent},
+  {path: 'myprofile', component: UserProfileComponent,data: {mode: UserMode.user}},
   {
     path: 'admin', component: AdminComponent, children: [
       {path: 'login', component: LoginComponent, data: {mode: LoginMode.admin}},
       {path: 'dashboard', component: DashboardComponent},
       {path: 'students', component: StudentsComponent},
+      {path: 'students/:id', component: UserProfileComponent, data: {mode: UserMode.admin}},
       {path: 'subjects', component: SubjectComponent}
     ]
   }

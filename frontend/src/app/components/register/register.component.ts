@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators} from "@angular/forms";
 import {UserService} from "../../services/user.service";
-import {CreateApplicationUserDto} from "../../dtos/user";
+import {CreateStudentDto} from "../../dtos/user";
 import {Router, RouterLink} from "@angular/router";
 import {NgIf} from "@angular/common";
 import {ToastrService} from "ngx-toastr";
@@ -16,7 +16,7 @@ export class RegisterComponent {
   form: FormGroup;
   created: boolean = false;
 
-  createUser: CreateApplicationUserDto = {
+  createUser: CreateStudentDto = {
       firstname: "",
       lastname: "",
       matrNumber: null,
@@ -46,6 +46,25 @@ export class RegisterComponent {
           this.spinner.hide();
           console.error("Error when creating user", error);
           this.notification.error(error.error, "Signup failed");
+        }
+      }
+    );
+
+  }
+
+  resendEmail() {
+    this.spinner.show();
+    console.log(this.createUser.email)
+
+    this.userService.resendVerification(this.createUser.email).subscribe({
+        next: () => {
+          this.spinner.hide();
+          this.notification.success("Verification email resent.");
+        },
+        error: error => {
+          this.spinner.hide();
+          console.error("Error when creating user", error);
+          this.notification.error(error.error, "Could not resend verification email");
         }
       }
     );

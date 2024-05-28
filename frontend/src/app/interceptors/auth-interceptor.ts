@@ -14,10 +14,12 @@ export class AuthInterceptor implements HttpInterceptor {
     const authUri = this.globals.backendUri + '/authentication';
     const registerUri = this.globals.backendUri + '/user';
     const verifyUri = this.globals.backendUri + '/user/verify';
+    const resetUri = this.globals.backendUri + '/user/reset_password';
     // Do not intercept authentication requests
+    console.log(req.url);
 
 
-    if (req.url === authUri || (req.url === registerUri && req.method === "POST")  || req.url.startsWith(verifyUri)) {
+    if (req.url === authUri || (req.url === registerUri && req.method === "POST")  || req.url.startsWith(verifyUri) || req.url.startsWith(resetUri)) {
       console.log(req.url);
       return next.handle(req);
     }

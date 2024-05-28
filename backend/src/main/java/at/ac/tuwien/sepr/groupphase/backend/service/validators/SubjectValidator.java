@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepr.groupphase.backend.service;
+package at.ac.tuwien.sepr.groupphase.backend.service.validators;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -9,13 +9,11 @@ import org.springframework.stereotype.Component;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Component
 public class SubjectValidator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final String VALIDATION_PATTERN = "^\\s*";
-
 
     public void validateSubject(SubjectCreateDto subject) throws ValidationException {
         LOGGER.trace("validateSubject: subject:{}", subject);
@@ -36,7 +34,7 @@ public class SubjectValidator {
             errors.add("Semester cannot be null");
         }
         if (!errors.isEmpty()) {
-            throw new ValidationException("Errors orroured while validating the subject", errors);
+            throw new ValidationException(errors.toString());
         }
         if (subject.getNumber().matches(VALIDATION_PATTERN)) {
             errors.add("Number may not consists only of whitespaces");
@@ -51,7 +49,7 @@ public class SubjectValidator {
             errors.add("Number may not consists only of whitespaces");
         }
         if (!errors.isEmpty()) {
-            throw new ValidationException("Errors occurred while validating the subject", errors);
+            throw new ValidationException(errors.toString());
         }
     }
 }

@@ -1,1 +1,69 @@
-<p>dashboard works!</p>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Dashboard:</h2>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Registered Verified Users</h5>
+          <p class="card-text display-4 font-weight-bold">{{statistics?.registeredVerifiedUsers}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Ratio Needed / Offered Subjects</h5>
+          <p class="card-text display-4 font-weight-bold" [ngClass]="getRatioClass()">
+            {{statistics?.ratioOfferedNeededSubjects}}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Open Chats/User</h5>
+          <p class="card-text display-4 font-weight-bold">{{statistics?.openChatsPerUser}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-md-6"
+      *ngIf="statisticsListExtended?.topXofferedSubjects && statisticsListExtended?.topXofferedAmount">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Top {{listLimitExtendedStatistics}} Subjects Offered</h5>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center"
+              *ngFor="let subject of statisticsListExtended?.topXofferedSubjects; let i = index">
+              <span class="flex-grow-1">{{subject}}</span>
+              <span class="ml-3"><strong><em>{{statisticsListExtended?.topXofferedAmount[i]}}</em></strong></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6"
+      *ngIf="statisticsListExtended?.topXneededSubjects && statisticsListExtended?.topXneededAmount">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Top {{listLimitExtendedStatistics}} Subjects Needed</h5>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center"
+              *ngFor="let subject of statisticsListExtended?.topXneededSubjects; let i = index">
+              <span class="flex-grow-1">{{subject}}</span>
+              <span class="ml-3"><strong><em>{{statisticsListExtended?.topXneededAmount[i]}}</em></strong></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p *ngIf="!statisticsListExtended?.topXneededSubjects">No data for needed subjects.</p>
+  <p *ngIf="!statisticsListExtended?.topXneededAmount">No data for needed subjects amount.</p>
+</div>

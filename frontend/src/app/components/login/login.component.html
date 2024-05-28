@@ -20,7 +20,7 @@
               <h3>Welcome back!</h3>
               <p class="text-muted">{{description}}</p>
             </div>
-            <form #form="ngForm" [formGroup]="loginForm" (ngSubmit)="loginUser()">
+            <form #form="ngForm" [formGroup]="loginForm">
               <div class="mb-3 form-group">
                 <label for="inputUsername" class="form-label text-muted">Email</label>
                 <input type="text" name="username" formControlName="username" class="form-control" id="inputUsername"
@@ -45,7 +45,7 @@
                 </div>
               </div>
               <div class="mt-1 text-end mb-5 ">
-                <a href="#">{{resetPasswordLink}}</a>
+                <a href="#password_reset">{{resetPasswordLink}}</a>
               </div>
               <div class="row mb-3">
                 <button (click)="loginUser()" class="btn primary-btn w-100" [disabled]="form.invalid">SIGN IN</button>

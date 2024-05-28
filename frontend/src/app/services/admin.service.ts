@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Globals } from "../global/globals";
-import { ApplicationUserDto } from '../dtos/user';
-import { UserDetailWithSubjectsDto } from '../dtos/user';
+import {StudentDto, UserProfile} from '../dtos/user';
+import { StudentSubjectInfoDto } from '../dtos/user';
 import { Page } from '../dtos/page';
 import {SubjectCreateDto, SubjectDetailDto} from "../dtos/subject";
+import { SimpleStaticticsDto, ExtendedStatisticsDto } from '../dtos/statistics';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class AdminService {
 
   constructor(private http: HttpClient, private globals: Globals) { }
 
-  searchUsers(fullname: string, matrNumber: number, page: number, size: number): Observable<Page<ApplicationUserDto>> {
+  searchUsers(fullname: string, matrNumber: number, page: number, size: number): Observable<Page<StudentDto>> {
     const url = `${this.baseUri}/users`;
 
     // Define the query parameters
@@ -32,21 +33,47 @@ export class AdminService {
     params.size = size.toString();
 
     // Make the GET request and return the result
-    return this.http.get<Page<ApplicationUserDto>>(url, { params });
+    return this.http.get<Page<StudentDto>>(url, { params });
   }
 
-  getUserDetails(id: number): Observable<UserDetailWithSubjectsDto> {
+  getUserDetails(id: number): Observable<StudentSubjectInfoDto> {
     const url = `${this.baseUri}/users/${id}`;
-    return this.http.get<UserDetailWithSubjectsDto>(url);
+    return this.http.get<StudentSubjectInfoDto>(url);
+  }
+
+  updateUserDetails(toUpdate: StudentDto) : Observable<StudentDto> {
+    const url = `${this.baseUri}/users/update`
+    return this.http.put<StudentDto>(url, toUpdate, { responseType: 'json' });
   }
 
   createSubject(subject: SubjectCreateDto){
-    return this.http.post<UserDetailWithSubjectsDto>(this.baseUri + `/subject`, subject, { responseType: 'json' });
+    return this.http.post<StudentSubjectInfoDto>(this.baseUri + `/subject`, subject, { responseType: 'json' });
   }
   updateSubject(subject: SubjectDetailDto){
-    return this.http.put<UserDetailWithSubjectsDto>(this.baseUri + `/subject`, subject, { responseType: 'json' });
+    return this.http.put<StudentSubjectInfoDto>(this.baseUri + `/subject`, subject, { responseType: 'json' });
   }
   deleteSubject(id: number){
-    return this.http.delete<UserDetailWithSubjectsDto>(this.baseUri + `/${id}`, { responseType: 'json' });
+    return this.http.delete<StudentSubjectInfoDto>(this.baseUri + `/${id}`, { responseType: 'json' });
+  }
+
+  getStatistics(): Observable<SimpleStaticticsDto> {
+    const url = `${this.baseUri}/statistics/simple`;
+    return this.http.get<SimpleStaticticsDto>(url);
+  }
+
+  getExtendedStatistics(x: number): Observable<ExtendedStatisticsDto> {
+    const url = `${this.baseUri}/statistics/extended?x=${x}`;
+    return this.http.get<ExtendedStatisticsDto>(url);
+  }
+
+  getUserSubjects(id: number) {
+    return this.http.get<UserProfile>(this.baseUri + `/users/subjects` + `/${id}`);
+  }
+
+  addSubjectToUser(id: number, traineeSubjects: number[], tutorSubjects: number[]): Observable<any> {
+    return this.http.put(this.baseUri + `/users/subjects`+ `/${id}`, {
+      traineeSubjects: traineeSubjects,
+      tutorSubjects: tutorSubjects
+    })
   }
 }

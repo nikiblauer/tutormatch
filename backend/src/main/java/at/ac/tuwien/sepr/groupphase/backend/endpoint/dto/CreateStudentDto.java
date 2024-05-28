@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateApplicationUserDto {
+public class CreateStudentDto {
     @NotBlank(message = "Password is mandatory")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     public String password;
@@ -38,7 +38,7 @@ public class CreateApplicationUserDto {
             + '}';
     }
 
-    public CreateApplicationUserDto() {
+    public CreateStudentDto() {
 
     }
 

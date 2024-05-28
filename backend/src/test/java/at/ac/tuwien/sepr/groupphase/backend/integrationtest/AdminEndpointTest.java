@@ -3,10 +3,14 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestUtils;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ApplicationUserDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleStatisticsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserDetailsWithSubjectDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TopStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.helper.RestResponsePage;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
@@ -23,13 +27,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.ADMIN_EMAIL;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER_EMAIL;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -65,9 +73,9 @@ public class AdminEndpointTest extends BaseTest {
             .andReturn();
 
         String responseBody = mvcResult.getResponse().getContentAsString();
-        RestResponsePage<ApplicationUserDto> returnedPage = objectMapper.readValue(responseBody, new TypeReference<RestResponsePage<ApplicationUserDto>>() {
+        RestResponsePage<StudentDto> returnedPage = objectMapper.readValue(responseBody, new TypeReference<RestResponsePage<StudentDto>>() {
         });
-        List<ApplicationUserDto> returnedUsers = returnedPage.getContent();
+        List<StudentDto> returnedUsers = returnedPage.getContent();
 
         assertEquals(1, returnedUsers.size());
         assertEquals("User2", returnedUsers.get(0).getFirstname());
@@ -85,9 +93,9 @@ public class AdminEndpointTest extends BaseTest {
             .andReturn();
 
         String responseBody = mvcResult.getResponse().getContentAsString();
-        RestResponsePage<ApplicationUserDto> returnedPage = objectMapper.readValue(responseBody, new TypeReference<RestResponsePage<ApplicationUserDto>>() {
+        RestResponsePage<StudentDto> returnedPage = objectMapper.readValue(responseBody, new TypeReference<RestResponsePage<StudentDto>>() {
         });
-        List<ApplicationUserDto> returnedUsers = returnedPage.getContent();
+        List<StudentDto> returnedUsers = returnedPage.getContent();
 
         assertEquals(0, returnedUsers.size()); //empty list
     }
@@ -106,7 +114,7 @@ public class AdminEndpointTest extends BaseTest {
             .andReturn();
 
         String responseBody = mvcResult.getResponse().getContentAsString();
-        UserDetailsWithSubjectDto returnedUser = objectMapper.readValue(responseBody, UserDetailsWithSubjectDto.class);
+        StudentSubjectInfoDto returnedUser = objectMapper.readValue(responseBody, StudentSubjectInfoDto.class);
 
         assertAll("User",
             () -> assertEquals("User1", returnedUser.getFirstname()),
@@ -125,6 +133,13 @@ public class AdminEndpointTest extends BaseTest {
         ArrayList<String> expectedRole = new ArrayList<>();
         expectedRole.add("ROLE_ADMIN");
         return TestUtils.validLoginTest(mockMvc, loginData, expectedRole, ADMIN_EMAIL, securityProperties);
+    }
+
+    private String loginAsUser() throws Exception {
+        String loginData = "{\"password\": \"Password123\", \"email\": \"" + DEFAULT_USER_EMAIL + "\"}";
+        ArrayList<String> expectedRole = new ArrayList<>();
+        expectedRole.add("ROLE_USER");
+        return TestUtils.validLoginTest(mockMvc, loginData, expectedRole, DEFAULT_USER_EMAIL, securityProperties);
     }
     @Test
     void CreateNewValidSubjectReturnsSubject_200() throws Exception {
@@ -160,6 +175,7 @@ public class AdminEndpointTest extends BaseTest {
             () -> assertEquals("Title", returnedUser.getTitle())
         );
     }
+
     @Test
     void UpdateNewValidSubjectReturnsSubject_200() throws Exception {
         // get the first user from the database
@@ -197,6 +213,7 @@ public class AdminEndpointTest extends BaseTest {
 
         );
     }
+
     @Test
     void DeleteValidSubjectReturnsSubject_200() throws Exception {
 
@@ -209,5 +226,138 @@ public class AdminEndpointTest extends BaseTest {
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andReturn();
+    }
+
+    @Test
+    void getValidUserReturnsUser_200() throws Exception {
+
+        ApplicationUser user = userRepository.findAll().get(0);
+        Long id = user.getId();
+
+        String token = loginAsAdmin();
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users/" + id)
+                                                  .header("Authorization", "Bearer " + token)
+                                                  .contentType(MediaType.APPLICATION_JSON))
+                                  .andExpect(status().isOk())
+                                  .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        StudentSubjectInfoDto returnedUser = objectMapper.readValue(responseBody, StudentSubjectInfoDto.class);
+        assertAll(
+            () -> assertEquals(user.getFirstname(), returnedUser.getFirstname()),
+            () -> assertEquals(user.getLastname(), returnedUser.getLastname()),
+            () -> assertEquals(user.getDetails().getTelNr(), returnedUser.getTelNr()),
+            () -> assertEquals(user.getDetails().getEmail(), returnedUser.getEmail())
+        );
+
+    }
+
+    @Test
+    void changeValidUserDetailsReturnsChangedUser_200() throws Exception {
+
+        ApplicationUser userBefore = userRepository.findAll().get(0);
+
+        UpdateStudentAsAdminDto updatedUser = new UpdateStudentAsAdminDto();
+        updatedUser.setId(userBefore.getId());
+        updatedUser.setFirstname("UserUpdated");
+        updatedUser.setLastname("SurnameUpdated");
+        updatedUser.setTelNr("+4367675553");
+        updatedUser.setMatrNumber(1111111111L);
+        updatedUser.setStreet("newStreet 54");
+        updatedUser.setAreaCode(1310);
+        updatedUser.setCity("Graz");
+
+        String token = loginAsAdmin();
+
+        MvcResult mvcResult = mockMvc.perform(put("/api/v1/admin/users/update")
+                                                  .header("Authorization", "Bearer " + token)
+                                                  .contentType(MediaType.APPLICATION_JSON)
+                                                  .content(objectMapper.writeValueAsString(updatedUser)))
+                                  .andExpect(status().isOk())
+                                  .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        UpdateStudentAsAdminDto returnedUser = objectMapper.readValue(responseBody, UpdateStudentAsAdminDto.class);
+        assertAll(
+            () -> assertEquals(updatedUser.getFirstname(), returnedUser.getFirstname()),
+            () -> assertEquals(updatedUser.getLastname(), returnedUser.getLastname()),
+            () -> assertEquals(updatedUser.getTelNr(), returnedUser.getTelNr()),
+            () -> assertEquals(updatedUser.getStreet(), returnedUser.getStreet()),
+            () -> assertEquals(updatedUser.getAreaCode(), returnedUser.getAreaCode()),
+            () -> assertEquals(updatedUser.getCity(), returnedUser.getCity()),
+            () -> assertEquals(updatedUser.getMatrNumber(), returnedUser.getMatrNumber()),
+            () -> assertNotEquals(userBefore.getFirstname(), returnedUser.getFirstname()),
+            () -> assertNotEquals(userBefore.getLastname(), returnedUser.getLastname()),
+            () -> assertNotEquals(userBefore.getDetails().getTelNr(), returnedUser.getTelNr()),
+            () -> assertNotEquals(userBefore.getDetails().getAddress().getStreet(), returnedUser.getStreet()),
+            () -> assertNotEquals(userBefore.getDetails().getAddress().getAreaCode(), returnedUser.getAreaCode()),
+            () -> assertNotEquals(userBefore.getDetails().getAddress().getCity(), returnedUser.getCity())
+        );
+
+    }
+
+    @Test
+    void getUserWithNonAdminTokenReturns_403() throws Exception {
+
+        Long id = subjectRepository.findAll().get(0).getId();
+
+        String token = loginAsUser();
+
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users/" + id)
+                                                  .header("Authorization", "Bearer " + token)
+                                                  .contentType(MediaType.APPLICATION_JSON))
+                                  .andExpect(status().isForbidden())
+                                  .andReturn();
+    }
+
+    @Test
+    void testGetSimpleStatistics() throws Exception {
+        String token = loginAsAdmin();
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/statistics/simple")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        SimpleStatisticsDto returnedStatistics = objectMapper.readValue(responseBody, SimpleStatisticsDto.class);
+
+        assertAll("Statistics",
+            () -> assertEquals(5, returnedStatistics.getRegisteredVerifiedUsers()),
+            () -> assertEquals(1.0, returnedStatistics.getRatioOfferedNeededSubjects(), 0.01) // delta is used to compare doubles
+        );
+    }
+
+    @Test
+    void testGetTop5Statistics() throws Exception {
+        String token = loginAsAdmin();
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/statistics/extended?x=5")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        TopStatisticsDto returnedStatistics = objectMapper.readValue(responseBody, TopStatisticsDto.class);
+
+        List<String> top5OfferedSubjects = Arrays.asList(
+            "SE Advanced Model Engineering", "VU Advanced Modeling and Simulation", "PR Advanced Software Engineering",
+            "PR Advanced Software Engineering", "SE Advanced Topics in Recommender Systems and Generative AI"
+        );
+        List<String> top5NeededSubjects = Arrays.asList(
+            "VU Advanced Modeling and Simulation","PR Advanced Software Engineering",
+            "PR Advanced Software Engineering","SE Advanced Model Engineering","VU Advanced Model Engineering"
+        );
+
+        List<Integer> top5OfferedAmount = Arrays.asList(4, 4, 4, 4, 4);
+        List<Integer> top5NeededAmount = Arrays.asList(4, 4, 4, 3, 3);
+        assertAll("Statistics",
+            () -> assertEquals(5, returnedStatistics.getTopXofferedSubjects().size()),
+            () -> assertEquals(5, returnedStatistics.getTopXneededSubjects().size()),
+            () -> assertEquals(top5OfferedAmount, returnedStatistics.getTopXofferedAmount()),
+            () -> assertEquals(top5NeededAmount, returnedStatistics.getTopXneededAmount()),
+            () -> assertThat(returnedStatistics.getTopXofferedSubjects(), containsInAnyOrder(top5OfferedSubjects.toArray())),
+            () -> assertThat(returnedStatistics.getTopXneededSubjects(), containsInAnyOrder(top5NeededSubjects.toArray()))
+        );
     }
 }
