@@ -19,7 +19,7 @@ export class ChatComponent implements OnInit {
 
   sendMessage(){
     const chatMessage: ChatMessageDetailDto = {
-      chatId: 1,
+      chatRoomId: 1,
       senderId: 1,
       recipientId: 2,
       content: this.message,

@@ -1,6 +1,6 @@
 
 export class ChatMessageDetailDto {
-  chatId: number;
+  chatRoomId: number;
   senderId: number;
   recipientId: number;
   content: string;

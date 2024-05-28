@@ -1,5 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ChatRoom;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

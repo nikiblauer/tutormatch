@@ -3,9 +3,6 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatMessageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateChatRoomDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ChatRoom;
 import at.ac.tuwien.sepr.groupphase.backend.service.ChatMessageService;
 import at.ac.tuwien.sepr.groupphase.backend.service.ChatRoomService;
 import jakarta.annotation.security.PermitAll;
@@ -30,19 +27,21 @@ public class ChatEndpoint {
     private final ChatMessageService chatMessageService;
 
     @Autowired
-	public ChatEndpoint(ChatRoomService chatRoomService, ChatMessageService chatMessageService) {
-		this.chatRoomService = chatRoomService;
-		this.chatMessageService = chatMessageService;
-	}
+    public ChatEndpoint(ChatRoomService chatRoomService, ChatMessageService chatMessageService) {
+        this.chatRoomService = chatRoomService;
+        this.chatMessageService = chatMessageService;
+    }
 
 
     @PermitAll
-	@GetMapping("/room/user/{userId}")
+    @GetMapping("/room/user/{userId}")
     public List<ChatRoomDto> getChatRoomsByUserId(@PathVariable(name = "userId") Long userId) {
         LOGGER.info("GET /api/v1/chat/room/user/{}", userId);
         List<ChatRoomDto> chatRooms = chatRoomService.getChatRoomsByUserId(userId);
         return chatRooms;
     }
+
+    @PermitAll
     @PostMapping("room")
     public Long createChat(@RequestBody CreateChatRoomDto chatRoomCreateDto) {
         LOGGER.info("POST /api/v1/chat/room/create with senderId: {} and recipientId: {}",
@@ -50,8 +49,9 @@ public class ChatEndpoint {
         return chatRoomService.createChatRoom(chatRoomCreateDto.getSenderId(), chatRoomCreateDto.getRecipientId());
     }
 
+    @PermitAll
     @GetMapping("/room/{chatRoomId}")
-    public List<ChatMessageDto> getMessagesByChatRoomId(@PathVariable(name = "chatRoomId") Long chatRoomId){
+    public List<ChatMessageDto> getMessagesByChatRoomId(@PathVariable(name = "chatRoomId") Long chatRoomId) {
         LOGGER.info("GET /api/v1/chat/room/{}", chatRoomId);
         return chatMessageService.getChatMessagesByChatRoomId(chatRoomId);
     }
