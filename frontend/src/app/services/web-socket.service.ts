@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {AuthService} from "./auth.service";
 
 
 declare var SockJS: any;
@@ -11,7 +12,7 @@ export class WebSocketService {
   private stompClient: any;
   connected: boolean = false;
 
-  constructor() {
+  constructor(private auth: AuthService) {
     console.log(SockJS);
     let socket = null;
     socket = new SockJS('http://localhost:8080/ws')
@@ -21,7 +22,9 @@ export class WebSocketService {
   }
 
   connect() {
-    this.stompClient.connect({}, frame => {
+    const token = this.auth.getToken(); // Assume token is stored in localStorage
+
+    this.stompClient.connect({ 'Authorization': token}, frame => {
       console.log('Connected: ' + frame);
       this.connected = true;
 
