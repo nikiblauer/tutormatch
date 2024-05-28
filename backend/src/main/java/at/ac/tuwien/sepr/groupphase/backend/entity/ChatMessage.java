@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,11 +21,15 @@ public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Long chatId;
-
-    private Long senderId;
-    private Long recipientId;
+    @ManyToOne
+    @JoinColumn(name="CHATROOM_ID")
+    private ChatRoom chatRoomId;
+    @ManyToOne
+    @JoinColumn(name="SENDER_ID")
+    private ApplicationUser senderId;
+    @ManyToOne
+    @JoinColumn(name="RECIPIENT_ID")
+    private ApplicationUser recipientId;
     private String content;
     private Date timestamp;
 }
