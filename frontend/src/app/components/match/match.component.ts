@@ -15,6 +15,7 @@ export class MatchComponent implements OnInit {
     public matches: UserMatchDto[] = [];
     public selectedMatch: UserMatchDto;
     public selectedUser: StudentDto;
+    temp_number:number = 3.6
 
     constructor(private userService: UserService, private notification: ToastrService, private spinner: NgxSpinnerService) {
     }
@@ -81,4 +82,6 @@ export class MatchComponent implements OnInit {
     public getSelectedUserAddressAsString(user: StudentDto) {
         return StudentDto.getAddressAsString(user);
     }
+
+    protected readonly Math = Math;
 }
