@@ -1,16 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatMessageDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ChatMessage;
 import at.ac.tuwien.sepr.groupphase.backend.service.ChatMessageService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-
-import java.lang.invoke.MethodHandles;
 
 
 @Controller
