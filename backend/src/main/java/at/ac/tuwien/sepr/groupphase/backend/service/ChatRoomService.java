@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -31,36 +32,30 @@ public class ChatRoomService {
 
     public List<ChatRoomDto> getChatRoomsByUserId(Long userId) {
         LOGGER.trace("getChatRoomByUserId({})", userId);
-        ApplicationUser user = userService.findApplicationUserById(userId);
-        var chatRooms = chatRoomRepository.findAllBySenderId(user);
 
+        // get all chat room for userId
+        var chatRooms = chatRoomRepository.findAllBySenderId(userId);
+
+        // map to ChatRoomDto
         return chatRooms.stream()
-            .map(chatRoom -> new ChatRoomDto(chatRoom.getId(), chatRoom.getChatId(), chatRoom.getSenderId().getId(), chatRoom.getRecipientId().getId()))
+            .map(chatRoom -> new ChatRoomDto(chatRoom.getId(), chatRoom.getChatId(), chatRoom.getSender().getId(), chatRoom.getRecipient().getId()))
             .collect(Collectors.toList());
     }
 
-    public ChatRoom getChatRoomById(Long id) {
-        LOGGER.trace("getChatRoomId({})", id);
-        return (ChatRoom) chatRoomRepository.findAllByChatId(id).get(0);
-    }
-
-    public Long createChatRoom(CreateChatRoomDto toCreate) {
+    public ChatRoomDto createChatRoom(CreateChatRoomDto toCreate) {
         LOGGER.trace("createChatRoom({}, {})", toCreate.getSenderId(), toCreate.getRecipientId());
 
-        Long senderId = toCreate.getSenderId();
-        Long recipientId = toCreate.getRecipientId();
+        String chatId = UUID.randomUUID().toString();
 
-        Long chatId = (long) (senderId.toString() + recipientId.toString()).hashCode();
-
-        ApplicationUser sender = userService.findApplicationUserById(senderId);
-        ApplicationUser recipient = userService.findApplicationUserById(recipientId);
-        ChatRoom senderRecipient = ChatRoom.builder().chatId(chatId).senderId(sender).recipientId(recipient).build();
-        ChatRoom recipientSender = ChatRoom.builder().chatId(chatId).senderId(recipient).recipientId(sender).build();
+        ApplicationUser sender = userService.findApplicationUserById(toCreate.getSenderId());
+        ApplicationUser recipient = userService.findApplicationUserById(toCreate.getRecipientId());
+        ChatRoom senderRecipient = ChatRoom.builder().chatId(chatId).sender(sender).recipient(recipient).build();
+        ChatRoom recipientSender = ChatRoom.builder().chatId(chatId).sender(recipient).recipient(sender).build();
 
         chatRoomRepository.save(senderRecipient);
         chatRoomRepository.save(recipientSender);
 
-        return chatId;
+        return new ChatRoomDto(senderRecipient.getId(), senderRecipient.getChatId(), senderRecipient.getSender().getId(), senderRecipient.getRecipient().getId());
     }
 }
 

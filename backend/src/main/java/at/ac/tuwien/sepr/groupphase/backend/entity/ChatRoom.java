@@ -23,11 +23,11 @@ public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long chatId;
+    private String chatId;
     @ManyToOne
     @JoinColumn(name = "SENDER_ID")
-    private ApplicationUser senderId;
+    private ApplicationUser sender;
     @ManyToOne
     @JoinColumn(name = "RECIPIENT_ID")
-    private ApplicationUser recipientId;
+    private ApplicationUser recipient;
 }

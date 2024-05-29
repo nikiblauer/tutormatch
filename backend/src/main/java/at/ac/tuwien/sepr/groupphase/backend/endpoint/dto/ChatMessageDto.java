@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class ChatMessageDto {
     private Long id;
-    private Long chatRoomId;
+    private String chatRoomId;
     private Long senderId;
     private Long recipientId;
     private String content;

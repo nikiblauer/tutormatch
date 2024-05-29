@@ -12,7 +12,7 @@ export class ChatComponent implements OnInit {
   message: string = "Hello, its me";
   user1: number = 1;
   user2: number = 2;
-  activeChatRoom: number = 1;
+  activeChatRoom: string = "";
   chatRooms: ChatRoomDto[];
 
   constructor(private chatService: ChatService, private webSocketService: WebSocketService) {
@@ -31,7 +31,7 @@ export class ChatComponent implements OnInit {
 
     this.chatService.createChatRoom(chatRoom).subscribe({
       next: value => {
-
+        console.log(value);
       }, error: error => {
         console.log(error);
       }
@@ -39,7 +39,7 @@ export class ChatComponent implements OnInit {
   }
 
   getAllChatRooms() {
-    this.chatService.getChatRoomsByUserId(4).subscribe({
+    this.chatService.getChatRoomsByUserId(this.user1).subscribe({
       next: chatRooms => {
         this.chatRooms = chatRooms;
         console.log(this.chatRooms);

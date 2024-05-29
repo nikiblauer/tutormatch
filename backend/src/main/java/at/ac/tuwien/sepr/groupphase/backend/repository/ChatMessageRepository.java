@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, String> {
-    List<ChatMessage> findAllByChatRoomId(ChatRoom chatRoom);
+    List<ChatMessage> findAllByChatRoomId(String chatRoomId);
 
     //List<ChatMessage> findByChatId(String s);
 }

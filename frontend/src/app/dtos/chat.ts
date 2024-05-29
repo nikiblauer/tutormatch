@@ -1,6 +1,6 @@
 
 export class ChatMessageDto {
-  chatRoomId: number;
+  chatRoomId: string;
   senderId: number;
   recipientId: number;
   content: string;
@@ -13,7 +13,7 @@ export class CreateChatRoomDto {
 }
 
 export class ChatRoomDto {
-  chatId: number;
+  chatId: string;
   senderId: number;
   recipientId: number;
 }

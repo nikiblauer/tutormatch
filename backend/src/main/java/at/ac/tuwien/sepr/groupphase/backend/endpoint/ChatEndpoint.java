@@ -9,12 +9,8 @@ import jakarta.annotation.security.PermitAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -43,7 +39,8 @@ public class ChatEndpoint {
 
     @PermitAll
     @PostMapping("room")
-    public Long createChatRoom(@RequestBody CreateChatRoomDto chatRoomCreateDto) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ChatRoomDto createChatRoom(@RequestBody CreateChatRoomDto chatRoomCreateDto) {
         LOGGER.info("POST /api/v1/chat/room/create body: {}", chatRoomCreateDto);
 
         return chatRoomService.createChatRoom(chatRoomCreateDto);
@@ -51,7 +48,7 @@ public class ChatEndpoint {
 
     @PermitAll
     @GetMapping("/room/{chatRoomId}")
-    public List<ChatMessageDto> getMessagesByChatRoomId(@PathVariable(name = "chatRoomId") Long chatRoomId) {
+    public List<ChatMessageDto> getMessagesByChatRoomId(@PathVariable(name = "chatRoomId") String chatRoomId) {
         LOGGER.info("GET /api/v1/chat/room/{}", chatRoomId);
 
         return chatMessageService.getChatMessagesByChatRoomId(chatRoomId);

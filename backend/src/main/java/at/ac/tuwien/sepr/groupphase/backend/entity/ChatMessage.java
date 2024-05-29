@@ -25,9 +25,8 @@ public class ChatMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "CHATROOM_ID")
-    private ChatRoom chatRoomId;
+
+    private String chatRoomId;
     @ManyToOne
     @JoinColumn(name = "SENDER_ID")
     private ApplicationUser senderId;
