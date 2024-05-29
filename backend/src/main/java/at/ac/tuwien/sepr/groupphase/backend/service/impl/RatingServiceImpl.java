@@ -41,16 +41,16 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public void updatedRating(RatingDto ratingDto, long raterUserID) throws Exception {
+    public void updatedRating(RatingDto ratingDto, long raterUserid) throws Exception {
         LOGGER.trace("updatedRating: {}", ratingDto);
-        if (Objects.equals(raterUserID, ratingDto.ratedUserID)) {
+        if (Objects.equals(raterUserid, ratingDto.ratedUserid)) {
             throw new Exception("Cannot rate your self");
         }
-        UserRating rating = ratingRepository.getByRatedAndRater(ratingDto.ratedUserID, raterUserID);
+        UserRating rating = ratingRepository.getByRatedAndRater(ratingDto.ratedUserid, raterUserid);
         if (rating == null) {
             rating = new UserRating();
-            rating.setRated(ratingDto.ratedUserID);
-            rating.setRater(raterUserID);
+            rating.setRated(ratingDto.ratedUserid);
+            rating.setRater(raterUserid);
         }
         rating.setRating(ratingDto.rating);
         ratingRepository.save(rating);

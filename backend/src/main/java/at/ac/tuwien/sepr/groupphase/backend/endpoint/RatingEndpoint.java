@@ -37,8 +37,8 @@ public class RatingEndpoint {
     public void updateRating(@RequestBody RatingDto ratingDto) throws Exception {
         LOGGER.info("PUT /api/v1/rating {}", ratingDto);
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        long ratingUserID = userService.findApplicationUserByEmail(userEmail).getId();
-        ratingService.updatedRating(ratingDto, ratingUserID);
+        long ratingUserid = userService.findApplicationUserByEmail(userEmail).getId();
+        ratingService.updatedRating(ratingDto, ratingUserid);
     }
 
     @Secured("ROLE_USER")
@@ -46,7 +46,7 @@ public class RatingEndpoint {
     @ResponseStatus(HttpStatus.OK)
     public float getRatingFromUser(@PathVariable("id") Long id) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        long ratingUserID = userService.findApplicationUserByEmail(userEmail).getId();
-        return ratingService.getRatingFromStudent(id, ratingUserID);
+        long ratingUserid = userService.findApplicationUserByEmail(userEmail).getId();
+        return ratingService.getRatingFromStudent(id, ratingUserid);
     }
 }

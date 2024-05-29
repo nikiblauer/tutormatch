@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepr.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.RatingDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.SubjectDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserSubjectDataGenerator;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
@@ -29,6 +31,10 @@ public class BaseTest {
     private UserSubjectDataGenerator userSubjectDataGenerator;
     @Autowired
     private SubjectDataGenerator subjectDataGenerator;
+    @Autowired
+    private RatingRepository ratingRepository;
+    @Autowired
+    private RatingDataGenerator ratingDataGenerator;
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -44,11 +50,13 @@ public class BaseTest {
         userDataGenerator.generateApplicationUser();
         subjectDataGenerator.generateSubjects();
         userSubjectDataGenerator.generateUserSubjectRelation();
+        ratingDataGenerator.generateUserSubjectRelation();
     }
 
     private void clearData() {
         userSubjectRepository.deleteAll();
         userRepository.deleteAll();
         subjectRepository.deleteAll();
+        ratingRepository.deleteAll();
     }
 }
