@@ -86,6 +86,26 @@ export class MatchComponent implements OnInit {
     public closeMatch() {
         this.selectedMatch = null;
         this.selectedUserRating = -2;
+        this.reloadAll();
+    }
+
+    private reloadAll(){
+      let timeout = setTimeout(() => {
+        this.spinner.show();
+      }, 1500);
+      this.userService.getUserMatcher().subscribe({
+        next: (matches) => {
+          clearTimeout(timeout);
+          this.spinner.hide();
+          this.matches = matches;
+        },
+        error: error => {
+          clearTimeout(timeout);
+          this.spinner.hide();
+          console.error("Error when retrieving matches", error);
+          this.notification.error(error.error, "Something went wrong!");
+        }
+      });
     }
 
     public startChat() {

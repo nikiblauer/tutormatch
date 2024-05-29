@@ -1,11 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.RatingService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import jakarta.annotation.security.PermitAll;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,8 +33,8 @@ public class RatingEndpoint {
 
     @Secured("ROLE_USER")
     @PutMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void updateRating(@Valid @RequestBody RatingDto ratingDto) throws Exception {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateRating(@RequestBody RatingDto ratingDto) throws Exception {
         LOGGER.info("PUT /api/v1/rating {}", ratingDto);
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         long rater = userService.findApplicationUserByEmail(userEmail).getId();
@@ -49,10 +45,8 @@ public class RatingEndpoint {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public float getRatingFromUser(@PathVariable("id") Long id) {
-        LOGGER.info("GET /api/v1/rating/{}", id);
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         long rater = userService.findApplicationUserByEmail(userEmail).getId();
         return ratingService.getRatingFromStudent(id, rater);
-
     }
 }

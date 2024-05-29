@@ -9,34 +9,40 @@ import {RatingService} from "../../services/rating.service";
   templateUrl: './rating.component.html',
   styleUrls: ['./rating.component.scss']
 })
-export class StarRatingComponent implements OnInit{
+export class StarRatingComponent implements OnInit {
   @Input() rating: number = 0;
   @Input() isEditable: boolean = true;
   @Input() amount: number = 0;
   @Input() ratedUserId: number;
   ratingStars = [];
 
-  constructor(private userService: UserService, private notification: ToastrService, private spinner: NgxSpinnerService, private ratingService: RatingService) {
+  constructor(private notification: ToastrService, private spinner: NgxSpinnerService, private ratingService: RatingService) {
+  }
+
+  ngOnInit(): void {
+    let temp = (1 + this.rating) * 100
+    this.ratingStars = Array(5).fill(0)
+    for (let i = 0; i < temp; i++) {
+      if (temp <= 0) {
+        continue;
+      }
+      this.ratingStars[i] = Math.max(Math.min(temp -= 100, 100), 0);
+    }
   }
 
   setRating(newRating: number): void {
     if (!this.isEditable) return;
     this.rating = newRating;
-    this.ratingService.rateUser(this.ratedUserId, this.rating);
-  }
-
-  putRating():void{
-    this.ratingService.rateUser(this.ratedUserId, this.rating);
-  }
-
-  ngOnInit(): void {
-    let temp = (1+this.rating)*100
-    this.ratingStars = Array(5).fill(0)
-    for (let i = 0; i < temp; i++) {
-      if (temp <= 0){
-        continue;
+    this.ratingService.rateUser(this.ratedUserId, this.rating).subscribe({
+      next: () => {
+        this.spinner.hide();
+        this.notification.success("Successfully updated ratings!");
+      },
+      error: error => {
+        this.spinner.hide();
+        console.error("Error when setting new rating", error);
+        this.notification.error(error.error, "Something went wrong!");
       }
-      this.ratingStars[i] = Math.max(Math.min(temp-=100,100),0);
-    }
+    });
   }
 }
