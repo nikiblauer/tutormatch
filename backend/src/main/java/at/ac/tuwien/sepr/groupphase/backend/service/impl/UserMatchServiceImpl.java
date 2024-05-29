@@ -2,7 +2,10 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.UserRating;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.RatingService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.stream.Stream;
 
 @Service
@@ -23,7 +27,11 @@ public class UserMatchServiceImpl implements UserMatchService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RatingService ratingService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 
 
     @Override
@@ -57,6 +65,8 @@ public class UserMatchServiceImpl implements UserMatchService {
         query.setParameter("userId", user.getId());
         query.setMaxResults(100);
 
+        float rating = ratingService.getRatingOfStudent(user.getId());
+
         return query.getResultList()
             .stream()
             .map(objItem -> {
@@ -71,6 +81,7 @@ public class UserMatchServiceImpl implements UserMatchService {
                     .totalMatchingcount((Long) item[5])
                     .traineeSubjects((String) item[6])
                     .tutorSubjects((String) item[7])
+                    .rating(rating)
                     .build();
             });
     }

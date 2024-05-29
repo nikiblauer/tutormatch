@@ -6,9 +6,8 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./rating.component.scss']
 })
 export class StarRatingComponent implements OnInit{
-  @Input() rating: number = 0; // Wert der aktuellen Bewertung (1 bis 5)
-  @Input() isEditable: boolean = true; // Kann der Benutzer die Bewertung ändern?
-  starCount = 5;
+  @Input() rating: number = 0;
+  @Input() isEditable: boolean = true;
   ratingStars = [];
 
   setRating(newRating: number): void {
@@ -24,9 +23,6 @@ export class StarRatingComponent implements OnInit{
         continue;
       }
       this.ratingStars[i] = Math.max(Math.min(temp-=100,100),0);
-
     }
-    console.log(this.ratingStars)
   }
-
 }

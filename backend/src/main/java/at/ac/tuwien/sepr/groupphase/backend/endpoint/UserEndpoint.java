@@ -131,6 +131,8 @@ public class UserEndpoint {
     @GetMapping("/matches")
     public Stream<UserMatchDto> getUserMatches() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Stream<UserMatchDto> s = userMatchService.findMatchingsForUser(userEmail);
+        LOGGER.info(s.toList().toString());
         return userMatchService.findMatchingsForUser(userEmail);
     }
 
