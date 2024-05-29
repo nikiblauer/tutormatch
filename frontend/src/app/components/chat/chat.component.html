@@ -1,9 +1,40 @@
 <div>
   <h2>Chat</h2>
   <div>
+    <p>Specify sender and recipient: </p>
+    <input [(ngModel)]="user1" placeholder="Input userId of this user">
+    <input [(ngModel)]="user2" placeholder="Input userId of user to chat with">
+    <br>
+    <br>
+
+    <i>Create a chat with above specified users: </i>
+    <button (click)="createChat()">Create Chat</button>
+  </div>
+  <br>
+  <div>
+    <i>Retrieve all ChatRooms for user1: </i>
+    <button (click)="getAllChatRooms()">GET</button>
+  </div>
+  <br>
+  <div>
+    <i>Set active chatroom: </i>
+    <input [(ngModel)]="activeChatRoom" placeholder="2">
+  </div>
+  <br>
+  <div>
+    <i>Load history for active chatroom: </i>
+    <button (click)="loadHistory()">LOAD HISTORY</button>
+  </div>
+  <br>
+  <br>
+  <p>Send a message from specified sender to specified recipient</p>
+  <div>
     <input [(ngModel)]="message" placeholder="Type a message...">
     <button (click)="sendMessage()">Send</button>
   </div>
+  <br>
+
+
   <div id="messages">
     <!-- Display messages here -->
   </div>
