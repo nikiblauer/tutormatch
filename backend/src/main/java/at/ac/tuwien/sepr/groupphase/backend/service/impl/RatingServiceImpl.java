@@ -41,25 +41,25 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public void updatedRating(RatingDto ratingDto, long rater) throws Exception {
+    public void updatedRating(RatingDto ratingDto, long raterUserID) throws Exception {
         LOGGER.trace("updatedRating: {}", ratingDto);
-        if (Objects.equals(rater, ratingDto.rated)) {
+        if (Objects.equals(raterUserID, ratingDto.ratedUserID)) {
             throw new Exception("Cannot rate your self");
         }
-        UserRating rating = ratingRepository.getByRatedAndRater(ratingDto.rated, rater);
+        UserRating rating = ratingRepository.getByRatedAndRater(ratingDto.ratedUserID, raterUserID);
         if (rating == null) {
             rating = new UserRating();
-            rating.setRated(ratingDto.rated);
-            rating.setRater(rater);
+            rating.setRated(ratingDto.ratedUserID);
+            rating.setRater(raterUserID);
         }
         rating.setRating(ratingDto.rating);
         ratingRepository.save(rating);
     }
 
     @Override
-    public float getRatingFromStudent(long rated, long rater) {
-        LOGGER.trace("getRatingFromStudent rated: {}, rater: {}", rated, rater);
-        UserRating rating = ratingRepository.getByRatedAndRater(rated, rater);
+    public float getRatingFromStudent(long ratedUserId, long raterUserId) {
+        LOGGER.trace("getRatingFromStudent rated: {}, rater: {}", ratedUserId, raterUserId);
+        UserRating rating = ratingRepository.getByRatedAndRater(ratedUserId, raterUserId);
         if (rating != null) {
             return rating.getRating();
         }

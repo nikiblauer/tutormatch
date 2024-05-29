@@ -5,10 +5,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 @Data
 public class RatingDto {
     public float rating;
-    public Long rated;
+    public Long ratedUserID;
 }

@@ -15,16 +15,17 @@ public interface RatingService {
      * updates an existing rating of one student to another. If none exists it creates a new one.
      *
      * @param ratingDto contains both students and the rating
+     * @param ratingUserId the user that rates
      * @throws Exception if both students are the same.
      */
-    void updatedRating(RatingDto ratingDto, long rater) throws Exception;
+    void updatedRating(RatingDto ratingDto, long ratingUserId) throws Exception;
 
     /**
-     * gets the value of rating of which rater rated rated.
+     * gets the value of rating of which ratingUserId rated ratedUserId.
      *
-     * @param rated the student that rated
-     * @param rater the student that was rated
+     * @param ratedUserId the student that rated
+     * @param ratingUserId the student that was rated
      * @return the rating of if none exits -1
      */
-    float getRatingFromStudent(long rated, long rater);
+    float getRatingFromStudent(long ratedUserId, long ratingUserId);
 }
