@@ -33,7 +33,6 @@ public class UserMatchServiceImpl implements UserMatchService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 
-
     @Override
     public Stream<UserMatchDto> findMatchingsForUser(String email) {
         LOGGER.trace("findMatchingUserByUserIdAsStream({})", email);
@@ -65,12 +64,12 @@ public class UserMatchServiceImpl implements UserMatchService {
         query.setParameter("userId", user.getId());
         query.setMaxResults(100);
 
-        float rating = ratingService.getRatingOfStudent(user.getId());
 
         return query.getResultList()
             .stream()
             .map(objItem -> {
                 var item = (Object[]) objItem;
+                var rating = ratingService.getRatingOfStudent((Long) item[0]);
                 return UserMatchDto
                     .builder()
                     .id((Long) item[0])
@@ -81,7 +80,8 @@ public class UserMatchServiceImpl implements UserMatchService {
                     .totalMatchingcount((Long) item[5])
                     .traineeSubjects((String) item[6])
                     .tutorSubjects((String) item[7])
-                    .rating(rating)
+                    .rating(rating[0])
+                    .amount((long) rating[1])
                     .build();
             });
     }

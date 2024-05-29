@@ -19,4 +19,5 @@ public class UserMatchDto {
     private String traineeSubjects;
     private String tutorSubjects;
     private float rating;
+    private long amount;
 }
