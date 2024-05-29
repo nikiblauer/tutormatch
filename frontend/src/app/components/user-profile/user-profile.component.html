@@ -2,7 +2,7 @@
 <div class="pt-5" *ngIf="loadUser">
     <div class="row align-items-center justify-content-center">
         <h2 class="col-md-8 mb-4">{{ getHeadline }}</h2>
-        <div class="card col-md-8 box-shadow" style="border: none; margin-bottom: 40px;" >
+        <div class="card col-md-8 box-shadow" style="border: none; margin-bottom: 40px;">
             <h3 class="m-4">Personal Data</h3>
             <button class="btn btn-edit position-absolute top-0 end-0 mt-3 me-3" (click)="editUser()"
                 data-bs-toggle="modal" data-bs-target="#editProfileModal">
@@ -112,12 +112,12 @@
             </div>
             <div class="modal-body">
                 <form>
-                  <div class="mb-3" *ngIf="admin">
-                    <label for="matrikelNumber" class="form-label">Student number</label>
-                    <input type="text" class="form-control" id="matrikelNumber" [(ngModel)]="editedUser.matrNumber"
-                           name="matrikelNumber">
-                  </div>
-                  <div class="mb-3">
+                    <div class="mb-3" *ngIf="admin">
+                        <label for="matrikelNumber" class="form-label">Student number</label>
+                        <input type="text" class="form-control" id="matrikelNumber" [(ngModel)]="editedUser.matrNumber"
+                            name="matrikelNumber">
+                    </div>
+                    <div class="mb-3">
                         <label for="firstName" class="form-label">First Name</label>
                         <input type="text" class="form-control" id="firstName" [(ngModel)]="editedUser.firstname"
                             name="firstName">
@@ -134,8 +134,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="areaCode" class="form-label">Post Code</label>
-                        <input type="text" class="form-control" id="areaCode" [(ngModel)]="editedUser.areaCode"
-                            name="areaCode">
+                        <input type="text" class="form-control" id="areaCode"
+                            [(ngModel)]="editedUser.areaCode === 0 ? '' : editedUser.areaCode" name="areaCode">
                     </div>
                     <div class="mb-3">
                         <label for="city" class="form-label">City</label>
