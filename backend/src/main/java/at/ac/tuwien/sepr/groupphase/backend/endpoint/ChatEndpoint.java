@@ -37,21 +37,23 @@ public class ChatEndpoint {
     @GetMapping("/room/user/{userId}")
     public List<ChatRoomDto> getChatRoomsByUserId(@PathVariable(name = "userId") Long userId) {
         LOGGER.info("GET /api/v1/chat/room/user/{}", userId);
+
         return chatRoomService.getChatRoomsByUserId(userId);
     }
 
     @PermitAll
     @PostMapping("room")
     public Long createChatRoom(@RequestBody CreateChatRoomDto chatRoomCreateDto) {
-        LOGGER.info("POST /api/v1/chat/room/create with senderId: {} and recipientId: {}",
-            chatRoomCreateDto.getSenderId(), chatRoomCreateDto.getRecipientId());
-        return chatRoomService.createChatRoom(chatRoomCreateDto.getSenderId(), chatRoomCreateDto.getRecipientId());
+        LOGGER.info("POST /api/v1/chat/room/create body: {}", chatRoomCreateDto);
+
+        return chatRoomService.createChatRoom(chatRoomCreateDto);
     }
 
     @PermitAll
     @GetMapping("/room/{chatRoomId}")
     public List<ChatMessageDto> getMessagesByChatRoomId(@PathVariable(name = "chatRoomId") Long chatRoomId) {
         LOGGER.info("GET /api/v1/chat/room/{}", chatRoomId);
+
         return chatMessageService.getChatMessagesByChatRoomId(chatRoomId);
     }
 }

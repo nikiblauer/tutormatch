@@ -8,8 +8,10 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.ChatMessage;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ChatRoom;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ChatMessageRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.impl.CustomUserDetailService;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChatMessageService {
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 
     private final ChatMessageRepository chatMessageRepository;
     private final ChatRoomService chatRoomService;
@@ -29,12 +33,9 @@ public class ChatMessageService {
         this.userService = userService;
     }
 
-    public ChatMessage save(ChatMessage chatMessage) {
-        chatMessageRepository.save(chatMessage);
-        return chatMessage;
-    }
-
     public List<ChatMessageDto> getChatMessagesByChatRoomId(Long chatRoomId) {
+        LOGGER.trace("getChatMessagesByChatRoomId({})", chatRoomId);
+
         ChatRoom chatRoom = chatRoomService.getChatRoomById(chatRoomId);
         List<ChatMessage> messages = chatMessageRepository.findAllByChatRoomId(chatRoom);
 
@@ -50,6 +51,8 @@ public class ChatMessageService {
     }
 
     public ChatMessage saveChatMessage(ChatMessageDto chatMessageDto) {
+        LOGGER.trace("saveChatMessage({})", chatMessageDto);
+
         ChatMessage chatMessage = ChatMessage.builder()
             .chatRoomId(chatRoomService.getChatRoomById(chatMessageDto.getChatRoomId()))
             .senderId(userService.findApplicationUserById(chatMessageDto.getSenderId()))

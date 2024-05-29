@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatRoomDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ChatRoom;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ChatRoomRepository;
@@ -29,6 +30,7 @@ public class ChatRoomService {
     }
 
     public List<ChatRoomDto> getChatRoomsByUserId(Long userId) {
+        LOGGER.trace("getChatRoomByUserId({})", userId);
         ApplicationUser user = userService.findApplicationUserById(userId);
         var chatRooms = chatRoomRepository.findAllBySenderId(user);
 
@@ -38,11 +40,16 @@ public class ChatRoomService {
     }
 
     public ChatRoom getChatRoomById(Long id) {
-        ChatRoom chatRoom = (ChatRoom) chatRoomRepository.findAllByChatId(id).get(0);
-        return chatRoom;
+        LOGGER.trace("getChatRoomId({})", id);
+        return (ChatRoom) chatRoomRepository.findAllByChatId(id).get(0);
     }
 
-    public Long createChatRoom(Long senderId, Long recipientId) {
+    public Long createChatRoom(CreateChatRoomDto toCreate) {
+        LOGGER.trace("createChatRoom({}, {})", toCreate.getSenderId(), toCreate.getRecipientId());
+
+        Long senderId = toCreate.getSenderId();
+        Long recipientId = toCreate.getRecipientId();
+
         Long chatId = (long) (senderId.toString() + recipientId.toString()).hashCode();
 
         ApplicationUser sender = userService.findApplicationUserById(senderId);
