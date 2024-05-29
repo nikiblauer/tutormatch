@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <div id="half-stars-example">
-  <div *ngIf="!isEditable">
+  <div class = "rating-group" *ngIf="!isEditable">
     <i class="star star-under fa fa-star">
       <i class="star star-over fa fa-star" style="width: {{this.ratingStars[0]}}%"></i>
     </i>
@@ -17,6 +17,8 @@
     <i class="star star-under fa fa-star">
       <i class="star star-over fa fa-star" style="width: {{this.ratingStars[4]}}%"></i>
     </i>
+    <div class="gray-text-small">({{(rating.toFixed(2))}})</div>
+    <div class="gray-text-small">({{amount}})</div>
   </div>
   <div *ngIf="isEditable" class="rating-group">
     <input class="rating__input rating__input--none" checked name="rating2" id="rating2-0" value="0"
@@ -52,8 +54,12 @@
     <label aria-label="5 stars" class="rating__label" for="rating2-50"><i
       class="rating__icon rating__icon--star fa fa-star"></i></label>
     <input class="rating__input" name="rating2" id="rating2-50" value="5" (change)="setRating(5)" type="radio" [checked]="this.ratingStars[4] === 100">
+    <div *ngIf="rating !== -1" class="m-2 gray-text">({{rating}})</div>
   </div>
-  <p *ngIf="isEditable" class="desc" style="margin-bottom: 2rem; font-family: sans-serif; font-size:0.9rem">
+  <p *ngIf="isEditable && rating === -1" class="desc" style="margin-bottom: 2rem; font-family: sans-serif; font-size:0.9rem">
+    You have not rated yet:<br>
+    Space on left side to select 0 stars</p>
+  <p *ngIf="isEditable && rating !== -1" class="desc" style="margin-bottom: 2rem; font-family: sans-serif; font-size:0.9rem">
     Your previous rating:<br>
     Space on left side to select 0 stars</p>
 </div>

@@ -4,6 +4,7 @@ import {UserMatchDto} from "../../dtos/user-match";
 import {StudentDto} from "../../dtos/user";
 import {ToastrService} from "ngx-toastr";
 import {NgxSpinnerService} from "ngx-spinner";
+import {RatingService} from "../../services/rating.service";
 
 
 @Component({
@@ -15,8 +16,9 @@ export class MatchComponent implements OnInit {
     public matches: UserMatchDto[] = [];
     public selectedMatch: UserMatchDto;
     public selectedUser: StudentDto;
+    public selectedUserRating: number = -2;
 
-    constructor(private userService: UserService, private notification: ToastrService, private spinner: NgxSpinnerService) {
+    constructor(private userService: UserService, private notification: ToastrService, private spinner: NgxSpinnerService, private ratingService: RatingService) {
     }
 
     ngOnInit() {
@@ -68,10 +70,22 @@ export class MatchComponent implements OnInit {
             this.notification.error(error.error, "Something went wrong!");
           }
         })
+        this.ratingService.getRatingFromUser(match.id).subscribe({
+          next: (value) =>{
+            this.selectedUserRating = value;
+          },
+          error: err => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            console.error("Error when getting match rating", err);
+            this.notification.error(err.error, "Something went wrong!");
+          }
+        })
     }
 
     public closeMatch() {
         this.selectedMatch = null;
+        this.selectedUserRating = -2;
     }
 
     public startChat() {

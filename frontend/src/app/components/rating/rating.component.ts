@@ -1,4 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {UserService} from "../../services/user.service";
+import {ToastrService} from "ngx-toastr";
+import {NgxSpinnerService} from "ngx-spinner";
+import {RatingService} from "../../services/rating.service";
 
 @Component({
   selector: 'app-star-rating',
@@ -8,11 +12,21 @@ import {Component, Input, OnInit} from '@angular/core';
 export class StarRatingComponent implements OnInit{
   @Input() rating: number = 0;
   @Input() isEditable: boolean = true;
+  @Input() amount: number = 0;
+  @Input() ratedUserId: number;
   ratingStars = [];
+
+  constructor(private userService: UserService, private notification: ToastrService, private spinner: NgxSpinnerService, private ratingService: RatingService) {
+  }
 
   setRating(newRating: number): void {
     if (!this.isEditable) return;
     this.rating = newRating;
+    this.ratingService.rateUser(this.ratedUserId, this.rating);
+  }
+
+  putRating():void{
+    this.ratingService.rateUser(this.ratedUserId, this.rating);
   }
 
   ngOnInit(): void {
