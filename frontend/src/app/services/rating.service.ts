@@ -15,8 +15,8 @@ export class RatingService {
   getRatingFromUser(id: number):Observable<number>{
     return this.httpClient.get<number>(this.baseUri + `/${id}`)
   }
-  rateUser(rated: number, rating: number){
-    return this.httpClient.put(this.baseUri, {
+  rateUser(rated: number, rating: number):Observable<void>{
+    return this.httpClient.put<void>(this.baseUri, {
       rated,
       rating
     });
