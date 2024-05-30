@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {UserService} from "../../services/user.service";
 import {ToastrService} from "ngx-toastr";
 import {NgxSpinnerService} from "ngx-spinner";
 import {RatingService} from "../../services/rating.service";
@@ -33,7 +32,8 @@ export class StarRatingComponent implements OnInit {
   setRating(newRating: number): void {
     if (!this.isEditable) return;
     this.rating = newRating;
-    this.ratingService.rateUser(this.ratedUserId, this.rating).subscribe({
+    console.log(this.ratedUserId + ", " + newRating )
+    this.ratingService.rateUser(this.ratedUserId, newRating).subscribe({
       next: () => {
         this.spinner.hide();
         this.notification.success("Successfully updated ratings!");
