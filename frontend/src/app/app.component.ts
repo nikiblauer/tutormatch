@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import {WebSocketService} from "./services/web-socket.service";
 
 @Component({
   selector: 'app-root',
@@ -9,7 +8,6 @@ import {WebSocketService} from "./services/web-socket.service";
 export class AppComponent {
   title = 'SE PR Group Phase';
 
-  // To ensure websocket service and connecting is instantiated on loading web application
-  constructor(webSocketService: WebSocketService) {
+  constructor() {
   }
 }
