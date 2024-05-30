@@ -23,6 +23,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
 import {RegisterComponent} from "./components/register/register.component";
 import {NgxSpinnerModule} from "ngx-spinner";
+import {StarRatingComponent} from "./components/rating/rating.component";
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import {NgxSpinnerModule} from "ngx-spinner";
     DashboardComponent,
     StudentsComponent,
     UserProfileComponent,
-    SubjectComponent
+    SubjectComponent,
+    StarRatingComponent
   ],
   imports: [
     BrowserModule,
