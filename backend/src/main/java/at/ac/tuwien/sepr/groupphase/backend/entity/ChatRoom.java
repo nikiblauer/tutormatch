@@ -23,7 +23,7 @@ public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String chatId;
+    private String chatRoomId;
     @ManyToOne
     @JoinColumn(name = "SENDER_ID")
     private ApplicationUser sender;

@@ -12,7 +12,7 @@ export class CreateChatRoomDto {
 }
 
 export class ChatRoomDto {
-  chatId: string;
+  chatRoomId: string;
   senderId: number;
   recipientId: number;
 }

@@ -40,23 +40,23 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         // map to ChatRoomDto
         return chatRooms.stream()
-            .map(chatRoom -> new ChatRoomDto(chatRoom.getId(), chatRoom.getChatId(), chatRoom.getSender().getId(), chatRoom.getRecipient().getId()))
+            .map(chatRoom -> new ChatRoomDto(chatRoom.getId(), chatRoom.getChatRoomId(), chatRoom.getSender().getId(), chatRoom.getRecipient().getId()))
             .collect(Collectors.toList());
     }
 
     public ChatRoomDto createChatRoom(ApplicationUser sender, CreateChatRoomDto toCreate) {
         LOGGER.trace("createChatRoom({}, {})", sender.getId(), toCreate.getRecipientId());
 
-        String chatId = UUID.randomUUID().toString();
+        String chatRoomId = UUID.randomUUID().toString();
 
         ApplicationUser recipient = userService.findApplicationUserById(toCreate.getRecipientId());
-        ChatRoom senderRecipient = ChatRoom.builder().chatId(chatId).sender(sender).recipient(recipient).build();
-        ChatRoom recipientSender = ChatRoom.builder().chatId(chatId).sender(recipient).recipient(sender).build();
+        ChatRoom senderRecipient = ChatRoom.builder().chatRoomId(chatRoomId).sender(sender).recipient(recipient).build();
+        ChatRoom recipientSender = ChatRoom.builder().chatRoomId(chatRoomId).sender(recipient).recipient(sender).build();
 
         chatRoomRepository.save(senderRecipient);
         chatRoomRepository.save(recipientSender);
 
-        return new ChatRoomDto(senderRecipient.getId(), senderRecipient.getChatId(), senderRecipient.getSender().getId(), senderRecipient.getRecipient().getId());
+        return new ChatRoomDto(senderRecipient.getId(), senderRecipient.getChatRoomId(), senderRecipient.getSender().getId(), senderRecipient.getRecipient().getId());
     }
 }
 

@@ -1,11 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.basetest;
 
-import at.ac.tuwien.sepr.groupphase.backend.datagenerator.SubjectDataGenerator;
-import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserDataGenerator;
-import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserSubjectDataGenerator;
-import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.*;
+import at.ac.tuwien.sepr.groupphase.backend.repository.*;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +17,13 @@ public class BaseTest {
     protected UserRepository userRepository;
     @Autowired
     private SubjectRepository subjectRepository;
+
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
+
+    @Autowired
+    private ChatMessageRepository chatMessageRepository;
+
     @Autowired
     private UserSubjectRepository userSubjectRepository;
     @Autowired
@@ -29,6 +32,13 @@ public class BaseTest {
     private UserSubjectDataGenerator userSubjectDataGenerator;
     @Autowired
     private SubjectDataGenerator subjectDataGenerator;
+
+    @Autowired
+    private ChatRoomDataGenerator chatRoomDataGenerator;
+
+    @Autowired
+    private ChatMessageDataGenerator chatMessageDataGenerator;
+
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -44,11 +54,17 @@ public class BaseTest {
         userDataGenerator.generateApplicationUser();
         subjectDataGenerator.generateSubjects();
         userSubjectDataGenerator.generateUserSubjectRelation();
+        chatRoomDataGenerator.generateChatRooms();
+        chatMessageDataGenerator.generateChatMessages();
     }
 
     private void clearData() {
+        chatMessageRepository.deleteAll();
+        chatRoomRepository.deleteAll();
+
         userSubjectRepository.deleteAll();
         userRepository.deleteAll();
         subjectRepository.deleteAll();
+
     }
 }

@@ -29,7 +29,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     public List<ChatMessageDto> getChatMessagesByChatRoomId(String chatRoomId) {
         LOGGER.trace("getChatMessagesByChatRoomId({})", chatRoomId);
 
+        LOGGER.info("AAA: {}", chatRoomId);
         List<ChatMessage> messages = chatMessageRepository.findAllByChatRoomId(chatRoomId);
+
+        LOGGER.info("BBB: {}", messages.size());
 
         return messages.stream()
             .map(message -> new ChatMessageDto(
