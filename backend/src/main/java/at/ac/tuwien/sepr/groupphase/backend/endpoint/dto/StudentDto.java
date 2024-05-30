@@ -1,11 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
-import lombok.Getter;
-import lombok.Setter;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -38,6 +38,21 @@ public class StudentDto {
 
     public String city;
 
+    public StudentDto() {
+    }
+
+    public StudentDto build() {
+        StudentDto studentDto = new StudentDto();
+        studentDto.setEmail(email);
+        studentDto.setFirstname(firstname);
+        studentDto.setLastname(lastname);
+        studentDto.setPassword(password);
+        studentDto.setMatrNumber(matrNumber);
+        studentDto.setStreet(street);
+        studentDto.setAreaCode(areaCode);
+        studentDto.setCity(city);
+        return studentDto;
+    }
 
     @Override
     public String toString() {
@@ -52,90 +67,5 @@ public class StudentDto {
             + ", areaCode='" + areaCode + '\''
             + ", city='" + city + '\''
             + '}';
-    }
-
-    public StudentDto() {
-
-    }
-
-    public static final class ApplicationUserDtoBuilder {
-        private String password;
-        private String firstname;
-        private String lastname;
-        private Long matrNumber;
-        private String email;
-        private String telNr;
-
-        private String street;
-
-        private Integer areaCode;
-        private String city;
-
-
-
-        private ApplicationUserDtoBuilder() {
-        }
-
-        public static StudentDto.ApplicationUserDtoBuilder aApplicationUserDto() {
-            return new StudentDto.ApplicationUserDtoBuilder();
-        }
-
-        public StudentDto.ApplicationUserDtoBuilder withPassword(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public StudentDto.ApplicationUserDtoBuilder withFirstname(String firstname) {
-            this.firstname = firstname;
-            return this;
-        }
-
-        public StudentDto.ApplicationUserDtoBuilder withLastname(String lastname) {
-            this.lastname = lastname;
-            return this;
-        }
-
-        public StudentDto.ApplicationUserDtoBuilder withMatrNumber(Long matrNumber) {
-            this.matrNumber = matrNumber;
-            return this;
-        }
-
-        public StudentDto.ApplicationUserDtoBuilder withEmail(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public StudentDto.ApplicationUserDtoBuilder withTelNr(String telNr) {
-            this.telNr = telNr;
-            return this;
-        }
-
-        public StudentDto.ApplicationUserDtoBuilder withStreet(String street) {
-            this.street = street;
-            return this;
-        }
-
-        public StudentDto.ApplicationUserDtoBuilder withAreaCode(Integer areaCode) {
-            this.areaCode = areaCode;
-            return this;
-        }
-
-        public StudentDto.ApplicationUserDtoBuilder withCity(String city) {
-            this.city = city;
-            return this;
-        }
-
-        public StudentDto build() {
-            StudentDto studentDto = new StudentDto();
-            studentDto.setEmail(email);
-            studentDto.setFirstname(firstname);
-            studentDto.setLastname(lastname);
-            studentDto.setPassword(password);
-            studentDto.setMatrNumber(matrNumber);
-            studentDto.setStreet(street);
-            studentDto.setAreaCode(areaCode);
-            studentDto.setCity(city);
-            return studentDto;
-        }
     }
 }

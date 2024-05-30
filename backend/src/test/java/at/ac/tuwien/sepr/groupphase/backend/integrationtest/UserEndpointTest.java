@@ -428,14 +428,16 @@ public class UserEndpointTest extends BaseTest {
 
         var matches = new ArrayList<UserMatchDto>();
         matchesResult.forEachRemaining((match) -> matches.add((UserMatchDto) match));
-
+        Float[] rating = new Float[2];
+        rating[0] = 2.22F;
+        rating[1] = 2.00F;
         assertAll(
             () -> assertEquals(2, matches.size()),
             () -> {
                 for (int i = 0; i < matches.size(); i++) {
                     UserMatchDto expectedMatch = expectedMatches.get(i);
                     UserMatchDto actualMatch = matches.get(i);
-
+                    float curRating = rating[i];
 
                     assertAll(
                         () -> assertEquals(expectedMatch.getFirstname(), actualMatch.getFirstname()),
@@ -444,8 +446,9 @@ public class UserEndpointTest extends BaseTest {
                         () -> assertEquals(expectedMatch.getTutorMatchingcount(), actualMatch.getTutorMatchingcount()),
                         () -> assertEquals(expectedMatch.getTotalMatchingcount(), actualMatch.getTotalMatchingcount()),
                         () -> assertEquals(expectedMatch.getTraineeSubjects(), actualMatch.getTraineeSubjects()),
-                        () -> assertEquals(expectedMatch.getTutorSubjects(), actualMatch.getTutorSubjects())
-
+                        () -> assertEquals(expectedMatch.getTutorSubjects(), actualMatch.getTutorSubjects()),
+                        () -> assertEquals(Math.round(curRating*100.0)/100.0, Math.round(actualMatch.getRating()*100.0)/100.0),
+                        () -> assertEquals(9, actualMatch.getAmount())
                     );
                 }
             }

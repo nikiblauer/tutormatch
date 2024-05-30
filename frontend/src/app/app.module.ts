@@ -25,6 +25,7 @@ import {RegisterComponent} from "./components/register/register.component";
 import {NgxSpinnerModule} from "ngx-spinner";
 import {ChatComponent} from "./components/chat/chat.component";
 import {WebSocketService} from "./services/web-socket.service";
+import {StarRatingComponent} from "./components/rating/rating.component";
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import {WebSocketService} from "./services/web-socket.service";
     StudentsComponent,
     UserProfileComponent,
     SubjectComponent,
-    ChatComponent
+    ChatComponent,
+    StarRatingComponent
   ],
   imports: [
     BrowserModule,

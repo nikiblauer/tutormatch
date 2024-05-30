@@ -7,4 +7,6 @@ export class UserMatchDto {
   totalMatchingcount: number;
   traineeSubjects: string;
   tutorSubjects: string;
+  rating: number;
+  amount: number;
 }
