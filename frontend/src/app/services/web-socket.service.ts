@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {AuthService} from "./auth.service";
+import {HttpClient} from "@angular/common/http";
+import {UserService} from "./user.service";
 
 
 declare var SockJS: any;
@@ -12,7 +14,7 @@ export class WebSocketService {
   private stompClient: any;
   connected: boolean = false;
 
-  constructor(private auth: AuthService) {
+  constructor(private userService: UserService, private auth: AuthService) {
     console.log(SockJS);
     let socket = null;
     socket = new SockJS('http://localhost:8080/ws')
@@ -28,9 +30,16 @@ export class WebSocketService {
       console.log('Connected: ' + frame);
       this.connected = true;
 
-      this.stompClient.subscribe('/user/2/queue/messages', message=> {
-        if (message.body){
-          this.onMessageReceived(JSON.parse(message.body));
+
+      this.userService.getUserId().subscribe({
+        next: id => {
+          this.stompClient.subscribe(`/user/${id}/queue/messages`, message=> {
+            if (message.body){
+              this.onMessageReceived(JSON.parse(message.body));
+            }
+          })
+        }, error: err => {
+          console.log(err);
         }
       })
     })

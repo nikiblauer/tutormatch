@@ -39,15 +39,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-
         config.enableSimpleBroker("/user"); // Enable user-specific message broker
-        config.setApplicationDestinationPrefixes("/app");
+        config.setApplicationDestinationPrefixes("/app"); // this is where all messages are received
         config.setUserDestinationPrefix(("/user"));
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-
+        // endpoint for websocket connection
         registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:4200").withSockJS();
     }
 
@@ -71,6 +70,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
                 StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
                 LOGGER.info(accessor.getFirstNativeHeader("Authorization"));
+
+                // Checks that only users who are logged in can connect to websocket
                 if (StompCommand.CONNECT.equals(accessor.getCommand())) {
                     String token = accessor.getFirstNativeHeader("Authorization");
                     if (token != null && token.startsWith("Bearer ")) {

@@ -44,12 +44,11 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             .collect(Collectors.toList());
     }
 
-    public ChatRoomDto createChatRoom(CreateChatRoomDto toCreate) {
-        LOGGER.trace("createChatRoom({}, {})", toCreate.getSenderId(), toCreate.getRecipientId());
+    public ChatRoomDto createChatRoom(ApplicationUser sender, CreateChatRoomDto toCreate) {
+        LOGGER.trace("createChatRoom({}, {})", sender.getId(), toCreate.getRecipientId());
 
         String chatId = UUID.randomUUID().toString();
 
-        ApplicationUser sender = userService.findApplicationUserById(toCreate.getSenderId());
         ApplicationUser recipient = userService.findApplicationUserById(toCreate.getRecipientId());
         ChatRoom senderRecipient = ChatRoom.builder().chatId(chatId).sender(sender).recipient(recipient).build();
         ChatRoom recipientSender = ChatRoom.builder().chatId(chatId).sender(recipient).recipient(sender).build();

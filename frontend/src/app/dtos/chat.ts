@@ -8,7 +8,6 @@ export class ChatMessageDto {
 }
 
 export class CreateChatRoomDto {
-  senderId: number;
   recipientId: number;
 }
 

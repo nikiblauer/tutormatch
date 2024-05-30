@@ -10,6 +10,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateChatRoomDto {
-    private Long senderId;
     private Long recipientId;
 }

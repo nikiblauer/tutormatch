@@ -22,6 +22,7 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void processMessage(@Payload ChatMessageDto chatMessageDto) {
+        // Persist message in database
         chatMessageService.saveChatMessage(chatMessageDto);
 
         // This sends the received message to the specified recipient

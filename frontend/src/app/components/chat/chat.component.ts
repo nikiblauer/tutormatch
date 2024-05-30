@@ -24,7 +24,6 @@ export class ChatComponent implements OnInit {
 
   createChat() {
     const chatRoom: CreateChatRoomDto = {
-      senderId: this.user1,
       recipientId: this.user2
     }
 
@@ -39,7 +38,7 @@ export class ChatComponent implements OnInit {
   }
 
   getAllChatRooms() {
-    this.chatService.getChatRoomsByUserId(this.user1).subscribe({
+    this.chatService.getChatRooms().subscribe({
       next: chatRooms => {
         this.chatRooms = chatRooms;
         console.log(this.chatRooms);
