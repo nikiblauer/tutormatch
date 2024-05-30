@@ -1,9 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.basetest;
 
-<<<<<<< backend/src/test/java/at/ac/tuwien/sepr/groupphase/backend/basetest/BaseTest.java
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.*;
 import at.ac.tuwien.sepr.groupphase.backend.repository.*;
-=======
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.RatingDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.SubjectDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserDataGenerator;
@@ -12,7 +10,6 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
->>>>>>> backend/src/test/java/at/ac/tuwien/sepr/groupphase/backend/basetest/BaseTest.java
 import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
