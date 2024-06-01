@@ -379,14 +379,14 @@ public class UserEndpointTest extends BaseTest {
     @Test
     void testUserVerificationEndpointSetsUserToVerified() throws Exception {
         List<ApplicationUser> usersList = userRepository.findAll();
-        ApplicationUser userBefore = usersList.get(1);
+        ApplicationUser userBefore = usersList.get(usersList.size()-2);
         assertFalse(userBefore.getVerified());
         String token = jwtTokenizer.buildVerificationToken(userBefore.getDetails().getEmail());
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/user/verify/" + token))
             .andExpect(status().isOk())
             .andReturn();
         List<ApplicationUser> updatedList = userRepository.findAll();
-        ApplicationUser userAfter = updatedList.get(1);
+        ApplicationUser userAfter = updatedList.get(usersList.size()-2);
         assertTrue(userAfter.getVerified());
     }
 

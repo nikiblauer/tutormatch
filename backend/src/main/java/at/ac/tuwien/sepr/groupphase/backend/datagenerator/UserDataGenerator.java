@@ -58,13 +58,23 @@ public class UserDataGenerator {
     private ApplicationUser[] generateUsers(int count) {
         ApplicationUser[] users = new ApplicationUser[count];
         String password = passwordEncoder.encode(USER_PASSWORD);
-        //odd numbered users are not verified
+        //last user is not verified
         for (int i = 0; i < count; i++) {
             long matrNumber = 10000001L + i;
-            boolean verified = (i % 2 == 0);
-            var user = new ApplicationUser(password, false, "User" + (i + 1), "Surname" + (i + 1),
-                matrNumber, new ContactDetails("+43660 1111111", "e" + matrNumber + "@student.tuwien.ac.at", new Address("Teststraße " + i, 1000 + i * 10, "Wien")), verified);
-            users[i] = user;
+            if (i == count - 1) {
+                var user = new ApplicationUser(password, false, "User" + (i + 1), "Surname" + (i + 1),
+                    matrNumber,
+                    new ContactDetails("+43660 1111111", "e" + matrNumber + "@student.tuwien.ac.at", new Address("Teststraße " + i, 1000 + i * 10, "Wien")),
+                    false);
+                users[i] = user;
+            } else {
+                var user = new ApplicationUser(password, false, "User" + (i + 1), "Surname" + (i + 1),
+                    matrNumber,
+                    new ContactDetails("+43660 1111111", "e" + matrNumber + "@student.tuwien.ac.at", new Address("Teststraße " + i, 1000 + i * 10, "Wien")),
+                    true);
+                users[i] = user;
+            }
+
         }
         return users;
     }

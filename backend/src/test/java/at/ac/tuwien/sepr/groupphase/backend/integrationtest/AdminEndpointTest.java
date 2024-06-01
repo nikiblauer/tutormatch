@@ -323,7 +323,7 @@ public class AdminEndpointTest extends BaseTest {
         SimpleStatisticsDto returnedStatistics = objectMapper.readValue(responseBody, SimpleStatisticsDto.class);
 
         assertAll("Statistics",
-            () -> assertEquals(5, returnedStatistics.getRegisteredVerifiedUsers()),
+            () -> assertEquals(9, returnedStatistics.getRegisteredVerifiedUsers()),
             () -> assertEquals(1.0, returnedStatistics.getRatioOfferedNeededSubjects(), 0.01) // delta is used to compare doubles
         );
     }

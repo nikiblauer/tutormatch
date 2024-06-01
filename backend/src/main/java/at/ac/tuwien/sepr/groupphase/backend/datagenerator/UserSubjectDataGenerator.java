@@ -48,8 +48,14 @@ public class UserSubjectDataGenerator {
         var subjects = subjectRepository.findAll();
 
         int i = 0;
+        List<ApplicationUser> users = new ArrayList<>(userRepository.findAll());
+        //removes unverified user
+        if (!users.isEmpty()) {
+            users.removeLast();
+        }
+
         // user and subjects are already inserted at this point
-        for (ApplicationUser applicationUser : userRepository.findAll()) {
+        for (ApplicationUser applicationUser : users) {
 
             if (applicationUser.getAdmin()) {
                 continue;
