@@ -1,66 +1,76 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<div id="half-stars-example">
-  <div class = "rating-group" *ngIf="!isEditable">
-    <i class="star star-under fa fa-star">
-      <i class="star star-over fa fa-star" style="width: {{this.ratingStars[0]}}%"></i>
-    </i>
-    <i class="star star-under fa fa-star">
-      <i class="star star-over fa fa-star" style="width: {{this.ratingStars[1]}}%"></i>
-    </i>
-    <i class="star star-under fa fa-star">
-      <i class="star star-over fa fa-star" style="width: {{this.ratingStars[2]}}%"></i>
-    </i>
-    <i class="star star-under fa fa-star">
-      <i class="star star-over fa fa-star" style="width: {{this.ratingStars[3]}}%"></i>
-    </i>
-    <i class="star star-under fa fa-star">
-      <i class="star star-over fa fa-star" style="width: {{this.ratingStars[4]}}%"></i>
-    </i>
-    <div class="gray-text-small">({{(rating.toFixed(2))}})</div>
-    <div class="gray-text-small">({{amount}})</div>
-  </div>
-  <div *ngIf="isEditable" class="rating-group">
-    <input class="rating__input rating__input--none" checked name="rating2" id="rating2-0" value="0"
-           (change)="setRating(0)" type="radio">
-    <label aria-label="0 stars" class="rating__label" for="rating2-0">&nbsp;</label>
-    <label aria-label="0.5 stars" class="rating__label rating__label--half" for="rating2-05"><i
-      class="rating__icon rating__icon--star fa fa-star-half"></i></label>
-    <input class="rating__input" name="rating2" id="rating2-05" value="0.5" (change)="setRating(0.5)" type="radio" [checked]="this.ratingStars[0] >=50">
-    <label aria-label="1 star" class="rating__label" for="rating2-10"><i
-      class="rating__icon rating__icon--star fa fa-star"></i></label>
-    <input class="rating__input" name="rating2" id="rating2-10" value="1" (change)="setRating(1)" type="radio" [checked]="this.ratingStars[1] < 50 && (this.ratingStars[1] !== 0 || this.ratingStars[1]===0 && this.ratingStars[0] === 100)">
-    <label aria-label="1.5 stars" class="rating__label rating__label--half" for="rating2-15"><i
-      class="rating__icon rating__icon--star fa fa-star-half"></i></label>
-    <input class="rating__input" name="rating2" id="rating2-15" value="1.5" (change)="setRating(1.5)" type="radio" [checked]="this.ratingStars[1] >= 50">
-    <label aria-label="2 stars" class="rating__label" for="rating2-20"><i
-      class="rating__icon rating__icon--star fa fa-star"></i></label>
-    <input class="rating__input" name="rating2" id="rating2-20" value="2" (change)="setRating(2)" type="radio" [checked]="this.ratingStars[2] < 50 && (this.ratingStars[2] !== 0 || this.ratingStars[2]===0 && this.ratingStars[1] === 100)">
-    <label aria-label="2.5 stars" class="rating__label rating__label--half" for="rating2-25"><i
-      class="rating__icon rating__icon--star fa fa-star-half"></i></label>
-    <input class="rating__input" name="rating2" id="rating2-25" value="2.5" (change)="setRating(2.5)" type="radio" [checked]="this.ratingStars[2] >= 50">
-    <label aria-label="3 stars" class="rating__label" for="rating2-30"><i
-      class="rating__icon rating__icon--star fa fa-star"></i></label>
-    <input class="rating__input" name="rating2" id="rating2-30" value="3" (change)="setRating(3)" type="radio" [checked]="this.ratingStars[3] < 50 && (this.ratingStars[3] !== 0 || this.ratingStars[3]===0 && this.ratingStars[2] === 100)">
-    <label aria-label="3.5 stars" class="rating__label rating__label--half" for="rating2-35"><i
-      class="rating__icon rating__icon--star fa fa-star-half"></i></label>
-    <input class="rating__input" name="rating2" id="rating2-35" value="3.5" (change)="setRating(3.5)" type="radio" [checked]="this.ratingStars[3] >= 50">
-    <label aria-label="4 stars" class="rating__label" for="rating2-40"><i
-      class="rating__icon rating__icon--star fa fa-star"></i></label>
-    <input class="rating__input" name="rating2" id="rating2-40" value="4" (change)="setRating(4)" type="radio" [checked]="this.ratingStars[4] < 50 && (this.ratingStars[4] !== 0 || this.ratingStars[4]===0 && this.ratingStars[3] === 100)">
-    <label aria-label="4.5 stars" class="rating__label rating__label--half" for="rating2-45"><i
-      class="rating__icon rating__icon--star fa fa-star-half"></i></label>
-    <input class="rating__input" name="rating2" id="rating2-45" value="4.5" (change)="setRating(4.5)" type="radio" [checked]="this.ratingStars[4] >= 50">
-    <label aria-label="5 stars" class="rating__label" for="rating2-50"><i
-      class="rating__icon rating__icon--star fa fa-star"></i></label>
-    <input class="rating__input" name="rating2" id="rating2-50" value="5" (change)="setRating(5)" type="radio" [checked]="this.ratingStars[4] === 100">
-    <div *ngIf="rating !== -1" class="m-2 gray-text">({{rating}})</div>
-  </div>
-  <p *ngIf="isEditable && rating === -1" class="desc" style="margin-bottom: 2rem; font-family: sans-serif; font-size:0.9rem">
-    You have not rated yet:<br>
-    Space on left side to select 0 stars</p>
-  <p *ngIf="isEditable && rating !== -1" class="desc" style="margin-bottom: 2rem; font-family: sans-serif; font-size:0.9rem">
-    Your previous rating:<br>
-    Space on left side to select 0 stars</p>
-</div>
+<div class="card">
+  <div id="half-stars-example">
+    <div class="rating-group" *ngIf="!isEditable">
+      <i class="star star-under fa fa-star">
+        <i class="star star-over fa fa-star" style="width: {{this.ratingStars[0]}}%"></i>
+      </i>
+      <i class="star star-under fa fa-star">
+        <i class="star star-over fa fa-star" style="width: {{this.ratingStars[1]}}%"></i>
+      </i>
+      <i class="star star-under fa fa-star">
+        <i class="star star-over fa fa-star" style="width: {{this.ratingStars[2]}}%"></i>
+      </i>
+      <i class="star star-under fa fa-star">
+        <i class="star star-over fa fa-star" style="width: {{this.ratingStars[3]}}%"></i>
+      </i>
+      <i class="star star-under fa fa-star">
+        <i class="star star-over fa fa-star" style="width: {{this.ratingStars[4]}}%"></i>
+      </i>
+      <div class="gray-text-small">({{(rating.toFixed(1))}})</div>
+      <div class="gray-text-small">({{amount}} Ratings)</div>
+    </div>
+    <div *ngIf="isEditable">
+      <div class="rating-group">
+        <input class="rating__input rating__input--none" checked name="rating2" id="rating2-0" value="0" type="radio">
+        <label aria-label="0 stars" class="rating__label" for="rating2-0">&nbsp;</label>
 
+        <label aria-label="0.5 stars" class="rating__label rating__label--half" for="rating2-05"><i
+            class="rating__icon rating__icon--star fa fa-star-half"></i></label>
+        <input class="rating__input" name="rating2" id="rating2-05" value="0.5" (change)="setRating(0.5)" type="radio"
+          [checked]="this.ratingStars[0] >=50 && this.ratingStars[0] !== undefined && this.ratingStars[0] !== null">
+        <label aria-label="1 star" class="rating__label" for="rating2-10"><i
+            class="rating__icon rating__icon--star fa fa-star"></i></label>
+        <input class="rating__input" name="rating2" id="rating2-10" value="1" (change)="setRating(1)" type="radio"
+          [checked]="this.ratingStars[1] >=50 && this.ratingStars[1] !== undefined && this.ratingStars[1] !== null">
+        <label aria-label="1.5 stars" class="rating__label rating__label--half" for="rating2-15"><i
+            class="rating__icon rating__icon--star fa fa-star-half"></i></label>
+        <input class="rating__input" name="rating2" id="rating2-15" value="1.5" (change)="setRating(1.5)" type="radio"
+          [checked]="this.ratingStars[1] >=50 && this.ratingStars[1] !== undefined && this.ratingStars[1] !== null">
+        <label aria-label="2 stars" class="rating__label" for="rating2-20"><i
+            class="rating__icon rating__icon--star fa fa-star"></i></label>
+        <input class="rating__input" name="rating2" id="rating2-20" value="2" (change)="setRating(2)" type="radio"
+          [checked]="this.ratingStars[2] >=50 && this.ratingStars[2] !== undefined && this.ratingStars[2] !== null">
+        <label aria-label="2.5 stars" class="rating__label rating__label--half" for="rating2-25"><i
+            class="rating__icon rating__icon--star fa fa-star-half"></i></label>
+        <input class="rating__input" name="rating2" id="rating2-25" value="2.5" (change)="setRating(2.5)" type="radio"
+          [checked]="this.ratingStars[2] >=50 && this.ratingStars[2] !== undefined && this.ratingStars[2] !== null">
+        <label aria-label="3 stars" class="rating__label" for="rating2-30"><i
+            class="rating__icon rating__icon--star fa fa-star"></i></label>
+        <input class="rating__input" name="rating2" id="rating2-30" value="3" (change)="setRating(3)" type="radio"
+          [checked]="this.ratingStars[3] >=50 && this.ratingStars[3] !== undefined && this.ratingStars[3] !== null">
+        <label aria-label="3.5 stars" class="rating__label rating__label--half" for="rating2-35"><i
+            class="rating__icon rating__icon--star fa fa-star-half"></i></label>
+        <input class="rating__input" name="rating2" id="rating2-35" value="3.5" (change)="setRating(3.5)" type="radio"
+          [checked]="this.ratingStars[3] >=50 && this.ratingStars[3] !== undefined && this.ratingStars[3] !== null">
+        <label aria-label="4 stars" class="rating__label" for="rating2-40"><i
+            class="rating__icon rating__icon--star fa fa-star"></i></label>
+        <input class="rating__input" name="rating2" id="rating2-40" value="4" (change)="setRating(4)" type="radio"
+          [checked]="this.ratingStars[4] >=50 && this.ratingStars[4] !== undefined && this.ratingStars[4] !== null">
+        <label aria-label="4.5 stars" class="rating__label rating__label--half" for="rating2-45"><i
+            class="rating__icon rating__icon--star fa fa-star-half"></i></label>
+        <input class="rating__input" name="rating2" id="rating2-45" value="4.5" (change)="setRating(4.5)" type="radio"
+          [checked]="this.ratingStars[4] >=50 && this.ratingStars[4] !== undefined && this.ratingStars[4] !== null">
+        <label aria-label="5 stars" class="rating__label" for="rating2-50"><i
+            class="rating__icon rating__icon--star fa fa-star"></i></label>
+        <input class="rating__input" name="rating2" id="rating2-50" value="5" (change)="setRating(5)" type="radio"
+          [checked]="this.ratingStars[4] === 100 && this.ratingStars[4] !== undefined && this.ratingStars[4] !== null">
+        <div *ngIf="rating !== -1" class="m-2 gray-text">({{rating}})</div>
+      </div>
+      <div>
+        <p style="color: gray;">Select your rating by clicking on the stars</p>
+      </div>
+    </div>
+  </div>
+</div>

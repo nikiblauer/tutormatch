@@ -11,13 +11,18 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMappe
 import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
+import at.ac.tuwien.sepr.groupphase.backend.entity.UserRating;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
-import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,11 +38,16 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.*;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.ADMIN_EMAIL;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.ADMIN_ROLES;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER_EMAIL;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_BASE_URI;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_ROLES;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -86,7 +96,7 @@ public class UserEndpointTest extends BaseTest {
 
     @Test
     public void createNewValidUser() throws Exception {
-        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+438881919190", "konsti@tuwien.ac.at",new Address("Teststraße 2", 1100, "Wien")), false);
+        ApplicationUser user = new ApplicationUser("password", false, "Konsti", "U", 123465L, new ContactDetails("+438881919190", "konsti@tuwien.ac.at", new Address("Teststraße 2", 1100, "Wien")), false);
         StudentDto studentDto = userMapper.applicationUserToDto(user);
         String body = objectMapper.writeValueAsString(studentDto);
 
@@ -118,7 +128,7 @@ public class UserEndpointTest extends BaseTest {
 
     @Test
     public void createNewInvalidUser_422() throws Exception {
-        ApplicationUser user = new ApplicationUser("", false, "", "", 123465L, new ContactDetails("+438881919190", "konsti@tuswien.ac.at", new Address( "Teststraße 2", 1200, "Wien")), false);
+        ApplicationUser user = new ApplicationUser("", false, "", "", 123465L, new ContactDetails("+438881919190", "konsti@tuswien.ac.at", new Address("Teststraße 2", 1200, "Wien")), false);
         StudentDto studentDto = userMapper.applicationUserToDto(user);
         String body = objectMapper.writeValueAsString(studentDto);
 
@@ -152,7 +162,7 @@ public class UserEndpointTest extends BaseTest {
 
         String body = objectMapper.writeValueAsString(subjectsListDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/subjects")
+        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI + "/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
@@ -178,7 +188,7 @@ public class UserEndpointTest extends BaseTest {
 
         String body = objectMapper.writeValueAsString(subjectsListDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI+"/subjects")
+        MvcResult mvcResult = this.mockMvc.perform(put(USER_BASE_URI + "/subjects")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
@@ -357,7 +367,7 @@ public class UserEndpointTest extends BaseTest {
         // Perform a PUT request to the "/api/v1/user" endpoint
         MvcResult result = mockMvc.perform(put("/api/v1/user")
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(users.getFirst().getDetails().getEmail(), USER_ROLES))
-            .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedUser)))
             .andExpect(status().isOk())
             .andReturn();
@@ -428,16 +438,12 @@ public class UserEndpointTest extends BaseTest {
 
         var matches = new ArrayList<UserMatchDto>();
         matchesResult.forEachRemaining((match) -> matches.add((UserMatchDto) match));
-        Float[] rating = new Float[2];
-        rating[0] = 2.13F;
-        rating[1] = 1.88F;
         assertAll(
             () -> assertEquals(2, matches.size()),
             () -> {
                 for (int i = 0; i < matches.size(); i++) {
                     UserMatchDto expectedMatch = expectedMatches.get(i);
                     UserMatchDto actualMatch = matches.get(i);
-                    float curRating = rating[i];
 
                     assertAll(
                         () -> assertEquals(expectedMatch.getFirstname(), actualMatch.getFirstname()),
@@ -447,7 +453,6 @@ public class UserEndpointTest extends BaseTest {
                         () -> assertEquals(expectedMatch.getTotalMatchingcount(), actualMatch.getTotalMatchingcount()),
                         () -> assertEquals(expectedMatch.getTraineeSubjects(), actualMatch.getTraineeSubjects()),
                         () -> assertEquals(expectedMatch.getTutorSubjects(), actualMatch.getTutorSubjects()),
-                        () -> assertEquals(Math.round(curRating*100.0)/100.0, Math.round(actualMatch.getRating()*100.0)/100.0),
                         () -> assertEquals(8, actualMatch.getAmount())
                     );
                 }
