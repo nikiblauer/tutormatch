@@ -2,9 +2,14 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.UserRating;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +56,27 @@ public class RatingEndpointTest {
     @Autowired
     private JwtTokenizer jwtTokenizer;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RatingRepository ratingRepository;
+
+    @BeforeEach
+    public void setup() {
+        ratingRepository.deleteAll();
+
+        ApplicationUser user1 = userRepository.findById(1L).orElseThrow();
+        ApplicationUser user2 = userRepository.findById(3L).orElseThrow();
+
+        UserRating rating = new UserRating();
+        rating.setRater(user1.getId());
+        rating.setRated(user2.getId());
+        rating.setRating(0f);
+
+        ratingRepository.save(rating);
+    }
+
     @Test
     public void putValidRatingReturns204() throws Exception {
         RatingDto ratingDto = new RatingDto();
@@ -59,7 +85,7 @@ public class RatingEndpointTest {
 
         String body = objectMapper.writeValueAsString(ratingDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(put(BASE_URI+"/rating")
+        MvcResult mvcResult = this.mockMvc.perform(put(BASE_URI + "/rating")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
@@ -70,10 +96,10 @@ public class RatingEndpointTest {
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
         assertNull(response.getContentType());
     }
+
     @Test
     public void getRatingFromUser3Returns0FAnd200() throws Exception {
-
-        MvcResult mvcResult = this.mockMvc.perform(get(BASE_URI+"/rating/3")
+        MvcResult mvcResult = this.mockMvc.perform(get(BASE_URI + "/rating/3")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
             .andDo(print())

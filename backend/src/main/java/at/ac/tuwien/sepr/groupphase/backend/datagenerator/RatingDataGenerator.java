@@ -46,6 +46,8 @@ public class RatingDataGenerator {
         List<UserRating> ratings = new ArrayList<>();
 
         List<ApplicationUser> applicationUsers = userRepository.findAll();
+
+        Random random = new Random();
         for (int i = 0; i < applicationUsers.size(); i++) {
             if (applicationUsers.get(i).getAdmin() || !(applicationUsers.get(i).getVerified())) {
                 continue;
@@ -57,9 +59,11 @@ public class RatingDataGenerator {
                 if (i == j) {
                     continue;
                 }
-                ratings.add(getRating(applicationUsers.get(i).getId(), applicationUsers.get(j).getId(), (float) (j % 6)));
+                float rating = random.nextInt(10) / 2.0f + 0.5f;
+                ratings.add(getRating(applicationUsers.get(i).getId(), applicationUsers.get(j).getId(), rating));
             }
         }
+
         ratingRepository.saveAll(ratings);
         log.info("Ratings generation completed.");
     }
