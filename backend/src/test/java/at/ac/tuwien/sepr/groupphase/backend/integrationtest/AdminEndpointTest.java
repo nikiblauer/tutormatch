@@ -342,14 +342,14 @@ public class AdminEndpointTest extends BaseTest {
 
         List<String> top5OfferedSubjects = Arrays.asList(
             "SE Advanced Model Engineering", "VU Advanced Modeling and Simulation", "PR Advanced Software Engineering",
-            "PR Advanced Software Engineering", "SE Advanced Topics in Recommender Systems and Generative AI"
+            "VU Advanced Information Retrieval", "VU Advanced Model Engineering"
         );
         List<String> top5NeededSubjects = Arrays.asList(
             "VU Advanced Modeling and Simulation","PR Advanced Software Engineering",
             "PR Advanced Software Engineering","SE Advanced Model Engineering","VU Advanced Model Engineering"
         );
 
-        List<Integer> top5OfferedAmount = Arrays.asList(4, 4, 4, 4, 4);
+        List<Integer> top5OfferedAmount = Arrays.asList(4, 4, 4, 3, 3);
         List<Integer> top5NeededAmount = Arrays.asList(4, 4, 4, 3, 3);
         assertAll("Statistics",
             () -> assertEquals(5, returnedStatistics.getTopXofferedSubjects().size()),
