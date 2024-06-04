@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.*;
+import at.ac.tuwien.sepr.groupphase.backend.repository.*;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.RatingDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.SubjectDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserDataGenerator;
@@ -23,6 +25,13 @@ public class BaseTest {
     protected UserRepository userRepository;
     @Autowired
     private SubjectRepository subjectRepository;
+
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
+
+    @Autowired
+    private ChatMessageRepository chatMessageRepository;
+
     @Autowired
     private UserSubjectRepository userSubjectRepository;
     @Autowired
@@ -35,6 +44,13 @@ public class BaseTest {
     private RatingRepository ratingRepository;
     @Autowired
     private RatingDataGenerator ratingDataGenerator;
+
+    @Autowired
+    private ChatRoomDataGenerator chatRoomDataGenerator;
+
+    @Autowired
+    private ChatMessageDataGenerator chatMessageDataGenerator;
+
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -50,13 +66,19 @@ public class BaseTest {
         userDataGenerator.generateApplicationUser();
         subjectDataGenerator.generateSubjects();
         userSubjectDataGenerator.generateUserSubjectRelation();
+        chatRoomDataGenerator.generateChatRooms();
+        chatMessageDataGenerator.generateChatMessages();
         ratingDataGenerator.generateUserSubjectRelation();
     }
 
     private void clearData() {
+        chatMessageRepository.deleteAll();
+        chatRoomRepository.deleteAll();
+
         userSubjectRepository.deleteAll();
         userRepository.deleteAll();
         subjectRepository.deleteAll();
+
         ratingRepository.deleteAll();
     }
 }

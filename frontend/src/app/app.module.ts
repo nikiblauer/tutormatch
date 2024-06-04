@@ -23,6 +23,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
 import {RegisterComponent} from "./components/register/register.component";
 import {NgxSpinnerModule} from "ngx-spinner";
+import {ChatComponent} from "./components/chat/chat.component";
+import {WebSocketService} from "./services/web-socket.service";
 import {StarRatingComponent} from "./components/rating/rating.component";
 
 
@@ -41,6 +43,7 @@ import {StarRatingComponent} from "./components/rating/rating.component";
     StudentsComponent,
     UserProfileComponent,
     SubjectComponent,
+    ChatComponent,
     StarRatingComponent
   ],
   imports: [
@@ -55,7 +58,7 @@ import {StarRatingComponent} from "./components/rating/rating.component";
     NgxSpinnerModule,
     ToastrModule.forRoot()
   ],
-  providers: [httpInterceptorProviders],
+  providers: [httpInterceptorProviders, WebSocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
