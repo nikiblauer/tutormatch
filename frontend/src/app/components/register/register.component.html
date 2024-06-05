@@ -1,6 +1,6 @@
 <ngx-spinner type="square-jelly-box"></ngx-spinner>
 <div class="pt-5">
-  <div class="row align-items-center justify-content-center"  *ngIf="!created">
+  <div class="row align-items-center justify-content-center" *ngIf="!created">
     <div class="card col-md-8 shadow" style="border: none;">
       <div class="card-body m-4">
         <div class="row">
@@ -11,7 +11,8 @@
               </div>
               <div class="row p-4 mb-4">
                 <h2 class="text-center">TutorMatch</h2>
-                <p class="text-muted text-center">Advance your academic career, reach your goals and study with others!</p>
+                <p class="text-muted text-center">Advance your academic career, reach your goals and study with others!
+                </p>
               </div>
             </div>
           </div>
@@ -25,30 +26,51 @@
                 <div class="col">
                   <div class="mb-3">
                     <label for="firstname" class="form-label text-muted">First Name:</label>
-                    <input type="text" id="firstname" class="form-control"  name="firstname" [(ngModel)]="createUser.firstname" minlength="1" required>
+                    <input type="text" id="firstname" class="form-control" name="firstname"
+                      [(ngModel)]="createUser.firstname" minlength="1" required>
                   </div>
                 </div>
                 <div class="col">
                   <div class="mb-3">
                     <label for="lastname" class="form-label text-muted">Last Name:</label>
-                    <input type="text" id="lastname" class="form-control" name="lastname" [(ngModel)]="createUser.lastname" minlength="1" required>
+                    <input type="text" id="lastname" class="form-control" name="lastname"
+                      [(ngModel)]="createUser.lastname" minlength="1" required>
                   </div>
                 </div>
               </div>
               <div class="mb-3">
                 <label for="matrNumber" class="form-label text-muted">Student ID:</label>
-                <input id="matrNumber" type="text" class="form-control" name="matrNumber" [(ngModel)]="createUser.matrNumber" pattern="^([0-9]{7,8})" required>
+                <input id="matrNumber" type="text" class="form-control" name="matrNumber"
+                  [(ngModel)]="createUser.matrNumber" pattern="^([0-9]{7,8})" required>
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label text-muted">TU-Email:</label>
-                <input id="email" type="email" class="form-control" name="email" [(ngModel)]="createUser.email" email required>
+                <input id="email" type="email" class="form-control" name="email" [(ngModel)]="createUser.email" email
+                  required>
               </div>
-              <div class="mb-3">
+              <div class="mb-3 form-group">
                 <label for="password" class="form-label text-muted">Password: <i>(min. 8 characters)</i></label>
-                <input id="password" type="password" class="form-control" name="password" [(ngModel)]="createUser.password" minlength="8" required>
+                <div class="input-group">
+                  <input id="password" [type]="showOrHidePassword ? 'text' : 'password'" class="form-control" name="password"
+                    [(ngModel)]="createUser.password" minlength="8" required>
+                </div>
+              </div>
+              <div class="mb-3 form-group">
+                <label for="repeatPassword" class="form-label text-muted">Repeat Password:</label>
+                <div class="input-group">
+                  <input id="repeatPassword" [type]="showOrHidePassword ? 'text' : 'password'" class="form-control"
+                    name="repeatPassword" [(ngModel)]="createUser.repeatPassword" minlength="8" required>
+                  <span class="input-group-text">
+                    <i class="fa" [ngClass]="{
+                        'bi-eye-slash': !showOrHidePassword,
+                        'bi-eye': showOrHidePassword
+                      }" (click)="toggleshowOrHidePassword()"></i>
+                  </span>
+                </div>
               </div>
               <div class="mb-3">
-                <button type="submit" class="btn primary-btn w-100" [disabled]="form.invalid">GET STARTED</button>
+                <button type="submit" class="btn primary-btn w-100" [disabled]="!passwordsMatch() || form.invalid">GET
+                  STARTED</button>
               </div>
             </form>
             <div class="mt-3 text-center">
@@ -66,9 +88,10 @@
         <div class="row justify-content-center">
           <img class="w-25 mb-5" src="/assets/logo.jpg">
           <h2 class="mb-3 px-5 text-center">Please verify your account </h2>
-          <p class="mb-5 px-5 text-center text-muted">We have just sent an email to {{createUser.email}}. Click the link in the email to verify your account.</p>
+          <p class="mb-5 px-5 text-center text-muted">We have just sent an email to {{createUser.email}}. Click the link
+            in the email to verify your account.</p>
           <p><button type="" class="btn primary-btn w-100" (click)="resendEmail()">Resend verification email</button>
-            </p>
+          </p>
         </div>
       </div>
     </div>

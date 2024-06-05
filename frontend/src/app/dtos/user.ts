@@ -21,7 +21,8 @@ export interface Subject {
 }
 
 export interface CreateStudentDto extends BaseUser {
-  password: string;
+  password: string; 
+  repeatPassword: string;
   matrNumber: number;
 }
 export interface SendPasswordResetDto {
