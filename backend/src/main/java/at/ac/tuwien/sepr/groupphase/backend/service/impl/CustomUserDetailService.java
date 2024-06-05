@@ -11,8 +11,8 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
+import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,9 +147,9 @@ public class CustomUserDetailService implements UserService {
         try {
             UserDetails userDetails = loadUserByUsername(email);
             if (userDetails != null
-                    && userDetails.isAccountNonExpired()
-                    && userDetails.isAccountNonLocked()
-                    && userDetails.isCredentialsNonExpired()
+                && userDetails.isAccountNonExpired()
+                && userDetails.isAccountNonLocked()
+                && userDetails.isCredentialsNonExpired()
             ) {
                 ApplicationUser applicationUser = findApplicationUserByEmail(email);
                 if (!applicationUser.getVerified()) {
@@ -167,7 +167,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public boolean getVisibility(ApplicationUser user) {
-        if (user == null){
+        if (user == null) {
             return false;
         }
         return user.getVisible();
@@ -175,7 +175,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public void updateVisibility(boolean flag, ApplicationUser user) {
-        if (user != null){
+        if (user != null) {
             user.setVisible(flag);
             this.userRepository.save(user);
         }

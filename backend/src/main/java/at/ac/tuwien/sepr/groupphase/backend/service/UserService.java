@@ -39,7 +39,7 @@ public interface UserService extends UserDetailsService {
     /**
      * Update a user.
      *
-     * @param userEmail the email of the user
+     * @param userEmail          the email of the user
      * @param applicationUserDto the updated user
      * @return the updated user
      */
@@ -70,7 +70,6 @@ public interface UserService extends UserDetailsService {
 
     /**
      * sends a new verification email if user with this email exists and is not verified yet.
-     *
      */
     void resendVerificationEmail(String email);
 
@@ -83,7 +82,7 @@ public interface UserService extends UserDetailsService {
     boolean getVisibility(ApplicationUser user);
 
     /**
-     * updates the visibility for a user
+     * updates the visibility for a user.
      *
      * @param flag the value to update the visibility with
      * @param user the user for whom the visibility is updated.
