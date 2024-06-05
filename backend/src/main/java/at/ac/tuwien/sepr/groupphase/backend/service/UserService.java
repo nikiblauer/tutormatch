@@ -1,10 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.data.domain.Page;
@@ -61,7 +59,7 @@ public interface UserService extends UserDetailsService {
 
     ApplicationUser findApplicationUserById(Long id);
 
-    public List<String> getUserSubjectsByRole(Long id, String role);
+    List<String> getUserSubjectsByRole(Long id, String role);
 
     /**
      * sets the user verification status to verified.
@@ -75,4 +73,20 @@ public interface UserService extends UserDetailsService {
      *
      */
     void resendVerificationEmail(String email);
+
+    /**
+     * gets the boolean value of the visibility for a user.
+     *
+     * @param user the user of the boolean flag
+     * @return a boolean flag true for visible false for not visible.
+     */
+    boolean getVisibility(ApplicationUser user);
+
+    /**
+     * updates the visibility for a user
+     *
+     * @param flag the value to update the visibility with
+     * @param user the user for whom the visibility is updated.
+     */
+    void updateVisibility(boolean flag, ApplicationUser user);
 }

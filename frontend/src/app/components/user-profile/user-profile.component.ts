@@ -56,6 +56,8 @@ export class UserProfileComponent implements OnInit {
   //Subject for info modal
   selectedSubject: Subject;
 
+  visible = true;
+
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.mode = data.mode;
@@ -65,6 +67,7 @@ export class UserProfileComponent implements OnInit {
     });
     this.updateUser()
     this.searchSubjects();
+    this.getVisibility();
     this.searchSubject$.pipe(
       debounceTime(300),
       distinctUntilChanged()
@@ -307,5 +310,25 @@ export class UserProfileComponent implements OnInit {
       default:
         return 0;
     }
+  }
+
+  public updateVisibility(){
+    this.visible = !this.visible;
+    this.userService.updateVisibility(this.visible).subscribe({
+      error: (e) => {
+        this.handleError(e)
+      }
+    });
+  }
+
+  private getVisibility(){
+    this.userService.getVisibility().subscribe({
+      next: visibility => {
+        this.visible = visibility;
+      },
+      error: (e) => {
+        this.handleError(e)
+      }
+    });
   }
 }

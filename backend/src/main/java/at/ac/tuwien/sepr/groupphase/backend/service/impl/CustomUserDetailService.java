@@ -166,6 +166,22 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
+    public boolean getVisibility(ApplicationUser user) {
+        if (user == null){
+            return false;
+        }
+        return user.getVisible();
+    }
+
+    @Override
+    public void updateVisibility(boolean flag, ApplicationUser user) {
+        if (user != null){
+            user.setVisible(flag);
+            this.userRepository.save(user);
+        }
+    }
+
+    @Override
     public ApplicationUser updateUser(String userEmail, UpdateStudentDto applicationUserDto) throws ValidationException {
         LOGGER.trace("Updating user with email: {}", userEmail);
         //remove whitespaces from telNr
@@ -218,4 +234,6 @@ public class CustomUserDetailService implements UserService {
         LOGGER.trace("Getting all users");
         return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber, pageable);
     }
+
+
 }
