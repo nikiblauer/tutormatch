@@ -1,7 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {ToastrService} from "ngx-toastr";
-import {NgxSpinnerService} from "ngx-spinner";
-import {RatingService} from "../../services/rating.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { ToastrService } from "ngx-toastr";
+import { NgxSpinnerService } from "ngx-spinner";
+import { RatingService } from "../../services/rating.service";
 
 @Component({
   selector: 'app-star-rating',
@@ -32,7 +32,7 @@ export class StarRatingComponent implements OnInit {
   setRating(newRating: number): void {
     if (!this.isEditable) return;
     this.rating = newRating;
-    console.log(this.ratedUserId + ", " + newRating )
+    console.log(this.ratedUserId + ", " + newRating)
     this.ratingService.rateUser(this.ratedUserId, newRating).subscribe({
       next: () => {
         this.spinner.hide();

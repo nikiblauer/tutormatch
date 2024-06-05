@@ -61,6 +61,7 @@ public class RatingServiceImpl implements RatingService {
         LOGGER.trace("getRatingFromStudent rated: {}, rater: {}", ratedUserId, raterUserId);
         UserRating rating = ratingRepository.getByRatedAndRater(ratedUserId, raterUserId);
         if (rating != null) {
+            System.out.println(rating.getRating());
             return rating.getRating();
         }
         return -1;
