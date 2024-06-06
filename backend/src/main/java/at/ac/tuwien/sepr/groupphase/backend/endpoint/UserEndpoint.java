@@ -161,4 +161,22 @@ public class UserEndpoint {
         return mapper.mapUserAndSubjectsToUserSubjectDto(user, subjects);
     }
 
+    @Secured("ROLE_USER")
+    @GetMapping("/visibility")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean getVisibilityOfUser() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        ApplicationUser user = userService.findApplicationUserByEmail(userEmail);
+        return userService.getVisibility(user);
+    }
+
+    @Secured("ROLE_USER")
+    @PutMapping("/visibility")
+    public void setVisibilityOfUser(@RequestBody Boolean flag) {
+        LOGGER.info("PUT /api/v1/user/visibility body:{}", flag);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        ApplicationUser user = userService.findApplicationUserByEmail(userEmail);
+        userService.updateVisibility(flag, user);
+    }
+
 }

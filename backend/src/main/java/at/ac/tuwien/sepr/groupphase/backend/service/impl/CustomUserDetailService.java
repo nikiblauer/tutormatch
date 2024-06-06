@@ -11,8 +11,8 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
+import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,6 +162,26 @@ public class CustomUserDetailService implements UserService {
             }
         } catch (UsernameNotFoundException | NotFoundException e) {
             throw new NotFoundException(String.format("User with email %s not found", email));
+        }
+    }
+
+    @Override
+    public boolean getVisibility(ApplicationUser user) {
+        LOGGER.trace("getVisibility: {}", user);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+        return user.getVisible();
+    }
+
+    @Override
+    public void updateVisibility(boolean flag, ApplicationUser user) {
+        LOGGER.trace("updateVisibility: {},{}", flag, user);
+        if (user != null) {
+            user.setVisible(flag);
+            this.userRepository.save(user);
+        } else {
+            throw new NotFoundException("User not found");
         }
     }
 
