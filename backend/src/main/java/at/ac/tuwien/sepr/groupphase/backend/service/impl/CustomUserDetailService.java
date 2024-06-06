@@ -147,9 +147,9 @@ public class CustomUserDetailService implements UserService {
         try {
             UserDetails userDetails = loadUserByUsername(email);
             if (userDetails != null
-                    && userDetails.isAccountNonExpired()
-                    && userDetails.isAccountNonLocked()
-                    && userDetails.isCredentialsNonExpired()
+                && userDetails.isAccountNonExpired()
+                && userDetails.isAccountNonLocked()
+                && userDetails.isCredentialsNonExpired()
             ) {
                 ApplicationUser applicationUser = findApplicationUserByEmail(email);
                 if (!applicationUser.getVerified()) {
@@ -168,22 +168,7 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser updateUser(String userEmail, UpdateStudentDto applicationUserDto) throws ValidationException {
         LOGGER.trace("Updating user with email: {}", userEmail);
-        //remove whitespaces from telNr
-        applicationUserDto.telNr = applicationUserDto.telNr.trim();
-        validator.verifyUserData(applicationUserDto);
-
-        ApplicationUser applicationUser = userRepository.findApplicationUserByDetails_Email(userEmail);
-        if (applicationUser == null) {
-            throw new NotFoundException(String.format("User with email %s not found", userEmail));
-        }
-
-        applicationUser.setFirstname(applicationUserDto.firstname);
-        applicationUser.setLastname(applicationUserDto.lastname);
-        applicationUser.getDetails().setTelNr(applicationUserDto.telNr);
-        applicationUser.getDetails().getAddress().setStreet(applicationUserDto.street);
-        applicationUser.getDetails().getAddress().setAreaCode(applicationUserDto.areaCode);
-        applicationUser.getDetails().getAddress().setCity(applicationUserDto.city);
-
+        ApplicationUser applicationUser = buildUser(userEmail, applicationUserDto);
         // Save the updated ApplicationUser in the database
         return userRepository.save(applicationUser);
     }
@@ -191,27 +176,32 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser updateUserIncludingMatrNr(String userEmail, UpdateStudentAsAdminDto applicationUserDto) throws ValidationException {
         LOGGER.trace("Updating user with email: {}", userEmail);
-        //remove whitespaces from telNr
-        applicationUserDto.telNr = applicationUserDto.telNr.trim();
-        validator.verifyUserData(applicationUserDto);
+        ApplicationUser applicationUser = updateUser(userEmail, applicationUserDto);
+        applicationUser.setMatrNumber(applicationUserDto.matrNumber);
+        // Save the updated ApplicationUser in the database
+        return userRepository.save(applicationUser);
+    }
+
+    private ApplicationUser buildUser(String userEmail, UpdateStudentDto user) throws ValidationException {
+        LOGGER.trace("buildUser: {},{}", userEmail, user);
+
+        user.telNr = user.telNr.replaceAll(" ", "");
+        validator.verifyUserData(user);
 
         ApplicationUser applicationUser = userRepository.findApplicationUserByDetails_Email(userEmail);
         if (applicationUser == null) {
             throw new NotFoundException(String.format("User with email %s not found", userEmail));
         }
 
-        applicationUser.setFirstname(applicationUserDto.firstname);
-        applicationUser.setLastname(applicationUserDto.lastname);
-        applicationUser.setMatrNumber(applicationUserDto.matrNumber);
-        applicationUser.getDetails().setTelNr(applicationUserDto.telNr);
-        applicationUser.getDetails().getAddress().setStreet(applicationUserDto.street);
-        applicationUser.getDetails().getAddress().setAreaCode(applicationUserDto.areaCode);
-        applicationUser.getDetails().getAddress().setCity(applicationUserDto.city);
+        applicationUser.setFirstname(user.firstname);
+        applicationUser.setLastname(user.lastname);
+        applicationUser.getDetails().setTelNr(user.telNr);
+        applicationUser.getDetails().getAddress().setStreet(user.street);
+        applicationUser.getDetails().getAddress().setAreaCode(user.areaCode);
+        applicationUser.getDetails().getAddress().setCity(user.city);
 
-        // Save the updated ApplicationUser in the database
-        return userRepository.save(applicationUser);
+        return applicationUser;
     }
-
 
     @Override
     public Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Pageable pageable) {
