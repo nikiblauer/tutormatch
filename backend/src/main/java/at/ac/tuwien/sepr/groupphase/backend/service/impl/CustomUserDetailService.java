@@ -169,7 +169,7 @@ public class CustomUserDetailService implements UserService {
     public boolean getVisibility(ApplicationUser user) {
         LOGGER.trace("getVisibility: {}", user);
         if (user == null) {
-            return false;
+            throw new NotFoundException("User not found");
         }
         return user.getVisible();
     }
@@ -180,6 +180,8 @@ public class CustomUserDetailService implements UserService {
         if (user != null) {
             user.setVisible(flag);
             this.userRepository.save(user);
+        } else {
+            throw new NotFoundException("User not found");
         }
     }
 
