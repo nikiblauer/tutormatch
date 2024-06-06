@@ -32,7 +32,6 @@ export class StarRatingComponent implements OnInit {
   setRating(newRating: number): void {
     if (!this.isEditable) return;
     this.rating = newRating;
-    console.log(this.ratedUserId + ", " + newRating)
     this.ratingService.rateUser(this.ratedUserId, newRating).subscribe({
       next: () => {
         this.spinner.hide();
