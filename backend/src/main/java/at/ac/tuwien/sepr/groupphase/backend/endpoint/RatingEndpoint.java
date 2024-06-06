@@ -48,7 +48,7 @@ public class RatingEndpoint {
     }
 
     @Operation(
-        description = "Get the rating of a user. Rating is a float from 0-5",
+        description = "Get the rating of a user. Rating is a float from 0.5-5",
         summary = "Get rating.")
     @Secured("ROLE_USER")
     @GetMapping("/{id}")

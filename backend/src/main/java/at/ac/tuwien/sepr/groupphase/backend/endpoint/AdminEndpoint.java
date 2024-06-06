@@ -67,8 +67,8 @@ public class AdminEndpoint {
     }
 
     @Operation(
-        description = "This endpoint returns all users, that meet certain criteria in pages. The criteria can be empty.",
-        summary = "Admin endpoint, get all users.")
+        description = "This endpoint returns all users, that meet the search criteria for the Name or MatrNumber. The criterias can be empty.",
+        summary = "Admin endpoint, get all searched users.")
     @Secured("ROLE_ADMIN")
     @GetMapping("/users")
     public Page<StudentDto> searchUsers(
@@ -80,8 +80,8 @@ public class AdminEndpoint {
     }
 
     @Operation(
-        description = "Get all the Details of a student.",
-        summary = "Get user details.")
+        description = "Get all the Details of a student with the ID. This includes also all the subjects of the student which he has chosen",
+        summary = "Get all user details.")
     @Secured("ROLE_ADMIN")
     @GetMapping("/users/{id}")
     public StudentSubjectInfoDto getUserDetails(@PathVariable(name = "id") Long id) {
@@ -99,7 +99,7 @@ public class AdminEndpoint {
     }
 
     @Operation(
-        description = "Admin can update a user including the Matriculation number",
+        description = "Admin can update all the user details",
         summary = "Update user")
     @Secured("ROLE_ADMIN")
     @PutMapping("/users/update")
@@ -112,7 +112,7 @@ public class AdminEndpoint {
     }
 
     @Operation(
-        description = "Create a new Subject",
+        description = "Create a new Subject given a certain scheme",
         summary = "Create Subject")
     @Secured("ROLE_ADMIN")
     @PostMapping("/subject")
@@ -157,7 +157,7 @@ public class AdminEndpoint {
     }
 
     @Operation(
-        description = "Update the subjects a user has selected.",
+        description = "Update the subjects a user has selected. User is identified over ID",
         summary = "Update user subjects by user id")
     @Secured("ROLE_ADMIN")
     @PutMapping("/users/subjects/{id}")
@@ -169,8 +169,8 @@ public class AdminEndpoint {
     }
 
     @Operation(
-        description = "Gets a simple statistic of Subjects.",
-        summary = "Get simpleStatistic.")
+        description = "Gets a simple statistic of Subjects which is defined with the DTO SimpleStatisticsDto.",
+        summary = "Get statistics from Backend.")
     @Secured("ROLE_ADMIN")
     @GetMapping("/statistics/simple")
     public SimpleStatisticsDto getSimpleStatistics() {
@@ -179,8 +179,8 @@ public class AdminEndpoint {
     }
 
     @Operation(
-        description = "Get x amount of subjects.",
-        summary = "Get TopStatistic")
+        description = "Gets a extended list of statistics, like how many subjects are needed and offered currently.",
+        summary = "Get Top Statistics from Backend.")
     @Secured("ROLE_ADMIN")
     @GetMapping(value = "/statistics/extended")
     public TopStatisticsDto getExtendedStatisticsList(@RequestParam(name = "x") int x) {

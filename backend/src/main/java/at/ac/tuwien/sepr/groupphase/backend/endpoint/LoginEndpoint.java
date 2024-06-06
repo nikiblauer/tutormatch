@@ -27,7 +27,7 @@ public class LoginEndpoint {
     }
 
     @Operation(
-        description = "Login a user returns a corresponding token.",
+        description = "Login user, returns a corresponding bearer token.",
         summary = "Login User")
     @PermitAll
     @PostMapping

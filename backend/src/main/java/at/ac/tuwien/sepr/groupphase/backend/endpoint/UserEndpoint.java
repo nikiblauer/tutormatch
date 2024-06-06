@@ -1,11 +1,11 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.EmailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentBaseInfoDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectsDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectsListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
@@ -23,12 +23,12 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -77,7 +77,7 @@ public class UserEndpoint {
         summary = "Resend verification email")
     @PermitAll
     @PostMapping(value = "/verify/resend")
-    public ResponseEntity resendVerificationEmail(@RequestBody Map<String, String> payload) throws ValidationException {
+    public ResponseEntity resendVerificationEmail(@RequestBody Map<String, String> payload) {
         LOGGER.info("POST /api/v1/user/ body: {}", payload);
         userService.resendVerificationEmail(payload.get("email"));
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -133,7 +133,7 @@ public class UserEndpoint {
     }
 
     @Operation(
-        description = "Updates the user of which the token is.",
+        description = "Updates the current user with the data in the DTO. The user is identified over the token.",
         summary = "Update User")
     @Secured("ROLE_USER")
     @PutMapping
@@ -147,7 +147,7 @@ public class UserEndpoint {
     }
 
     @Operation(
-        description = "Gets all matches for the user of the token",
+        description = "Gets all matches for the (current) user, is identified over the token.",
         summary = "Get available all matches")
     @Secured("ROLE_USER")
     @GetMapping("/matches")
