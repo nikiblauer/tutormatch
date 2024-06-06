@@ -32,18 +32,4 @@ import org.springframework.context.annotation.Configuration;
     in = SecuritySchemeIn.HEADER
 )
 @Configuration
-public class OpenApiConfig {
-    @Bean
-    public OpenApiCustomiser globalResponseCustomizer() {
-        return openApi -> openApi.getPaths().values().forEach(pathItem -> pathItem.readOperations().forEach(operation -> {
-        }));
-    }
-
-    /*private void removeContentFromApiResponse(ApiResponses responses, String statusCode) {
-        if (responses.containsKey(statusCode)) {
-            ApiResponse apiResponse = responses.get(statusCode);
-            //apiResponse.setContent(new Content()); // Setzen Sie Content explizit auf eine leere Instanz
-            apiResponse.setDescription("No content available for this response"); // Optional: Update der Beschreibung
-        }
-    }*/
-}
+public class OpenApiConfig {}
