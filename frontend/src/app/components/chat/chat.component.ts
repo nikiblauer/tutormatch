@@ -12,8 +12,9 @@ export class ChatComponent implements OnInit {
   message: string = "Hello, its me";
   user1: number = 1;
   user2: number = 2;
-  activeChatRoom: string = "";
+  activeChatRoom: string = "fdbd2a60-4328-47f1-8463-fcdb609810eb";
   chatRooms: ChatRoomDto[];
+  messages: ChatMessageDto[];
 
   constructor(private chatService: ChatService, private webSocketService: WebSocketService) {
 
@@ -47,10 +48,26 @@ export class ChatComponent implements OnInit {
       }
     })
   }
+  getChatRoomsForUser() {
+    this.chatService.getChatRoomByUserId(1).subscribe({
+      next: chatRooms => {
+        this.chatRooms = chatRooms;
+        console.log(this.chatRooms);
+      }, error: error => {
+        console.log(error);
+      }
+    })
+  }
 
   loadHistory() {
+    if (!this.activeChatRoom) {
+      console.log("Active chat room is not set");
+      return;
+    }
+    this.activeChatRoom
     this.chatService.getMessagesByChatRoomId(this.activeChatRoom).subscribe({
       next: messages => {
+        this.messages = messages;
         console.log(messages);
       }, error: error => {
         console.log(error);

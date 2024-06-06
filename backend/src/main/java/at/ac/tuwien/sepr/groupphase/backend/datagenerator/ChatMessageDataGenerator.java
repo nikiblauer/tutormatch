@@ -16,7 +16,9 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Profile("generateData")
@@ -26,10 +28,12 @@ public class ChatMessageDataGenerator {
 
     private ChatMessageRepository chatMessageRepository;
     private UserRepository userRepository;
+    private ChatRoomRepository chatRoomRepository;
 
     @Autowired
-    public ChatMessageDataGenerator(ChatMessageRepository chatRoomRepository, UserRepository userRepository) {
-        this.chatMessageRepository = chatRoomRepository;
+    public ChatMessageDataGenerator(ChatMessageRepository chatMessageRepository, ChatRoomRepository chatRoomRepository, UserRepository userRepository) {
+        this.chatMessageRepository = chatMessageRepository;
+        this.chatRoomRepository = chatRoomRepository;
         this.userRepository = userRepository;
     }
 
@@ -40,9 +44,51 @@ public class ChatMessageDataGenerator {
             log.info("ChatMessage data already generated. Skipping generation.");
             return;
         }
-
         log.info("Generating chat messages...");
 
+        List<ChatRoom> chatRooms = chatRoomRepository.findAll();
+        int i = 0;
+        for(ChatRoom chatRoom : chatRooms){
+            if (i%2 == 0){
+                i++;
+                continue;
+            }
+            ApplicationUser user1 = chatRoom.getSender();
+            ApplicationUser user2 = chatRoom.getRecipient();
+
+            LocalDate localDate = LocalDate.of(2023, 1, 1);
+            System.out.println("LocalDate: " + localDate);
+
+            // Convert LocalDate to Date
+            LocalDateTime dateTime1 = LocalDateTime.of(2023, 1, 1, 0, 0);
+            // Add 1 minute to the first date to get the second date
+            LocalDateTime dateTime2 = dateTime1.plusMinutes(1);
+            // Convert LocalDateTime to Date
+            Date timestampMsg1 = Date.from(dateTime1.atZone(ZoneId.systemDefault()).toInstant());
+            Date timestampMsg2 = Date.from(dateTime2.atZone(ZoneId.systemDefault()).toInstant());
+
+            ChatMessage chatMessage1 = ChatMessage.builder()
+                .chatRoomId(chatRoom.getChatRoomId())
+                .senderId(user1)
+                .recipientId(user2)
+                .content("Hi " + user2.getFirstname() + ", how are you?") // Customizing message content
+                .timestamp(timestampMsg1)
+                .build();
+
+            ChatMessage chatMessage2 = ChatMessage.builder()
+                .chatRoomId(chatRoom.getChatRoomId())
+                .senderId(user2)
+                .recipientId(user1)
+                .content("Hi " + user1.getFirstname() + ", I'm fine. How are you?")
+                .timestamp(timestampMsg2)
+                .build();
+
+            chatMessageRepository.save(chatMessage1);
+            chatMessageRepository.save(chatMessage2);
+            i++;
+        }
+
+/*
         ApplicationUser user1 = userRepository.findApplicationUserByDetails_Email("e10000001@student.tuwien.ac.at");
         ApplicationUser user3 = userRepository.findApplicationUserByDetails_Email("e10000003@student.tuwien.ac.at");
 
@@ -85,7 +131,7 @@ public class ChatMessageDataGenerator {
         chatMessageRepository.save(chatMessage2);
 
 
-
+*/
         log.info("ChatMessage generation completed.");
     }
 

@@ -1,15 +1,21 @@
 package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ChatRoom;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ChatRoomRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepr.groupphase.backend.service.ChatRoomService;
+import at.ac.tuwien.sepr.groupphase.backend.service.impl.ChatRoomServiceImpl;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Profile("generateData")
@@ -19,11 +25,13 @@ public class ChatRoomDataGenerator {
 
     private ChatRoomRepository chatRoomRepository;
     private UserRepository userRepository;
+    private ChatRoomService chatRoomService;
 
     @Autowired
-    public ChatRoomDataGenerator(ChatRoomRepository chatRoomRepository, UserRepository userRepository) {
+    public ChatRoomDataGenerator(ChatRoomRepository chatRoomRepository, UserRepository userRepository, ChatRoomService chatRoomService) {
         this.chatRoomRepository = chatRoomRepository;
         this.userRepository = userRepository;
+        this.chatRoomService = chatRoomService;
     }
 
 
@@ -35,32 +43,28 @@ public class ChatRoomDataGenerator {
         }
 
         log.info("Generating chatrooms...");
+        List<ApplicationUser> users = userRepository.findAll();
+        ArrayList<ApplicationUser> verifiedUsers = new ArrayList<>();
 
-        ApplicationUser user1 = userRepository.findApplicationUserByDetails_Email("e10000001@student.tuwien.ac.at");
-        ApplicationUser user3 = userRepository.findApplicationUserByDetails_Email("e10000003@student.tuwien.ac.at");
-        ApplicationUser user4 = userRepository.findApplicationUserByDetails_Email("e10000004@student.tuwien.ac.at");
+        for (ApplicationUser user : users) {
+            if (user.getVerified() && !(user.getAdmin())) {
+                verifiedUsers.add(user);
+            }
+        }
 
+        if (verifiedUsers.size() < 2) {
+            System.out.println("Not enough verified users to create chats.");
+            return;
+        }
 
-        // hardcoded because UUID generates with time specific seed
-        String chatRoomId1 = "123e4567-e89b-12d3-a456-426614174000";
-        String chatRoomId2 = "321e4567-e89b-12d3-a456-426614174000";
+        for (int i = 0; i < verifiedUsers.size(); i++) {
+            ApplicationUser user1 = verifiedUsers.get(i);
+            ApplicationUser user2 = verifiedUsers.get((i + 1) % verifiedUsers.size());
+            CreateChatRoomDto receipient = new CreateChatRoomDto();
+            receipient.setRecipientId(user2.getId());
+            chatRoomService.createChatRoom(user1, receipient);
+        }
 
-
-
-        ChatRoom senderRecipient1 = ChatRoom.builder().chatRoomId(chatRoomId1).sender(user1).recipient(user3).build();
-        ChatRoom recipientSender1 = ChatRoom.builder().chatRoomId(chatRoomId1).sender(user3).recipient(user1).build();
-
-        chatRoomRepository.save(senderRecipient1);
-        chatRoomRepository.save(recipientSender1);
-
-        ChatRoom senderRecipient2 = ChatRoom.builder().chatRoomId(chatRoomId2).sender(user1).recipient(user4).build();
-        ChatRoom recipientSender2 = ChatRoom.builder().chatRoomId(chatRoomId2).sender(user4).recipient(user1).build();
-
-        chatRoomRepository.save(senderRecipient2);
-        chatRoomRepository.save(recipientSender2);
-
-
-        log.info("Chatrooms generation completed.");
     }
 
 }

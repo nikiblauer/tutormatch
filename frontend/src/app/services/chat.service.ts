@@ -28,6 +28,10 @@ export class ChatService {
   getMessagesByChatRoomId(chatRoomId: string) {
     console.log("Getting all messages for chatroom: ", chatRoomId);
     return this.httpClient.get<ChatMessageDto[]>(this.chatUri + "/room/"+ chatRoomId + "/messages" , {responseType: "json"});
-
   }
+  getChatRoomByUserId(userId: number){
+    console.log("Getting all chatrooms of user: ", userId);
+    return this.httpClient.get<ChatRoomDto[]>(this.chatUri + "/room/user" , {responseType: "json"});
+  }
+
 }
