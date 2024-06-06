@@ -167,6 +167,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public boolean getVisibility(ApplicationUser user) {
+        LOGGER.trace("getVisibility: {}", user);
         if (user == null) {
             return false;
         }
@@ -175,6 +176,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public void updateVisibility(boolean flag, ApplicationUser user) {
+        LOGGER.trace("updateVisibility: {},{}", flag, user);
         if (user != null) {
             user.setVisible(flag);
             this.userRepository.save(user);
@@ -228,12 +230,9 @@ public class CustomUserDetailService implements UserService {
         return userRepository.save(applicationUser);
     }
 
-
     @Override
     public Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Pageable pageable) {
         LOGGER.trace("Getting all users");
         return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber, pageable);
     }
-
-
 }

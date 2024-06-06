@@ -45,6 +45,14 @@ public interface UserService extends UserDetailsService {
      */
     ApplicationUser updateUser(String userEmail, UpdateStudentDto applicationUserDto) throws ValidationException;
 
+    /**
+     * Updates a User including the Matriculation Number.
+     *
+     * @param userEmail          the email of tue user
+     * @param applicationUserDto the updated user
+     * @return the updated user
+     * @throws ValidationException If any validation errors occur. (no name, ...)
+     */
     ApplicationUser updateUserIncludingMatrNr(String userEmail, UpdateStudentAsAdminDto applicationUserDto) throws ValidationException;
 
     /**
@@ -55,10 +63,31 @@ public interface UserService extends UserDetailsService {
      */
     Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Pageable pageable);
 
+    /**
+     * Creates a new User in the database.
+     *
+     * @param applicationUserDto The user that is created
+     * @return The created User Entry in the database
+     * @throws ValidationException If any validation errors occur. (no name, ...)
+     */
     ApplicationUser create(CreateStudentDto applicationUserDto) throws ValidationException;
+
+    /**
+     * Finds a User with a given ID.
+     *
+     * @param id the user to find
+     * @return An entity of the User with the given id
+     */
 
     ApplicationUser findApplicationUserById(Long id);
 
+    /**
+     * Gets a list of all subjects a User has a certain role.
+     *
+     * @param id   the user id
+     * @param role the searched role (trainee/tutor)
+     * @return a list of Subjects
+     */
     List<String> getUserSubjectsByRole(Long id, String role);
 
     /**

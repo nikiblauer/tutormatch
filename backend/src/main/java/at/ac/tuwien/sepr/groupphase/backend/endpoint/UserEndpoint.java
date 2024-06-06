@@ -173,6 +173,7 @@ public class UserEndpoint {
     @Secured("ROLE_USER")
     @PutMapping("/visibility")
     public void setVisibilityOfUser(@RequestBody Boolean flag) {
+        LOGGER.info("PUT /api/v1/user/visibility body:{}", flag);
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         ApplicationUser user = userService.findApplicationUserByEmail(userEmail);
         userService.updateVisibility(flag, user);

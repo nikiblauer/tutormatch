@@ -37,14 +37,17 @@
                         <input type="tel" id="phone" class="form-control" [(ngModel)]="user.telNr" disabled>
                     </div>
                 </div>
+              <div class="mb-5 row align-content-center">
+                <h5 class="mb-1">Toggle Visibility for matches</h5>
+                <div class="form-check form-switch align-content-center">
+                  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" [checked]="visible" (change)="updateVisibility()">
+                  <label *ngIf="visible" class="form-check-label check-visible" for="flexSwitchCheckChecked">Visible</label>
+                  <label *ngIf="!visible" class="form-check-label check-not-visible" for="flexSwitchCheckChecked">Not visible</label>
+                </div>
+              </div>
                 <!-- Add horizontal line here -->
                 <hr class="my-4">
                 <h3 class="row mb-5">My Subjects:</h3>
-                <h5 class="mb-1">Toggle Visibility for matches</h5>
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" [checked]="visible" (change)="updateVisibility()">
-                <label class="form-check-label" for="flexSwitchCheckChecked">Select this to be available for a match</label>
-              </div>
               <br>
                 <div class="row mb-5">
                     <div class="col">
