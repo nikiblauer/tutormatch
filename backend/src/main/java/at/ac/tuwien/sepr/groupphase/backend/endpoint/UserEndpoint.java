@@ -18,7 +18,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.SubjectService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -43,6 +43,7 @@ import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "/api/v1/user")
+@Tag(name = "User Endpoint")
 public class UserEndpoint {
     private final UserService userService;
     private final LoginService loginService;
@@ -60,6 +61,9 @@ public class UserEndpoint {
         this.userMatchService = userMatchService;
     }
 
+    @Operation(
+        description = "Create a new User with the data in the DTO",
+        summary = "Creates a new User")
     @PermitAll
     @PostMapping
     public StudentDto create(@RequestBody CreateStudentDto toCreate) throws ValidationException {
@@ -68,6 +72,9 @@ public class UserEndpoint {
         return mapper.applicationUserToDto(user);
     }
 
+    @Operation(
+        description = "Resends a verification email to the email of the token.",
+        summary = "Resend verification email")
     @PermitAll
     @PostMapping(value = "/verify/resend")
     public ResponseEntity resendVerificationEmail(@RequestBody Map<String, String> payload) throws ValidationException {
@@ -76,6 +83,9 @@ public class UserEndpoint {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @Operation(
+        description = "Sends the verification email to the email of the token.",
+        summary = "Sends verification email")
     @GetMapping(value = "/verify/{token}")
     @PermitAll
     public ResponseEntity verifyEmail(@PathVariable("token") String token) {
@@ -87,6 +97,9 @@ public class UserEndpoint {
         }
     }
 
+    @Operation(
+        description = "Request to reset the password. An email is being send to the email from the token.",
+        summary = "Request to reset password")
     @PostMapping(value = "/reset_password")
     @PermitAll
     public ResponseEntity requestPasswordReset(@RequestBody EmailDto emailDto) {
@@ -95,6 +108,9 @@ public class UserEndpoint {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @Operation(
+        description = "Changes the password with a token sent in an Email.",
+        summary = "Reset password")
     @PostMapping(value = "/reset_password/{token}")
     @PermitAll
     public ResponseEntity changePasswordWithToken(@PathVariable("token") String token, @RequestBody PasswordResetDto resetDto) throws ValidationException {
@@ -108,7 +124,7 @@ public class UserEndpoint {
 
     @Secured("ROLE_USER")
     @PutMapping(value = "/subjects")
-    @Operation(summary = "Set subjects for a user", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Set subjects for a user", description = "Sets selected subjects to the user either as trainee or as tutor.")
     public void setUserSubjects(@Valid @RequestBody SubjectsListDto listDto) throws ValidationException {
         LOGGER.info("PUT /api/v1/user/subjects body:{}", listDto);
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -116,6 +132,9 @@ public class UserEndpoint {
         subjectService.setUserSubjects(student, listDto.traineeSubjects, listDto.tutorSubjects);
     }
 
+    @Operation(
+        description = "Updates the user of which the token is.",
+        summary = "Update User")
     @Secured("ROLE_USER")
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
@@ -127,6 +146,9 @@ public class UserEndpoint {
         return mapper.toUpdateDto(user);
     }
 
+    @Operation(
+        description = "Gets all matches for the user of the token",
+        summary = "Get available all matches")
     @Secured("ROLE_USER")
     @GetMapping("/matches")
     public Stream<UserMatchDto> getUserMatches() {
@@ -134,6 +156,9 @@ public class UserEndpoint {
         return userMatchService.findMatchingsForUser(userEmail);
     }
 
+    @Operation(
+        description = "Get the contactDetails of any User.",
+        summary = "Get UserDetails")
     @PermitAll
     @GetMapping("{id}")
     public StudentBaseInfoDto getUserDetailsById(@PathVariable("id") Long id) {
@@ -141,6 +166,9 @@ public class UserEndpoint {
         return mapper.mapApplicationUserToApplicationUserDto(user);
     }
 
+    @Operation(
+        description = "Get all subjects that are mapped to a user via his id.",
+        summary = "Get subject of user by id")
     @PermitAll
     @GetMapping("{id}/subjects")
     @ResponseStatus(HttpStatus.OK)
@@ -151,6 +179,9 @@ public class UserEndpoint {
         return mapper.mapUserAndSubjectsToUserSubjectDto(user, subjects);
     }
 
+    @Operation(
+        description = "Get all subjects that are mapped to a user via his email.",
+        summary = "Get subject of user by email")
     @PermitAll
     @GetMapping("subjects")
     @ResponseStatus(HttpStatus.OK)
