@@ -48,8 +48,8 @@ public class ChatMessageDataGenerator {
 
         List<ChatRoom> chatRooms = chatRoomRepository.findAll();
         int i = 0;
-        for(ChatRoom chatRoom : chatRooms){
-            if (i%2 == 0){
+        for (ChatRoom chatRoom : chatRooms) {
+            if (i % 2 == 0) {
                 i++;
                 continue;
             }
@@ -67,28 +67,18 @@ public class ChatMessageDataGenerator {
             Date timestampMsg1 = Date.from(dateTime1.atZone(ZoneId.systemDefault()).toInstant());
             Date timestampMsg2 = Date.from(dateTime2.atZone(ZoneId.systemDefault()).toInstant());
 
-            ChatMessage chatMessage1 = ChatMessage.builder()
-                .chatRoomId(chatRoom.getChatRoomId())
-                .senderId(user1)
-                .recipientId(user2)
+            ChatMessage chatMessage1 = ChatMessage.builder().chatRoomId(chatRoom.getChatRoomId()).senderId(user1).recipientId(user2)
                 .content("Hi " + user2.getFirstname() + ", how are you?") // Customizing message content
-                .timestamp(timestampMsg1)
-                .build();
+                .timestamp(timestampMsg1).build();
 
-            ChatMessage chatMessage2 = ChatMessage.builder()
-                .chatRoomId(chatRoom.getChatRoomId())
-                .senderId(user2)
-                .recipientId(user1)
-                .content("Hi " + user1.getFirstname() + ", I'm fine. How are you?")
-                .timestamp(timestampMsg2)
-                .build();
+            ChatMessage chatMessage2 = ChatMessage.builder().chatRoomId(chatRoom.getChatRoomId()).senderId(user2).recipientId(user1)
+                .content("Hi " + user1.getFirstname() + ", I'm fine. How are you?").timestamp(timestampMsg2).build();
 
             chatMessageRepository.save(chatMessage1);
             chatMessageRepository.save(chatMessage2);
             i++;
         }
-
-/*
+        /*
         ApplicationUser user1 = userRepository.findApplicationUserByDetails_Email("e10000001@student.tuwien.ac.at");
         ApplicationUser user3 = userRepository.findApplicationUserByDetails_Email("e10000003@student.tuwien.ac.at");
 
@@ -129,9 +119,7 @@ public class ChatMessageDataGenerator {
 
         chatMessageRepository.save(chatMessage1);
         chatMessageRepository.save(chatMessage2);
-
-
-*/
+        */
         log.info("ChatMessage generation completed.");
     }
 

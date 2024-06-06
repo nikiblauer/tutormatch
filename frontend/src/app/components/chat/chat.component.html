@@ -22,7 +22,7 @@
   <br>
   <div>
     <i>Set active chatroom: </i>
-    <input [(ngModel)]="activeChatRoom" placeholder="2">
+    <input [(ngModel)]="activeChatRoom" placeholder="">
   </div>
   <br>
   <div>
@@ -63,7 +63,7 @@
           <ul class="list-unstyled chat-list mt-2 mb-0">
             <li class="list-group-item d-flex justify-content-between align-items-center"
                 *ngFor="let chatRoom of chatRooms; let i = index">
-              <span class="ml-3">{{chatRooms[i].recipientId}}</span>
+              <button (click)="setActiveChatRoom(chatRoom)" class="ml-3">{{chatRooms[i].recipientId}}</button>
             </li>
           </ul>
         </div>
@@ -75,8 +75,7 @@
                   <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
                 </a>
                 <div class="chat-about">
-                  <h6 class="m-b-0"></h6>
-                  <small>Last seen: 2 hours ago</small>
+                  <h6 class="m-b-0">{{user2}}</h6>
                 </div>
               </div>
             </div>
@@ -84,10 +83,10 @@
           <div class="chat-history">
             <ul class="m-b-0">
               <li class="clearfix" *ngFor="let message of messages; let i = index">
-                <div *ngIf="message.recipientId === 1" class="message other-message float-right">
+                <div *ngIf="message.recipientId === user2" class="message other-message float-right">
                 <span class="ml-3">{{message.content}}</span>
                   </div>
-                <div *ngIf="message.recipientId === 2" class="message my-message">
+                <div *ngIf="message.recipientId === user1" class="message my-message">
                   <span class="ml-3">{{message.content}}</span>
                 </div>
               </li>
