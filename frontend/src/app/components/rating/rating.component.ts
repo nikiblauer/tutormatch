@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ToastrService } from "ngx-toastr";
-import { NgxSpinnerService } from "ngx-spinner";
-import { RatingService } from "../../services/rating.service";
+import {Component, Input, OnInit} from '@angular/core';
+import {ToastrService} from "ngx-toastr";
+import {NgxSpinnerService} from "ngx-spinner";
+import {RatingService} from "../../services/rating.service";
 
 @Component({
   selector: 'app-star-rating',
