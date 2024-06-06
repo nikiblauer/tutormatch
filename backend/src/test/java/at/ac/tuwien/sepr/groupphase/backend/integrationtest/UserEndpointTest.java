@@ -37,6 +37,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -389,14 +390,14 @@ public class UserEndpointTest extends BaseTest {
     @Test
     void testUserVerificationEndpointSetsUserToVerified() throws Exception {
         List<ApplicationUser> usersList = userRepository.findAll();
-        ApplicationUser userBefore = usersList.get(usersList.size()-2);
+        ApplicationUser userBefore = usersList.get(usersList.size() - 2);
         assertFalse(userBefore.getVerified());
         String token = jwtTokenizer.buildVerificationToken(userBefore.getDetails().getEmail());
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/user/verify/" + token))
             .andExpect(status().isOk())
             .andReturn();
         List<ApplicationUser> updatedList = userRepository.findAll();
-        ApplicationUser userAfter = updatedList.get(usersList.size()-2);
+        ApplicationUser userAfter = updatedList.get(usersList.size() - 2);
         assertTrue(userAfter.getVerified());
     }
 
@@ -458,5 +459,37 @@ public class UserEndpointTest extends BaseTest {
                 }
             }
         );
+    }
+
+    @Test
+    void updatedVisibilityAndGetOneMatchLessReturns200() throws Exception {
+        var body = mockMvc.perform(put("/api/v1/user/visibility")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("e10000002@student.tuwien.ac.at", USER_ROLES))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(false)))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+
+        var booleanBody = mockMvc.perform(get("/api/v1/user/visibility")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("e10000002@student.tuwien.ac.at", USER_ROLES)))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
+
+        var visibilityForUser2 = objectMapper.readerFor(boolean.class).readValues(booleanBody);
+        assertNotNull(visibilityForUser2);
+        assertEquals(false, visibilityForUser2.next());
+
+        body = mockMvc.perform(get("/api/v1/user/matches")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+
+        var matchesResult = objectMapper.readerFor(UserMatchDto.class).readValues(body);
+        assertNotNull(matchesResult);
+
+        var matches = new ArrayList<UserMatchDto>();
+        matchesResult.forEachRemaining((match) -> matches.add((UserMatchDto) match));
+        assertAll(
+            () -> assertEquals(1, matches.size()));
     }
 }
