@@ -58,7 +58,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         chatRoomRepository.save(senderRecipient);
         chatRoomRepository.save(recipientSender);
 
-        LOGGER.info(senderRecipient.getRecipient().getFirstname());
         return new ChatRoomDto(senderRecipient.getId(), senderRecipient.getChatRoomId(), senderRecipient.getSender().getId(),
             senderRecipient.getRecipient().getId(), senderRecipient.getSender().getFirstname(), senderRecipient.getSender().getLastname(),
             senderRecipient.getRecipient().getFirstname(), senderRecipient.getRecipient().getLastname());

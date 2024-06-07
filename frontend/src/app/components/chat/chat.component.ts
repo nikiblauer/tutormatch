@@ -39,7 +39,8 @@ export class ChatComponent implements OnInit {
               private webSocketService: WebSocketService,
               private ratingService: RatingService,
               private spinner: NgxSpinnerService,
-              private notification: ToastrService) {}
+              private notification: ToastrService) {
+  }
 
   ngOnInit() {
     this.getChatRoomsForUser();
@@ -76,10 +77,10 @@ export class ChatComponent implements OnInit {
   getChatRoomsForUser() {
     this.chatService.getChatRoomOfUser().subscribe({
       next: chatRooms => {
-        this.chatRooms = chatRooms;
+        this.chatRooms = chatRooms.reverse();
         this.filteredChatRooms = this.chatRooms;
         if (this.chatRooms.length > 0) {
-          this.setActiveChatRoom(this.chatRooms[0]);
+          this.setActiveChatRoom(this.filteredChatRooms[0]);
         }
       }, error: error => {
         console.log(error);
@@ -87,12 +88,12 @@ export class ChatComponent implements OnInit {
     })
   }
 
-  setActiveChatRoom(chatroom: ChatRoomDto) {
-    this.activeChatRoom = chatroom;
-    this.user1 = chatroom.senderId;
-    this.user1Name = chatroom.senderFirstName + " " + chatroom.senderLastName;
-    this.user2 = chatroom.recipientId;
-    this.user2Name = chatroom.recipientFirstName + " " + chatroom.recipientLastName;
+  setActiveChatRoom(chatRoom: ChatRoomDto) {
+    this.activeChatRoom = chatRoom;
+    this.user1 = chatRoom.senderId;
+    this.user1Name = chatRoom.senderFirstName + " " + chatRoom.senderLastName;
+    this.user2 = chatRoom.recipientId;
+    this.user2Name = chatRoom.recipientFirstName + " " + chatRoom.recipientLastName;
     this.loadHistory();
     this.webSocketService.connect();
   }
@@ -140,11 +141,6 @@ export class ChatComponent implements OnInit {
   }
 
 
-
-
-
-
-
   recipientInfo() {
     this.info = true;
     let timeout = setTimeout(() => {
@@ -180,5 +176,12 @@ export class ChatComponent implements OnInit {
 
   public getSelectedUserAddressAsString(user: StudentDto) {
     return StudentDto.getAddressAsString(user);
+  }
+
+  public temp() {
+    this.messageSubscription = this.webSocketService.onNewMessage().subscribe(receivedMessage => {
+      this.messages.push(receivedMessage);
+      this.scrollToBottom();
+    });
   }
 }

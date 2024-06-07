@@ -69,7 +69,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
                 StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-                LOGGER.info(accessor.getFirstNativeHeader("Authorization"));
 
                 // Checks that only users who are logged in can connect to websocket
                 if (StompCommand.CONNECT.equals(accessor.getCommand())) {

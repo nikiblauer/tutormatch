@@ -17,7 +17,7 @@
                       *ngFor="let chatRoom of filteredChatRooms">
                     <button
                       [ngClass]="{'card active-chat-room': chatRoom === activeChatRoom, 'card chat-room': chatRoom !== activeChatRoom}"
-                      (click)="setActiveChatRoom(chatRoom)">
+                      (click)="setActiveChatRoom(chatRoom) && temp()">
                       {{ chatRoom.recipientFirstName }} {{ chatRoom.recipientLastName }}
                     </button>
                   </li>
