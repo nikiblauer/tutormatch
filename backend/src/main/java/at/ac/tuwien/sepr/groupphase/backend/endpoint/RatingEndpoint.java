@@ -35,7 +35,7 @@ public class RatingEndpoint {
     }
 
     @Operation(
-        description = "Update the rating of a user for a user. 0.5-5 are valid ratings",
+        description = "Update the rating a user gave another user. 0.5-5 are valid ratings",
         summary = "Update Rating.")
     @Secured("ROLE_USER")
     @PutMapping

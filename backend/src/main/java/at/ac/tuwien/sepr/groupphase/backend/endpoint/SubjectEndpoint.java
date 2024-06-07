@@ -29,7 +29,7 @@ public class SubjectEndpoint {
     }
 
     @Operation(
-        description = "This endpoint returns all subjects, that meet certain criteria in pages. The criteria can be empty.",
+        description = "Returns all subjects, that meet certain criteria in pages. The criteria can be empty.",
         summary = "Get Subjects")
     @PermitAll
     @GetMapping()

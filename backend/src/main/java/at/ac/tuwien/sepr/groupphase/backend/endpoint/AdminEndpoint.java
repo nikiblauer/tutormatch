@@ -112,7 +112,7 @@ public class AdminEndpoint {
     }
 
     @Operation(
-        description = "Create a new Subject given a certain scheme",
+        description = "Create a new subject given a certain scheme",
         summary = "Create Subject")
     @Secured("ROLE_ADMIN")
     @PostMapping("/subject")
@@ -157,7 +157,7 @@ public class AdminEndpoint {
     }
 
     @Operation(
-        description = "Update the subjects a user has selected. User is identified over ID",
+        description = "Update the subjects a user has selected. User is identified by Id",
         summary = "Update user subjects by user id")
     @Secured("ROLE_ADMIN")
     @PutMapping("/users/subjects/{id}")
@@ -169,8 +169,8 @@ public class AdminEndpoint {
     }
 
     @Operation(
-        description = "Gets a simple statistic of Subjects which is defined with the DTO SimpleStatisticsDto.",
-        summary = "Get statistics from Backend.")
+        description = "Gets a simple statistic of Subjects which is defined in the DTO SimpleStatisticsDto.",
+        summary = "Get statistics from backend.")
     @Secured("ROLE_ADMIN")
     @GetMapping("/statistics/simple")
     public SimpleStatisticsDto getSimpleStatistics() {
@@ -180,7 +180,7 @@ public class AdminEndpoint {
 
     @Operation(
         description = "Gets a extended list of statistics, like how many subjects are needed and offered currently.",
-        summary = "Get Top Statistics from Backend.")
+        summary = "Get top Statistics from backend.")
     @Secured("ROLE_ADMIN")
     @GetMapping(value = "/statistics/extended")
     public TopStatisticsDto getExtendedStatisticsList(@RequestParam(name = "x") int x) {

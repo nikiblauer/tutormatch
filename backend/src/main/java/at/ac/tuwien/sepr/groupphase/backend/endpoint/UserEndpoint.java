@@ -62,8 +62,8 @@ public class UserEndpoint {
     }
 
     @Operation(
-        description = "Create a new User with the data in the DTO",
-        summary = "Creates a new User")
+        description = "Create a new user with the data in the DTO",
+        summary = "Creates a new user")
     @PermitAll
     @PostMapping
     public StudentDto create(@RequestBody CreateStudentDto toCreate) throws ValidationException {
@@ -73,7 +73,7 @@ public class UserEndpoint {
     }
 
     @Operation(
-        description = "Resends a verification email to the email of the token.",
+        description = "Resends a verification email to the email in the token.",
         summary = "Resend verification email")
     @PermitAll
     @PostMapping(value = "/verify/resend")
@@ -84,7 +84,7 @@ public class UserEndpoint {
     }
 
     @Operation(
-        description = "Sends the verification email to the email of the token.",
+        description = "Sends the verification email to the email in the token.",
         summary = "Sends verification email")
     @GetMapping(value = "/verify/{token}")
     @PermitAll
@@ -98,7 +98,7 @@ public class UserEndpoint {
     }
 
     @Operation(
-        description = "Request to reset the password. An email is being send to the email from the token.",
+        description = "Request to reset the password. An email is being send to the email in the token.",
         summary = "Request to reset password")
     @PostMapping(value = "/reset_password")
     @PermitAll
@@ -109,7 +109,7 @@ public class UserEndpoint {
     }
 
     @Operation(
-        description = "Changes the password with a token sent in an Email.",
+        description = "Changes the password with a token sent in an email.",
         summary = "Reset password")
     @PostMapping(value = "/reset_password/{token}")
     @PermitAll
@@ -133,7 +133,7 @@ public class UserEndpoint {
     }
 
     @Operation(
-        description = "Updates the current user with the data in the DTO. The user is identified over the token.",
+        description = "Updates the current user with the data in the DTO. The user is identified by the token.",
         summary = "Update User")
     @Secured("ROLE_USER")
     @PutMapping
@@ -147,8 +147,8 @@ public class UserEndpoint {
     }
 
     @Operation(
-        description = "Gets all matches for the (current) user, is identified over the token.",
-        summary = "Get available all matches")
+        description = "Gets all matches for the current user, is identified by the token.",
+        summary = "Get all available matches")
     @Secured("ROLE_USER")
     @GetMapping("/matches")
     public Stream<UserMatchDto> getUserMatches() {
@@ -157,7 +157,7 @@ public class UserEndpoint {
     }
 
     @Operation(
-        description = "Get the contactDetails of any User.",
+        description = "Get the contact details of any user.",
         summary = "Get UserDetails")
     @PermitAll
     @GetMapping("{id}")
