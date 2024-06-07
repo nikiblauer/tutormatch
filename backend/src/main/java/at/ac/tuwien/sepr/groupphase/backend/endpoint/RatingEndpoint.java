@@ -3,6 +3,8 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.RatingService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import java.lang.invoke.MethodHandles;
 
 @RestController
 @RequestMapping(value = "/api/v1/rating")
+@Tag(name = "Rating Endpoint")
 public class RatingEndpoint {
     private final RatingService ratingService;
     private final UserService userService;
@@ -31,6 +34,9 @@ public class RatingEndpoint {
         this.userService = userService;
     }
 
+    @Operation(
+        description = "Update the rating a user gave another user. 0.5-5 are valid ratings",
+        summary = "Update Rating.")
     @Secured("ROLE_USER")
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -41,6 +47,9 @@ public class RatingEndpoint {
         ratingService.updatedRating(ratingDto, ratingUserid);
     }
 
+    @Operation(
+        description = "Get the rating of a user. Rating is a float from 0.5-5",
+        summary = "Get rating.")
     @Secured("ROLE_USER")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)

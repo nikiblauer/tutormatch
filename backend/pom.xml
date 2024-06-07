@@ -133,6 +133,11 @@
             <artifactId>greenmail-spring</artifactId>
             <version>2.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-common</artifactId>
+            <version>1.8.0</version>
+        </dependency>
 
 
     </dependencies>
