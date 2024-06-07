@@ -15,4 +15,10 @@ export class ChatRoomDto {
   chatRoomId: string;
   senderId: number;
   recipientId: number;
+  senderFirstName: string;
+  recipientFirstName: string;
+  senderLastName: string;
+  recipientLastName: string;
+
+
 }

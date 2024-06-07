@@ -64,7 +64,7 @@ public class ChatEndpoint {
 
 
     @Secured("ROLE_USER")
-    @PostMapping("room")
+    @PostMapping("/room")
     @ResponseStatus(HttpStatus.CREATED)
     public ChatRoomDto createChatRoom(@RequestBody CreateChatRoomDto chatRoomCreateDto) {
         LOGGER.info("POST /api/v1/chat/room/create body: {}", chatRoomCreateDto);

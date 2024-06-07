@@ -6,6 +6,9 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.Builder;
 
+import java.util.List;
+import java.util.stream.Collector;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,4 +19,9 @@ public class ChatRoomDto {
     private String chatRoomId;
     private Long senderId;
     private Long recipientId;
+    private String senderFirstName;
+    private String senderLastName;
+    private String recipientFirstName;
+    private String recipientLastName;
+
 }

@@ -40,7 +40,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         // map to ChatRoomDto
         return chatRooms.stream()
-            .map(chatRoom -> new ChatRoomDto(chatRoom.getId(), chatRoom.getChatRoomId(), chatRoom.getSender().getId(), chatRoom.getRecipient().getId()))
+            .map(chatRoom -> new ChatRoomDto(chatRoom.getId(), chatRoom.getChatRoomId(), chatRoom.getSender().getId(), chatRoom.getRecipient().getId(),
+                chatRoom.getSender().getFirstname(), chatRoom.getSender().getLastname(),
+                chatRoom.getRecipient().getFirstname(), chatRoom.getRecipient().getLastname()))
             .collect(Collectors.toList());
     }
 
@@ -56,7 +58,10 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         chatRoomRepository.save(senderRecipient);
         chatRoomRepository.save(recipientSender);
 
-        return new ChatRoomDto(senderRecipient.getId(), senderRecipient.getChatRoomId(), senderRecipient.getSender().getId(), senderRecipient.getRecipient().getId());
+        LOGGER.info(senderRecipient.getRecipient().getFirstname());
+        return new ChatRoomDto(senderRecipient.getId(), senderRecipient.getChatRoomId(), senderRecipient.getSender().getId(),
+            senderRecipient.getRecipient().getId(), senderRecipient.getSender().getFirstname(), senderRecipient.getSender().getLastname(),
+            senderRecipient.getRecipient().getFirstname(), senderRecipient.getRecipient().getLastname());
     }
 }
 
