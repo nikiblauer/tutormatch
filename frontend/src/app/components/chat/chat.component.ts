@@ -7,6 +7,7 @@ import {RatingService} from "../../services/rating.service";
 import {NgxSpinnerService} from "ngx-spinner";
 import {ToastrService} from "ngx-toastr";
 import {StudentDto} from "../../dtos/user";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-chat',
@@ -23,18 +24,38 @@ export class ChatComponent implements OnInit {
   user2Name: string;
   activeChatRoom: ChatRoomDto;
   chatRooms: ChatRoomDto[];
+  filteredChatRooms: ChatRoomDto[];
+  searchString: string;
   messages: ChatMessageDto[];
   selectedUserRating: number;
   recipientToGetInfo: StudentDto;
   info: boolean;
   messageReceived: ChatMessageDto;
+  messageSubscription: Subscription;
 
-  constructor(private chatService: ChatService, private userService: UserService, private webSocketService: WebSocketService ,private ratingService: RatingService, private spinner: NgxSpinnerService, private notification: ToastrService) {
 
-  }
+  constructor(private chatService: ChatService,
+              private userService: UserService,
+              private webSocketService: WebSocketService,
+              private ratingService: RatingService,
+              private spinner: NgxSpinnerService,
+              private notification: ToastrService) {}
 
   ngOnInit() {
     this.getChatRoomsForUser();
+    this.scrollToBottom();
+    this.messageSubscription = this.webSocketService.onNewMessage().subscribe(receivedMessage => {
+      this.messages.push(receivedMessage);
+      this.scrollToBottom();
+    });
+  }
+
+  onSearch() {
+    const inputElement = event.target as HTMLInputElement;
+    this.searchString = inputElement.value.toLowerCase();
+    this.filteredChatRooms = this.chatRooms.filter(chatRoom =>
+      `${chatRoom.recipientFirstName} ${chatRoom.recipientLastName}`.toLowerCase().includes(this.searchString.toLowerCase())
+    );
   }
 
   createChat() {
@@ -52,21 +73,11 @@ export class ChatComponent implements OnInit {
     })
   }
 
-  getAllChatRooms() {
-    this.chatService.getChatRooms().subscribe({
-      next: chatRooms => {
-        this.chatRooms = chatRooms;
-        console.log(this.chatRooms);
-      }, error: error => {
-        console.log(error);
-      }
-    })
-  }
   getChatRoomsForUser() {
-    this.chatService.getChatRoomByUserId(1).subscribe({
+    this.chatService.getChatRoomOfUser().subscribe({
       next: chatRooms => {
         this.chatRooms = chatRooms;
-        console.log(this.chatRooms);
+        this.filteredChatRooms = this.chatRooms;
         if (this.chatRooms.length > 0) {
           this.setActiveChatRoom(this.chatRooms[0]);
         }
@@ -75,7 +86,8 @@ export class ChatComponent implements OnInit {
       }
     })
   }
-  setActiveChatRoom(chatroom : ChatRoomDto) {
+
+  setActiveChatRoom(chatroom: ChatRoomDto) {
     this.activeChatRoom = chatroom;
     this.user1 = chatroom.senderId;
     this.user1Name = chatroom.senderFirstName + " " + chatroom.senderLastName;
@@ -83,7 +95,6 @@ export class ChatComponent implements OnInit {
     this.user2Name = chatroom.recipientFirstName + " " + chatroom.recipientLastName;
     this.loadHistory();
     this.webSocketService.connect();
-    console.log("test: " + this.user1Name)
   }
 
   loadHistory() {
@@ -94,14 +105,14 @@ export class ChatComponent implements OnInit {
     this.chatService.getMessagesByChatRoomId(this.activeChatRoom.chatRoomId).subscribe({
       next: messages => {
         this.messages = messages;
-        console.log(messages);
       }, error: error => {
         console.log(error);
+        this.notification.error(error.error, "Messages could not be loaded")
       }
     })
   }
 
-  sendMessage(){
+  sendMessage() {
     if (this.message.trim() == "") {
       return; // Do not send empty messages
     }
@@ -115,30 +126,26 @@ export class ChatComponent implements OnInit {
 
     this.webSocketService.sendMessage(chatMessage);
     this.messageReceived = this.webSocketService.onMessageReceived(chatMessage);
-    this.messages[this.messages.length] = this.messageReceived
     this.message = '';
-    this.scrollToBottom();
   }
-  receiveMessage(){
-    const chatMessage: ChatMessageDto = {
-      chatRoomId: this.activeChatRoom.chatRoomId,
-      senderId: this.user1,
-      recipientId: this.user2,
-      content: this.message,
-      timestamp: new Date()
-    };
-    this.webSocketService.onMessageReceived(chatMessage);
-    this.messageReceived = this.webSocketService.onMessageReceived(chatMessage);
-    this.messages[this.messages.length] = this.messageReceived
-  }
+
   scrollToBottom(): void {
     try {
+      setTimeout(() => {
         this.chatHistoryContainer.nativeElement.scrollTop = this.chatHistoryContainer.nativeElement.scrollHeight;
+      }, 50); // You can adjust the delay if necessary
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
     }
   }
-  recipientInfo(){
+
+
+
+
+
+
+
+  recipientInfo() {
     this.info = true;
     let timeout = setTimeout(() => {
       this.spinner.show();
@@ -155,7 +162,7 @@ export class ChatComponent implements OnInit {
       }
     })
     this.ratingService.getRatingFromUser(this.user2).subscribe({
-      next: (value) =>{
+      next: (value) => {
         this.selectedUserRating = value;
       },
       error: err => {
@@ -166,9 +173,11 @@ export class ChatComponent implements OnInit {
       }
     })
   }
-  public closeMatch() {
+
+  public closeInfo() {
     this.selectedUserRating = -2;
   }
+
   public getSelectedUserAddressAsString(user: StudentDto) {
     return StudentDto.getAddressAsString(user);
   }

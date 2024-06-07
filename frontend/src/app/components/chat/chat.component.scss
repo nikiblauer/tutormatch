@@ -3,6 +3,10 @@ body {
   margin-top: 20px;
 }
 
+.chat-window {
+  padding-top: 25px;
+}
+
 .card {
   background: #fff;
   transition: .5s;
@@ -20,13 +24,6 @@ body {
   padding: 20px;
 }
 
-.people-list {
-  background: #F0F2F7; /* Light blue background */
-  border-right: 1px solid #e6e6e6;
-  width: 25%;
-  padding: 20px;
-  overflow-y: auto; /* Ensure content can be scrolled if it overflows */
-}
 
 .chat {
   width: 75%; /* Take up the remaining space */
@@ -35,15 +32,9 @@ body {
   flex-direction: column;
 }
 
-.people-list {
-  -moz-transition: .5s;
-  -o-transition: .5s;
-  -webkit-transition: .5s;
-  transition: .5s
-}
 .card.chat-room {
   width: 100%; /* Make button fill the width of the list item */
-  border: none; /* Remove border */
+  border: 2px solid white; /* Remove border */
   background: white; /* Remove default background */
   text-align: left; /* Align text to the left */
   padding: 10px 15px; /* Add padding to the button */
@@ -51,20 +42,45 @@ body {
 
 .card.chat-room:hover {
   background-color: #efefef; /* Add a hover effect */
-  border: thin;
-  border: #d87000;
+  border: 2px solid #efefef;
   cursor: pointer; /* Change cursor to pointer */
+}
+
+.active-chat-room {
+  width: 100%; /* Make button fill the width of the list item */
+  border: 2px solid orange; /* Remove border */
+  text-align: left; /* Align text to the left */
+  padding: 10px 15px; /* Add padding to the button */
+  transition: .5s;
+  border-radius: .55rem;
+  position: relative;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+  background-color: white;
+}
+
+.active-chat-room:hover {
+  background-color: #efefef; /* Add a hover effect */
+  border: 2px solid orange;
+  cursor: pointer; /* Change cursor to pointer */
+}
+
+.people-list {
+  background: #F0F2F7; /* Light blue background */
+  border-right: 1px solid #e6e6e6;
+  width: 25%;
+  padding: 20px;
+  /*overflow-y: auto; /* Ensure content can be scrolled if it overflows
+  height: calc(75vh);
+  -moz-transition: .5s;
+  -o-transition: .5s;
+  -webkit-transition: .5s;
+  transition: .5s*/
 }
 
 .people-list .chat-list li {
   padding: 10px 15px;
   list-style: none;
   border-radius: 3px
-}
-
-.people-list .chat-list li:hover {
-  background: #efefef;
-  cursor: pointer
 }
 
 .people-list .chat-list li.active {
@@ -80,26 +96,10 @@ body {
   border-radius: 50%
 }
 
-.people-list img {
-  float: left;
-  border-radius: 50%
-}
-
-.people-list .about {
-  float: left;
-  padding-left: 8px
-}
-
-.people-list .status {
-  color: #999;
-  font-size: 13px
-}
-
 .chat .chat-header {
   padding: 15px 20px;
   border-bottom: 2px solid #f4f7f6
 }
-
 
 .chat .chat-header img {
   float: left;
@@ -131,6 +131,9 @@ body {
 .chat .chat-history ul li:last-child {
   margin-bottom: 0px
 }
+.chat .chat-history ul li:first-child {
+  margin-top: 15px
+}
 
 .chat .chat-history .message-data {
   margin-bottom: 15px
@@ -155,59 +158,17 @@ body {
   display: inline-block;
   position: relative
 }
-/*
-.chat .chat-history .message:after {
-  bottom: 100%;
-  left: 7%;
-  border: solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-  border-bottom-color: #fff;
-  border-width: 10px;
-  margin-left: -10px
-}
-*/
+
 .chat .chat-history .my-message {
   background: #F0F2F7
 }
-/*
-.chat .chat-history .my-message:after {
-  bottom: 100%;
-  left: 30px;
-  border: solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-  border-bottom-color: #efefef;
-  border-width: 10px;
-  margin-left: -10px
-}
-*/
+
 .chat .chat-history .other-message {
   background: #33709C;
   text-align: right;
   color: white;
 }
-/*
-.chat .chat-history .other-message:after {
-  bottom: 100%;
-  left: 30px;
-  border: solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-  border-bottom-color: #33709C;
-  border-width: 10px;
-  margin-left: -10px
-}
-*/
+
 .chat .chat-message {
   padding: 10px
 }
@@ -253,4 +214,12 @@ body {
 }
 .header-container .btn {
   background-color: red;
+}
+.sticky{
+  overflow-y: auto;
+  height: calc(64vh) ;
+  -moz-transition: .5s;
+  -o-transition: .5s;
+  -webkit-transition: .5s;
+  transition: .5s
 }

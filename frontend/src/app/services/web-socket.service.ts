@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {AuthService} from "./auth.service";
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "./user.service";
-import {Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {ChatMessageDto} from "../dtos/chat";
 
 
@@ -63,6 +63,7 @@ export class WebSocketService {
         receivedMessage.recipientId = parsedObject.recipientId;
         receivedMessage.content = parsedObject.content;
         receivedMessage.timestamp = parsedObject.timestamp;
+        this.messageSubject.next(parsedObject);
         return receivedMessage;
       } else {
         throw new Error("Error extracting content");
@@ -71,5 +72,9 @@ export class WebSocketService {
       console.error('Error parsing JSON or extracting content:', error);
       return null;
     }
+  }
+
+  onNewMessage(): Observable<any> {
+    return this.messageSubject.asObservable();
   }
 }
