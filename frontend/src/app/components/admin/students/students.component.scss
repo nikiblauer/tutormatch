@@ -1,3 +1,16 @@
+th,
+td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.email-column {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .form-inline {
   display: flex;
   flex-direction: column;
@@ -15,6 +28,7 @@
 .form-group {
   flex-grow: 1;
   margin-bottom: 10px;
+  padding-top: 5px;
 }
 
 @media (min-width: 768px) {
@@ -28,12 +42,33 @@
   width: 100%;
 }
 
-td {
-  vertical-align: middle;
-}
-
 .custom-button {
   background-color: #33709c;
   border-color: #33709c;
   margin-right: 2px;
+}
+
+.verified-column {
+  text-align: center;
+}
+
+.table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.text-success {
+  color: green;
+}
+
+.text-danger {
+  color: red;
+}
+
+.form-control {
+  text-align: center;
+  text-align-last: center;
+  -moz-text-align-last: center;
+  -webkit-text-align-last: center;
+  margin-top: 5px;
 }

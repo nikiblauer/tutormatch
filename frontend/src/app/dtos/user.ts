@@ -55,7 +55,8 @@ export class StudentDto implements BaseUser {
   telNr: string;
   street: string;
   areaCode: number;
-  city: string;
+  city: string; 
+  verified: boolean; 
 
   public static getAddressAsString(user: StudentDto): string {
 

@@ -38,6 +38,8 @@ public class StudentDto {
 
     public String city;
 
+    public boolean verified;
+
     public StudentDto() {
     }
 

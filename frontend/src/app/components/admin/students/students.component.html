@@ -10,26 +10,38 @@
             <input type="text" class="form-control" [(ngModel)]="matrNumber" (input)="searchTerm$.next(null)"
                 placeholder="Student ID" name="studentId">
         </div>
+        <div class="form-group mr-2">
+            <select class="form-control mt-1" id="verifiedFilter" name="verifiedStatus" [(ngModel)]="verifiedFilter" (change)="searchTerm$.next(null)">
+                <option value="all" selected>Registration Status: Indifferent</option>
+                <option value="verified">Registration Stauts: Verified</option>
+                <option value="notVerified">Registration Status: Not Verified</option>
+            </select>
+        </div>
     </form>
 
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Email</th>
+                <th class="email-column">Email</th>
+                <th class="verified-column">Verified</th>
                 <th>Info</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let student of filteredStudents">
                 <td>{{ student.firstname }} {{ student.lastname }}</td>
-                <td>{{ student.email }}</td>
+                <td class="email-column" title="{{ student.email }}">{{ student.email }}</td>
+                <td class="verified-column"
+                    [ngClass]="{'text-success': student.verified, 'text-danger': !student.verified}">
+                    {{ student.verified }}
+                </td>
                 <td>
-                  <button class="btn btn-info custom-button" routerLink="./{{student.id}}">
-                    <i class="bi bi-pencil"></i>
-                  </button>
+                    <button class="btn btn-info custom-button" routerLink="./{{student.id}}">
+                        <i class="bi bi-pencil"></i>
+                    </button>
 
-                  <button class="btn btn-info custom-button" (click)="viewDetails(student, detailsModal)">
+                    <button class="btn btn-info custom-button" (click)="viewDetails(student, detailsModal)">
                         <i class="bi bi-info-circle"></i>
                     </button>
                 </td>
@@ -60,8 +72,9 @@
             <p><em>Tutor Subjects: </em> {{selectedStudentDetails?.tutorSubjects.join(', ')}}</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary justify-content-start" routerLink="./{{selectedStudent.id}}" (click)="modal.close('Close click')">Edit</button>
-          <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+            <button type="button" class="btn btn-secondary justify-content-start" routerLink="./{{selectedStudent.id}}"
+                (click)="modal.close('Close click')">Edit</button>
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
         </div>
     </ng-template>
 </div>

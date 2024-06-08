@@ -16,6 +16,7 @@ interface StudentListing {
   firstname: string;
   lastname: string;
   email: string;
+  verified: boolean;
 }
 
 @Component({
@@ -33,6 +34,7 @@ export class StudentsComponent implements OnInit {
   selectedStudentDetails: StudentSubjectInfoDto | null = null;
   searchTerm$ = new Subject<string>();
   noMoreResults: boolean = false;
+  verifiedFilter: string = 'all';
 
   constructor(private modalService: NgbModal, private adminService: AdminService,
     private notification: ToastrService, private spinner: NgxSpinnerService,
@@ -60,30 +62,40 @@ export class StudentsComponent implements OnInit {
       this.filteredStudents = []; // Clear the list of filtered students
     }
 
-    let timeout = setTimeout(() => {
-      this.spinner.show();
-    }, 1500);
-    this.adminService.searchUsers(this.searchName, Number(this.matrNumber), this.page, 5).subscribe({
+    let timeout = setTimeout(() => this.spinner.show(), 1500);
+    this.adminService.searchUsers(this.searchName, Number(this.matrNumber), this.page, 20).subscribe({
       next: (response: Page<StudentDto>) => {
         clearTimeout(timeout);
         this.spinner.hide();
         if (response.content.length === 0) {
-          this.noMoreResults = true; // Set noMoreResults to true when there are no more results
+          this.noMoreResults = true;
         } else {
           this.noMoreResults = false;
-          this.filteredStudents = [...this.filteredStudents, ...response.content.map(user => ({
+          let newStudents = response.content.map(user => ({
             firstname: user.firstname,
             lastname: user.lastname,
             email: user.email,
-            id: user.id
-          }))];
+            id: user.id,
+            verified: user.verified
+          })).filter(student => this.filterByVerifiedStatus(student)); // Filter here based on verified status
+
+          // Sort newStudents based on verified status
+          newStudents = newStudents.sort((a, b) => {
+            if (a.verified && !b.verified) {
+              return -1;
+            }
+            if (!a.verified && b.verified) {
+              return 1;
+            }
+            return 0;
+          });
+          this.filteredStudents = [...this.filteredStudents, ...newStudents];
         }
       },
       error: (error: any) => {
         clearTimeout(timeout);
         this.spinner.hide();
         console.error('Error:', error);
-        this.page -= 0; // Reset the page count if there was an error
         this.notification.error(error.error, "Error in fetching student details!");
       }
     });
@@ -114,5 +126,12 @@ export class StudentsComponent implements OnInit {
   loadMore(): void {
     this.page += 1;
     this.search(false); // Don't clear the list of filtered students
+  }
+
+  filterByVerifiedStatus(student: StudentListing): boolean {
+    if (this.verifiedFilter === 'all') return true;
+    if (this.verifiedFilter === 'verified') return student.verified;
+    if (this.verifiedFilter === 'notVerified') return !student.verified;
+    return false;
   }
 }
