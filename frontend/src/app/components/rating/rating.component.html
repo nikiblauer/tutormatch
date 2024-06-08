@@ -92,6 +92,27 @@
       <div>
         <p style="color: gray;">Select your rating by clicking on the stars</p>
       </div>
+      <div *ngIf="chatExists">
+        <form (ngSubmit)="postFeedback(feedbackForm)" #feedbackForm="ngForm">
+        <div class="form-group">
+          <label for="inputText">Write anonymous feedback:</label>
+          <textarea rows="6" name="text" class="form-control" id="inputText" required
+                    aria-describedby="textHelp" placeholder="Enter text" [(ngModel)]="feedbackText"></textarea>
+          <div *ngIf="submitted && feedbackForm.controls.text.errors" class="error">
+            <small class="form-text text-warning" *ngIf="feedbackForm.controls.text.errors.required">Your text is
+              required!
+            </small>
+          </div>
+        </div>
+        <button type="button" (click)="postFeedback(feedbackForm)" id="add-msg" class="btn btn-success float-right">Add message</button>
+        </form>
+      </div>
+      <div *ngIf="!chatExists">You can leave feedback after starting a chat with this user</div>
+      <div class="" *ngFor="let feedback of postedFeedback">
+        <div>
+        {{feedback.feedback}}
+        </div>
+      </div>
     </div>
   </div>
 </div>

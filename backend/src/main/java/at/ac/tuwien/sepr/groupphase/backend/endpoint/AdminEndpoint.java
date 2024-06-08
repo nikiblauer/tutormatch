@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
@@ -18,6 +19,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.StatisticService;
 import at.ac.tuwien.sepr.groupphase.backend.service.SubjectService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.service.impl.RatingServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -55,15 +57,18 @@ public class AdminEndpoint {
     //mapper
     private final ApplicationUserMapper userMapper;
     private final SubjectMapper subjectMapper;
+    private final RatingServiceImpl ratingService;
+
 
     @Autowired
     public AdminEndpoint(UserService userService, ApplicationUserMapper mapper,
-                         SubjectService subjectService, SubjectMapper subjectMapper, StatisticService statisticService) {
+                         SubjectService subjectService, SubjectMapper subjectMapper, StatisticService statisticService, RatingServiceImpl ratingService) {
         this.userService = userService;
         this.userMapper = mapper;
         this.subjectService = subjectService;
         this.subjectMapper = subjectMapper;
         this.statisticService = statisticService;
+        this.ratingService = ratingService;
     }
 
     @Operation(
@@ -186,5 +191,38 @@ public class AdminEndpoint {
     public TopStatisticsDto getExtendedStatisticsList(@RequestParam(name = "x") int x) {
         LOGGER.info("GET /api/v1/admin/statistics/extended");
         return statisticService.getExtendedStatistics(x);
+    }
+
+    @Operation(
+        description = "Get the feedback for a user.",
+        summary = "Get received feedback.")
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/feedback/in/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public FeedbackCreateDto[] getFeedbackOfUser(@PathVariable("id") Long id) {
+        LOGGER.info("PUT /api/v1/feedback/in/{}", id);
+        return ratingService.getFeedbackOfStudent(id);
+    }
+
+    @Operation(
+        description = "Get the feedback by a user.",
+        summary = "Get posted feedback.")
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/feedback/out/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public FeedbackCreateDto[] getFeedbackByUser(@PathVariable("id") Long id) {
+        LOGGER.info("PUT /api/v1/feedback/out/{}", id);
+        return ratingService.getFeedbackByStudent(id);
+    }
+
+    @Operation(
+        description = "Delete the feedback by id.",
+        summary = "Delete feedback.")
+    @Secured("ROLE_ADMIN")
+    @DeleteMapping("/feedback/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteFeedbackById(@PathVariable("id") Long id) {
+        LOGGER.info("PUT /api/v1/feedback/out/{}", id);
+        ratingService.deleteFeedbackById(id);
     }
 }

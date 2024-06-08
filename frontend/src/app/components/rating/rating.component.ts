@@ -2,6 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 import {ToastrService} from "ngx-toastr";
 import {NgxSpinnerService} from "ngx-spinner";
 import {RatingService} from "../../services/rating.service";
+import {FeedbackService} from "../../services/feedback.service";
+import {FeedbackDto} from "../../dtos/feedback";
 
 @Component({
   selector: 'app-star-rating',
@@ -14,8 +16,11 @@ export class StarRatingComponent implements OnInit {
   @Input() amount: number = 0;
   @Input() ratedUserId: number;
   ratingStars = [];
-
-  constructor(private notification: ToastrService, private spinner: NgxSpinnerService, private ratingService: RatingService) {
+  public chatExists: boolean = false;
+  public postedFeedback: FeedbackDto[] = [];
+  submitted = false;
+  feedbackText: string = '';
+  constructor(private notification: ToastrService, private spinner: NgxSpinnerService, private ratingService: RatingService, private feedbackService: FeedbackService) {
   }
 
   ngOnInit(): void {
@@ -27,8 +32,42 @@ export class StarRatingComponent implements OnInit {
       }
       this.ratingStars[i] = Math.max(Math.min(temp -= 100, 100), 0);
     }
+    this.getChatExists();
+    this.getPostedFeedback();
   }
 
+  getChatExists() {
+    if (!this.isEditable) return;
+    this.feedbackService.getChatExists(this.ratedUserId).subscribe({
+      next: () => {
+        this.chatExists = true;
+      },
+      error: error => {
+        if (error.status == 404) {
+          this.chatExists = false;
+          return;
+        }
+        this.notification.error(error.error, "Something went wrong!");
+      }
+    });
+  }
+  getPostedFeedback() {
+    if (!this.isEditable) return;
+    this.feedbackService.getPostedFeedback(this.ratedUserId).subscribe({
+      next: (postedFeedback) => {
+        console.log(postedFeedback);
+        this.postedFeedback = postedFeedback;
+      },
+      error: error => {
+        console.log(error);
+        if (error.status == 404) {
+          this.postedFeedback = [];
+          return;
+        }
+        this.notification.error(error.error, "Something went wrong!");
+      }
+    });
+  }
   setRating(newRating: number): void {
     if (!this.isEditable) return;
     this.rating = newRating;
@@ -43,5 +82,29 @@ export class StarRatingComponent implements OnInit {
         this.notification.error(error.error, "Something went wrong!");
       }
     });
+  }
+  postFeedback(form): void {
+    if (!this.isEditable) return;
+    this.spinner.show();
+    this.submitted = true;
+    if (form.valid) {
+      let feedbackDto = new FeedbackDto();
+      feedbackDto.feedback = this.feedbackText;
+      feedbackDto.rated = this.ratedUserId;
+      this.feedbackService.postFeedback(feedbackDto).subscribe({
+          next: () => {
+            this.spinner.hide();
+            this.getPostedFeedback();
+            this.feedbackText = '';
+          },
+          error: error => {
+            this.spinner.hide();
+            console.error("Error posting feedback", error);
+            this.notification.error(error.error, "Something went wrong!");
+          }
+        }
+      );
+    }
+    this.submitted = false;
   }
 }
