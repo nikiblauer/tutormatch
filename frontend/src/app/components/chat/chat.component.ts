@@ -177,11 +177,4 @@ export class ChatComponent implements OnInit {
   public getSelectedUserAddressAsString(user: StudentDto) {
     return StudentDto.getAddressAsString(user);
   }
-
-  public temp() {
-    this.messageSubscription = this.webSocketService.onNewMessage().subscribe(receivedMessage => {
-      this.messages.push(receivedMessage);
-      this.scrollToBottom();
-    });
-  }
 }
