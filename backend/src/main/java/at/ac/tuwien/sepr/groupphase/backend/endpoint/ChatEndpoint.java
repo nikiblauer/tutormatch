@@ -39,13 +39,11 @@ public class ChatEndpoint {
         this.userService = userService;
     }
 
-
     // for admin (later for reviewing chat reports)
     @Secured("ROLE_ADMIN")
     @GetMapping("/room/user/{userId}")
     public List<ChatRoomDto> getChatRoomsByUserId(@PathVariable(name = "userId") Long userId) {
         LOGGER.info("GET /api/v1/chat/room/user/{}", userId);
-
         return chatRoomService.getChatRoomsByUserId(userId);
     }
 
@@ -53,26 +51,18 @@ public class ChatEndpoint {
     @GetMapping("/room/user")
     public List<ChatRoomDto> getChatRooms() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-
         LOGGER.info("GET /api/v1/chat/room/user/ with email: {}", userEmail);
-
         ApplicationUser user = userService.findApplicationUserByEmail(userEmail);
-
         return chatRoomService.getChatRoomsByUserId(user.getId());
     }
-
-
 
     @Secured("ROLE_USER")
     @PostMapping("/room")
     @ResponseStatus(HttpStatus.CREATED)
     public ChatRoomDto createChatRoom(@RequestBody CreateChatRoomDto chatRoomCreateDto) {
         LOGGER.info("POST /api/v1/chat/room/create body: {}", chatRoomCreateDto);
-
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         ApplicationUser user = userService.findApplicationUserByEmail(userEmail);
-
-
         return chatRoomService.createChatRoom(user, chatRoomCreateDto);
     }
 
@@ -81,7 +71,6 @@ public class ChatEndpoint {
     @GetMapping("/room/{chatRoomId}/messages")
     public List<ChatMessageDto> getMessagesByChatRoomId(@PathVariable(name = "chatRoomId") String chatRoomId) {
         LOGGER.info("GET /api/v1/chat/room/{}", chatRoomId);
-
         return chatMessageService.getChatMessagesByChatRoomId(chatRoomId);
     }
 }
