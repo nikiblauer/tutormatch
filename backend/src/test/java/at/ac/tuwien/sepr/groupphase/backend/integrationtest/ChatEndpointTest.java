@@ -64,7 +64,7 @@ public class ChatEndpointTest extends BaseTest{
     @Test
     public void testCreateChatRoomWithValidTokenReturnsChatRoomDto() throws Exception {
         Pageable pageable = Pageable.unpaged();
-        var recipient = userRepository.findAllByFullnameOrMatrNumber(null, 10000002L, pageable).getContent().get(0);
+        var recipient = userRepository.findAllByFullnameOrMatrNumber(null, 10000004L, pageable).getContent().get(0);
 
         var sender = userRepository.findAllByDetails_Email(DEFAULT_USER_EMAIL).get(0);
 

@@ -77,7 +77,7 @@ public class BaseTest {
         ratingDataGenerator.generateUserSubjectRelation();
     }
 
-    protected void clearData() {
+    private void clearData() {
         chatMessageRepository.deleteAll();
         chatRoomRepository.deleteAll();
 
