@@ -77,6 +77,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     @Override
     public ChatRoomDto getChatRoomByChatRoomId(String chatRoomId) {
+        LOGGER.trace("getChatRoomByChatRoomId({})", chatRoomId);
+        
         List<ChatRoom> chatRooms = chatRoomRepository.findAllByChatRoomId(chatRoomId);
 
         if (chatRooms.isEmpty()) {

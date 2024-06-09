@@ -54,7 +54,7 @@ public class ChatRoomDataGenerator {
         }
 
         if (verifiedUsers.size() < 2) {
-            System.out.println("Not enough verified users to create chats.");
+            log.info("Not enough verified users to create chats.");
             return;
         }
 
