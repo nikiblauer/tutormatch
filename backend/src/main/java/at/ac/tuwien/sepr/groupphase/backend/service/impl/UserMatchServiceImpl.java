@@ -2,8 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepr.groupphase.backend.entity.UserRating;
-import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RatingService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 import java.util.stream.Stream;
 
 @Service
@@ -38,7 +36,9 @@ public class UserMatchServiceImpl implements UserMatchService {
         LOGGER.trace("findMatchingUserByUserIdAsStream({})", email);
 
         ApplicationUser user = userRepository.findApplicationUserByDetails_Email(email);
-
+        if (!user.getVisible()) {
+            throw new NotFoundException("Visibility is turned off, so there won't be any matches");
+        }
 
         String queryString = "SELECT u.Id, "
             + "u.FIRSTNAME, "
@@ -55,6 +55,7 @@ public class UserMatchServiceImpl implements UserMatchService {
             + "AND us1.USER_ID != us2.USER_ID "
             + "JOIN SUBJECT s ON us1.SUBJECT_ID = s.ID "
             + "WHERE u.ID != :userId AND us2.USER_ID = :userId "
+            + "AND u.VISIBLE = TRUE "
             + "GROUP BY u.id "
             + "HAVING trainee_matchingCount > 0 AND tutor_matchingCount > 0 "
             + "ORDER BY total_matchingCount DESC";

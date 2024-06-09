@@ -21,7 +21,8 @@ export interface Subject {
 }
 
 export interface CreateStudentDto extends BaseUser {
-  password: string;
+  password: string; 
+  repeatPassword: string;
   matrNumber: number;
 }
 export interface SendPasswordResetDto {
@@ -54,7 +55,8 @@ export class StudentDto implements BaseUser {
   telNr: string;
   street: string;
   areaCode: number;
-  city: string;
+  city: string; 
+  verified: boolean; 
 
   public static getAddressAsString(user: StudentDto): string {
 

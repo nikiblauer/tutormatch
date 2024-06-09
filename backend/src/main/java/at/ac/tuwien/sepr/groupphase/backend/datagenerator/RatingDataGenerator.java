@@ -1,11 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserRating;
-import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
-import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubjectKey;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
@@ -13,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -59,8 +54,8 @@ public class RatingDataGenerator {
                 if (i == j) {
                     continue;
                 }
-                float rating = random.nextInt(10) / 2.0f + 0.5f;
-                ratings.add(getRating(applicationUsers.get(i).getId(), applicationUsers.get(j).getId(), rating));
+                int rating = random.nextInt(5) + 1; // generates a random integer from 1 to 5
+                ratings.add(getRating(applicationUsers.get(i).getId(), applicationUsers.get(j).getId(), (float) rating));
             }
         }
 

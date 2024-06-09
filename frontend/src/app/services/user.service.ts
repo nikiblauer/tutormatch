@@ -66,4 +66,12 @@ export class UserService {
     return this.httpClient.get<number>(this.userUri + "/id");
   }
 
+  getVisibility():Observable<boolean>{
+    return this.httpClient.get<boolean>(this.userUri + '/visibility');
+  }
+
+  updateVisibility(visibility: boolean): Observable<void>{
+    return this.httpClient.put<void>(this.userUri + '/visibility', visibility);
+  }
+
 }
