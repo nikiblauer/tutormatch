@@ -17,6 +17,7 @@ public interface ChatMessageService {
      * This function persists the specified chat messages in the persistent data store.
      *
      * @param chatMessageDto message to persist
+     * @return if message could be successfully persisted
      */
-    void saveChatMessage(ChatMessageDto chatMessageDto);
+    boolean saveChatMessage(ChatMessageDto chatMessageDto);
 }

@@ -47,7 +47,10 @@ public class ChatController {
 
 
         // Persist message in database
-        chatMessageService.saveChatMessage(chatMessageDto);
+        if(!chatMessageService.saveChatMessage(chatMessageDto)){
+            LOGGER.warn("Chat messages is malformed.");
+            return;
+        }
 
         // This sends the received message to the specified recipient
         messagingTemplate.convertAndSendToUser(chatMessageDto.getRecipientId().toString(), "/queue/messages", chatMessageDto);

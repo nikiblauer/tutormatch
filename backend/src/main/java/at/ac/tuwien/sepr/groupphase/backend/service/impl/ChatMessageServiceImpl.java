@@ -2,6 +2,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatMessageDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ChatMessage;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ChatMessageRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.ChatMessageService;
@@ -20,10 +21,12 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
     private final CustomUserDetailService userService;
+    private final ChatRoomService chatRoomService;
 
-    public ChatMessageServiceImpl(ChatMessageRepository chatMessageRepository, CustomUserDetailService userService) {
+    public ChatMessageServiceImpl(ChatMessageRepository chatMessageRepository, CustomUserDetailService userService, ChatRoomService chatRoomService) {
         this.chatMessageRepository = chatMessageRepository;
         this.userService = userService;
+        this.chatRoomService = chatRoomService;
     }
 
     public List<ChatMessageDto> getChatMessagesByChatRoomId(String chatRoomId) {
@@ -41,8 +44,16 @@ public class ChatMessageServiceImpl implements ChatMessageService {
             .collect(Collectors.toList());
     }
 
-    public void saveChatMessage(ChatMessageDto chatMessageDto) {
+    public boolean saveChatMessage(ChatMessageDto chatMessageDto) {
         LOGGER.trace("saveChatMessage({})", chatMessageDto);
+
+        ChatRoomDto chatroom = chatRoomService.getChatRoomByChatRoomId(chatMessageDto.getChatRoomId());
+        if (!((chatroom.getSenderId().equals(chatMessageDto.getSenderId())) &&
+            (chatroom.getRecipientId().equals(chatMessageDto.getRecipientId()))) &&
+            !((chatroom.getSenderId().equals(chatMessageDto.getRecipientId())) &&
+                (chatroom.getRecipientId().equals(chatMessageDto.getSenderId())))) {
+            return false;
+        }
 
         ChatMessage chatMessage = ChatMessage.builder()
             .chatRoomId(chatMessageDto.getChatRoomId())
@@ -53,5 +64,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
             .build();
 
         chatMessageRepository.save(chatMessage);
+
+        return true;
     }
 }

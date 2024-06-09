@@ -23,4 +23,12 @@ public interface ChatRoomService {
      * @return ChatRoomDto from creators perspective
      */
     ChatRoomDto createChatRoom(ApplicationUser sender, CreateChatRoomDto toCreate);
+
+    /**
+     * Retrieves a chatroom by chatroom id.
+     *
+     * @param chatRoomId the room to retrieve
+     * @return chatroom dto
+     */
+    ChatRoomDto getChatRoomByChatRoomId(String chatRoomId);
 }
