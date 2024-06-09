@@ -115,7 +115,7 @@ export class MatchComponent implements OnInit {
 
   public startChat() {
     let chatRoomToCreate = new CreateChatRoomDto()
-    chatRoomToCreate.recipientId = this.selectedMatch.id
+    chatRoomToCreate.recipientId = this.selectedMatch.id;
     this.chatService.createChatRoom(chatRoomToCreate).subscribe({
       next: value => {
         console.log(value);

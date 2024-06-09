@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface ChatRoomService {
      * @param toCreate dto containing the other chatroom participant
      * @return ChatRoomDto from creators perspective
      */
-    ChatRoomDto createChatRoom(ApplicationUser sender, CreateChatRoomDto toCreate);
+    ChatRoomDto createChatRoom(ApplicationUser sender, CreateChatRoomDto toCreate) throws ValidationException;
 
     /**
      * Retrieves a chatroom by chatroom id.

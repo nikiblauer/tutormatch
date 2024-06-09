@@ -6,14 +6,18 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ChatRoomMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ChatRoom;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ChatRoomRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.ChatRoomService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepr.groupphase.backend.service.validators.ChatValidator;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,11 +34,14 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     private final ChatRoomMapper chatRoomMapper;
 
+    private final ChatValidator chatValidator;
+
     @Autowired
-    public ChatRoomServiceImpl(ChatRoomRepository chatRoomRepository, UserService userService, ChatRoomMapper chatRoomMapper) {
+    public ChatRoomServiceImpl(ChatRoomRepository chatRoomRepository, UserService userService, ChatRoomMapper chatRoomMapper, ChatValidator chatValidator) {
         this.chatRoomRepository = chatRoomRepository;
         this.userService = userService;
         this.chatRoomMapper = chatRoomMapper;
+        this.chatValidator = chatValidator;
     }
 
     public List<ChatRoomDto> getChatRoomsByUserId(Long userId) {
@@ -49,12 +56,23 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             .collect(Collectors.toList());
     }
 
-    public ChatRoomDto createChatRoom(ApplicationUser sender, CreateChatRoomDto toCreate) {
+    public ChatRoomDto createChatRoom(ApplicationUser sender, CreateChatRoomDto toCreate) throws ValidationException {
         LOGGER.trace("createChatRoom({}, {})", sender.getId(), toCreate.getRecipientId());
 
         String chatRoomId = UUID.randomUUID().toString();
 
         ApplicationUser recipient = userService.findApplicationUserById(toCreate.getRecipientId());
+
+        ArrayList<String> errors = chatValidator.validateForCreate(sender, recipient);
+        // had to be done that way, otherwise circular dependency error
+        if (getChatRoomsByUserId(sender.getId()).stream().anyMatch(
+            chatRoomDto -> chatRoomDto.getRecipientId().equals(recipient.getId())
+        )) {
+            errors.add("Chatroom already exists");
+            throw new ValidationException("Chatroom cannot be created", errors);
+        }
+
+
         ChatRoom senderRecipient = ChatRoom.builder().chatRoomId(chatRoomId).sender(sender).recipient(recipient).build();
         ChatRoom recipientSender = ChatRoom.builder().chatRoomId(chatRoomId).sender(recipient).recipient(sender).build();
 

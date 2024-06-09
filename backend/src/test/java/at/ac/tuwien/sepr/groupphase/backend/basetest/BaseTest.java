@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.basetest;
 
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.*;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.*;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.RatingDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.SubjectDataGenerator;
@@ -53,7 +54,7 @@ public class BaseTest {
 
 
     @BeforeEach
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, ValidationException {
         generateData();
     }
 
@@ -62,7 +63,7 @@ public class BaseTest {
         clearData();
     }
 
-    private void generateData() throws IOException {
+    private void generateData() throws IOException, ValidationException {
         userDataGenerator.generateApplicationUser();
         subjectDataGenerator.generateSubjects();
         userSubjectDataGenerator.generateUserSubjectRelation();

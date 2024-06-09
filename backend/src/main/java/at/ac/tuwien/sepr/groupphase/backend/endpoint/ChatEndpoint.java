@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatMessageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.ChatMessageService;
 import at.ac.tuwien.sepr.groupphase.backend.service.ChatRoomService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -59,7 +60,7 @@ public class ChatEndpoint {
     @Secured("ROLE_USER")
     @PostMapping("/room")
     @ResponseStatus(HttpStatus.CREATED)
-    public ChatRoomDto createChatRoom(@RequestBody CreateChatRoomDto chatRoomCreateDto) {
+    public ChatRoomDto createChatRoom(@RequestBody CreateChatRoomDto chatRoomCreateDto) throws ValidationException {
         LOGGER.info("POST /api/v1/chat/room/create body: {}", chatRoomCreateDto);
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         ApplicationUser user = userService.findApplicationUserByEmail(userEmail);

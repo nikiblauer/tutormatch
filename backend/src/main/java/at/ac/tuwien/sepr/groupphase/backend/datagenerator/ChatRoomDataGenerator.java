@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ChatRoom;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ChatRoomRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.ChatRoomService;
@@ -36,7 +37,7 @@ public class ChatRoomDataGenerator {
 
 
     @PostConstruct
-    public void generateChatRooms() {
+    public void generateChatRooms() throws ValidationException {
         if (chatRoomRepository.existsById(1L)) {
             log.info("ChatRoom data already generated. Skipping generation.");
             return;

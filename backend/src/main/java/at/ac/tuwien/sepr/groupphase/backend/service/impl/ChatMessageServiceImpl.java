@@ -47,6 +47,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     public boolean saveChatMessage(ChatMessageDto chatMessageDto) {
         LOGGER.trace("saveChatMessage({})", chatMessageDto);
 
+        // Checking that dto data is valid
         ChatRoomDto chatroom = chatRoomService.getChatRoomByChatRoomId(chatMessageDto.getChatRoomId());
         if (!((chatroom.getSenderId().equals(chatMessageDto.getSenderId())) &&
             (chatroom.getRecipientId().equals(chatMessageDto.getRecipientId()))) &&
