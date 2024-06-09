@@ -86,7 +86,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     public ChatRoomDto getChatRoomByChatRoomId(String chatRoomId) {
         List<ChatRoom> chatRooms = chatRoomRepository.findAllByChatRoomId(chatRoomId);
 
-        if(chatRooms.isEmpty()){
+        if (chatRooms.isEmpty()) {
             throw new NotFoundException("ChatRoom with this id was not found!");
         }
 

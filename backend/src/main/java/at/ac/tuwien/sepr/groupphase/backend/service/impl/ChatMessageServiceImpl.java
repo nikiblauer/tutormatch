@@ -49,10 +49,10 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
         // Checking that dto data is valid
         ChatRoomDto chatroom = chatRoomService.getChatRoomByChatRoomId(chatMessageDto.getChatRoomId());
-        if (!((chatroom.getSenderId().equals(chatMessageDto.getSenderId())) &&
-            (chatroom.getRecipientId().equals(chatMessageDto.getRecipientId()))) &&
-            !((chatroom.getSenderId().equals(chatMessageDto.getRecipientId())) &&
-                (chatroom.getRecipientId().equals(chatMessageDto.getSenderId())))) {
+        if (!((chatroom.getSenderId().equals(chatMessageDto.getSenderId()))
+            && (chatroom.getRecipientId().equals(chatMessageDto.getRecipientId())))
+            && !((chatroom.getSenderId().equals(chatMessageDto.getRecipientId()))
+            && (chatroom.getRecipientId().equals(chatMessageDto.getSenderId())))) {
             return false;
         }
 

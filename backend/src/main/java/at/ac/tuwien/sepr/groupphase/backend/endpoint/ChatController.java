@@ -48,7 +48,7 @@ public class ChatController {
 
         // Persist message in database
         // websocket doesn't support error codes, so there is no error sent back. Message is just not persisted if malformed
-        if(!chatMessageService.saveChatMessage(chatMessageDto)){
+        if (!chatMessageService.saveChatMessage(chatMessageDto)) {
             LOGGER.warn("Chat messages is malformed.");
             return;
         }
