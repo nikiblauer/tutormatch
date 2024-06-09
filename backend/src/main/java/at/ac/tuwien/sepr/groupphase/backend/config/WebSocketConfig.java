@@ -49,7 +49,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // endpoint for websocket connection
-        registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:4200").withSockJS();
+        registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:4200", "https://*.apps.student.inso-w.at").withSockJS();
     }
 
     @Override
