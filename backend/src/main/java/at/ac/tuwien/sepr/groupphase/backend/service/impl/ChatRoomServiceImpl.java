@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateChatRoomDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ChatRoomMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ChatRoom;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ChatRoomRepository;
@@ -26,10 +27,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
     private final UserService userService;
 
+    private final ChatRoomMapper chatRoomMapper;
+
     @Autowired
-    public ChatRoomServiceImpl(ChatRoomRepository chatRoomRepository, UserService userService) {
+    public ChatRoomServiceImpl(ChatRoomRepository chatRoomRepository, UserService userService, ChatRoomMapper chatRoomMapper) {
         this.chatRoomRepository = chatRoomRepository;
         this.userService = userService;
+        this.chatRoomMapper = chatRoomMapper;
     }
 
     public List<ChatRoomDto> getChatRoomsByUserId(Long userId) {
@@ -40,9 +44,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         // map to ChatRoomDto
         return chatRooms.stream()
-            .map(chatRoom -> new ChatRoomDto(chatRoom.getId(), chatRoom.getChatRoomId(), chatRoom.getSender().getId(), chatRoom.getRecipient().getId(),
-                chatRoom.getSender().getFirstname(), chatRoom.getSender().getLastname(),
-                chatRoom.getRecipient().getFirstname(), chatRoom.getRecipient().getLastname()))
+            .map(chatRoomMapper::chatRoomToDto)
             .collect(Collectors.toList());
     }
 
@@ -58,9 +60,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         chatRoomRepository.save(senderRecipient);
         chatRoomRepository.save(recipientSender);
 
-        return new ChatRoomDto(senderRecipient.getId(), senderRecipient.getChatRoomId(), senderRecipient.getSender().getId(),
-            senderRecipient.getRecipient().getId(), senderRecipient.getSender().getFirstname(), senderRecipient.getSender().getLastname(),
-            senderRecipient.getRecipient().getFirstname(), senderRecipient.getRecipient().getLastname());
+        return chatRoomMapper.chatRoomToDto(senderRecipient);
     }
 }
 
