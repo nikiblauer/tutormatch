@@ -63,14 +63,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         ApplicationUser recipient = userService.findApplicationUserById(toCreate.getRecipientId());
 
-        ArrayList<String> errors = chatValidator.validateForCreate(sender, recipient);
-        // had to be done that way, otherwise circular dependency error
-        if (getChatRoomsByUserId(sender.getId()).stream().anyMatch(
-            chatRoomDto -> chatRoomDto.getRecipientId().equals(recipient.getId())
-        )) {
-            errors.add("Chatroom already exists");
-            throw new ValidationException("Chatroom cannot be created", errors);
-        }
+        chatValidator.validateForCreate(sender, recipient);
 
 
         ChatRoom senderRecipient = ChatRoom.builder().chatRoomId(chatRoomId).sender(sender).recipient(recipient).build();
