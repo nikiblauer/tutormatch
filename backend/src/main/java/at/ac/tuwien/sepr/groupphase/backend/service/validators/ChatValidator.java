@@ -39,7 +39,7 @@ public class ChatValidator {
             errors.add("Sender has no match with recipient.");
         }
 
-        if(chatRoomRepository.findAllBySenderId(sender.getId()).stream().anyMatch(
+        if (chatRoomRepository.findAllBySenderId(sender.getId()).stream().anyMatch(
             chatRoom -> chatRoom.getRecipient().getId().equals(recipient.getId())
         )) {
             errors.add("Chatroom already exists");
