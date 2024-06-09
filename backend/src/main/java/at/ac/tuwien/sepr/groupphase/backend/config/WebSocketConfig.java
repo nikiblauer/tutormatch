@@ -18,6 +18,7 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -25,6 +26,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 
@@ -65,10 +67,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
+        LOGGER.trace("configureClientInboundChannel({})", registration);
+
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
                 StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+                LOGGER.debug("Authorization header: {}", accessor.getFirstNativeHeader("Authorization"));
 
                 // Checks that only users who are logged in can connect to websocket
                 if (StompCommand.CONNECT.equals(accessor.getCommand())) {
@@ -77,16 +82,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         String jwt = token.substring(7);
                         try {
                             String username = jwtTokenizer.extractUsernameFromVerificationToken(jwt);
+                            LOGGER.debug("User: {} connected to websocket.", username);
                             if (username != null) {
                                 accessor.setUser(() -> username);
                                 return message;
                             }
                         } catch (Exception e) {
-                            // Invalid token
+                            throw HttpClientErrorException.create(UNAUTHORIZED, "Unauthorized", null, null, null);
                         }
                     }
                     // If token is missing or invalid, reject the connection
-                    throw new IllegalArgumentException("No valid JWT token provided");
+                    throw HttpClientErrorException.create(UNAUTHORIZED, "No valid JWT token provided", null, null, null);
                 }
                 return message;
             }
