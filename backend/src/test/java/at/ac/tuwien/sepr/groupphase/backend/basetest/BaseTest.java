@@ -12,11 +12,15 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+
 
 public class BaseTest {
 
@@ -58,6 +62,7 @@ public class BaseTest {
         generateData();
     }
 
+
     @AfterEach
     public void tearDown() throws IOException {
         clearData();
@@ -72,7 +77,7 @@ public class BaseTest {
         ratingDataGenerator.generateUserSubjectRelation();
     }
 
-    private void clearData() {
+    protected void clearData() {
         chatMessageRepository.deleteAll();
         chatRoomRepository.deleteAll();
 
