@@ -71,7 +71,7 @@ public class ChatRoomDataGenerator {
                 receipient.setRecipientId(user2.getId());
                 try {
                     chatRoomService.createChatRoom(user1, receipient);
-                } catch (ValidationException e){
+                } catch (ValidationException e) {
                     log.info("Skipping already created chat room.");
                 }
             }
