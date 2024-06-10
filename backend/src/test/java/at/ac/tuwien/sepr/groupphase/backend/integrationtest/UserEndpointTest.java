@@ -12,6 +12,8 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserRating;
+import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
+import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubjectKey;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
@@ -48,6 +50,7 @@ import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.ADMIN_ROLES
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER_EMAIL;
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_BASE_URI;
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_ROLES;
+import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.BANNED_USER_EMAIL;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -316,7 +319,7 @@ public class UserEndpointTest extends BaseTest {
     @Test
     void testGetSubjectsByTokenEmailOfUser() throws Exception {
         Pageable pageable = Pageable.unpaged();
-        var expectedUser = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, pageable).getContent().get(0);
+        var expectedUser = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, null, pageable).getContent().get(0);
 
         long[] expectedUserSubjects = userSubjectRepository.findAll()
             .stream()
@@ -389,14 +392,14 @@ public class UserEndpointTest extends BaseTest {
     @Test
     void testUserVerificationEndpointSetsUserToVerified() throws Exception {
         List<ApplicationUser> usersList = userRepository.findAll();
-        ApplicationUser userBefore = usersList.get(usersList.size()-2);
+        ApplicationUser userBefore = usersList.get(usersList.size() - 2);
         assertFalse(userBefore.getVerified());
         String token = jwtTokenizer.buildVerificationToken(userBefore.getDetails().getEmail());
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/user/verify/" + token))
             .andExpect(status().isOk())
             .andReturn();
         List<ApplicationUser> updatedList = userRepository.findAll();
-        ApplicationUser userAfter = updatedList.get(usersList.size()-2);
+        ApplicationUser userAfter = updatedList.get(usersList.size() - 2);
         assertTrue(userAfter.getVerified());
     }
 
@@ -457,6 +460,39 @@ public class UserEndpointTest extends BaseTest {
                     );
                 }
             }
+        );
+    }
+
+
+    @Test
+    void testGetMatchingShouldNotReturnBannedUser() throws Exception {
+        var allUserSubjects = userSubjectRepository.findAll();
+        var matchUser = allUserSubjects.getFirst().getUser();
+        var tutorSubject = allUserSubjects.stream().filter(item -> item.getRole().equals("tutor") && item.getUser().equals(matchUser)).findFirst().get();
+        var traineeSubject = allUserSubjects.stream().filter(item -> item.getRole().equals("trainee") && item.getUser().equals(matchUser)).findFirst().get();
+
+        var bannedUser = userRepository.findApplicationUserByDetails_Email(BANNED_USER_EMAIL);
+        userSubjectRepository.save(new UserSubject(new UserSubjectKey(bannedUser.getId(), tutorSubject.getSubject().getId()), bannedUser, tutorSubject.getSubject(),"trainee"));
+        userSubjectRepository.save(new UserSubject(new UserSubjectKey(bannedUser.getId(), traineeSubject.getSubject().getId()), bannedUser, traineeSubject.getSubject(),"tutor"));
+
+
+        // Perform a GET request to the "/api/v1/user/matches" endpoint
+        var body = mockMvc.perform(get("/api/v1/user/matches")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(matchUser.getDetails().getEmail(), USER_ROLES)))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+
+        var matchesResult = objectMapper.readerFor(UserMatchDto.class).readValues(body);
+        assertNotNull(matchesResult);
+
+        var matchIds = new ArrayList<Long>();
+        matchesResult.forEachRemaining((match) -> {
+            var userMatch = (UserMatchDto) match;
+            matchIds.add(userMatch.getId());
+        });
+        assertAll(
+            () -> assertEquals(2, matchIds.size()),
+            () -> assertFalse(matchIds.contains(bannedUser.getId()))
         );
     }
 }

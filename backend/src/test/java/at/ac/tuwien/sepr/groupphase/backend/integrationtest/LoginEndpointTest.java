@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.repository.BanRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -71,6 +72,14 @@ public class LoginEndpointTest extends BaseTest {
     @Test
     public void AdminLoginWithIncorrectPasswordNotFound() throws Exception {
         String loginData = "{\"password\": \"wrongPassword\", \"email\": \"" + ADMIN_EMAIL + "\"}";
+        invalidLoginTest(loginData, HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    public void BanUserLoginShouldFail() throws Exception {
+        var email = userRepository.findAll().stream().filter(item -> item.isBanned())
+            .findFirst().get().getDetails().getEmail();
+        String loginData = "{\"password\": \"Password123\", \"email\": \"" + email + "\"}";
         invalidLoginTest(loginData, HttpStatus.UNAUTHORIZED.value());
     }
 

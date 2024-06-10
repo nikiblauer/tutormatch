@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.LoginService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import com.icegreen.greenmail.imap.AuthorizationException;
 import jakarta.annotation.security.PermitAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ public class LoginEndpoint {
 
     @PermitAll
     @PostMapping
-    public String login(@RequestBody UserLoginDto userLoginDto) {
+    public String login(@RequestBody UserLoginDto userLoginDto) throws AuthorizationException {
         LOGGER.info("POST /api/v1/authentication, user = {}", userLoginDto.getEmail());
         return loginService.login(userLoginDto);
     }

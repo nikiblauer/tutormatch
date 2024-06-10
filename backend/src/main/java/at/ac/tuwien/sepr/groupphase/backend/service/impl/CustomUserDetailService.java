@@ -5,9 +5,11 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Banned;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.BanRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -34,15 +36,18 @@ public class CustomUserDetailService implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
+    private final BanRepository banRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator validator;
     private final EmailSmtpService emailService;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer,
+    public CustomUserDetailService(UserRepository userRepository, BanRepository banRepository,
+                                   PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer,
                                    UserValidator validator, EmailSmtpService emailService) {
         this.userRepository = userRepository;
+        this.banRepository = banRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
         this.validator = validator;
@@ -147,9 +152,9 @@ public class CustomUserDetailService implements UserService {
         try {
             UserDetails userDetails = loadUserByUsername(email);
             if (userDetails != null
-                    && userDetails.isAccountNonExpired()
-                    && userDetails.isAccountNonLocked()
-                    && userDetails.isCredentialsNonExpired()
+                && userDetails.isAccountNonExpired()
+                && userDetails.isAccountNonLocked()
+                && userDetails.isCredentialsNonExpired()
             ) {
                 ApplicationUser applicationUser = findApplicationUserByEmail(email);
                 if (!applicationUser.getVerified()) {
@@ -163,6 +168,36 @@ public class CustomUserDetailService implements UserService {
         } catch (UsernameNotFoundException | NotFoundException e) {
             throw new NotFoundException(String.format("User with email %s not found", email));
         }
+    }
+
+    @Override
+    public void banUser(Long id, String reason) {
+        LOGGER.trace("Banning user with id: {}", id);
+        ApplicationUser applicationUser = userRepository.findById(id).orElse(null);
+        if (applicationUser == null) {
+            throw new NotFoundException(String.format("User with id %d not found", id));
+        }
+
+        if (applicationUser.isBanned()) {
+            // user already banned
+            return;
+        }
+
+        Banned userBan = new Banned();
+        userBan.setUser(applicationUser);
+        userBan.setReason(reason);
+        banRepository.save(userBan);
+    }
+
+    @Override
+    public Banned getBanForUser(Long id) {
+        LOGGER.trace("Get Ban for user with id: {}", id);
+        Banned userBan = banRepository.getBanByUserId(id);
+        if (userBan == null) {
+            throw new NotFoundException(String.format("No Ban for User with id %d found", id));
+        }
+
+        return userBan;
     }
 
     @Override
@@ -214,8 +249,8 @@ public class CustomUserDetailService implements UserService {
 
 
     @Override
-    public Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Pageable pageable) {
+    public Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Boolean hasBan, Pageable pageable) {
         LOGGER.trace("Getting all users");
-        return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber, pageable);
+        return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber, hasBan, pageable);
     }
 }

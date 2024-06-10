@@ -55,6 +55,7 @@ export class StudentDto implements BaseUser {
   street: string;
   areaCode: number;
   city: string;
+  isBanned: boolean;
 
   public static getAddressAsString(user: StudentDto): string {
 
@@ -79,3 +80,8 @@ export class UserProfile extends StudentDto {
   matrNumber: number;
   subjects: UserSubject[];
 }
+
+export interface BannedUserDto extends StudentDto {
+  banDate: Date;
+  reason: string;
+} 

@@ -24,7 +24,7 @@ public class UserMatchServiceTest extends BaseTest {
     @Test
     void testFindMatchingUserByUserIdShouldReturn2Results() {
         Pageable pageable = Pageable.unpaged();
-        var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, pageable).getContent();
+        var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, null, pageable).getContent();
         var stream = userMatchService.findMatchingsForUser(user.get(0).getDetails().getEmail());
 
         List<UserMatchDto> resultList = stream.collect(Collectors.toList());
