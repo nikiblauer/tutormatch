@@ -55,7 +55,7 @@ public class UserMatchServiceImpl implements UserMatchService {
             + "AND us1.USER_ID != us2.USER_ID "
             + "JOIN SUBJECT s ON us1.SUBJECT_ID = s.ID "
             + "WHERE u.ID != :userId AND us2.USER_ID = :userId "
-            + "AND NOT EXISTS (SELECT 1 FROM Ban b WHERE u.ID = b.USER_ID) " // Exclude users in Ban table
+            + "AND NOT EXISTS (SELECT 1 FROM Banned b WHERE u.ID = b.USER_ID) " // Exclude users in Ban table
             + "GROUP BY u.id "
             + "HAVING trainee_matchingCount > 0 AND tutor_matchingCount > 0 "
             + "ORDER BY total_matchingCount DESC";
