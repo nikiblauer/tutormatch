@@ -32,7 +32,6 @@ const routes: Routes = [
   },
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {path: 'matches', component: MatchComponent},
-  {path: 'myprofile', component: UserProfileComponent},
   {path: 'chat', component: ChatComponent},
   {path: 'myprofile', component: UserProfileComponent,data: {mode: UserMode.user}},
   {
