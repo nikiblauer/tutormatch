@@ -32,6 +32,7 @@ public interface ApplicationUserMapper {
             if (applicationUser.getDetails() != null) {
                 studentDto.setEmail(applicationUser.getDetails().getEmail());
                 studentDto.setTelNr(applicationUser.getDetails().getTelNr());
+                studentDto.setVerified(applicationUser.getVerified());
                 if (applicationUser.getDetails().getAddress() != null) {
                     studentDto.setStreet(applicationUser.getDetails().getAddress().getStreet());
                     studentDto.setAreaCode(applicationUser.getDetails().getAddress().getAreaCode());

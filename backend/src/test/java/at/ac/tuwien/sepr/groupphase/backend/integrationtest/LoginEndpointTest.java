@@ -45,21 +45,17 @@ public class LoginEndpointTest extends BaseTest {
 
     @Test
     public void validUserLogin() throws Exception {
-        System.out.println(userRepository.findAll());
         String loginData = "{\"password\": \"Password123\", \"email\": \"" + DEFAULT_USER_EMAIL + "\"}";
         ArrayList<String> expectedRole = new ArrayList<>();
         expectedRole.add("ROLE_USER");
-        System.out.println("logging valid user login");
         validLoginTest(loginData, expectedRole, DEFAULT_USER_EMAIL);
     }
 
     @Test
     public void validAdminLogin() throws Exception {
-        System.out.println(userRepository.findAll());
         String loginData = "{\"password\": \"Password123\", \"email\": \"" + ADMIN_EMAIL + "\"}";
         ArrayList<String> expectedRole = new ArrayList<>();
         expectedRole.add("ROLE_ADMIN");
-        System.out.println("logging valid admin login");
         validLoginTest(loginData, expectedRole, ADMIN_EMAIL);
     }
 
@@ -92,7 +88,6 @@ public class LoginEndpointTest extends BaseTest {
         MockHttpServletResponse response = mvcResult.getResponse();
         String responseBody = response.getContentAsString();
         String token = responseBody.replace("Bearer ", "");
-        System.out.println("Barer Token " + token);
         byte[] signingKey = securityProperties.getJwtSecret().getBytes();
         Claims claims = Jwts.parser()
             .setSigningKey(signingKey)
@@ -116,7 +111,6 @@ public class LoginEndpointTest extends BaseTest {
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
-        System.out.println(response);
         assertAll(
             () -> assertEquals(expectedStatus, response.getStatus()),
             () -> assertEquals("text/plain;charset=UTF-8", response.getContentType())

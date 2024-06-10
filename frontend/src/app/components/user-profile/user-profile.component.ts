@@ -56,6 +56,8 @@ export class UserProfileComponent implements OnInit {
   //Subject for info modal
   selectedSubject: Subject;
 
+  visible = true;
+
   ngOnInit() {
     this.route.data.subscribe(data => {
       this.mode = data.mode;
@@ -65,6 +67,7 @@ export class UserProfileComponent implements OnInit {
     });
     this.updateUser()
     this.searchSubjects();
+    this.getVisibility();
     this.searchSubject$.pipe(
       debounceTime(300),
       distinctUntilChanged()
@@ -137,7 +140,7 @@ export class UserProfileComponent implements OnInit {
   saveProfile(): void {
       this.spinner.show();
       if (this.mode == UserMode.admin){
-        this.adminService.addSubjectToUser(this.id, this.userOffer.map(item => item.id), this.userNeed.map(item => item.id))
+        this.adminService.addSubjectToUser(this.id, this.userNeed.map(item => item.id), this.userOffer.map(item => item.id))
           .subscribe({
             next: _ => {
               this.spinner.hide();
@@ -150,7 +153,7 @@ export class UserProfileComponent implements OnInit {
             complete: () => this.notification.success("Successfully updated user subjects for user " + this.user.id, "Updated user subjects!")
           });
       } else {
-        this.userService.addSubjectToUser(this.userOffer.map(item => item.id), this.userNeed.map(item => item.id))
+        this.userService.addSubjectToUser(this.userNeed.map(item => item.id), this.userOffer.map(item => item.id))
           .subscribe({
             next: _ => {
               this.spinner.hide();
@@ -218,8 +221,8 @@ export class UserProfileComponent implements OnInit {
             this.spinner.hide();
             this.loadUser = true;
             this.user = userProfile;
-            this.userOffer = userProfile.subjects.filter(item => item.role == "trainee");
-            this.userNeed = userProfile.subjects.filter(item => item.role == "tutor");
+            this.userOffer = userProfile.subjects.filter(item => item.role == "tutor");
+            this.userNeed = userProfile.subjects.filter(item => item.role == "trainee");
             this.userAddress = StudentDto.getAddressAsString(userProfile);
             this.editedUser = { ...this.user };
             this.user.id  = this.id;
@@ -239,8 +242,8 @@ export class UserProfileComponent implements OnInit {
           this.spinner.hide();
           this.loadUser = true;
           this.user = userProfile;
-          this.userOffer = userProfile.subjects.filter(item => item.role == "trainee");
-          this.userNeed = userProfile.subjects.filter(item => item.role == "tutor");
+          this.userOffer = userProfile.subjects.filter(item => item.role == "tutor");
+          this.userNeed = userProfile.subjects.filter(item => item.role == "trainee");
           this.userAddress = StudentDto.getAddressAsString(userProfile);
           this.editedUser = { ...this.user };
           this.user.id  = this.id;
@@ -307,5 +310,25 @@ export class UserProfileComponent implements OnInit {
       default:
         return 0;
     }
+  }
+
+  public updateVisibility(){
+    this.visible = !this.visible;
+    this.userService.updateVisibility(this.visible).subscribe({
+      error: (e) => {
+        this.handleError(e)
+      }
+    });
+  }
+
+  private getVisibility(){
+    this.userService.getVisibility().subscribe({
+      next: visibility => {
+        this.visible = visibility;
+      },
+      error: (e) => {
+        this.handleError(e)
+      }
+    });
   }
 }

@@ -19,6 +19,7 @@ interface StudentListing {
   firstname: string;
   lastname: string;
   email: string;
+  verified: boolean;
   isBanned: boolean;
 }
 
@@ -37,6 +38,7 @@ export class StudentsComponent implements OnInit {
   selectedStudentDetails: StudentSubjectInfoDto | null = null;
   searchTerm$ = new Subject<string>();
   noMoreResults: boolean = false;
+  verifiedFilter: string = 'all';
 
   selectedBanUser: StudentListing | null = null;
   selectedBanReasonUser: BannedUserDto | null = null;
@@ -92,30 +94,41 @@ export class StudentsComponent implements OnInit {
       this.filteredStudents = []; // Clear the list of filtered students
     }
 
-    this.withSpinner(
-      this.adminService.searchUsers(this.searchName, Number(this.matrNumber), this.filterStatus, this.page, 5), this.spinner).subscribe({
-        next: (response: Page<StudentDto>) => {
-          this.spinner.hide();
-          if (response.content.length === 0) {
-            this.noMoreResults = true; // Set noMoreResults to true when there are no more results
-          } else {
-            this.noMoreResults = false;
-            this.filteredStudents = [...this.filteredStudents, ...response.content.map(user => ({
-              firstname: user.firstname,
-              lastname: user.lastname,
-              email: user.email,
-              id: user.id,
-              isBanned: user.isBanned
-            }))];
-          }
-        },
-        error: (error: any) => {
-          this.spinner.hide();
-          console.error('Error:', error);
-          this.page -= 0; // Reset the page count if there was an error
-          this.notification.error(error.error, "Error in fetching student details!");
+    this.withSpinner(this.adminService.searchUsers(this.searchName, Number(this.matrNumber), this.filterStatus, this.page, 20), this.spinner).subscribe({
+      next: (response: Page<StudentDto>) => {
+        this.spinner.hide();
+        if (response.content.length === 0) {
+          this.noMoreResults = true;
+        } else {
+          this.noMoreResults = false;
+          let newStudents = response.content.map(user => ({
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            id: user.id,
+            verified: user.verified,
+            isBanned: user.isBanned
+          })).filter(student => this.filterByVerifiedStatus(student)); // Filter here based on verified status
+
+          // Sort newStudents based on verified status
+          newStudents = newStudents.sort((a, b) => {
+            if (a.verified && !b.verified) {
+              return -1;
+            }
+            if (!a.verified && b.verified) {
+              return 1;
+            }
+            return 0;
+          });
+          this.filteredStudents = [...this.filteredStudents, ...newStudents];
         }
-      });
+      },
+      error: (error: any) => {
+        this.spinner.hide();
+        console.error('Error:', error);
+        this.notification.error(error.error, "Error in fetching student details!");
+      }
+    });
   }
 
   viewDetails(student: StudentListing, content: any): void {
@@ -143,6 +156,13 @@ export class StudentsComponent implements OnInit {
   loadMore(): void {
     this.page += 1;
     this.search(false); // Don't clear the list of filtered students
+  }
+
+  filterByVerifiedStatus(student: StudentListing): boolean {
+    if (this.verifiedFilter === 'all') return true;
+    if (this.verifiedFilter === 'verified') return student.verified;
+    if (this.verifiedFilter === 'notVerified') return !student.verified;
+    return false;
   }
 
 

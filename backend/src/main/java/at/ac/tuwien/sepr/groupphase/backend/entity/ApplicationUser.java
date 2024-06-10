@@ -10,41 +10,33 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import lombok.Getter;
+import lombok.Data;
 import lombok.Setter;
 
 import java.util.List;
 
-@Getter
+@Data
 @Entity
 public class ApplicationUser {
 
-    @Setter
     @OneToOne(cascade = jakarta.persistence.CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "DETAILS_ID", referencedColumnName = "ID")
     private ContactDetails details;
-    @Setter
     @Column(nullable = false, length = 255)
     private String password;
-    @Setter
     @Column(nullable = false)
     private Boolean admin;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Setter
     private Long id;
-    @Setter
     @Column(nullable = false, length = 255)
     private String firstname;
-    @Setter
     @Column(nullable = false, length = 255)
     private String lastname;
-    @Setter
     private Long matrNumber;
-    @Setter
     private Boolean verified;
+    private Boolean visible = true;
 
-    @Setter
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserSubject> userSubjects;
 

@@ -41,12 +41,20 @@ public interface UserService extends UserDetailsService {
     /**
      * Update a user.
      *
-     * @param userEmail the email of the user
+     * @param userEmail          the email of the user
      * @param applicationUserDto the updated user
      * @return the updated user
      */
     ApplicationUser updateUser(String userEmail, UpdateStudentDto applicationUserDto) throws ValidationException;
 
+    /**
+     * Updates a User including the Matriculation Number.
+     *
+     * @param userEmail          the email of tue user
+     * @param applicationUserDto the updated user
+     * @return the updated user
+     * @throws ValidationException If any validation errors occur. (no name, ...)
+     */
     ApplicationUser updateUserIncludingMatrNr(String userEmail, UpdateStudentAsAdminDto applicationUserDto) throws ValidationException;
 
     /**
@@ -57,11 +65,32 @@ public interface UserService extends UserDetailsService {
      */
     Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Boolean hasBan, Pageable pageable);
 
+    /**
+     * Creates a new User in the database.
+     *
+     * @param applicationUserDto The user that is created
+     * @return The created User Entry in the database
+     * @throws ValidationException If any validation errors occur. (no name, ...)
+     */
     ApplicationUser create(CreateStudentDto applicationUserDto) throws ValidationException;
+
+    /**
+     * Finds a User with a given ID.
+     *
+     * @param id the user to find
+     * @return An entity of the User with the given id
+     */
 
     ApplicationUser findApplicationUserById(Long id);
 
-    public List<String> getUserSubjectsByRole(Long id, String role);
+    /**
+     * Gets a list of all subjects a User has a certain role.
+     *
+     * @param id   the user id
+     * @param role the searched role (trainee/tutor)
+     * @return a list of Subjects
+     */
+    List<String> getUserSubjectsByRole(Long id, String role);
 
     /**
      * sets the user verification status to verified.
@@ -72,7 +101,6 @@ public interface UserService extends UserDetailsService {
 
     /**
      * sends a new verification email if user with this email exists and is not verified yet.
-     *
      */
     void resendVerificationEmail(String email);
 
@@ -93,4 +121,20 @@ public interface UserService extends UserDetailsService {
      * @throws NotFoundException if no ban is found for the specified user ID.
      */
     Banned getBanForUser(Long id);
+
+    /**
+     * gets the boolean value of the visibility for a user.
+     *
+     * @param user the user of the boolean flag
+     * @return a boolean flag true for visible false for not visible.
+     */
+    boolean getVisibility(ApplicationUser user);
+
+    /**
+     * updates the visibility for a user.
+     *
+     * @param flag the value to update the visibility with
+     * @param user the user for whom the visibility is updated.
+     */
+    void updateVisibility(boolean flag, ApplicationUser user);
 }

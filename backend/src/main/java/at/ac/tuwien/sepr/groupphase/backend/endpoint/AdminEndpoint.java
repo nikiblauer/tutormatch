@@ -20,6 +20,8 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.StatisticService;
 import at.ac.tuwien.sepr.groupphase.backend.service.SubjectService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +46,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/admin")
+@Tag(name = "Admin Endpoint")
 public class AdminEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -65,6 +68,9 @@ public class AdminEndpoint {
         this.statisticService = statisticService;
     }
 
+    @Operation(
+        description = "This endpoint returns all users, that meet the search criteria for the Name or MatrNumber. The criterias can be empty.",
+        summary = "Admin endpoint, get all searched users.")
     @Secured("ROLE_ADMIN")
     @GetMapping("/users")
     public Page<StudentDto> searchUsers(
@@ -88,6 +94,9 @@ public class AdminEndpoint {
         return pageOfUsers.map(userMapper::applicationUserToDto);
     }
 
+    @Operation(
+        description = "Get all the Details of a student with the ID. This includes also all the subjects of the student which he has chosen",
+        summary = "Get all user details.")
     @Secured("ROLE_ADMIN")
     @GetMapping("/users/{id}")
     public StudentSubjectInfoDto getUserDetails(@PathVariable(name = "id") Long id) {
@@ -104,6 +113,9 @@ public class AdminEndpoint {
         return resultingUser;
     }
 
+    @Operation(
+        description = "Admin can update all the user details",
+        summary = "Update user")
     @Secured("ROLE_ADMIN")
     @PutMapping("/users/update")
     public UpdateStudentAsAdminDto updateUserDetails(@Valid @RequestBody UpdateStudentAsAdminDto applicationUserDto) throws ValidationException {
@@ -114,6 +126,9 @@ public class AdminEndpoint {
         return userMapper.toAdminUpdateDto(user);
     }
 
+    @Operation(
+        description = "Create a new subject given a certain scheme",
+        summary = "Create Subject")
     @Secured("ROLE_ADMIN")
     @PostMapping("/users/{id}/ban")
     public void banUser(@PathVariable(name = "id") Long id, @RequestBody @Valid BanReasonDto reason) throws ValidationException {
@@ -138,6 +153,9 @@ public class AdminEndpoint {
         return subjectMapper.subjectToSubjectDetailDto(subject);
     }
 
+    @Operation(
+        description = "Update an already existing subject.",
+        summary = "Update subject")
     @Secured("ROLE_ADMIN")
     @PutMapping("/subject")
     public SubjectDetailDto updateSubject(@Valid @RequestBody SubjectDetailDto subjectDetailDto) throws Exception {
@@ -146,6 +164,9 @@ public class AdminEndpoint {
         return subjectMapper.subjectToSubjectDetailDto(subject);
     }
 
+    @Operation(
+        description = "Remove a subject including all references to that subject",
+        summary = "Remove subject")
     @Secured("ROLE_ADMIN")
     @DeleteMapping("{id}")
     public void removeSubject(@PathVariable("id") Long id) {
@@ -153,6 +174,9 @@ public class AdminEndpoint {
         subjectService.deleteSubject(id);
     }
 
+    @Operation(
+        description = "Get all subjects a user has selected ",
+        summary = "Get subjects by user id")
     @Secured("ROLE_ADMIN")
     @GetMapping("/users/subjects/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -163,6 +187,9 @@ public class AdminEndpoint {
         return userMapper.mapUserAndSubjectsToUserSubjectDto(user, subjects);
     }
 
+    @Operation(
+        description = "Update the subjects a user has selected. User is identified by Id",
+        summary = "Update user subjects by user id")
     @Secured("ROLE_ADMIN")
     @PutMapping("/users/subjects/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -172,6 +199,9 @@ public class AdminEndpoint {
         subjectService.setUserSubjects(student, listDto.traineeSubjects, listDto.tutorSubjects);
     }
 
+    @Operation(
+        description = "Gets a simple statistic of Subjects which is defined in the DTO SimpleStatisticsDto.",
+        summary = "Get statistics from backend.")
     @Secured("ROLE_ADMIN")
     @GetMapping("/statistics/simple")
     public SimpleStatisticsDto getSimpleStatistics() {
@@ -179,6 +209,9 @@ public class AdminEndpoint {
         return statisticService.getSimpleStatistics();
     }
 
+    @Operation(
+        description = "Gets a extended list of statistics, like how many subjects are needed and offered currently.",
+        summary = "Get top Statistics from backend.")
     @Secured("ROLE_ADMIN")
     @GetMapping(value = "/statistics/extended")
     public TopStatisticsDto getExtendedStatisticsList(@RequestParam(name = "x") int x) {
