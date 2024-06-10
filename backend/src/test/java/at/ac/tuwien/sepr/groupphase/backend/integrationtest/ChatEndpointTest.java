@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ChatRoomRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
@@ -60,6 +61,8 @@ public class ChatEndpointTest extends BaseTest{
 
     @Autowired
     private JwtTokenizer jwtTokenizer;
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
 
     @Test
     public void testCreateChatRoomWithValidTokenReturnsChatRoomDto() throws Exception {
@@ -110,20 +113,21 @@ public class ChatEndpointTest extends BaseTest{
     public void testGetChatRooms() throws Exception {
 
         ApplicationUser user1 = userRepository.findApplicationUserByDetails_Email("e10000001@student.tuwien.ac.at");
-        ApplicationUser user3 = userRepository.findApplicationUserByDetails_Email("e10000003@student.tuwien.ac.at");
-        ApplicationUser user4 = userRepository.findApplicationUserByDetails_Email("e10000004@student.tuwien.ac.at");
+        ApplicationUser user2 = userRepository.findApplicationUserByDetails_Email("e10000002@student.tuwien.ac.at");
+
+        String chatRoomId = chatRoomRepository.findAll().getFirst().getChatRoomId();
 
         ArrayList<ChatRoomDto> expectedChatRooms = new ArrayList<>();
         expectedChatRooms.add(ChatRoomDto.builder()
-                .chatRoomId("123e4567-e89b-12d3-a456-426614174000")
-                .senderId(user1.getId())
-                .recipientId(user3.getId())
+                .chatRoomId(chatRoomId)
+                .senderId(user2.getId())
+                .recipientId(user1.getId())
             .build()
         );
         expectedChatRooms.add(ChatRoomDto.builder()
-            .chatRoomId("321e4567-e89b-12d3-a456-426614174000")
+            .chatRoomId(chatRoomId)
             .senderId(user1.getId())
-            .recipientId(user4.getId())
+            .recipientId(user2.getId())
             .build()
         );
 
@@ -139,23 +143,16 @@ public class ChatEndpointTest extends BaseTest{
 
         var chatrooms = new ArrayList<ChatRoomDto>();
         chatRoomsResult.forEachRemaining((chatroom) -> chatrooms.add((ChatRoomDto) chatroom));
-        /*
+
+        ChatRoomDto expectedMatch = expectedChatRooms.get(1);
+        ChatRoomDto actualMatch = chatrooms.get(0);
+
         assertAll(
-            () -> assertEquals(2, chatrooms.size()),
-            () -> {
-                for (int i = 0; i < chatrooms.size(); i++) {
-                    ChatRoomDto expectedMatch = expectedChatRooms.get(i);
-                    ChatRoomDto actualMatch = chatrooms.get(i);
-
-
-                    assertAll(
-                        () -> assertEquals(expectedMatch.getChatRoomId(), actualMatch.getChatRoomId()),
-                        () -> assertEquals(expectedMatch.getSenderId(), actualMatch.getSenderId()),
-                        () -> assertEquals(expectedMatch.getRecipientId(), actualMatch.getRecipientId())
-                    );
-                }
-            }
-        );*/
+            () -> assertEquals(1, chatrooms.size()),
+            () -> assertEquals(expectedMatch.getChatRoomId(), actualMatch.getChatRoomId()),
+            () -> assertEquals(expectedMatch.getSenderId(), actualMatch.getSenderId()),
+            () -> assertEquals(expectedMatch.getRecipientId(), actualMatch.getRecipientId())
+        );
     }
 
 
@@ -163,20 +160,21 @@ public class ChatEndpointTest extends BaseTest{
     @Test
     public void testGetChatRoomsByUserId() throws Exception {
         ApplicationUser user1 = userRepository.findApplicationUserByDetails_Email("e10000001@student.tuwien.ac.at");
-        ApplicationUser user3 = userRepository.findApplicationUserByDetails_Email("e10000003@student.tuwien.ac.at");
-        ApplicationUser user4 = userRepository.findApplicationUserByDetails_Email("e10000004@student.tuwien.ac.at");
+        ApplicationUser user2 = userRepository.findApplicationUserByDetails_Email("e10000002@student.tuwien.ac.at");
+
+        String chatRoomId = chatRoomRepository.findAll().getFirst().getChatRoomId();
 
         ArrayList<ChatRoomDto> expectedChatRooms = new ArrayList<>();
         expectedChatRooms.add(ChatRoomDto.builder()
-            .chatRoomId("123e4567-e89b-12d3-a456-426614174000")
-            .senderId(user1.getId())
-            .recipientId(user3.getId())
+            .chatRoomId(chatRoomId)
+            .senderId(user2.getId())
+            .recipientId(user1.getId())
             .build()
         );
         expectedChatRooms.add(ChatRoomDto.builder()
-            .chatRoomId("321e4567-e89b-12d3-a456-426614174000")
+            .chatRoomId(chatRoomId)
             .senderId(user1.getId())
-            .recipientId(user4.getId())
+            .recipientId(user2.getId())
             .build()
         );
 
@@ -192,23 +190,15 @@ public class ChatEndpointTest extends BaseTest{
 
         var chatrooms = new ArrayList<ChatRoomDto>();
         chatRoomsResult.forEachRemaining((chatroom) -> chatrooms.add((ChatRoomDto) chatroom));
-        /*
+
+        ChatRoomDto expectedMatch = expectedChatRooms.get(1);
+        ChatRoomDto actualMatch = chatrooms.get(0);
         assertAll(
-            () -> assertEquals(2, chatrooms.size()),
-            () -> {
-                for (int i = 0; i < chatrooms.size(); i++) {
-                    ChatRoomDto expectedMatch = expectedChatRooms.get(i);
-                    ChatRoomDto actualMatch = chatrooms.get(i);
-
-
-                    assertAll(
-                        () -> assertEquals(expectedMatch.getChatRoomId(), actualMatch.getChatRoomId()),
-                        () -> assertEquals(expectedMatch.getSenderId(), actualMatch.getSenderId()),
-                        () -> assertEquals(expectedMatch.getRecipientId(), actualMatch.getRecipientId())
-                    );
-                }
-            }
-        );*/
+            () -> assertEquals(1, chatrooms.size()),
+            () -> assertEquals(expectedMatch.getChatRoomId(), actualMatch.getChatRoomId()),
+            () -> assertEquals(expectedMatch.getSenderId(), actualMatch.getSenderId()),
+            () -> assertEquals(expectedMatch.getRecipientId(), actualMatch.getRecipientId())
+        );
     }
 
 
@@ -216,7 +206,7 @@ public class ChatEndpointTest extends BaseTest{
     @Test
     public void testGetMessagesByChatRoomId() throws Exception {
         ApplicationUser user1 = userRepository.findApplicationUserByDetails_Email("e10000001@student.tuwien.ac.at");
-        ApplicationUser user3 = userRepository.findApplicationUserByDetails_Email("e10000003@student.tuwien.ac.at");
+        ApplicationUser user2 = userRepository.findApplicationUserByDetails_Email("e10000002@student.tuwien.ac.at");
 
         // Convert LocalDate to Date
         LocalDateTime dateTime1 = LocalDateTime.of(2023, 1, 1, 0, 0);
@@ -227,28 +217,27 @@ public class ChatEndpointTest extends BaseTest{
         // Convert LocalDateTime to Date
         Date timestampMsg1 = Date.from(dateTime1.atZone(ZoneId.systemDefault()).toInstant());
         Date timestampMsg2 = Date.from(dateTime2.atZone(ZoneId.systemDefault()).toInstant());
+        String chatRoomId = chatRoomRepository.findAll().getFirst().getChatRoomId();
 
         ArrayList<ChatMessageDto> expectedChatMessages = new ArrayList<>();
         expectedChatMessages.add(ChatMessageDto.builder()
-            .chatRoomId("123e4567-e89b-12d3-a456-426614174000")
-            .senderId(user1.getId())
-            .recipientId(user3.getId())
-            .content("Hi, how are you?")
+            .chatRoomId(chatRoomId)
+            .senderId(user2.getId())
+            .recipientId(user1.getId())
+            .content("Hi User1, how are you?")
             .timestamp(timestampMsg1)
             .build()
         );
         expectedChatMessages.add(ChatMessageDto.builder()
-            .chatRoomId("123e4567-e89b-12d3-a456-426614174000")
-            .senderId(user3.getId())
-            .recipientId(user1.getId())
-            .content("I'm fine. How are you?")
+            .chatRoomId(chatRoomId)
+            .senderId(user1.getId())
+            .recipientId(user2.getId())
+            .content("Hi User2, I'm fine. How are you?")
             .timestamp(timestampMsg2)
             .build()
         );
 
-
-
-        var body = this.mockMvc.perform(get(CHAT_BASE_URI+"/room/123e4567-e89b-12d3-a456-426614174000/messages")
+        var body = this.mockMvc.perform(get(CHAT_BASE_URI+"/room/" + chatRoomId + "/messages")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
             .andExpect(status().isOk())
@@ -260,7 +249,7 @@ public class ChatEndpointTest extends BaseTest{
         var chatMessages = new ArrayList<ChatMessageDto>();
         chatMessagesResult.forEachRemaining((chatroom) -> chatMessages.add((ChatMessageDto) chatroom));
 
-        /*assertAll(
+        assertAll(
             () -> assertEquals(2, chatMessages.size()),
             () -> {
                 for (int i = 0; i < chatMessages.size(); i++) {
@@ -277,7 +266,7 @@ public class ChatEndpointTest extends BaseTest{
                     );
                 }
             }
-        );*/
+        );
 
     }
 }
