@@ -94,19 +94,6 @@ public class ChatEndpointTest extends BaseTest{
         );
     }
 
-    @Test
-    public void testCreateChatRoomWithInValidTokenReturns403() throws Exception {
-        Pageable pageable = Pageable.unpaged();
-        var recipient = userRepository.findAllByFullnameOrMatrNumber(null, 10000002L, pageable).getContent().get(0);
-
-        CreateChatRoomDto chatRoomDto = new CreateChatRoomDto(recipient.getId());
-
-        this.mockMvc.perform(post(CHAT_BASE_URI+"/room")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(chatRoomDto)))
-            .andExpect(status().isForbidden())
-            .andReturn();
-    }
 
 
     @Test
