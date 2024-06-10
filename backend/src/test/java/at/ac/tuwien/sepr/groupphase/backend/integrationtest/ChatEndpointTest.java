@@ -110,7 +110,7 @@ public class ChatEndpointTest extends BaseTest{
 
 
     @Test
-    public void testGetChatRooms() throws Exception {
+    public void testGetChatRoomsReturns1ChatRoomDto() throws Exception {
 
         ApplicationUser user1 = userRepository.findApplicationUserByDetails_Email("e10000001@student.tuwien.ac.at");
         ApplicationUser user2 = userRepository.findApplicationUserByDetails_Email("e10000002@student.tuwien.ac.at");
@@ -158,7 +158,7 @@ public class ChatEndpointTest extends BaseTest{
 
 
     @Test
-    public void testGetChatRoomsByUserId() throws Exception {
+    public void testGetChatRoomsByUserIdReturns1ChatRoomDto() throws Exception {
         ApplicationUser user1 = userRepository.findApplicationUserByDetails_Email("e10000001@student.tuwien.ac.at");
         ApplicationUser user2 = userRepository.findApplicationUserByDetails_Email("e10000002@student.tuwien.ac.at");
 
@@ -204,7 +204,7 @@ public class ChatEndpointTest extends BaseTest{
 
 
     @Test
-    public void testGetMessagesByChatRoomId() throws Exception {
+    public void testGetMessagesByChatRoomIdReturns2ChatMessages() throws Exception {
         ApplicationUser user1 = userRepository.findApplicationUserByDetails_Email("e10000001@student.tuwien.ac.at");
         ApplicationUser user2 = userRepository.findApplicationUserByDetails_Email("e10000002@student.tuwien.ac.at");
 

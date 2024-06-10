@@ -47,10 +47,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     public List<ChatRoomDto> getChatRoomsByUserId(Long userId) {
         LOGGER.trace("getChatRoomByUserId({})", userId);
 
-        // get all chat room for userId
         var chatRooms = chatRoomRepository.findAllBySenderId(userId);
 
-        // map to ChatRoomDto
         return chatRooms.stream()
             .map(chatRoomMapper::chatRoomToDto)
             .collect(Collectors.toList());
@@ -78,7 +76,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     @Override
     public ChatRoomDto getChatRoomByChatRoomId(String chatRoomId) {
         LOGGER.trace("getChatRoomByChatRoomId({})", chatRoomId);
-        
+
         List<ChatRoom> chatRooms = chatRoomRepository.findAllByChatRoomId(chatRoomId);
 
         if (chatRooms.isEmpty()) {

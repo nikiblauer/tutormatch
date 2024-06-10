@@ -53,11 +53,8 @@ public class ChatMessageDataGenerator {
             ApplicationUser user1 = chatRoom.getSender();
             ApplicationUser user2 = chatRoom.getRecipient();
 
-            // Convert LocalDate to Date
             LocalDateTime dateTime1 = LocalDateTime.of(2023, 1, 1, 0, 0);
-            // Add 1 minute to the first date to get the second date
             LocalDateTime dateTime2 = dateTime1.plusMinutes(1);
-            // Convert LocalDateTime to Date
             Date timestampMsg1 = Date.from(dateTime1.atZone(ZoneId.systemDefault()).toInstant());
             Date timestampMsg2 = Date.from(dateTime2.atZone(ZoneId.systemDefault()).toInstant());
 

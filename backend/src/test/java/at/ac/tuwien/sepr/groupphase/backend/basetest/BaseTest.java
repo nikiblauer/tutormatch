@@ -68,7 +68,7 @@ public class BaseTest {
         clearData();
     }
 
-    private void generateData() throws IOException, ValidationException {
+    private void generateData() throws IOException {
         userDataGenerator.generateApplicationUser();
         subjectDataGenerator.generateSubjects();
         userSubjectDataGenerator.generateUserSubjectRelation();

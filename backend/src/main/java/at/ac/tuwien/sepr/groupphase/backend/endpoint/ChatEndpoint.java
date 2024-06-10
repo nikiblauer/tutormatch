@@ -8,6 +8,8 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.ChatMessageService;
 import at.ac.tuwien.sepr.groupphase.backend.service.ChatRoomService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/chat")
+@Tag(name = "Chat Endpoint")
 public class ChatEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ChatRoomService chatRoomService;
@@ -40,7 +43,9 @@ public class ChatEndpoint {
         this.userService = userService;
     }
 
-    // for admin (later for reviewing chat reports)
+    @Operation(
+        description = "Gets all chatrooms for user with specified id.",
+        summary = "Gets all chatrooms for user(id)")
     @Secured("ROLE_ADMIN")
     @GetMapping("/room/user/{userId}")
     public List<ChatRoomDto> getChatRoomsByUserId(@PathVariable(name = "userId") Long userId) {
@@ -48,6 +53,9 @@ public class ChatEndpoint {
         return chatRoomService.getChatRoomsByUserId(userId);
     }
 
+    @Operation(
+        description = "Gets all chatrooms for user, identified by the token.",
+        summary = "Gets all chatrooms for user(token)")
     @Secured("ROLE_USER")
     @GetMapping("/room/user")
     public List<ChatRoomDto> getChatRooms() {
@@ -57,6 +65,9 @@ public class ChatEndpoint {
         return chatRoomService.getChatRoomsByUserId(user.getId());
     }
 
+    @Operation(
+        description = "Creates a new chatroom for user identified by token and recipient specified in dto.",
+        summary = "Creates a new chatroom")
     @Secured("ROLE_USER")
     @PostMapping("/room")
     @ResponseStatus(HttpStatus.CREATED)
@@ -67,7 +78,9 @@ public class ChatEndpoint {
         return chatRoomService.createChatRoom(user, chatRoomCreateDto);
     }
 
-    // Also access for admin -> Later used for reviewing chat reports
+    @Operation(
+        description = "Gets all messages of a chatroom with the specified id.",
+        summary = "Get all messages of chatroom")
     @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("/room/{chatRoomId}/messages")
     public List<ChatMessageDto> getMessagesByChatRoomId(@PathVariable(name = "chatRoomId") String chatRoomId) {
