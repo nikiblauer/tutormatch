@@ -374,7 +374,7 @@ public class AdminEndpointTest extends BaseTest {
         var banReason = new BanReasonDto();
         banReason.setReason("TestReason");
         String body = objectMapper.writeValueAsString(banReason);
-        Long id = subjectRepository.findAll().get(0).getId();
+        Long id = userRepository.findAll().get(0).getId();
 
         MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/users/" + id + "/ban")
                 .header("Authorization", "Bearer " + token)

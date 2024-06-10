@@ -45,17 +45,13 @@ public class RatingDataGenerator {
 
         List<UserRating> ratings = new ArrayList<>();
 
-        List<ApplicationUser> applicationUsers = userRepository.findAll();
+        List<ApplicationUser> applicationUsers = userRepository.findAll()
+            .stream().filter(item -> !item.isBanned() && item.getVerified() && !item.getAdmin())
+            .toList();
 
         Random random = new Random();
         for (int i = 0; i < applicationUsers.size(); i++) {
-            if (applicationUsers.get(i).getAdmin() || !(applicationUsers.get(i).getVerified())) {
-                continue;
-            }
             for (int j = 0; j < applicationUsers.size(); j++) {
-                if (applicationUsers.get(j).getAdmin() || !(applicationUsers.get(j).getVerified())) {
-                    continue;
-                }
                 if (i == j) {
                     continue;
                 }

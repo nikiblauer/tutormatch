@@ -10,11 +10,13 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.BanRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,17 +43,20 @@ public class CustomUserDetailService implements UserService {
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator validator;
     private final EmailSmtpService emailService;
+    private final RatingRepository ratingRepository;
 
     @Autowired
     public CustomUserDetailService(UserRepository userRepository, BanRepository banRepository,
                                    PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer,
-                                   UserValidator validator, EmailSmtpService emailService) {
+                                   UserValidator validator, EmailSmtpService emailService,
+                                   RatingRepository ratingRepository) {
         this.userRepository = userRepository;
         this.banRepository = banRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
         this.validator = validator;
         this.emailService = emailService;
+        this.ratingRepository = ratingRepository;
     }
 
     @Override
@@ -171,6 +176,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
+    @Transactional
     public void banUser(Long id, String reason) {
         LOGGER.trace("Banning user with id: {}", id);
         ApplicationUser applicationUser = userRepository.findById(id).orElse(null);
@@ -182,6 +188,9 @@ public class CustomUserDetailService implements UserService {
             // user already banned
             return;
         }
+
+        //delete ratings of student
+        ratingRepository.deleteAllByStudentId(id);
 
         Banned userBan = new Banned();
         userBan.setUser(applicationUser);
