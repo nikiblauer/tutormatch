@@ -17,17 +17,22 @@ export class WebSocketService {
   connected: boolean = false;
   private messageSubject = new Subject<any>();
 
-  constructor(private userService: UserService, private auth: AuthService) {
-    console.log(SockJS);
-    let socket = null;
-    socket = new SockJS('http://localhost:8080/ws')
-    this.stompClient = Stomp.over(socket);
-    console.log("HELLO");
-    this.connect(); // Connects the first time this class is iniated
+  constructor(private userService: UserService) {
+
   }
 
   connect() {
-    const token = this.auth.getToken(); // Assume token is stored in localStorage
+    if (this.connected){
+      return;
+    }
+    let socket = null;
+    socket = new SockJS('http://localhost:8080/ws')
+    this.stompClient = Stomp.over(socket);
+
+    const token = localStorage.getItem('authToken');
+    if (!token){
+      return;
+    }
 
     this.stompClient.connect({ 'Authorization': token}, frame => {
       console.log('Connected: ' + frame);
@@ -76,5 +81,14 @@ export class WebSocketService {
 
   onNewMessage(): Observable<any> {
     return this.messageSubject.asObservable();
+  }
+
+  disconnect() {
+    if (this.stompClient && this.connected) {
+      this.stompClient.disconnect(() => {
+        console.log('Disconnected');
+        this.connected = false;
+      });
+    }
   }
 }

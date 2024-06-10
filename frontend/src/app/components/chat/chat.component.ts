@@ -49,6 +49,7 @@ export class ChatComponent implements OnInit {
       this.messages.push(receivedMessage);
       this.scrollToBottom();
     });
+    this.webSocketService.connect();
   }
 
   onSearch() {
@@ -95,7 +96,6 @@ export class ChatComponent implements OnInit {
     this.user2 = chatRoom.recipientId;
     this.user2Name = chatRoom.recipientFirstName + " " + chatRoom.recipientLastName;
     this.loadHistory();
-    this.webSocketService.connect();
   }
 
   loadHistory() {
