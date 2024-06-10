@@ -130,6 +130,25 @@ public class UserEndpointTest extends BaseTest {
     }
 
     @Test
+    public void createUserWithExistingEmailShouldFailWith422() throws Exception {
+        StudentDto studentDto = new StudentDto();
+        studentDto.setPassword("Password123");
+        studentDto.setFirstname("test");
+        studentDto.setLastname("test");
+        studentDto.setMatrNumber(12345678L);
+        studentDto.setEmail(DEFAULT_USER_EMAIL);
+        String body = objectMapper.writeValueAsString(studentDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andExpect(status().isUnprocessableEntity())
+            .andDo(print())
+            .andReturn();
+
+    }
+
+    @Test
     public void createNewInvalidUser_422() throws Exception {
         ApplicationUser user = new ApplicationUser("", false, "", "", 123465L, new ContactDetails("+438881919190", "konsti@tuswien.ac.at", new Address("Teststraße 2", 1200, "Wien")), false);
         StudentDto studentDto = userMapper.applicationUserToDto(user);
@@ -392,14 +411,13 @@ public class UserEndpointTest extends BaseTest {
     @Test
     void testUserVerificationEndpointSetsUserToVerified() throws Exception {
         List<ApplicationUser> usersList = userRepository.findAll();
-        ApplicationUser userBefore = usersList.get(usersList.size() - 2);
+        ApplicationUser userBefore = usersList.stream().filter(item -> !item.getVerified()).toList().getFirst();
         assertFalse(userBefore.getVerified());
         String token = jwtTokenizer.buildVerificationToken(userBefore.getDetails().getEmail());
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/user/verify/" + token))
             .andExpect(status().isOk())
             .andReturn();
-        List<ApplicationUser> updatedList = userRepository.findAll();
-        ApplicationUser userAfter = updatedList.get(usersList.size() - 2);
+        ApplicationUser userAfter = userRepository.findById(userBefore.getId()).orElse(null);
         assertTrue(userAfter.getVerified());
     }
 
@@ -472,8 +490,8 @@ public class UserEndpointTest extends BaseTest {
         var traineeSubject = allUserSubjects.stream().filter(item -> item.getRole().equals("trainee") && item.getUser().equals(matchUser)).findFirst().get();
 
         var bannedUser = userRepository.findApplicationUserByDetails_Email(BANNED_USER_EMAIL);
-        userSubjectRepository.save(new UserSubject(new UserSubjectKey(bannedUser.getId(), tutorSubject.getSubject().getId()), bannedUser, tutorSubject.getSubject(),"trainee"));
-        userSubjectRepository.save(new UserSubject(new UserSubjectKey(bannedUser.getId(), traineeSubject.getSubject().getId()), bannedUser, traineeSubject.getSubject(),"tutor"));
+        userSubjectRepository.save(new UserSubject(new UserSubjectKey(bannedUser.getId(), tutorSubject.getSubject().getId()), bannedUser, tutorSubject.getSubject(), "trainee"));
+        userSubjectRepository.save(new UserSubject(new UserSubjectKey(bannedUser.getId(), traineeSubject.getSubject().getId()), bannedUser, traineeSubject.getSubject(), "tutor"));
 
 
         // Perform a GET request to the "/api/v1/user/matches" endpoint

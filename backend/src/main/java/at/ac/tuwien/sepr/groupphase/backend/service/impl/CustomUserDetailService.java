@@ -92,7 +92,7 @@ public class CustomUserDetailService implements UserService {
     public ApplicationUser create(CreateStudentDto toCreate) throws ValidationException {
         LOGGER.trace("Create user by applicationUserDto: {}", toCreate);
         validator.validateForCreate(toCreate);
-        if (!userRepository.findAllByDetails_Email(toCreate.email).isEmpty()) {
+        if (userRepository.findApplicationUserByDetails_Email(toCreate.email) != null) {
             throw new ValidationException("Email already exits please try an other one");
         }
         ContactDetails details = new ContactDetails("", toCreate.email, new Address("", 0, ""));

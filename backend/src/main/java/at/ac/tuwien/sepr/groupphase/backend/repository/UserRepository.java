@@ -14,8 +14,6 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
     ApplicationUser findApplicationUserByDetails_Email(String email);
 
-    List<ApplicationUser> findAllByDetails_Email(String email);
-
     @Query("SELECT u FROM ApplicationUser u WHERE u.admin = false "
         + "AND (:hasBan IS NULL OR (:hasBan = true AND u.ban IS NOT NULL) OR (:hasBan = false AND u.ban IS NULL)) AND "
         + "((:fullname IS NULL AND :matrNumber IS NULL) "
@@ -23,8 +21,6 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
         + "OR (LOWER(u.lastname) LIKE LOWER(CONCAT('%', :fullname, '%')) OR LOWER(:fullname) LIKE LOWER(CONCAT('%', u.lastname, '%'))) "
         + "OR CAST(u.matrNumber AS string) LIKE CONCAT('%', :matrNumber, '%'))")
     Page<ApplicationUser> findAllByFullnameOrMatrNumber(@Param("fullname") String fullname, @Param("matrNumber") Long matrNumber, @Param("hasBan") Boolean hasBan, Pageable pageable);
-
-    ApplicationUser findApplicationUsersById(Long id);
 
     @Query("SELECT s.title FROM ApplicationUser u JOIN u.userSubjects us JOIN us.subject s WHERE u.id = :userId AND us.role = :role")
     List<String> getUserSubjectsByRole(@Param("userId") Long id, @Param("role") String role);
