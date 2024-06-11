@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepr.groupphase.backend.config;
 
 
+import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Autowired
     private JwtTokenizer jwtTokenizer;
+
+    @Autowired
+    private UserService userService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -94,6 +99,25 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     // If token is missing or invalid, reject the connection
                     throw HttpClientErrorException.create(UNAUTHORIZED, "No valid JWT token provided", null, null, null);
                 }
+                if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
+                    String destination = accessor.getDestination();
+                    if(accessor.getUser() == null){
+                        throw HttpClientErrorException.create(UNAUTHORIZED, "Not yet connected!", null, null, null);
+                    }
+                    String username = accessor.getUser().getName();
+
+                    LOGGER.debug("Subscription destination: {}", destination);
+                    if (destination != null && username != null) {
+                        ApplicationUser user = userService.findApplicationUserByEmail(username);
+                        Long userId = user.getId();
+
+                        String expectedPrefix = "/user/" + userId + "/queue/messages";
+                        if (!destination.startsWith(expectedPrefix)) {
+                            throw HttpClientErrorException.create(UNAUTHORIZED, "Subscription to unauthorized destination", null, null, null);
+                        }
+                    }
+                }
+
                 return message;
             }
         });
