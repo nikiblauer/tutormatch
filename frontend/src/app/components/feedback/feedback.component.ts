@@ -2,15 +2,17 @@ import { Component } from '@angular/core';
 import {FeedbackDto} from "../../dtos/feedback";
 import {ToastrService} from "ngx-toastr";
 import {FeedbackService} from "../../services/feedback.service";
-import {NgForOf} from "@angular/common";
+import {DatePipe, NgForOf} from "@angular/common";
 import {RouterLink} from "@angular/router";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-feedback',
   standalone: true,
   imports: [
     NgForOf,
-    RouterLink
+    RouterLink,
+    DatePipe
   ],
   templateUrl: './feedback.component.html',
   styleUrl: './feedback.component.scss'
@@ -18,7 +20,7 @@ import {RouterLink} from "@angular/router";
 export class FeedbackComponent {
   public receivedFeedback: FeedbackDto[] = [];
 
-  constructor(private notification: ToastrService, private feedbackService: FeedbackService) {
+  constructor(private notification: ToastrService, private feedbackService: FeedbackService,private spinner: NgxSpinnerService) {
   }
   ngOnInit(): void {
   this.getReceivedFeedback();
@@ -38,5 +40,20 @@ export class FeedbackComponent {
         this.notification.error(error.error, "Something went wrong!");
       }
     });
+  }
+  deleteFeedback(id): void {
+    this.spinner.show();
+    this.feedbackService.deleteFeedback(id).subscribe({
+        next: () => {
+          this.spinner.hide();
+          this.getReceivedFeedback();
+        },
+        error: error => {
+          this.spinner.hide();
+          console.error("Error deleting feedback", error);
+          this.notification.error(error.error, "Something went wrong!");
+        }
+      }
+    );
   }
 }

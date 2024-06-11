@@ -15,6 +15,7 @@ import {SubjectComponent} from "./components/admin/subjects/subjects.component";
 import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
 import {RequestResetComponent} from "./components/password-reset/request-reset/request-reset.component";
 import {FeedbackComponent} from "./components/feedback/feedback.component";
+import {AdminFeedbackComponent} from "./components/admin/feedback/admin-feedback.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [AuthGuard]},
@@ -40,6 +41,7 @@ const routes: Routes = [
       {path: 'dashboard', component: DashboardComponent},
       {path: 'students', component: StudentsComponent},
       {path: 'students/:id', component: UserProfileComponent, data: {mode: UserMode.admin}},
+      {path: 'students/feedback/:id', component: AdminFeedbackComponent},
       {path: 'subjects', component: SubjectComponent}
     ]
   }

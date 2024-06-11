@@ -192,7 +192,7 @@ public class UserEndpoint {
         return mapper.mapUserAndSubjectsToUserSubjectDto(user, subjects);
     }
 
-    @Secured("ROLE_USER")
+    @PermitAll
     @GetMapping("/visibility")
     @ResponseStatus(HttpStatus.OK)
     public boolean getVisibilityOfUser() {

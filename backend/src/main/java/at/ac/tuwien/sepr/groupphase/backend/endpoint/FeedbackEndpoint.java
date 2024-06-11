@@ -41,7 +41,7 @@ public class FeedbackEndpoint {
         summary = "Add feedback.")
     @Secured("ROLE_USER")
     @PostMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public void addFeedback(@RequestBody FeedbackCreateDto feedbackCreateDto) throws Exception {
         LOGGER.info("POST /api/v1/feedback {}", feedbackCreateDto);
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();

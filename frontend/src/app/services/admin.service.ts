@@ -7,6 +7,7 @@ import { StudentSubjectInfoDto } from '../dtos/user';
 import { Page } from '../dtos/page';
 import {SubjectCreateDto, SubjectDetailDto} from "../dtos/subject";
 import { SimpleStaticticsDto, ExtendedStatisticsDto } from '../dtos/statistics';
+import {FeedbackDto} from "../dtos/feedback";
 
 @Injectable({
   providedIn: 'root'
@@ -75,5 +76,11 @@ export class AdminService {
       traineeSubjects: traineeSubjects,
       tutorSubjects: tutorSubjects
     })
+  }
+  getWrittenFeedback(id: number) {
+    return this.http.get<FeedbackDto[]>(this.baseUri + `/feedback/out` + `/${id}`);
+  }
+  deleteFeedbackById(id: number) {
+    return this.http.delete(this.baseUri + `/feedback/delete` + `/${id}`);
   }
 }

@@ -87,25 +87,24 @@ export class StarRatingComponent implements OnInit {
     if (!this.isEditable) return;
     this.spinner.show();
     this.submitted = true;
-    if (form.valid) {
-      let feedbackDto = new FeedbackDto();
-      feedbackDto.feedback = this.feedbackText;
-      feedbackDto.rated = this.ratedUserId;
-      this.feedbackService.postFeedback(feedbackDto).subscribe({
-          next: () => {
-            this.spinner.hide();
-            this.getPostedFeedback();
-            this.feedbackText = '';
-          },
-          error: error => {
-            this.spinner.hide();
-            console.error("Error posting feedback", error);
-            this.notification.error(error.error, "Something went wrong!");
-          }
+    let feedbackDto = new FeedbackDto();
+    feedbackDto.feedback = this.feedbackText;
+    feedbackDto.rated = this.ratedUserId;
+    this.feedbackService.postFeedback(feedbackDto).subscribe({
+        next: () => {
+          this.spinner.hide();
+          this.getPostedFeedback();
+          this.feedbackText = '';
+        },
+        error: error => {
+          this.spinner.hide();
+          console.error("Error posting feedback", error);
+          this.notification.error(error.error, "Something went wrong!");
         }
-      );
-    }
+      }
+    );
     this.submitted = false;
+    this.spinner.hide();
   }
   deleteFeedback(id): void {
     if (!this.isEditable) return;

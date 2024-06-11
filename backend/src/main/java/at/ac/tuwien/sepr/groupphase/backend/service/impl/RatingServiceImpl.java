@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Feedback;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserRating;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.FeedbackRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RatingService;
@@ -109,12 +110,14 @@ public class RatingServiceImpl implements RatingService {
     public void giveFeedback(FeedbackCreateDto feedbackCreateDto, long ratingUserId) throws Exception {
         LOGGER.trace("updatedRating: {}", feedbackCreateDto);
         if (Objects.equals(ratingUserId, feedbackCreateDto.rated)) {
-            throw new Exception("Cannot give feedback to your self");
+            throw new ValidationException("Cannot give feedback to your self");
         }
         if (!chatExists(ratingUserId, feedbackCreateDto.rated)) {
-            throw new Exception("A chat between the participants must exist");
+            throw new ValidationException("A chat between the participants must exist");
         }
-
+        if (feedbackCreateDto.feedback.length() < 3) {
+            throw new ValidationException("Message too short");
+        }
         Feedback feedback = new Feedback();
         feedback.setRated(feedbackCreateDto.rated);
         feedback.setRater(ratingUserId);

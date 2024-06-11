@@ -222,7 +222,7 @@ public class AdminEndpoint {
     @DeleteMapping("/feedback/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteFeedbackById(@PathVariable("id") Long id) {
-        LOGGER.info("PUT /api/v1/feedback/out/{}", id);
+        LOGGER.info("PUT /api/v1/feedback/delete/{}", id);
         ratingService.deleteFeedbackByIdAdmin(id);
     }
 }

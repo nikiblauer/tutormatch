@@ -1,0 +1,38 @@
+<div class="pt-5" *ngIf="selectedStudentDetails">
+<h2>Feedback written by User: {{selectedStudentDetails.firstname}} {{selectedStudentDetails.lastname}}</h2>
+  <br>
+  <table class="table table-striped" style="width:calc(100%)">
+  <thead>
+  <tr>
+    <th>User Details</th>
+    <th>Message</th>
+    <th>Date</th>
+    <th>Ban User</th>
+    <th>Delete</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let feedback of writtenFeedback">
+    <td style="width:0.1%;
+white-space: nowrap;
+">
+      <button class="btn btn-info custom-button" routerLink="../../{{userId}}">
+        <i class="bi bi-info-circle"></i>
+      </button>
+    </td>
+    <td >{{ feedback.feedback }}</td>
+    <td >{{ feedback.created  | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+    <td>
+      <button class="btn btn-warning custom-button">
+        <i class="bi bi-exclamation"></i>
+      </button>
+    </td>
+    <td>
+      <button class="btn btn-danger custom-button" (click)="deleteFeedback(feedback.id)">
+        <i class="bi bi-x"></i>
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</div>
