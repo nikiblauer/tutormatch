@@ -64,7 +64,7 @@ public class BaseTest {
 
 
     @AfterEach
-    public void tearDown() throws IOException {
+    public void tearDown() {
         clearData();
     }
 
