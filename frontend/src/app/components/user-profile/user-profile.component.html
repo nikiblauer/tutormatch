@@ -37,7 +37,7 @@
                         <input type="tel" id="phone" class="form-control" [(ngModel)]="user.telNr" disabled>
                     </div>
                 </div>
-                <div class="card">
+                <div class="card" *ngIf="!admin">
                     <div class="card-body text-center">
                       <div class="mb-3"> <!-- Container for the text -->
                         <h5>Toggle Visibility for matches</h5>

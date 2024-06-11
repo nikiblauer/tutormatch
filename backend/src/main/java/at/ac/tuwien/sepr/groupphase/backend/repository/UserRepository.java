@@ -27,6 +27,9 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
 
     @Query("SELECT COUNT(u) FROM ApplicationUser u WHERE u.admin = false AND u.verified = true")
     long countNonAdminUsers();
+
+    @Query("SELECT COUNT(u) FROM ApplicationUser u WHERE u.admin = false AND u.verified = false")
+    long countUnverifiedUsers();
 }
 
 

@@ -6,7 +6,7 @@ import { BannedUserDto, StudentDto, UserProfile } from '../dtos/user';
 import { StudentSubjectInfoDto } from '../dtos/user';
 import { Page } from '../dtos/page';
 import { SubjectCreateDto, SubjectDetailDto } from "../dtos/subject";
-import { SimpleStaticticsDto, ExtendedStatisticsDto } from '../dtos/statistics';
+import { SimpleStaticticsDto, ExtendedStatisticsDto, CoverageStatisticsDto } from '../dtos/statistics';
 
 @Injectable({
   providedIn: 'root'
@@ -91,5 +91,10 @@ export class AdminService {
       traineeSubjects: traineeSubjects,
       tutorSubjects: tutorSubjects
     })
+  }
+
+  getCoverageStatistics(x: number): Observable<CoverageStatisticsDto> {
+    const url = `${this.baseUri}/statistics/coverage?x=${x}`;
+    return this.http.get<CoverageStatisticsDto>(url);
   }
 }

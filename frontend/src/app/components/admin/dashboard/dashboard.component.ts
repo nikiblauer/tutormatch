@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { AdminService } from "src/app/services/admin.service";
-import { SimpleStaticticsDto, ExtendedStatisticsDto } from "src/app/dtos/statistics";
+import { SimpleStaticticsDto, ExtendedStatisticsDto, CoverageStatisticsDto } from "src/app/dtos/statistics";
 import { ToastrService } from "ngx-toastr";
 import { AuthService } from "src/app/services/auth.service";
 import { Router } from '@angular/router';
@@ -12,14 +12,16 @@ import { Router } from '@angular/router';
 })
 export class DashboardComponent implements OnInit {
   statistics: SimpleStaticticsDto;
-  statisticsListExtended: ExtendedStatisticsDto; 
-  listLimitExtendedStatistics: number = 5; //change here to get more or less statistical results 
+  statisticsListExtended: ExtendedStatisticsDto;
+  coverageStatistics: CoverageStatisticsDto;
+  listLimitExtendedStatistics: number = 5;
+  listLimitCoverageStatistics: number = 3;
 
   constructor(private adminService: AdminService, private notification: ToastrService,
     private authService: AuthService, private router: Router
   ) { }
 
-  ngOnInit() { 
+  ngOnInit() {
     if (this.authService.getUserRole() !== 'ADMIN' || !this.authService.isLoggedIn) {
       this.router.navigate(['/']);
       return;
@@ -33,7 +35,7 @@ export class DashboardComponent implements OnInit {
         console.error(error);
         this.notification.error(error.error, "Error in fetching statistics!");
       }
-  );
+    );
 
     this.adminService.getExtendedStatistics(this.listLimitExtendedStatistics).subscribe(
       data => {
@@ -44,6 +46,17 @@ export class DashboardComponent implements OnInit {
         this.notification.error(error.error, "Error in fetching extended statistics!");
       }
     );
+
+    //get coverage statistics
+    this.adminService.getCoverageStatistics(this.listLimitCoverageStatistics).subscribe(
+      data => {
+        this.coverageStatistics = { ...this.coverageStatistics, ...data };
+      },
+      error => {
+        console.error(error);
+        this.notification.error(error.error, "Error in fetching coverage statistics!");
+      }
+    )
   }
 
   getRatioClass(): string {
@@ -56,5 +69,33 @@ export class DashboardComponent implements OnInit {
       return 'text-danger';
     }
     return '';
+  }
+
+  getColorForOfferedSubject(index: number): string {
+    const tutors = Number(this.coverageStatistics.numberOfStudentsOfferedSubjects[index].split(', ')[0].split(': ')[1]);
+    const trainees = Number(this.coverageStatistics.numberOfStudentsOfferedSubjects[index].split(', ')[1].split(': ')[1]);
+    return Math.abs(tutors - trainees) > 5 ? 'red' : 'inherit';
+  }
+  
+  getColorForRequestedSubject(index: number): string {
+    const tutors = Number(this.coverageStatistics.numberOfStudentsRequestedSubjects[index].split(', ')[1].split(': ')[1]);
+    const trainees = Number(this.coverageStatistics.numberOfStudentsRequestedSubjects[index].split(', ')[0].split(': ')[1]);
+    return Math.abs(tutors - trainees) > 5 ? 'red' : 'inherit';
+  }
+
+  getNumberOfTutorsForOfferedSubject(index: number): number {
+    return Number(this.coverageStatistics.numberOfStudentsOfferedSubjects[index].split(', ')[0].split(': ')[1]);
+  }
+
+  getNumberOfTraineesForOfferedSubject(index: number): number {
+    return Number(this.coverageStatistics.numberOfStudentsOfferedSubjects[index].split(', ')[1].split(': ')[1]);
+  }
+
+  getNumberOfTutorsForRequestedSubject(index: number): number {
+    return Number(this.coverageStatistics.numberOfStudentsRequestedSubjects[index].split(', ')[1].split(': ')[1]);
+  }
+
+  getNumberOfTraineesForRequestedSubject(index: number): number {
+    return Number(this.coverageStatistics.numberOfStudentsRequestedSubjects[index].split(', ')[0].split(': ')[1]);
   }
 }

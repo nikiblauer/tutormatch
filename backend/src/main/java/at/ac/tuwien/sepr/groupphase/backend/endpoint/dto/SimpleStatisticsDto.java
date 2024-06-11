@@ -9,6 +9,8 @@ public class SimpleStatisticsDto {
 
     private int registeredVerifiedUsers;
 
+    private int registeredUnverifiedUsers;
+
     private double ratioOfferedNeededSubjects;
 
     private double openChatsPerUser;
