@@ -33,5 +33,4 @@ public class UserSubject {
     private Subject subject;
     @Column(nullable = false, length = 255)
     private String role;
-
 }

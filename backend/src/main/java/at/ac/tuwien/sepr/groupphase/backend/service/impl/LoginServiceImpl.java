@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.exception.BannedUserException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.UnverifiedAccountException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -61,17 +62,20 @@ public class LoginServiceImpl implements LoginService {
             userService.resendVerificationEmail(userLoginDto.getEmail());
             throw new UnverifiedAccountException("Account is not verified yet. Please verify your account to log in.");
         }
+        if (applicationUser.isBanned()) {
+            throw new BannedUserException("This user account is blocked!");
+        }
         if (userDetails != null
-                && userDetails.isAccountNonExpired()
-                && userDetails.isAccountNonLocked()
-                && userDetails.isCredentialsNonExpired()
-                && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
-                && applicationUser.getVerified()
+            && userDetails.isAccountNonExpired()
+            && userDetails.isAccountNonLocked()
+            && userDetails.isCredentialsNonExpired()
+            && passwordEncoder.matches(userLoginDto.getPassword(), userDetails.getPassword())
+            && applicationUser.getVerified()
         ) {
             List<String> roles = userDetails.getAuthorities()
-                                     .stream()
-                                     .map(GrantedAuthority::getAuthority)
-                                     .toList();
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
             return jwtTokenizer.getAuthToken(userDetails.getUsername(), roles);
         }
         throw new BadCredentialsException("Username or password is incorrect");
@@ -83,9 +87,9 @@ public class LoginServiceImpl implements LoginService {
         try {
             UserDetails userDetails = userService.loadUserByUsername(email);
             if (userDetails != null
-                    && userDetails.isAccountNonExpired()
-                    && userDetails.isAccountNonLocked()
-                    && userDetails.isCredentialsNonExpired()
+                && userDetails.isAccountNonExpired()
+                && userDetails.isAccountNonLocked()
+                && userDetails.isCredentialsNonExpired()
             ) {
                 ApplicationUser applicationUser = userService.findApplicationUserByEmail(email);
                 emailService.sendPasswordResetEmail(applicationUser);
@@ -102,9 +106,9 @@ public class LoginServiceImpl implements LoginService {
         try {
             UserDetails userDetails = userService.loadUserByUsername(tokenEmail);
             if (userDetails != null
-                    && userDetails.isAccountNonExpired()
-                    && userDetails.isAccountNonLocked()
-                    && userDetails.isCredentialsNonExpired()
+                && userDetails.isAccountNonExpired()
+                && userDetails.isAccountNonLocked()
+                && userDetails.isCredentialsNonExpired()
             ) {
                 ApplicationUser applicationUser = userService.findApplicationUserByEmail(tokenEmail);
                 validator.validatePasswordChange(resetDto, applicationUser.getPassword());

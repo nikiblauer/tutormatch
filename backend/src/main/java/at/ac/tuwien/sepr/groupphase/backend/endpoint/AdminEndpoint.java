@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackCreateDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.BanReasonDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CoverageSubjectsStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
@@ -10,6 +12,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectsListDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TopStatisticsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserBanDetailsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.SubjectMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -79,8 +82,21 @@ public class AdminEndpoint {
     public Page<StudentDto> searchUsers(
         @RequestParam(name = "fullname", required = false) String fullname,
         @RequestParam(name = "matrNumber", required = false) Long matrNumber,
+        @RequestParam(name = "status", required = false) String status,
         Pageable pageable) {
-        Page<ApplicationUser> pageOfUsers = userService.queryUsers(fullname, matrNumber, pageable);
+        Boolean hasBan = null;
+
+        if (status != null) {
+            String compareStatus = status.toLowerCase().trim();
+            if (compareStatus.equals("banned")) {
+                hasBan = true;
+            }
+            if (compareStatus.equals("active")) {
+                hasBan = false;
+            }
+        }
+
+        Page<ApplicationUser> pageOfUsers = userService.queryUsers(fullname, matrNumber, hasBan, pageable);
         return pageOfUsers.map(userMapper::applicationUserToDto);
     }
 
@@ -90,7 +106,7 @@ public class AdminEndpoint {
     @Secured("ROLE_ADMIN")
     @GetMapping("/users/{id}")
     public StudentSubjectInfoDto getUserDetails(@PathVariable(name = "id") Long id) {
-        LOGGER.info("PUT /api/v1/admin/users/{}", id);
+        LOGGER.info("GET /api/v1/admin/users/{}", id);
         ApplicationUser user = userService.findApplicationUserById(id);
         StudentSubjectInfoDto resultingUser = userMapper.applicationUserToSubjectsDto(user);
 
@@ -117,8 +133,27 @@ public class AdminEndpoint {
     }
 
     @Operation(
-        description = "Create a new subject given a certain scheme",
-        summary = "Create Subject")
+        description = "Create a ban entry for a user",
+        summary = "Ban User")
+    @Secured("ROLE_ADMIN")
+    @PostMapping("/users/{id}/ban")
+    public void banUser(@PathVariable(name = "id") Long id, @RequestBody @Valid BanReasonDto reason) {
+        LOGGER.info("POST /users/{}/ban with reason: {}", id, reason);
+        userService.banUser(id, reason.getReason());
+    }
+
+    @Operation(
+        description = "Get info of banned user.",
+        summary = "Get Banned User")
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/users/{id}/ban")
+    public UserBanDetailsDto getBanUser(@PathVariable(name = "id") Long id) {
+        var ban = userService.getBanForUser(id);
+        var user = userService.findApplicationUserById(id);
+
+        return userMapper.mapToUserBanDetailsDto(user, ban);
+    }
+
     @Secured("ROLE_ADMIN")
     @PostMapping("/subject")
     public SubjectDetailDto createSubject(@Valid @RequestBody SubjectCreateDto subjectDetailDto) throws ValidationException {
@@ -187,7 +222,7 @@ public class AdminEndpoint {
         description = "Gets a extended list of statistics, like how many subjects are needed and offered currently.",
         summary = "Get top Statistics from backend.")
     @Secured("ROLE_ADMIN")
-    @GetMapping(value = "/statistics/extended")
+    @GetMapping("/statistics/extended")
     public TopStatisticsDto getExtendedStatisticsList(@RequestParam(name = "x") int x) {
         LOGGER.info("GET /api/v1/admin/statistics/extended");
         return statisticService.getExtendedStatistics(x);
@@ -224,5 +259,14 @@ public class AdminEndpoint {
     public void deleteFeedbackById(@PathVariable("id") Long id) {
         LOGGER.info("PUT /api/v1/feedback/delete/{}", id);
         ratingService.deleteFeedbackByIdAdmin(id);
+    }
+
+    @Operation(description = "Get the statistics of which subjects have a lot of trainees but no coverage which means no one is offering this subjects.",
+        summary = "Get coverage subjects statistics"
+    )
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/statistics/coverage")
+    public CoverageSubjectsStatisticsDto getCoverageSubjectsStatistics(@RequestParam(name = "x", defaultValue = "5") int x) {
+        return statisticService.getCoverageSubjectsStatistics(x);
     }
 }

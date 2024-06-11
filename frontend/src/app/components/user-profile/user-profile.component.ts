@@ -5,10 +5,10 @@ import { UserProfile, Subject, StudentDto } from 'src/app/dtos/user';
 import { HttpErrorResponse } from '@angular/common/http';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Subject as RxSubject } from 'rxjs';
-import {ToastrService} from "ngx-toastr";
-import {NgxSpinnerService} from "ngx-spinner";
-import {AdminService} from "../../services/admin.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import { ToastrService } from "ngx-toastr";
+import { NgxSpinnerService } from "ngx-spinner";
+import { AdminService } from "../../services/admin.service";
+import { ActivatedRoute, Router } from "@angular/router";
 
 export enum UserMode {
   admin,
@@ -67,7 +67,9 @@ export class UserProfileComponent implements OnInit {
     });
     this.updateUser()
     this.searchSubjects();
-    this.getVisibility();
+    if (!this.admin) {
+      this.getVisibility();
+    }
     this.searchSubject$.pipe(
       debounceTime(300),
       distinctUntilChanged()
@@ -140,7 +142,7 @@ export class UserProfileComponent implements OnInit {
   saveProfile(): void {
       this.spinner.show();
       if (this.mode == UserMode.admin){
-        this.adminService.addSubjectToUser(this.id, this.userOffer.map(item => item.id), this.userNeed.map(item => item.id))
+        this.adminService.addSubjectToUser(this.id, this.userNeed.map(item => item.id), this.userOffer.map(item => item.id))
           .subscribe({
             next: _ => {
               this.spinner.hide();
@@ -153,7 +155,7 @@ export class UserProfileComponent implements OnInit {
             complete: () => this.notification.success("Successfully updated user subjects for user " + this.user.id, "Updated user subjects!")
           });
       } else {
-        this.userService.addSubjectToUser(this.userOffer.map(item => item.id), this.userNeed.map(item => item.id))
+        this.userService.addSubjectToUser(this.userNeed.map(item => item.id), this.userOffer.map(item => item.id))
           .subscribe({
             next: _ => {
               this.spinner.hide();
@@ -165,7 +167,7 @@ export class UserProfileComponent implements OnInit {
             },
             complete: () => this.notification.success("Successfully updated user subjects", "Updated user subjects!")
         });
-      }
+    }
   }
 
   updateInfo(): void {
@@ -192,20 +194,20 @@ export class UserProfileComponent implements OnInit {
 
     } else {
       this.userService.updateUser(this.editedUser)
-      .subscribe({
-        next: _ => {
-          clearTimeout(timeout);
-          this.spinner.hide();
-          this.updateUser()
-          this.userInfoChanged = false;
-        },
-        error: (e) => {
-          clearTimeout(timeout);
-          this.spinner.hide();
-          this.handleError(e);
-        },
-        complete: () => this.notification.success("Successfully updated user information!", "Updated user information!")
-      });
+        .subscribe({
+          next: _ => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            this.updateUser()
+            this.userInfoChanged = false;
+          },
+          error: (e) => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            this.handleError(e);
+          },
+          complete: () => this.notification.success("Successfully updated user information!", "Updated user information!")
+        });
     }
   }
 
@@ -221,11 +223,11 @@ export class UserProfileComponent implements OnInit {
             this.spinner.hide();
             this.loadUser = true;
             this.user = userProfile;
-            this.userOffer = userProfile.subjects.filter(item => item.role == "trainee");
-            this.userNeed = userProfile.subjects.filter(item => item.role == "tutor");
+            this.userOffer = userProfile.subjects.filter(item => item.role == "tutor");
+            this.userNeed = userProfile.subjects.filter(item => item.role == "trainee");
             this.userAddress = StudentDto.getAddressAsString(userProfile);
             this.editedUser = { ...this.user };
-            this.user.id  = this.id;
+            this.user.id = this.id;
             this.updateFilterSubjects();
           },
           error: (e) => {
@@ -242,8 +244,8 @@ export class UserProfileComponent implements OnInit {
           this.spinner.hide();
           this.loadUser = true;
           this.user = userProfile;
-          this.userOffer = userProfile.subjects.filter(item => item.role == "trainee");
-          this.userNeed = userProfile.subjects.filter(item => item.role == "tutor");
+          this.userOffer = userProfile.subjects.filter(item => item.role == "tutor");
+          this.userNeed = userProfile.subjects.filter(item => item.role == "trainee");
           this.userAddress = StudentDto.getAddressAsString(userProfile);
           this.editedUser = { ...this.user };
           this.user.id  = this.id;
@@ -301,7 +303,7 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
-  public get admin(){
+  public get admin() {
     switch (this.mode) {
       case UserMode.admin:
         return 1;
@@ -312,7 +314,7 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
-  public updateVisibility(){
+  public updateVisibility() {
     this.visible = !this.visible;
     this.userService.updateVisibility(this.visible).subscribe({
       error: (e) => {
@@ -321,7 +323,7 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  private getVisibility(){
+  private getVisibility() {
     this.userService.getVisibility().subscribe({
       next: visibility => {
         this.visible = visibility;

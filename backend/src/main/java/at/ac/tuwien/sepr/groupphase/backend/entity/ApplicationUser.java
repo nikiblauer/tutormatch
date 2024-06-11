@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -37,6 +39,14 @@ public class ApplicationUser {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserSubject> userSubjects;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Setter
+    private Banned ban;
+
+    public boolean isBanned() {
+        return ban != null;
+    }
 
     public ApplicationUser() {
     }

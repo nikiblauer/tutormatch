@@ -1,7 +1,16 @@
 .card {
-  margin-bottom: 20px;
   border-radius: 10px;
-  box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+  box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
+  display: flex; 
+  flex-direction: column; 
+  height: 100%;  
+  margin-bottom: 1rem;
+}
+
+.card .card-body {
+  flex-grow: 1; 
+  display: flex;
+  flex-direction: column;
 }
 
 .card .card-body .card-text {
@@ -10,8 +19,11 @@
 }
 
 .card-title {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .list-group-item {
@@ -30,4 +42,18 @@
 
 .text-danger {
   color: red;
-} 
+}
+
+.fixed-height-card-top {
+  height: 320px;
+  overflow: auto;
+}
+
+.fixed-height-card-coverage {
+  height: 300px;
+  overflow: auto;
+}
+
+.padding{
+  padding-top: 10px!important;
+}

@@ -3,16 +3,19 @@ package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.basetest.TestUtils;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.BanReasonDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CoverageSubjectsStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TopStatisticsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserBanDetailsDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.helper.RestResponsePage;
+import at.ac.tuwien.sepr.groupphase.backend.repository.BanRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,14 +33,19 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.ADMIN_EMAIL;
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER_EMAIL;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -61,6 +69,9 @@ public class AdminEndpointTest extends BaseTest {
 
     @Autowired
     private SubjectRepository subjectRepository;
+
+    @Autowired
+    private BanRepository banRepository;
 
     @Test
     void testQueryUser2Surname2() throws Exception {
@@ -123,8 +134,8 @@ public class AdminEndpointTest extends BaseTest {
             () -> assertEquals("+43660 1111111", returnedUser.getTelNr()),
             () -> assertEquals(1000, returnedUser.getAreaCode()),
             () -> assertEquals("Wien", returnedUser.getCity()),
-            () -> assertEquals("[Advanced Information Retrieval, Advanced Model Engineering, Advanced Model Engineering, Advanced Modeling and Simulation]", Arrays.toString(returnedUser.getTutorSubjects())),
-            () -> assertEquals("[3D Vision, 3D Vision, AKNUM Reinforcement Learning, Abstrakte Maschinen]", Arrays.toString(returnedUser.getTraineeSubjects()))
+            () -> assertEquals("[Advanced Information Retrieval, Advanced Model Engineering, Advanced Model Engineering, Advanced Modeling and Simulation, Critical Design]", Arrays.toString(returnedUser.getTutorSubjects())),
+            () -> assertEquals("[3D Vision, 3D Vision, AKNUM Reinforcement Learning, Abstrakte Maschinen, Parallel Computing]", Arrays.toString(returnedUser.getTraineeSubjects()))
         );
     }
 
@@ -141,6 +152,7 @@ public class AdminEndpointTest extends BaseTest {
         expectedRole.add("ROLE_USER");
         return TestUtils.validLoginTest(mockMvc, loginData, expectedRole, DEFAULT_USER_EMAIL, securityProperties);
     }
+
     @Test
     void CreateNewValidSubjectReturnsSubject_200() throws Exception {
         // get the first user from the database
@@ -237,10 +249,10 @@ public class AdminEndpointTest extends BaseTest {
         String token = loginAsAdmin();
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users/" + id)
-                                                  .header("Authorization", "Bearer " + token)
-                                                  .contentType(MediaType.APPLICATION_JSON))
-                                  .andExpect(status().isOk())
-                                  .andReturn();
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
         String responseBody = mvcResult.getResponse().getContentAsString();
         StudentSubjectInfoDto returnedUser = objectMapper.readValue(responseBody, StudentSubjectInfoDto.class);
         assertAll(
@@ -270,11 +282,11 @@ public class AdminEndpointTest extends BaseTest {
         String token = loginAsAdmin();
 
         MvcResult mvcResult = mockMvc.perform(put("/api/v1/admin/users/update")
-                                                  .header("Authorization", "Bearer " + token)
-                                                  .contentType(MediaType.APPLICATION_JSON)
-                                                  .content(objectMapper.writeValueAsString(updatedUser)))
-                                  .andExpect(status().isOk())
-                                  .andReturn();
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedUser)))
+            .andExpect(status().isOk())
+            .andReturn();
 
         String responseBody = mvcResult.getResponse().getContentAsString();
         UpdateStudentAsAdminDto returnedUser = objectMapper.readValue(responseBody, UpdateStudentAsAdminDto.class);
@@ -304,10 +316,10 @@ public class AdminEndpointTest extends BaseTest {
         String token = loginAsUser();
 
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users/" + id)
-                                                  .header("Authorization", "Bearer " + token)
-                                                  .contentType(MediaType.APPLICATION_JSON))
-                                  .andExpect(status().isForbidden())
-                                  .andReturn();
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden())
+            .andReturn();
     }
 
     @Test
@@ -323,7 +335,7 @@ public class AdminEndpointTest extends BaseTest {
         SimpleStatisticsDto returnedStatistics = objectMapper.readValue(responseBody, SimpleStatisticsDto.class);
 
         assertAll("Statistics",
-            () -> assertEquals(9, returnedStatistics.getRegisteredVerifiedUsers()),
+            () -> assertEquals(10, returnedStatistics.getRegisteredVerifiedUsers()),
             () -> assertEquals(1.0, returnedStatistics.getRatioOfferedNeededSubjects(), 0.01) // delta is used to compare doubles
         );
     }
@@ -340,24 +352,119 @@ public class AdminEndpointTest extends BaseTest {
         String responseBody = mvcResult.getResponse().getContentAsString();
         TopStatisticsDto returnedStatistics = objectMapper.readValue(responseBody, TopStatisticsDto.class);
 
-        List<String> top5OfferedSubjects = Arrays.asList(
-            "SE Advanced Model Engineering", "VU Advanced Modeling and Simulation", "PR Advanced Software Engineering",
-            "VU Advanced Information Retrieval", "VU Advanced Model Engineering"
+        List<String> expectedOfferedSubjects = Arrays.asList(
+            "193.150 VU Critical Design (2024S)",
+            "188.953 SE Advanced Model Engineering (2024S)",
+            "194.056 VU Advanced Modeling and Simulation (2024S)",
+            "183.243 PR Advanced Software Engineering (2024S)",
+            "188.980 VU Advanced Information Retrieval (2024S)"
         );
-        List<String> top5NeededSubjects = Arrays.asList(
-            "VU Advanced Modeling and Simulation","PR Advanced Software Engineering",
-            "PR Advanced Software Engineering","SE Advanced Model Engineering","VU Advanced Model Engineering"
+        List<String> expectedNeededSubjects = Arrays.asList(
+            "184.710 VU Parallel Computing (2024S)",
+            "194.056 VU Advanced Modeling and Simulation (2024S)",
+            "188.910 PR Advanced Software Engineering (2024S)",
+            "183.243 PR Advanced Software Engineering (2024S)",
+            "188.952 VU Advanced Model Engineering (2024S)"
+        );
+        List<String> alternativeExpectedNeededSubjects = Arrays.asList(
+            "184.710 VU Parallel Computing (2024S)",
+            "194.056 VU Advanced Modeling and Simulation (2024S)",
+            "188.910 PR Advanced Software Engineering (2024S)",
+            "183.243 PR Advanced Software Engineering (2024S)",
+            "188.953 SE Advanced Model Engineering (2024S)"
         );
 
-        List<Integer> top5OfferedAmount = Arrays.asList(4, 4, 4, 3, 3);
-        List<Integer> top5NeededAmount = Arrays.asList(4, 4, 4, 3, 3);
+        List<Integer> top5OfferedAmount = Arrays.asList(9, 4, 4, 4, 3);
+        List<Integer> top5NeededAmount = Arrays.asList(9, 4, 4, 4, 3);
         assertAll("Statistics",
             () -> assertEquals(5, returnedStatistics.getTopXofferedSubjects().size()),
             () -> assertEquals(5, returnedStatistics.getTopXneededSubjects().size()),
             () -> assertEquals(top5OfferedAmount, returnedStatistics.getTopXofferedAmount()),
             () -> assertEquals(top5NeededAmount, returnedStatistics.getTopXneededAmount()),
-            () -> assertThat(returnedStatistics.getTopXofferedSubjects(), containsInAnyOrder(top5OfferedSubjects.toArray())),
-            () -> assertThat(returnedStatistics.getTopXneededSubjects(), containsInAnyOrder(top5NeededSubjects.toArray()))
+            () -> assertThat(returnedStatistics.getTopXofferedSubjects(), containsInAnyOrder(expectedOfferedSubjects.toArray())),
+            () -> assertThat(returnedStatistics.getTopXneededSubjects(), anyOf(containsInAnyOrder(expectedNeededSubjects.toArray()), containsInAnyOrder(alternativeExpectedNeededSubjects.toArray())))
+        );
+    }
+
+    @Test
+    public void testGetCoverageSubjectsStatistics() throws Exception {
+        // Arrange
+        int x = 5;
+        String expectedMostRequestedSubject = "184.710 VU Parallel Computing (2024S)";
+        String expectedMostOfferedSubject = "193.150 VU Critical Design (2024S)";
+        String expectedMostRequestedSubjectAmount = "Trainees: 9, Tutors: 0";
+        String expectedMostOfferedSubjectAmount = "Trainees: 9, Tutors: 0";
+
+        // Act
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/statistics/coverage")
+                .param("x", String.valueOf(x))
+                .header("Authorization", "Bearer " + loginAsAdmin())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        // Assert
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        CoverageSubjectsStatisticsDto returnedStatistics = objectMapper.readValue(responseBody, CoverageSubjectsStatisticsDto.class);
+
+        assertEquals(expectedMostRequestedSubject, returnedStatistics.getMostRequestedSubjectsWithoutCoverage().get(0));
+        assertEquals(expectedMostOfferedSubject, returnedStatistics.getMostOfferedSubjectsWithoutCoverage().get(0));
+        assertEquals(expectedMostRequestedSubjectAmount, returnedStatistics.getNumberOfStudentsRequestedSubjects().get(0));
+        assertEquals(expectedMostOfferedSubjectAmount, returnedStatistics.getNumberOfStudentsRequestedSubjects().get(0));
+    }
+
+    @Test
+    void testBanUser() throws Exception {
+        String token = loginAsAdmin();
+        var banReason = new BanReasonDto();
+        banReason.setReason("TestReason");
+        String body = objectMapper.writeValueAsString(banReason);
+        Long id = userRepository.findAll().get(0).getId();
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/users/" + id + "/ban")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        assertNotNull(banRepository.getBanByUserId(id));
+        assertEquals("TestReason", banRepository.getBanByUserId(id).getReason());
+    }
+
+    @Test
+    void testBanUser_ShouldFailWith400() throws Exception {
+        String token = loginAsAdmin();
+        var banReason = new BanReasonDto();
+        String body = objectMapper.writeValueAsString(banReason);
+        Long id = subjectRepository.findAll().get(0).getId();
+
+        MvcResult mvcResult = mockMvc.perform(post("/api/v1/admin/users/" + id + "/ban")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andExpect(status().isBadRequest())
+            .andReturn();
+    }
+
+    @Test
+    void testGetBanUserInfo() throws Exception {
+        var id = userRepository.findAll().stream().filter(item -> item.isBanned()).findFirst().get().getId();
+        var expectedBan = banRepository.getBanByUserId(id);
+
+        String token = loginAsAdmin();
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users/" + id + "/ban")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        var banDetails = objectMapper.readValue(responseBody, UserBanDetailsDto.class);
+        assertAll("BannedUser",
+            () -> assertEquals(expectedBan.getReason(), banDetails.getReason()),
+            () -> assertEquals(expectedBan.getBanDate(), banDetails.getBanDate()),
+            () -> assertEquals(id, banDetails.getId())
         );
     }
 }
