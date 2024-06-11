@@ -33,7 +33,7 @@ public interface UserSubjectRepository extends JpaRepository<UserSubject, UserSu
     long countSubjectsNeeded();
 
     @Query(value =
-        "SELECT CONCAT_WS(' ', s.type, s.title) "
+        "SELECT CONCAT(s.number, ' ', s.type, ' ', s.title, ' ', '(', s.semester, ')') "
             + "FROM Subject s "
             + "JOIN UserSubject us ON us.subject.id = s.id "
             + "LEFT JOIN Banned b ON us.user.id = b.user.id "
@@ -44,7 +44,7 @@ public interface UserSubjectRepository extends JpaRepository<UserSubject, UserSu
     List<String> getTopXofferedSubjects(@Param("x") int x);
 
     @Query(value =
-        "SELECT CONCAT_WS(' ', s.type, s.title) "
+        "SELECT CONCAT(s.number, ' ', s.type, ' ', s.title, ' ', '(', s.semester, ')') "
             + "FROM Subject s "
             + "JOIN UserSubject us ON us.subject.id = s.id "
             + "LEFT JOIN Banned b ON us.user.id = b.user.id "
@@ -73,5 +73,61 @@ public interface UserSubjectRepository extends JpaRepository<UserSubject, UserSu
             + "ORDER BY COUNT(us.subject) DESC, us.subject.title ASC "
             + "LIMIT :x")
     List<Integer> getTopXneededAmount(@Param("x") int x);
+
+    @Query(value =
+        "SELECT CONCAT(s.number, ' ', s.type, ' ', s.title, ' ', '(', s.semester, ')') "
+            + "FROM Subject s "
+            + "JOIN UserSubject us ON us.subject.id = s.id "
+            + "LEFT JOIN Banned b ON us.user.id = b.user.id "
+            + "WHERE us.role = 'trainee' AND b.id IS NULL "
+            + "GROUP BY s.id "
+            + "HAVING ABS(COUNT(us.subject) - (SELECT COUNT(us2.subject) FROM UserSubject us2 "
+            + "WHERE us2.role = 'tutor' AND us2.subject.id = s.id)) >= 1 "
+            + "ORDER BY ABS(COUNT(us.subject) - (SELECT COUNT(us2.subject) FROM UserSubject us2 "
+            + "WHERE us2.role = 'tutor' AND us2.subject.id = s.id)) DESC "
+            + "LIMIT :x")
+    List<String> getMostRequestedSubjectsWithoutCoverage(@Param("x") int x);
+
+    @Query(value =
+        "SELECT CONCAT(s.number, ' ', s.type, ' ', s.title, ' ', '(', s.semester, ')') "
+            + "FROM Subject s "
+            + "JOIN UserSubject us ON us.subject.id = s.id "
+            + "LEFT JOIN Banned b ON us.user.id = b.user.id "
+            + "WHERE us.role = 'tutor' and b.id IS NULL "
+            + "GROUP BY s.id "
+            + "HAVING ABS(COUNT(us.subject) - (SELECT COUNT(us2.subject) FROM UserSubject us2 "
+            + "WHERE us2.role = 'trainee' AND us2.subject.id = s.id)) >= 1 "
+            + "ORDER BY ABS(COUNT(us.subject) - (SELECT COUNT(us2.subject) FROM UserSubject us2 "
+            + "WHERE us2.role = 'trainee' AND us2.subject.id = s.id)) DESC "
+            + "LIMIT :x")
+    List<String> getMostOfferedSubjectsWithoutCoverage(@Param("x") int x);
+
+    @Query(value =
+        "SELECT CONCAT('Trainees: ', COUNT(us.subject), ', Tutors: ', (SELECT COUNT(us2.subject) FROM UserSubject us2 WHERE us2.role = 'tutor' AND us2.subject.id = s.id)) "
+            + "FROM Subject s "
+            + "JOIN UserSubject us ON us.subject.id = s.id "
+            + "LEFT JOIN Banned b ON us.user.id = b.user.id "
+            + "WHERE us.role = 'trainee' AND b.id IS NULL "
+            + "GROUP BY s.id "
+            + "HAVING ABS(COUNT(us.subject) - (SELECT COUNT(us2.subject) FROM UserSubject us2 "
+            + "WHERE us2.role = 'tutor' AND us2.subject.id = s.id)) >= 1 "
+            + "ORDER BY ABS(COUNT(us.subject) - (SELECT COUNT(us2.subject) FROM UserSubject us2 "
+            + "WHERE us2.role = 'tutor' AND us2.subject.id = s.id)) DESC "
+            + "LIMIT :x")
+    List<String> getMostRequestedSubjectsWithoutCoverageAmount(@Param("x") int x);
+
+    @Query(value =
+        "SELECT CONCAT('Tutors: ', COUNT(us.subject), ', Trainees: ', (SELECT COUNT(us2.subject) FROM UserSubject us2 WHERE us2.role = 'trainee' AND us2.subject.id = s.id)) "
+            + "FROM Subject s "
+            + "JOIN UserSubject us ON us.subject.id = s.id "
+            + "LEFT JOIN Banned b ON us.user.id = b.user.id "
+            + "WHERE us.role = 'tutor' AND b.id IS NULL "
+            + "GROUP BY s.id "
+            + "HAVING ABS(COUNT(us.subject) - (SELECT COUNT(us2.subject) FROM UserSubject us2 "
+            + "WHERE us2.role = 'trainee' AND us2.subject.id = s.id)) >= 1 "
+            + "ORDER BY ABS(COUNT(us.subject) - (SELECT COUNT(us2.subject) FROM UserSubject us2 "
+            + "WHERE us2.role = 'trainee' AND us2.subject.id = s.id)) DESC "
+            + "LIMIT :x")
+    List<String> getMostOfferedSubjectsWithoutCoverageAmount(@Param("x") int x);
 }
 

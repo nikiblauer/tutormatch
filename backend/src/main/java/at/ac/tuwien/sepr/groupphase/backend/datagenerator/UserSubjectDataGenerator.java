@@ -70,6 +70,22 @@ public class UserSubjectDataGenerator {
             i++;
         }
 
+        // Add a subject that is requested by all users but no one offers
+        Subject requestedSubject = subjects.get(178); //Parallel Computing
+        for (ApplicationUser applicationUser : userRepository.findAll()) {
+            if (!applicationUser.getAdmin() && applicationUser.getVerified()) {
+                userSubjects.add(getUserSubject(applicationUser.getId(), requestedSubject.getId(), "trainee"));
+            }
+        }
+
+        // Add a subject that is offered by all users but no one requests
+        Subject offeredSubject = subjects.get(61); //Critical Design
+        for (ApplicationUser applicationUser : userRepository.findAll()) {
+            if (!applicationUser.getAdmin() && applicationUser.getVerified()) {
+                userSubjects.add(getUserSubject(applicationUser.getId(), offeredSubject.getId(), "tutor"));
+            }
+        }
+
         userSubjectRepository.saveAll(userSubjects);
         log.info("User-subject relations generation completed.");
     }

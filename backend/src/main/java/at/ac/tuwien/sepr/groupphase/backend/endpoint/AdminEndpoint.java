@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.BanReasonDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CoverageSubjectsStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
@@ -22,6 +23,7 @@ import at.ac.tuwien.sepr.groupphase.backend.service.SubjectService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -216,9 +218,19 @@ public class AdminEndpoint {
         description = "Gets a extended list of statistics, like how many subjects are needed and offered currently.",
         summary = "Get top Statistics from backend.")
     @Secured("ROLE_ADMIN")
-    @GetMapping(value = "/statistics/extended")
+    @GetMapping("/statistics/extended")
     public TopStatisticsDto getExtendedStatisticsList(@RequestParam(name = "x") int x) {
         LOGGER.info("GET /api/v1/admin/statistics/extended");
         return statisticService.getExtendedStatistics(x);
+    }
+
+    @Operation(
+        description = "Get the statistics of which subjects have a lot of trainees but no coverage which means no one is offering this subjects.",
+        summary = "Get coverage subjects statistics"
+    )
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/statistics/coverage")
+    public CoverageSubjectsStatisticsDto getCoverageSubjectsStatistics(@RequestParam(name = "x", defaultValue = "5") int x) {
+        return statisticService.getCoverageSubjectsStatistics(x);
     }
 }
