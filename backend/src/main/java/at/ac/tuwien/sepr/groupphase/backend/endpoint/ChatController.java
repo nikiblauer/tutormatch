@@ -43,7 +43,7 @@ public class ChatController {
         Long authenticatedUserId = userService.findApplicationUserByEmail(authenticatedUsername).getId();
         ApplicationUser dtoUser = userService.findApplicationUserById(chatMessageDto.getSenderId());
 
-        if (!authenticatedUsername.equals(dtoUser.getDetails().getEmail())) { // Assuming you have a senderUsername field in ChatMessageDto
+        if (!authenticatedUsername.equals(dtoUser.getDetails().getEmail())) {
             LOGGER.warn("Sender does not match authenticated user.");
             throw new InvalidMessageException("Sender does not match authenticated user.", authenticatedUserId);
         }
