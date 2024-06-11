@@ -101,7 +101,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 }
                 if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
                     String destination = accessor.getDestination();
-                    if(accessor.getUser() == null){
+                    if (accessor.getUser() == null) {
                         throw HttpClientErrorException.create(UNAUTHORIZED, "Not yet connected!", null, null, null);
                     }
                     String username = accessor.getUser().getName();
