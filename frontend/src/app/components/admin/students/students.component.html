@@ -10,28 +10,30 @@
             <input type="text" class="form-control" [(ngModel)]="matrNumber" (input)="searchTerm$.next(null)"
                 placeholder="Student ID" name="studentId">
         </div>
-        <div class="form-group mr-2">
-            <select class="form-control mt-1" id="verifiedFilter" name="verifiedStatus"
-                [(ngModel)]="verifiedFilter" (change)="searchTerm$.next(null)">
-                <option value="all" selected>Registration Status: Indifferent</option>
-                <option value="verified">Registration Stauts: Verified</option>
-                <option value="notVerified">Registration Status: Not Verified</option>
-            </select>
-        </div>
+
         <div class="dropdown">
             <button class="btn btn-link dropdown-toggle" type="button" id="filterDropdown" aria-haspopup="true"
                 aria-expanded="false" (click)="toggleFilter()">
                 <i class="bi bi-funnel"></i> Filter
             </button>
             <div class="dropdown-menu p-3" [ngClass]="{'show': showFilter}" aria-labelledby="filterDropdown">
-                <div>
-                    <label for="status">Filter by status:</label>
-                    <select id="status" [(ngModel)]="tmpFilterStatus"
+                <div class="form-group">
+                    <label class="form-label" for="status">Filter by status:</label>
+                    <select class="form-control mt-1 form-select" id="status" [(ngModel)]="tmpFilterStatus"
                         (change)="updateTmpFilterStatus($event.target.value)">
                         <option value="">All</option>
                         <option value="active">Active</option>
                         <option value="banned">Banned</option>
                     </select>
+                </div>
+                <div class="form-group mt-2">
+                    <label class="form-label" for="status">Filter by registration status:</label>
+                    <select class="form-control mt-1 form-select" id="verifiedFilter" name="verifiedStatus"
+                [(ngModel)]="verifiedFilter" >
+                <option value="all" selected>Registration Status: Indifferent</option>
+                <option value="verified">Registration Stauts: Verified</option>
+                <option value="notVerified">Registration Status: Not Verified</option>
+            </select>
                 </div>
                 <button type="button" class="btn btn-primary mt-2" (click)="applyFilters()">Apply Filters</button>
             </div>
@@ -69,7 +71,7 @@
                     </button>
                 </td>
                 <td>
-                    <button class="btn btn-danger" [disabled]="student.isBanned" (click)="banUser(student, banModal)">
+                    <button class="btn btn-danger me-2" [disabled]="student.isBanned" (click)="banUser(student, banModal)">
                         <span *ngIf="student.isBanned">
                             <i class="bi bi-ban"></i> Banned
                         </span>
@@ -124,7 +126,6 @@
         <div class="modal-body">
             <form [formGroup]="banForm" (ngSubmit)="onBanSubmit(modal)">
                 <div class="form-group">
-                    <label for="banReason">Reason for ban</label>
                     <textarea id="banReason" class="form-control" formControlName="banReason"
                         placeholder="Enter reason for ban" rows="5" required></textarea>
                     <div *ngIf="banForm.get('banReason').invalid && (banForm.get('banReason').dirty || banForm.get('banReason').touched)"
@@ -151,9 +152,6 @@
             <textarea class="form-control" rows="5" readonly>{{ selectedBanReasonUser.reason }}</textarea>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-            <button type="button" class="btn btn-secondary justify-content-start" routerLink="./{{selectedStudent.id}}"
-                (click)="modal.close('Close click')">Edit</button>
             <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
         </div>
     </ng-template>

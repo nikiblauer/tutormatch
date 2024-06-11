@@ -127,18 +127,21 @@ public class AdminEndpoint {
     }
 
     @Operation(
-        description = "Create a new subject given a certain scheme",
-        summary = "Create Subject")
+        description = "Create a ban entry for a user",
+        summary = "Ban User")
     @Secured("ROLE_ADMIN")
     @PostMapping("/users/{id}/ban")
-    public void banUser(@PathVariable(name = "id") Long id, @RequestBody @Valid BanReasonDto reason) throws ValidationException {
+    public void banUser(@PathVariable(name = "id") Long id, @RequestBody @Valid BanReasonDto reason) {
         LOGGER.info("POST /users/{}/ban with reason: {}", id, reason);
         userService.banUser(id, reason.getReason());
     }
 
+    @Operation(
+        description = "Get info of banned user.",
+        summary = "Get Banned User")
     @Secured("ROLE_ADMIN")
     @GetMapping("/users/{id}/ban")
-    public UserBanDetailsDto getBanUser(@PathVariable(name = "id") Long id) throws ValidationException {
+    public UserBanDetailsDto getBanUser(@PathVariable(name = "id") Long id) {
         var ban = userService.getBanForUser(id);
         var user = userService.findApplicationUserById(id);
 
