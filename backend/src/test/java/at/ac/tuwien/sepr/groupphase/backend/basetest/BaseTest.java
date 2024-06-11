@@ -58,7 +58,7 @@ public class BaseTest {
 
 
     @BeforeEach
-    public void setUp() throws IOException, ValidationException {
+    public void setUp() throws IOException {
         generateData();
     }
 

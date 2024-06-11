@@ -28,6 +28,10 @@ public class RatingServiceImpl implements RatingService {
         List<Float> ratingList = ratingRepository.findAllByRated(student);
         float[] array = new float[2];
 
+        if (ratingList.isEmpty()) {
+            return array;
+        }
+
         float rating = 0;
         for (Float userRating : ratingList) {
             rating += userRating;
