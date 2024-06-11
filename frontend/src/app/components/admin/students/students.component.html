@@ -109,15 +109,13 @@
             <p>City: {{selectedStudentDetails?.city}}</p>
             <p><em>Trainee Subjects: </em> {{selectedStudentDetails?.traineeSubjects.join(', ')}}</p>
             <p><em>Tutor Subjects: </em> {{selectedStudentDetails?.tutorSubjects.join(', ')}}</p>
-        </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary justify-content-start" routerLink="./feedback/{{selectedStudent.id}}" (click)="modal.close('Close click')">Show Feedback by this student</button>
           <button type="button" class="btn btn-secondary justify-content-start" routerLink="./{{selectedStudent.id}}" (click)="modal.close('Close click')">Edit</button>
           <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-            <button type="button" class="btn btn-secondary justify-content-start" routerLink="./{{selectedStudent.id}}"
-                (click)="modal.close('Close click')">Edit</button>
-            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
         </div>
+        </div>
+
     </ng-template>
 
     <!-- Student Ban Modal -->
