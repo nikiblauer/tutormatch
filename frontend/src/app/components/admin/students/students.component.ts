@@ -174,7 +174,6 @@ export class StudentsComponent implements OnInit {
   onBanSubmit(modal: NgbActiveModal) {
     if (this.banForm.valid) {
       const reason = this.banForm.value.banReason;
-      // Your ban logic here
       console.log(`Banning user ${this.selectedBanUser} for reason: ${reason}`);
 
       this.withSpinner(this.adminService.banUser(this.selectedBanUser.id, reason), this.spinner)
@@ -188,7 +187,6 @@ export class StudentsComponent implements OnInit {
           }
         });
 
-      // Close the modal here
       modal.close('User banned');
     }
   }
@@ -221,7 +219,6 @@ export class StudentsComponent implements OnInit {
         }
       });
     this.modalService.open(content);
-    // Implement your show ban reason logic
   }
 
   toggleFilter() {

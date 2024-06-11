@@ -127,7 +127,7 @@
             <form [formGroup]="banForm" (ngSubmit)="onBanSubmit(modal)">
                 <div class="form-group">
                     <textarea id="banReason" class="form-control" formControlName="banReason"
-                        placeholder="Enter reason for ban" rows="5" required></textarea>
+                        placeholder="Type in reason for ban of Student" rows="5" required></textarea>
                     <div *ngIf="banForm.get('banReason').invalid && (banForm.get('banReason').dirty || banForm.get('banReason').touched)"
                         class="invalid-feedback">
                         Reason is required.
