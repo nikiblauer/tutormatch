@@ -45,6 +45,12 @@ export class WebSocketService {
             if (message.body){
               this.onMessageReceived(JSON.parse(message.body));
             }
+          });
+
+          this.stompClient.subscribe(`/user/${id}/queue/errors`, error=> {
+            if (error.body){
+              console.log(JSON.parse(error.body));
+            }
           })
         }, error: err => {
           console.log(err);

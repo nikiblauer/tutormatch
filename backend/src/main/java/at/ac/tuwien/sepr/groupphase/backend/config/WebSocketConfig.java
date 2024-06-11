@@ -28,10 +28,13 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 
+/**
+ * Configuration class for setting up WebSocket message broker in the application.
+ * It enables WebSocket message handling, configures STOMP endpoints, and sets up message converters and security interceptors.
+ */
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
@@ -41,9 +44,18 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private WebSocketSecurityConfig webSocketSecurityConfig;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 
+    /**
+     * Configures the message broker.
+     * Sets destination for subscription routes
+     *
+     * @param config the {@link MessageBrokerRegistry} to configure.
+     */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/user"); // Enable user-specific message broker
@@ -51,12 +63,23 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         config.setUserDestinationPrefix(("/user"));
     }
 
+    /**
+     * Registers STOMP endpoints for WebSocket connections.
+     *
+     * @param registry the {@link StompEndpointRegistry} to register the endpoints.
+     */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // endpoint for websocket connection
         registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:4200", "https://*.apps.student.inso-w.at").withSockJS();
     }
 
+    /**
+     * Configures the message converters to use JSON format.
+     *
+     * @param messageConverters the list of {@link MessageConverter} to configure.
+     * @return false indicating that the default converters should not be overridden.
+     */
     @Override
     public boolean configureMessageConverters(List<MessageConverter> messageConverters) {
 
@@ -70,57 +93,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         return false;
     }
 
+    /**
+     * Configures the client inbound channel with security interceptors.
+     *
+     * @param registration the {@link ChannelRegistration} to configure.
+     */
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         LOGGER.trace("configureClientInboundChannel({})", registration);
-
-        registration.interceptors(new ChannelInterceptor() {
-            @Override
-            public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-                LOGGER.debug("Authorization header: {}", accessor.getFirstNativeHeader("Authorization"));
-
-                // Checks that only users who are logged in can connect to websocket
-                if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-                    String token = accessor.getFirstNativeHeader("Authorization");
-                    if (token != null && token.startsWith("Bearer ")) {
-                        String jwt = token.substring(7);
-                        try {
-                            String username = jwtTokenizer.extractUsernameFromVerificationToken(jwt);
-                            LOGGER.debug("User: {} connected to websocket.", username);
-                            if (username != null) {
-                                accessor.setUser(() -> username);
-                                return message;
-                            }
-                        } catch (Exception e) {
-                            throw HttpClientErrorException.create(UNAUTHORIZED, "Unauthorized", null, null, null);
-                        }
-                    }
-                    // If token is missing or invalid, reject the connection
-                    throw HttpClientErrorException.create(UNAUTHORIZED, "No valid JWT token provided", null, null, null);
-                }
-                if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
-                    String destination = accessor.getDestination();
-                    if (accessor.getUser() == null) {
-                        throw HttpClientErrorException.create(UNAUTHORIZED, "Not yet connected!", null, null, null);
-                    }
-                    String username = accessor.getUser().getName();
-
-                    LOGGER.debug("Subscription destination: {}", destination);
-                    if (destination != null && username != null) {
-                        ApplicationUser user = userService.findApplicationUserByEmail(username);
-                        Long userId = user.getId();
-
-                        String expectedPrefix = "/user/" + userId + "/queue/messages";
-                        if (!destination.startsWith(expectedPrefix)) {
-                            throw HttpClientErrorException.create(UNAUTHORIZED, "Subscription to unauthorized destination", null, null, null);
-                        }
-                    }
-                }
-
-                return message;
-            }
-        });
+        registration.interceptors(webSocketSecurityConfig);
     }
 
 }

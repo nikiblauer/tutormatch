@@ -19,6 +19,8 @@ export class ChatRoomDto {
   recipientFirstName: string;
   senderLastName: string;
   recipientLastName: string;
+}
 
-
+export class WebSocketErrorDto {
+  errorMsg: string;
 }

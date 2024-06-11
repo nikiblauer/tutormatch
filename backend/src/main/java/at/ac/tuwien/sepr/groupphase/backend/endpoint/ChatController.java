@@ -1,12 +1,15 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatMessageDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.WebSocketErrorDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.exception.InvalidMessageException;
 import at.ac.tuwien.sepr.groupphase.backend.service.ChatMessageService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.impl.CustomUserDetailService;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -34,26 +37,32 @@ public class ChatController {
     }
 
     @MessageMapping("/chat")
-    public void processMessage(@Payload ChatMessageDto chatMessageDto, Principal principal) {
+    public void processMessage(@Payload ChatMessageDto chatMessageDto, Principal principal) throws InvalidMessageException {
         // Check if sender in dto matches the actual sender in token
         String authenticatedUsername = principal.getName();
+        Long authenticatedUserId = userService.findApplicationUserByEmail(authenticatedUsername).getId();
         ApplicationUser dtoUser = userService.findApplicationUserById(chatMessageDto.getSenderId());
 
-        // websocket doesn't support error codes, so there is no error sent back. Message is just not persisted if malformed
         if (!authenticatedUsername.equals(dtoUser.getDetails().getEmail())) { // Assuming you have a senderUsername field in ChatMessageDto
             LOGGER.warn("Sender does not match authenticated user.");
-            return;
+            throw new InvalidMessageException("Sender does not match authenticated user.", authenticatedUserId);
         }
 
 
         // Persist message in database
-        // websocket doesn't support error codes, so there is no error sent back. Message is just not persisted if malformed
         if (!chatMessageService.saveChatMessage(chatMessageDto)) {
             LOGGER.warn("Chat messages is malformed.");
-            return;
+            throw new InvalidMessageException("Chat messages is malformed.", authenticatedUserId);
         }
 
         // This sends the received message to the specified recipient
         messagingTemplate.convertAndSendToUser(chatMessageDto.getRecipientId().toString(), "/queue/messages", chatMessageDto);
     }
+
+    @MessageExceptionHandler(InvalidMessageException.class)
+    public void handleInvalidMessageException(InvalidMessageException exception) {
+        WebSocketErrorDto errorDto = new WebSocketErrorDto(exception.getMessage());
+        messagingTemplate.convertAndSendToUser(exception.getUserId().toString(), "/queue/errors", errorDto);
+    }
+
 }
