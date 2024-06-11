@@ -6,6 +6,8 @@ import {AdminService} from "../../../services/admin.service";
 import {StudentSubjectInfoDto} from "../../../dtos/user";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
+import {FormGroup, ReactiveFormsModule} from "@angular/forms";
+import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-feedback',
@@ -14,7 +16,8 @@ import {DatePipe, NgForOf, NgIf} from "@angular/common";
     DatePipe,
     NgIf,
     NgForOf,
-    RouterLink
+    RouterLink,
+    ReactiveFormsModule
   ],
   templateUrl: './admin-feedback.component.html',
   styleUrl: './admin-feedback.component.scss'
@@ -23,8 +26,11 @@ export class AdminFeedbackComponent {
   public writtenFeedback: FeedbackDto[] = [];
   selectedStudentDetails: StudentSubjectInfoDto;
   userId: number;
+  banReason: string = "";
 
-  constructor(private notification: ToastrService, private adminService: AdminService, private route: ActivatedRoute, private router: Router, private spinner: NgxSpinnerService) {
+  banForm: FormGroup;
+
+  constructor(private modalService: NgbModal, private notification: ToastrService, private adminService: AdminService, private route: ActivatedRoute, private router: Router, private spinner: NgxSpinnerService) {
   }
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -75,5 +81,24 @@ export class AdminFeedbackComponent {
       }
     );
   }
+  openBanModal(content:any) {
+  this.modalService.open(content);
+  }
+  onBanSubmit(modal: NgbActiveModal) {
+    if (this.banForm.valid) {
+      const reason = this.banForm.value.banReason;
+      console.log(`Banning user ${this.selectedStudentDetails} for reason: ${reason}`);
+      this.adminService.banUser(this.userId, reason).subscribe({
+          next: (_) => {
+            this.notification.success(`User  ${this.selectedStudentDetails} banned`);
+          },
+          error: (error: any) => {
+            console.error('Error:', error);
+            this.notification.error(error.error, "Error while banning student!");
+          }
+        });
 
+      modal.close('User banned');
+    }
+  }
 }

@@ -23,7 +23,7 @@ white-space: nowrap;
     <td >{{ feedback.feedback }}</td>
     <td >{{ feedback.created  | date:'MM/dd/yyyy HH:mm:ss'}}</td>
     <td>
-      <button class="btn btn-warning custom-button">
+      <button class="btn btn-warning custom-button" (click)="openBanModal(banModal)">
         <i class="bi bi-exclamation"></i>
       </button>
     </td>
@@ -35,4 +35,24 @@ white-space: nowrap;
   </tr>
   </tbody>
 </table>
-</div>
+  <!-- Student Ban Modal -->
+  <ng-template #banModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" style="font-size: 2em; color: #33709c;">Ban Student {{ selectedStudentDetails.firstname }}
+        {{ selectedStudentDetails.lastname }}</h5>
+    </div>
+    <form [formGroup]="banForm" (ngSubmit)="onBanSubmit(modal)">
+      <div class="form-group">
+                    <textarea id="banReason" class="form-control" formControlName="banReason"
+                              placeholder="Type in reason for ban of Student" rows="5" required></textarea>
+        <div *ngIf="banForm.get('banReason').invalid && (banForm.get('banReason').dirty || banForm.get('banReason').touched)"
+             class="invalid-feedback">
+          Reason is required.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+        <button type="submit" class="btn btn-danger" [disabled]="banForm.invalid">Ban User</button>
+      </div>
+    </form>
+  </ng-template>
