@@ -157,3 +157,27 @@ body {
   overflow: hidden;
   max-width: 600px;
 }
+
+.first {
+  width:calc(80%)
+}
+
+
+.ellipsis {
+  position: relative;
+}
+.ellipsis:before {
+  content: ' ';
+  visibility: hidden;
+}
+
+
+.ellipsis span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+

@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
 @Getter
 @Setter
@@ -23,6 +25,8 @@ public class Feedback {
     private Long rated;
     @Column(nullable = false)
     private Long rater;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10000)
     private String feedback;
+    @Column(nullable = false)
+    private Date created;
 }

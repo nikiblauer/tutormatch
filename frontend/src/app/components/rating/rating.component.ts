@@ -107,4 +107,21 @@ export class StarRatingComponent implements OnInit {
     }
     this.submitted = false;
   }
+  deleteFeedback(id): void {
+    if (!this.isEditable) return;
+    this.spinner.show();
+      this.feedbackService.deleteFeedback(id).subscribe({
+          next: () => {
+            this.spinner.hide();
+            this.getPostedFeedback();
+            this.feedbackText = '';
+          },
+          error: error => {
+            this.spinner.hide();
+            console.error("Error deleting feedback", error);
+            this.notification.error(error.error, "Something went wrong!");
+          }
+        }
+      );
+    }
 }

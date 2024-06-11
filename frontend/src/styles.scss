@@ -180,16 +180,19 @@ body {
   }
 
   .popup-overlay {
-    position: fixed;
+    position: absolute;
+    margin: auto;
+    margin-top: 10px;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
+    display: block;
     align-items: center;
     z-index: 1000;
+    overflow-y: auto;
+
   }
 
   .popup-container {
@@ -199,10 +202,13 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     max-width: 800px;
     width: 100%;
+    left: 50%;
+    transform: translate(50%, 0%);
   }
 
   .popup-container p {
     margin: 15px 0;
+    overflow-y: auto;
   }
 
   .popup-container button {

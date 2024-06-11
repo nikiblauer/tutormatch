@@ -14,6 +14,7 @@ import {UserMode, UserProfileComponent} from './components/user-profile/user-pro
 import {SubjectComponent} from "./components/admin/subjects/subjects.component";
 import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
 import {RequestResetComponent} from "./components/password-reset/request-reset/request-reset.component";
+import {FeedbackComponent} from "./components/feedback/feedback.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [AuthGuard]},
@@ -31,7 +32,8 @@ const routes: Routes = [
   },
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {path: 'matches', component: MatchComponent},
-  {path: 'myprofile', component: UserProfileComponent,data: {mode: UserMode.user}},
+  {path: 'myprofile', component: UserProfileComponent, data: {mode: UserMode.user}},
+  {path: 'feedback', component: FeedbackComponent, data: {mode: UserMode.user}},
   {
     path: 'admin', component: AdminComponent, children: [
       {path: 'login', component: LoginComponent, data: {mode: LoginMode.admin}},

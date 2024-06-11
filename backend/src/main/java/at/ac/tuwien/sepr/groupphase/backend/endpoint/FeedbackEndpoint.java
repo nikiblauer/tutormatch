@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -88,6 +89,19 @@ public class FeedbackEndpoint {
         if (!exists) {
             throw new NotFoundException(String.format("No chat for users {} and {} was found", id1, id2));
         }
+    }
+
+    @Operation(
+        description = "Delete the feedback by id.",
+        summary = "Delete feedback.")
+    @Secured("ROLE_USER")
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteFeedbackById(@PathVariable("id") Long id) throws Exception {
+        LOGGER.info("PUT /api/v1/feedback/out/{}", id);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        long id2 = userService.findApplicationUserByEmail(userEmail).getId();
+        ratingService.deleteFeedbackByIdStudent(id, id2);
     }
 
 }

@@ -14,13 +14,15 @@ import java.util.List;
 @Repository
 public interface FeedbackRepository extends JpaRepository<Feedback, String> {
 
-    @Query("SELECT new Feedback(id,rated,rater,feedback) from Feedback where rated = :ratedStudent")
+    Feedback findFeedbackById(Long id);
+
+    @Query("SELECT new Feedback(id,rated,rater,feedback,created) from Feedback where rated = :ratedStudent ORDER BY created DESC")
     List<Feedback> findAllByRated(@Param("ratedStudent") long ratedStudent);
 
-    @Query("SELECT new Feedback(id,rated,rater,feedback) from Feedback where rater = :ratingStudent")
+    @Query("SELECT new Feedback(id,rated,rater,feedback,created) from Feedback where rater = :ratingStudent ORDER BY created DESC")
     List<Feedback> findAllByRater(@Param("ratingStudent") long ratingStudent);
 
-    @Query("SELECT new Feedback(id,rated,rater,feedback) from Feedback where rater = :ratingStudent AND rated = :ratedStudent")
+    @Query("SELECT new Feedback(id,rated,rater,feedback,created) from Feedback where rater = :ratingStudent AND rated = :ratedStudent ORDER BY created DESC")
     List<Feedback> getByRatedAndRater(@Param("ratedStudent")long ratedStudent, @Param("ratingStudent") long ratingStudent);
 
     @Transactional

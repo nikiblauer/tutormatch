@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -118,18 +119,30 @@ public class RatingServiceImpl implements RatingService {
         feedback.setRated(feedbackCreateDto.rated);
         feedback.setRater(ratingUserId);
         feedback.setFeedback(feedbackCreateDto.feedback);
+        feedback.setCreated(new Date());
         feedbackRepository.save(feedback);
     }
 
     @Override
     public void deleteFeedbackOfStudent(long student) {
-        LOGGER.trace("getFeedbackByStudent: {}", student);
+        LOGGER.trace("deleteFeedbackOfStudent: {}", student);
         feedbackRepository.deleteFeedbackByRater(student);
     }
 
     @Override
-    public void deleteFeedbackById(long id) {
-        LOGGER.trace("getFeedbackByStudent: {}", id);
+    public void deleteFeedbackByIdAdmin(long id) {
+        LOGGER.trace("deleteFeedbackByIdAdmin: {}", id);
         feedbackRepository.deleteFeedbackById(id);
     }
+
+    @Override
+    public void deleteFeedbackByIdStudent(long deleteId, long requestUserId) throws Exception {
+        LOGGER.trace("deleteFeedbackByIdStudent: {} {}", deleteId, requestUserId);
+        Feedback feedback = feedbackRepository.findFeedbackById(deleteId);
+        if (feedback.getRated() != requestUserId && feedback.getRater() != requestUserId) {
+            throw new Exception("You can only delete feedback written or received by you");
+        }
+        feedbackRepository.deleteFeedbackById(deleteId);
+    }
+
 }

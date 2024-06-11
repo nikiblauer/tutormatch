@@ -1,0 +1,30 @@
+<div class="row align-items-center justify-content-center">
+  <h2 class="col-md-8 mb-4">Your feedback:</h2>
+  <div class="card col-md-8 box-shadow" style="border: none; margin-bottom: 40px;"><div>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Message</th>
+        <th>Date</th>
+        <th>Report</th>
+        <th>Delete</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let feedback of receivedFeedback">
+        <td style="width:calc(70%)">{{ feedback.feedback }}</td>
+        <td style="width:calc(20%)">{{ feedback.created }}</td>
+        <td>
+          <button class="btn btn-warning custom-button">
+            <i class="bi bi-exclamation"></i>
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-danger custom-button">
+            <i class="bi bi-x"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>  </div>
+</div>

@@ -79,5 +79,14 @@ public interface RatingService {
      *
      * @param id the id of the feedback to be deleted
      */
-    void deleteFeedbackById(long id);
+    void deleteFeedbackByIdAdmin(long id);
+
+    /**
+     * deletes a feedback written by student by id.
+     *
+     * @param deleteId the id of the feedback to be deleted
+     * @param requestUserId the id of the feedback to be deleted
+     * @throws Exception if student is neither giver nor receiver of feedback with given deleteId
+     */
+    void deleteFeedbackByIdStudent(long deleteId, long requestUserId) throws Exception;
 }

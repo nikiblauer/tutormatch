@@ -107,12 +107,33 @@
         <button type="button" (click)="postFeedback(feedbackForm)" id="add-msg" class="btn btn-success float-right">Add message</button>
         </form>
       </div>
-      <div *ngIf="!chatExists">You can leave feedback after starting a chat with this user</div>
-      <div class="" *ngFor="let feedback of postedFeedback">
-        <div>
-        {{feedback.feedback}}
-        </div>
       </div>
     </div>
+  <div *ngIf="!chatExists">You can leave feedback after starting a chat with this user</div>
+  <div *ngIf="postedFeedback.length !== 0" style="width: 90%">
+    <table class="table" style="width:calc(100%)">
+      <thead>
+      <tr>
+        <th>Your previous messages</th>
+        <th>Date</th>
+        <th>Delete</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let feedback of postedFeedback">
+        <td class="ellipsis first">
+          <span>{{ feedback.feedback }}</span>
+        </td>
+        <td>{{ feedback.created }}</td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteFeedback(feedback.id)">
+            <i class="bi bi-x"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
+
 </div>
+
