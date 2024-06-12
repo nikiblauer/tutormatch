@@ -62,6 +62,10 @@ export class UserService {
     })
   }
 
+  getUserId():Observable<number>{
+    return this.httpClient.get<number>(this.userUri + "/id");
+  }
+
   getVisibility():Observable<boolean>{
     return this.httpClient.get<boolean>(this.userUri + '/visibility');
   }
