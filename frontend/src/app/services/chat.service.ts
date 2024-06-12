@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Globals} from "../global/globals";
 import {CreateStudentDto, StudentDto} from "../dtos/user";
@@ -29,11 +29,15 @@ export class ChatService {
 
   getMessagesByChatRoomId(chatRoomId: string) {
     console.log("Getting all messages for chatroom: ", chatRoomId);
-    return this.httpClient.get<ChatMessageDto[]>(this.chatUri + "/room/"+ chatRoomId + "/messages" , {responseType: "json"});
+    return this.httpClient.get<ChatMessageDto[]>(this.chatUri + "/room/" + chatRoomId + "/messages", {responseType: "json"});
   }
+
+  checkChatRoomExistsByRecipient(recipientId: number) {
+    return this.httpClient.get<boolean>(this.chatUri + "/room/recipient/" + recipientId)
+  }
+
   getChatRoomOfUser() {
     console.log("Getting all chatrooms of user: ");
     return this.httpClient.get<ChatRoomDto[]>(this.chatUri + "/room/user", {responseType: "json"});
   }
-
 }

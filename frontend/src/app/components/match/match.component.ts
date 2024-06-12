@@ -116,14 +116,28 @@ export class MatchComponent implements OnInit {
   public startChat() {
     let chatRoomToCreate = new CreateChatRoomDto()
     chatRoomToCreate.recipientId = this.selectedMatch.id;
-    this.chatService.createChatRoom(chatRoomToCreate).subscribe({
-      next: value => {
-        console.log(value);
-        this.router.navigate(["/chat"])
-      }, error: error => {
-        console.log(error);
-      }
-    })
+    this.chatService.checkChatRoomExistsByRecipient(chatRoomToCreate.recipientId).subscribe({
+        next: exits => {
+          if (!exits){
+            this.chatService.createChatRoom(chatRoomToCreate).subscribe({
+              next: value => {
+                console.log(value);
+                this.router.navigate(["/chat"])
+              }, error: error => {
+                console.log(error);
+              }
+            })
+          } else {
+            this.router.navigate(["/chat"])
+          }
+
+        }, error: err => {
+          console.log(err)
+        }
+    }
+
+    )
+
   }
 
     public getSelectedUserAddressAsString(user: StudentDto) {

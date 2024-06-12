@@ -143,9 +143,6 @@ export class ChatComponent implements OnInit {
   getCharsLeft(){
     return this.message.length;
   }
-  getInitials(){
-    return this.activeChatRoom.senderFirstName[0] + this.activeChatRoom.senderLastName[0];
-  }
 
 
   recipientInfo() {

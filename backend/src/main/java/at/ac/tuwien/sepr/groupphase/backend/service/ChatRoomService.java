@@ -32,4 +32,6 @@ public interface ChatRoomService {
      * @return chatroom dto
      */
     ChatRoomDto getChatRoomByChatRoomId(String chatRoomId);
-}
+
+    Boolean checkChatRoomExistsByRecipient(Long senderId, Long recipientId);
+    }

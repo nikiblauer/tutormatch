@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ChatRoomMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.ChatMessage;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ChatRoom;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -84,6 +85,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         }
 
         return chatRoomMapper.chatRoomToDto(chatRooms.getFirst());
+    }
+
+    @Override
+    public Boolean checkChatRoomExistsByRecipient(Long senderId, Long recipientId) {
+        ChatRoom chatroom = chatRoomRepository.findChatRoomBySenderIdAndRecipientId(senderId, recipientId);
+        return chatroom != null;
     }
 }
 
