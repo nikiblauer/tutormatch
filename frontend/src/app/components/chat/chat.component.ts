@@ -32,9 +32,6 @@ export class ChatComponent implements OnInit {
   info: boolean;
   messageReceived: ChatMessageDto;
   messageSubscription: Subscription;
-  maxChars: number = 500;
-  noCharsLeft: boolean;
-
 
   constructor(private chatService: ChatService,
               private userService: UserService,
@@ -144,11 +141,10 @@ export class ChatComponent implements OnInit {
   }
 
   getCharsLeft(){
-    if(this.message.length == this.maxChars) {
-      this.noCharsLeft = true;
-    }
-    this.noCharsLeft = false;
     return this.message.length;
+  }
+  getInitials(){
+    return this.activeChatRoom.senderFirstName[0] + this.activeChatRoom.senderLastName[0];
   }
 
 

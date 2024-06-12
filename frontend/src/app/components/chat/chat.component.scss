@@ -107,12 +107,15 @@ body {
   width: 40px
 }
 
-.chat .chat-header .chat-about {
+.chat .chat-header .chat-name {
+  font-size: 1.7rem;
   float: left;
+  vertical-align: center;
   padding-left: 10px
 }
 .chat .chat-header .infobtn {
   float: right;
+  vertical-align: center
 }
 
 .chat .chat-history {
@@ -255,4 +258,24 @@ body {
 .form-control:focus {
   border-color: lightgray;
   box-shadow: none !important;
+}
+.circle {
+  display: inline-block;
+  background-color: #33709C;
+  margin: 0.1rem;
+  border-radius: 50%;
+  float: left;
+  vertical-align: center;
+}
+
+.circle-inner {
+  color: white;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  text-decoration: none;
+  height: 40px;
+  width: 40px;
+  font-size: 20px;
+
 }

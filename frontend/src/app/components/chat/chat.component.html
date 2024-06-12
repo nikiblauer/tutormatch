@@ -28,11 +28,11 @@
             <div class="chat-header clearfix">
               <div class="row">
                 <div>
-                  <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-                    <img src="https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png" alt="avatar">
-                  </a>
-                  <div class="chat-about">
-                    <h6 class="m-b-0">{{ user2Name }}</h6>
+                  <div class="circle">
+                    <p class="circle-inner">{{getInitials()}}</p>
+                  </div>
+                  <div class="chat-name">
+                    <p>{{ user2Name }}</p>
                   </div>
                   <div class="infobtn">
                     <button (click)="recipientInfo()" class="btn primary-btn"><i class="fa fa-info"></i></button>
