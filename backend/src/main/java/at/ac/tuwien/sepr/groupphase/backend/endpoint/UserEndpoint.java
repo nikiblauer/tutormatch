@@ -192,6 +192,15 @@ public class UserEndpoint {
         return mapper.mapUserAndSubjectsToUserSubjectDto(user, subjects);
     }
 
+    // Needed for setting up websockets in frontend
+    @Secured("ROLE_USER")
+    @GetMapping("id")
+    public Long getUserId() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        ApplicationUser user = userService.findApplicationUserByEmail(userEmail);
+        return user.getId();
+    }
+
     @Secured("ROLE_USER")
     @GetMapping("/visibility")
     @ResponseStatus(HttpStatus.OK)
