@@ -7,8 +7,10 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserBanDetailsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserSubjectDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Banned;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
 import org.mapstruct.Mapper;
 
@@ -26,6 +28,7 @@ public interface ApplicationUserMapper {
             studentDto.setLastname(applicationUser.getLastname());
             studentDto.setMatrNumber(applicationUser.getMatrNumber());
             studentDto.setId(applicationUser.getId());
+            studentDto.setIsBanned(applicationUser.isBanned());
             if (applicationUser.getDetails() != null) {
                 studentDto.setEmail(applicationUser.getDetails().getEmail());
                 studentDto.setTelNr(applicationUser.getDetails().getTelNr());
@@ -174,6 +177,21 @@ public interface ApplicationUserMapper {
         dto.setCity(applicationUserUpdated.getDetails().getAddress().getCity());
         dto.setStreet(applicationUserUpdated.getDetails().getAddress().getStreet());
         dto.setAreaCode(applicationUserUpdated.getDetails().getAddress().getAreaCode());
+        return dto;
+    }
+
+    default UserBanDetailsDto mapToUserBanDetailsDto(ApplicationUser user, Banned ban) {
+        UserBanDetailsDto dto = new UserBanDetailsDto();
+
+        dto.setBanDate(ban.getBanDate());
+        dto.setReason(ban.getReason());
+        dto.setStreet(user.getDetails().getAddress().getStreet());
+        dto.setCity(user.getDetails().getAddress().getCity());
+        dto.setAreaCode(user.getDetails().getAddress().getAreaCode());
+        dto.setId(user.getId());
+        dto.setEmail(user.getDetails().getEmail());
+        dto.setFirstname(user.getFirstname());
+        dto.setLastname(user.getLastname());
         return dto;
     }
 }

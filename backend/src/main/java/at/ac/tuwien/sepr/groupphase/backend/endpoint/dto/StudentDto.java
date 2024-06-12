@@ -40,6 +40,8 @@ public class StudentDto {
 
     public boolean verified;
 
+    public Boolean isBanned;
+
     public StudentDto() {
     }
 
@@ -68,6 +70,7 @@ public class StudentDto {
             + ", street='" + street + '\''
             + ", areaCode='" + areaCode + '\''
             + ", city='" + city + '\''
+            + ", isBanned='" + isBanned + '\''
             + '}';
     }
 }

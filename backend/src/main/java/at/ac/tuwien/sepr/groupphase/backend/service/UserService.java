@@ -4,6 +4,8 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Banned;
+import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,7 +63,7 @@ public interface UserService extends UserDetailsService {
      *
      * @return a list of all users
      */
-    Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Pageable pageable);
+    Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Boolean hasBan, Pageable pageable);
 
     /**
      * Creates a new User in the database.
@@ -101,6 +103,24 @@ public interface UserService extends UserDetailsService {
      * sends a new verification email if user with this email exists and is not verified yet.
      */
     void resendVerificationEmail(String email);
+
+    /**
+     * Bans a user by creating a new Ban entity in the database.
+     *
+     * @param id     The ID of the user to be banned.
+     * @param reason The reason for the ban.
+     */
+    void banUser(Long id, String reason);
+
+
+    /**
+     * Retrieves the ban information for a specific user.
+     *
+     * @param id The ID of the user for whom to retrieve the ban information.
+     * @return The Ban entity representing the ban information for the user.
+     * @throws NotFoundException if no ban is found for the specified user ID.
+     */
+    Banned getBanForUser(Long id);
 
     /**
      * gets the boolean value of the visibility for a user.

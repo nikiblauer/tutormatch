@@ -21,7 +21,7 @@ export interface Subject {
 }
 
 export interface CreateStudentDto extends BaseUser {
-  password: string; 
+  password: string;
   repeatPassword: string;
   matrNumber: number;
 }
@@ -35,7 +35,7 @@ export interface PasswordResetDto {
 
 export class StudentSubjectInfoDto {
   firstname: string;
-  lastname: string; 
+  lastname: string;
   matrNumber: number;
   email: string;
   telNr: string;
@@ -55,8 +55,9 @@ export class StudentDto implements BaseUser {
   telNr: string;
   street: string;
   areaCode: number;
-  city: string; 
-  verified: boolean; 
+  city: string;
+  verified: boolean;
+  isBanned: boolean;
 
   public static getAddressAsString(user: StudentDto): string {
 
@@ -80,4 +81,9 @@ export class StudentDto implements BaseUser {
 export class UserProfile extends StudentDto {
   matrNumber: number;
   subjects: UserSubject[];
+}
+
+export interface BannedUserDto extends StudentDto {
+  banDate: Date;
+  reason: string;
 }

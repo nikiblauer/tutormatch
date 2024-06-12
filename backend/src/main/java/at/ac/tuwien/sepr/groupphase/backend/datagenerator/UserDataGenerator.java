@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Banned;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 
 import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.ADMIN_EMAIL;
 import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.ADMIN_NAME;
+import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.BANNED_USER_EMAIL;
 import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.USER_COUNT;
 import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.USER_PASSWORD;
 
@@ -51,6 +53,19 @@ public class UserDataGenerator {
         ApplicationUser admin = new ApplicationUser(userPassword, true, ADMIN_NAME.split(" ")[0], ADMIN_NAME.split(" ")[1], null,
             new ContactDetails("+43660 3333333", ADMIN_EMAIL, null), true);
         userRepository.save(admin);
+
+        //generate Banned User
+        ApplicationUser bannedUser = new ApplicationUser(userPassword, false, "UserBanned", "SurnameBanned",
+            11000001L,
+            new ContactDetails("+43660 1111111", BANNED_USER_EMAIL, new Address("Teststraße 1111", 1001, "Wien")),
+            true);
+
+        var ban = new Banned();
+        ban.setUser(bannedUser);
+        ban.setReason("TestBan");
+        bannedUser.setBan(ban);
+        userRepository.save(bannedUser);
+
         log.info("User data generation completed.");
     }
 
@@ -78,5 +93,6 @@ public class UserDataGenerator {
         }
         return users;
     }
+
 
 }

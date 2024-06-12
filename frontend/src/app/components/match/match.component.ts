@@ -26,92 +26,92 @@ export class MatchComponent implements OnInit {
               private router: Router, private chatService: ChatService) {
   }
 
-  ngOnInit() {
-    let timeout = setTimeout(() => {
-      this.spinner.show();
-    }, 1500);
-    this.userService.getUserMatcher().subscribe({
-      next: (matches) => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        this.matches = matches;
-      },
-      error: error => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        console.error("Error when retrieving matches", error);
-        this.notification.error(error.error, "Something went wrong!");
-      }
-    });
-  }
-
-  public trimStringByComma(input: string) {
-    const parts = input.split(',');
-    for (let i = 0; i < parts.length; i++) {
-      parts[i] = parts[i].substring(8);
+    ngOnInit() {
+      let timeout = setTimeout(() => {
+        this.spinner.show();
+      }, 1500);
+        this.userService.getUserMatcher().subscribe({
+          next: (matches) => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            this.matches = matches;
+          },
+          error: error => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            console.error("Error when retrieving matches", error);
+            this.notification.error(error.error, "Something went wrong!");
+          }
+        });
     }
-    if (parts.length > 3) {
-      return parts.slice(0, 3).join(",\n") + ", ...";
-    } else {
-      return parts.join(",\n");
+
+    public trimStringByComma(input: string) {
+        const parts = input.split(',');
+      for (let i = 0; i < parts.length; i++) {
+        parts[i] = parts[i].substring(8);
+      }
+        if (parts.length > 3) {
+            return parts.slice(0, 3).join(",\n") + ", ...";
+        } else {
+            return parts.join(",\n");
+        }
     }
-  }
 
-  public openMatch(match: UserMatchDto) {
-    this.selectedMatch = match;
-    let timeout = setTimeout(() => {
-      this.spinner.show();
-    }, 1500);
-    this.userService.getUser(match.id).subscribe({
-      next: (user) => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        this.selectedUser = user;
-      },
-      error: error => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        console.error("Error when user match details", error);
-        this.notification.error(error.error, "Something went wrong!");
-      }
-    })
-    this.ratingService.getRatingFromUser(match.id).subscribe({
-      next: (value) => {
-        this.selectedUserRating = value;
-      },
-      error: err => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        console.error("Error when getting match rating", err);
-        this.notification.error(err.error, "Something went wrong!");
-      }
-    })
-  }
+    public openMatch(match: UserMatchDto) {
+        this.selectedMatch = match;
+        let timeout = setTimeout(() => {
+          this.spinner.show();
+        }, 1500);
+        this.userService.getUser(match.id).subscribe({
+          next: (user) => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            this.selectedUser = user;
+          },
+          error: error => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            console.error("Error when user match details", error);
+            this.notification.error(error.error, "Something went wrong!");
+          }
+        })
+        this.ratingService.getRatingFromUser(match.id).subscribe({
+          next: (value) =>{
+            this.selectedUserRating = value;
+          },
+          error: err => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            console.error("Error when getting match rating", err);
+            this.notification.error(err.error, "Something went wrong!");
+          }
+        })
+    }
 
-  public closeMatch() {
-    this.selectedMatch = null;
-    this.selectedUserRating = -2;
-    this.reloadAll();
-  }
+    public closeMatch() {
+        this.selectedMatch = null;
+        this.selectedUserRating = -2;
+        this.reloadAll();
+    }
 
-  private reloadAll() {
-    let timeout = setTimeout(() => {
-      this.spinner.show();
-    }, 1500);
-    this.userService.getUserMatcher().subscribe({
-      next: (matches) => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        this.matches = matches;
-      },
-      error: error => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        console.error("Error when retrieving matches", error);
-        this.notification.error(error.error, "Something went wrong!");
-      }
-    });
-  }
+    private reloadAll(){
+      let timeout = setTimeout(() => {
+        this.spinner.show();
+      }, 1500);
+      this.userService.getUserMatcher().subscribe({
+        next: (matches) => {
+          clearTimeout(timeout);
+          this.spinner.hide();
+          this.matches = matches;
+        },
+        error: error => {
+          clearTimeout(timeout);
+          this.spinner.hide();
+          console.error("Error when retrieving matches", error);
+          this.notification.error(error.error, "Something went wrong!");
+        }
+      });
+    }
 
   public startChat() {
     let chatRoomToCreate = new CreateChatRoomDto()
@@ -126,7 +126,7 @@ export class MatchComponent implements OnInit {
     })
   }
 
-  public getSelectedUserAddressAsString(user: StudentDto) {
-    return StudentDto.getAddressAsString(user);
-  }
+    public getSelectedUserAddressAsString(user: StudentDto) {
+        return StudentDto.getAddressAsString(user);
+    }
 }

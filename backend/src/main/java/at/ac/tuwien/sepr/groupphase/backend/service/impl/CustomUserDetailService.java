@@ -5,14 +5,18 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Banned;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.BanRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import at.ac.tuwien.sepr.groupphase.backend.service.email.EmailSmtpService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserValidator;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,19 +38,25 @@ public class CustomUserDetailService implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
+    private final BanRepository banRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenizer jwtTokenizer;
     private final UserValidator validator;
     private final EmailSmtpService emailService;
+    private final RatingRepository ratingRepository;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer,
-                                   UserValidator validator, EmailSmtpService emailService) {
+    public CustomUserDetailService(UserRepository userRepository, BanRepository banRepository,
+                                   PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer,
+                                   UserValidator validator, EmailSmtpService emailService,
+                                   RatingRepository ratingRepository) {
         this.userRepository = userRepository;
+        this.banRepository = banRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenizer = jwtTokenizer;
         this.validator = validator;
         this.emailService = emailService;
+        this.ratingRepository = ratingRepository;
     }
 
     @Override
@@ -82,7 +92,7 @@ public class CustomUserDetailService implements UserService {
     public ApplicationUser create(CreateStudentDto toCreate) throws ValidationException {
         LOGGER.trace("Create user by applicationUserDto: {}", toCreate);
         validator.validateForCreate(toCreate);
-        if (!userRepository.findAllByDetails_Email(toCreate.email).isEmpty()) {
+        if (userRepository.findApplicationUserByDetails_Email(toCreate.email) != null) {
             throw new ValidationException("Email already exits please try an other one");
         }
         ContactDetails details = new ContactDetails("", toCreate.email, new Address("", 0, ""));
@@ -186,6 +196,40 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
+    @Transactional
+    public void banUser(Long id, String reason) {
+        LOGGER.trace("Banning user with id: {}", id);
+        ApplicationUser applicationUser = userRepository.findById(id).orElse(null);
+        if (applicationUser == null) {
+            throw new NotFoundException(String.format("User with id %d not found", id));
+        }
+
+        if (applicationUser.isBanned()) {
+            // user already banned
+            return;
+        }
+
+        //delete ratings of student
+        ratingRepository.deleteAllByStudentId(id);
+
+        Banned userBan = new Banned();
+        userBan.setUser(applicationUser);
+        userBan.setReason(reason);
+        banRepository.save(userBan);
+    }
+
+    @Override
+    public Banned getBanForUser(Long id) {
+        LOGGER.trace("Get Ban for user with id: {}", id);
+        Banned userBan = banRepository.getBanByUserId(id);
+        if (userBan == null) {
+            throw new NotFoundException(String.format("No Ban for User with id %d found", id));
+        }
+
+        return userBan;
+    }
+
+    @Override
     public ApplicationUser updateUser(String userEmail, UpdateStudentDto applicationUserDto) throws ValidationException {
         LOGGER.trace("Updating user with email: {}", userEmail);
         ApplicationUser applicationUser = buildUser(userEmail, applicationUserDto);
@@ -224,8 +268,8 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Pageable pageable) {
+    public Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Boolean hasBan, Pageable pageable) {
         LOGGER.trace("Getting all users");
-        return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber, pageable);
+        return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber, hasBan, pageable);
     }
 }
