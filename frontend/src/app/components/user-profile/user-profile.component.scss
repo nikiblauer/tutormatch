@@ -22,13 +22,13 @@ $base-color: #33709C;
   color: $base-color;
 }
 
-//d-flex class of boostrap 
+//d-flex class of boostrap
 .d-flex {
   align-items: center;
   .form-check {
     margin-bottom: 0;
     display: flex;
-    align-items: center; 
+    align-items: center;
   }
   h5 {
     margin-bottom: 0;
@@ -53,4 +53,5 @@ $base-color: #33709C;
   border: none white;
   background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(255,255,255,1.0)'/></svg>");
 }
+
 

@@ -17,7 +17,7 @@ import {Subscription} from "rxjs";
 
 export class ChatComponent implements OnInit {
   @ViewChild('chatHistory') private chatHistoryContainer: ElementRef;
-  message: string;
+  message: string = "";
   user1: number = 1;
   user2: number = 2;
   user1Name: string;
@@ -32,6 +32,8 @@ export class ChatComponent implements OnInit {
   info: boolean;
   messageReceived: ChatMessageDto;
   messageSubscription: Subscription;
+  maxChars: number = 500;
+  noCharsLeft: boolean;
 
 
   constructor(private chatService: ChatService,
@@ -96,6 +98,7 @@ export class ChatComponent implements OnInit {
     this.user2 = chatRoom.recipientId;
     this.user2Name = chatRoom.recipientFirstName + " " + chatRoom.recipientLastName;
     this.loadHistory();
+    this.scrollToBottom();
   }
 
   loadHistory() {
@@ -138,6 +141,14 @@ export class ChatComponent implements OnInit {
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
     }
+  }
+
+  getCharsLeft(){
+    if(this.message.length == this.maxChars) {
+      this.noCharsLeft = true;
+    }
+    this.noCharsLeft = false;
+    return this.message.length;
   }
 
 

@@ -8,7 +8,7 @@
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Search..." (input)="onSearch()">
               <div class="input-group-append">
-                <span class="input-group-text" class="btn btn-primary"><i class="fa fa-search"></i></span>
+                <span class="input-group-text" class="btn primary-btn"><i class="fa fa-search"></i></span>
               </div>
             </div>
             <div class="sticky">
@@ -35,7 +35,7 @@
                     <h6 class="m-b-0">{{ user2Name }}</h6>
                   </div>
                   <div class="infobtn">
-                    <button (click)="recipientInfo()" class="btn btn-primary"><i class="fa fa-info"></i></button>
+                    <button (click)="recipientInfo()" class="btn primary-btn"><i class="fa fa-info"></i></button>
                   </div>
                 </div>
               </div>
@@ -43,25 +43,28 @@
             <div class="chat-history" #chatHistory>
               <ul class="m-b-0">
                 <li class="clearfix" *ngFor="let message of messages;">
-                  <div *ngIf="message.recipientId === user2" class="message other-message float-right">
-                    <span class="ml-3">{{ message.content }}</span>
-                    <span class="timestamp">{{ message.timestamp | date:'HH:mm' }}</span>
+                  <div *ngIf="message.recipientId === user2" class="message my-message float-right">
+                    <span class="ml-3 message-content" >{{ message.content }}</span>
+                    <span class="timestamp">{{ message.timestamp | date:'dd MMM HH:mm' }}</span>
                   </div>
-                  <div *ngIf="message.recipientId === user1" class="message my-message">
-                    <span class="ml-3">{{ message.content }}</span>
-                    <span class="timestamp">{{ message.timestamp | date:'HH:mm' }}</span>
+                  <div *ngIf="message.recipientId === user1" class="message other-message">
+                    <span class="ml-3 message-content">{{ message.content }}</span>
+                    <span class="timestamp">{{ message.timestamp | date:'dd MMM HH:mm' }}</span>
                   </div>
                 </li>
               </ul>
             </div>
             <div class="chat-message clearfix">
               <div class="input-group">
-                <input [(ngModel)]="message" type="text" class="form-control" placeholder="Write a message..."
+                <input [(ngModel)]="message" type="text" class="form-control no-border" maxlength="500"
+                       placeholder="Write a message..."
                        (keydown.enter)="sendMessage()">
                 <div class="input-group-append">
-                  <button (click)="sendMessage()" class="btn btn-primary"><i class="fa fa-send"></i></button>
+                  <button
+                    (click)="sendMessage()" class="btn primary-btn"><i class="fa fa-send"></i></button>
                 </div>
               </div>
+              <span [ngStyle]="{'color': getCharsLeft() === 500 ? 'red' : 'gray'}" class="char-count">{{getCharsLeft() + "/500"}}</span>
             </div>
           </div>
         </div>
@@ -73,7 +76,7 @@
   <div class="popup-container" (click)="$event.stopPropagation()">
     <div class="header-container">
       <h1>{{ user2Name }}</h1>
-      <button (click)="closeInfo()" class="btn btn-primary"><i class="fa fa-close"></i></button>
+      <button (click)="closeInfo()" class="btn primary-btn"><i class="fa fa-close"></i></button>
     </div>
     <div class="match-details">
       <div>
@@ -89,16 +92,6 @@
         *ngIf="recipientToGetInfo">{{ getSelectedUserAddressAsString(recipientToGetInfo) }}</span></div>
       <div class="detail-row"><span class="detail-label">Phone:</span> <span
         *ngIf="recipientToGetInfo">{{ recipientToGetInfo.telNr }}</span></div>
-      <!--<div class="flex-container">
-        <div class="flex-item">
-          <div class="detail-row"><span class="detail-label">Needs:</span>
-            <span>{{ selectedMatch.tutorSubjects }}</span></div>
-        </div>
-        <div class="flex-item">
-          <div class="detail-row"><span class="detail-label">Offers:</span>
-            <span>{{ selectedMatch.traineeSubjects }}</span></div>
-        </div>
-      </div>-->
     </div>
   </div>
 </div>

@@ -151,22 +151,25 @@ body {
 
 .chat .chat-history .message {
   color: #444;
+  text-align: left;
   padding: 5px 10px;
-  line-height: 26px;
+  line-height: 22px;
   font-size: 16px;
   border-radius: 7px;
   display: inline-block;
-  position: relative
+  position: relative;
+  max-width: 80%;
+  hyphens: auto;
 }
 
 .chat .chat-history .my-message {
-  background: #F0F2F7
+  background: #33709C;
+  color: white;
+  margin-right: 0.4rem;
 }
 
 .chat .chat-history .other-message {
-  background: #33709C;
-  text-align: right;
-  color: white;
+  background: #F0F2F7;
 }
 
 .chat .chat-message {
@@ -202,9 +205,13 @@ body {
 .input-group .btn {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  //background-color: #143975;
+  border: #33709C solid 2px;
 }
 .chat .btn{
-  justify-content: flex-end
+  justify-content: flex-end;
+  border:  solid 1px;
+  //background-color: #143975;
 }
 .header-container {
   display: flex;
@@ -222,4 +229,30 @@ body {
   -o-transition: .5s;
   -webkit-transition: .5s;
   transition: .5s
+}
+.message-content {
+  white-space: pre-wrap;
+}
+.char-count {
+  font-size: 0.8rem;
+  float: right;
+}
+::-webkit-scrollbar {
+  width: 4px;
+  marign-left: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: lightgray;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: lightgray;
+}
+.form-control {
+  box-shadow: none !important;
+}
+.form-control:focus {
+  border-color: lightgray;
+  box-shadow: none !important;
 }
