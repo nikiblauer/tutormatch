@@ -19,8 +19,11 @@ export class FeedbackService {
   getPostedFeedback(ratedUserId: number) {
     return this.httpClient.get<FeedbackDto[]>(this.baseUri + `/get/${ratedUserId}`)
   }
-  getReceivedFeedback() {
+  getReceivedFeedbackSelf() {
     return this.httpClient.get<FeedbackDto[]>(this.baseUri + `/me`)
+  }
+  getWrittenFeedbackSelf() {
+    return this.httpClient.get<FeedbackDto[]>(this.baseUri + `/me/sent`)
   }
   postFeedback(feedbackDto: FeedbackDto) {
     console.log(feedbackDto);

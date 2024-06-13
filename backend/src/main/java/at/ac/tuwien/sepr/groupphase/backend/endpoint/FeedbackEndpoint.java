@@ -68,11 +68,24 @@ public class FeedbackEndpoint {
     @Secured("ROLE_USER")
     @GetMapping("/me")
     @ResponseStatus(HttpStatus.OK)
-    public FeedbackDto[] getSelfFeedback() {
+    public FeedbackDto[] getFeedbackOfSelf() {
         LOGGER.info("GET /api/v1/feedback/me");
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         long id = userService.findApplicationUserByEmail(userEmail).getId();
         return ratingService.getFeedbackOfStudent(id);
+    }
+
+    @Operation(
+        description = "Get the feedback by the request user.",
+        summary = "Get feedback by self.")
+    @Secured("ROLE_USER")
+    @GetMapping("/me/sent")
+    @ResponseStatus(HttpStatus.OK)
+    public FeedbackDto[] getFeedbackBySelf() {
+        LOGGER.info("GET /api/v1/feedback/me/sent");
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        long id = userService.findApplicationUserByEmail(userEmail).getId();
+        return ratingService.getFeedbackByStudent(id);
     }
 
     @Operation(

@@ -19,17 +19,34 @@ import {NgxSpinnerService} from "ngx-spinner";
 })
 export class FeedbackComponent {
   public receivedFeedback: FeedbackDto[] = [];
-
+  public writtenFeedback: FeedbackDto[] = [];
   constructor(private notification: ToastrService, private feedbackService: FeedbackService,private spinner: NgxSpinnerService) {
   }
   ngOnInit(): void {
   this.getReceivedFeedback();
+  this.getWrittenFeedback();
   }
 
     getReceivedFeedback() {
-    this.feedbackService.getReceivedFeedback().subscribe({
+    this.feedbackService.getReceivedFeedbackSelf().subscribe({
       next: (receivedFeedback) => {
         this.receivedFeedback = receivedFeedback;
+      },
+      error: error => {
+        console.log(error);
+        if (error.status == 404) {
+          this.receivedFeedback = [];
+          return;
+        }
+        this.notification.error(error.error, "Something went wrong!");
+      }
+    });
+  }
+
+  getWrittenFeedback() {
+    this.feedbackService.getWrittenFeedbackSelf().subscribe({
+      next: (writtenFeedback) => {
+        this.writtenFeedback = writtenFeedback;
       },
       error: error => {
         console.log(error);
@@ -47,6 +64,7 @@ export class FeedbackComponent {
         next: () => {
           this.spinner.hide();
           this.getReceivedFeedback();
+          this.getWrittenFeedback();
         },
         error: error => {
           this.spinner.hide();

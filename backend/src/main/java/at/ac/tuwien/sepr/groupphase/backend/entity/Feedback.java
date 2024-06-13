@@ -26,7 +26,7 @@ public class Feedback {
     private Long rated;
     @Column(nullable = false)
     private Long rater;
-    @Column(nullable = false, length = 10000)
+    @Column(nullable = false, length = 500)
     private String feedback;
     @Column(nullable = false)
     private Date created;

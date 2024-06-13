@@ -112,7 +112,7 @@ export class StarRatingComponent implements OnInit {
     this.spinner.show();
       this.feedbackService.deleteFeedback(id).subscribe({
           next: () => {
-            this.notification.success("Feedback deleted successfully.");
+            this.notification.success("Feedback successfully deleted.");
             this.spinner.hide();
             this.getPostedFeedback();
             this.feedbackText = '';
@@ -125,4 +125,9 @@ export class StarRatingComponent implements OnInit {
         }
       );
     }
+
+  getCharsLeft(){
+    return this.feedbackText.length;
+  }
+
 }

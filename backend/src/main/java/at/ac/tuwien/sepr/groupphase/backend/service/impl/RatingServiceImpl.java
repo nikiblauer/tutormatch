@@ -120,6 +120,9 @@ public class RatingServiceImpl implements RatingService {
         if (feedbackCreateDto.feedback.length() < 3) {
             throw new ValidationException("Message too short");
         }
+        if (feedbackCreateDto.feedback.length() > 500) {
+            throw new ValidationException("Message too long");
+        }
         Feedback feedback = new Feedback();
         feedback.setRated(feedbackCreateDto.rated);
         feedback.setRater(ratingUserId);
