@@ -94,7 +94,7 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public FeedbackDto[] getFeedbackByAndForStudent(long id1, long id2) {
-        LOGGER.debug("getFeedbackByAndForStudent: {} {}", id1, id2);
+        LOGGER.trace("getFeedbackByAndForStudent: {} {}", id1, id2);
         List<Feedback> feedbackList = feedbackRepository.getByRatedAndRater(id1, id2);
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(feedbackList, FeedbackDto[].class);

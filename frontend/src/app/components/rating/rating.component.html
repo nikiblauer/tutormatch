@@ -1,8 +1,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <div class="card">
-  <div id="half-stars-example">
-    <div class="rating-group" *ngIf="!isEditable">
+  <div id="half-stars-example" style="padding-bottom: 1em">
+    <div class="rating-group"  *ngIf="!isEditable">
       <i class="star star-under fa fa-star">
         <i class="star star-over fa fa-star" style="width: {{this.ratingStars[0]}}%"></i>
       </i>
@@ -104,7 +104,7 @@
             </small>
           </div>
         </div>
-        <button type="button" (click)="postFeedback(feedbackForm)" id="add-msg" class="btn btn-success float-right">Add message</button>
+        <button type="button" (click)="postFeedback(feedbackForm)" id="add-msg" class="btn btn-primary custom-button float-right">Add message</button>
         </form>
       </div>
       </div>
@@ -126,7 +126,7 @@
         </td>
         <td>{{ feedback.created | date:'MM/dd/yyyy HH:mm:ss'}}</td>
         <td>
-          <button class="btn btn-danger" (click)="deleteFeedback(feedback.id)">
+          <button class="btn btn-primary custom-button" (click)="deleteFeedback(feedback.id)">
             <i class="bi bi-x"></i>
           </button>
         </td>
