@@ -8,6 +8,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.UserRating;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.FeedbackRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ChatRoomRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RatingService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -24,11 +25,12 @@ public class RatingServiceImpl implements RatingService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final RatingRepository ratingRepository;
     private final FeedbackRepository feedbackRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
-
-    public RatingServiceImpl(RatingRepository ratingRepository, FeedbackRepository feedbackRepository) {
+    public RatingServiceImpl(RatingRepository ratingRepository, FeedbackRepository feedbackRepository, ChatRoomRepository chatRoomRepository) {
         this.ratingRepository = ratingRepository;
         this.feedbackRepository = feedbackRepository;
+        this.chatRoomRepository = chatRoomRepository;
     }
 
     @Override
@@ -103,15 +105,14 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public boolean chatExists(long studentId1, long studentId2) {
         LOGGER.trace("chatExists: {}, {}", studentId1, studentId2);
-        //TODO: Add check if a chat between participants exists
-        return true;
+        return studentId1 != studentId2 && !chatRoomRepository.findAllBySenderAndReceiverId(studentId1, studentId2).isEmpty();
     }
 
     @Override
     public void giveFeedback(FeedbackCreateDto feedbackCreateDto, long ratingUserId) throws Exception {
-        LOGGER.trace("updatedRating: {}", feedbackCreateDto);
+        LOGGER.trace("giveFeedback: {}", feedbackCreateDto);
         if (Objects.equals(ratingUserId, feedbackCreateDto.rated)) {
-            throw new ValidationException("Cannot give feedback to your self");
+            throw new ValidationException("Cannot give feedback to yourself");
         }
         if (!chatExists(ratingUserId, feedbackCreateDto.rated)) {
             throw new ValidationException("A chat between the participants must exist");
@@ -144,7 +145,7 @@ public class RatingServiceImpl implements RatingService {
         LOGGER.trace("deleteFeedbackByIdStudent: {} {}", deleteId, requestUserId);
         Feedback feedback = feedbackRepository.findFeedbackById(deleteId);
         if (feedback.getRated() != requestUserId && feedback.getRater() != requestUserId) {
-            throw new Exception("You can only delete feedback written or received by you");
+            throw new ValidationException("You can only delete feedback written or received by you");
         }
         feedbackRepository.deleteFeedbackById(deleteId);
     }

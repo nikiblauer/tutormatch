@@ -180,18 +180,25 @@ body {
   }
 
   .popup-overlay {
-    position: absolute;
-    margin: auto;
-    padding-bottom: 1em;
-    padding-top: 1em;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    display: block;
+    display: flex;
+    justify-content: center;
     align-items: center;
     z-index: 1000;
+
+  }
+
+  .popup-overlay-matches{
+    position: absolute;
+    margin: auto;
+    padding-bottom: 1em;
+    padding-top: 1em;
+    display: block;
     overflow-y: auto;
 
   }
@@ -203,6 +210,9 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     max-width: 800px;
     width: 100%;
+  }
+
+  .popup-container-matches {
     left: 50%;
     transform: translate(50%, 0%);
   }

@@ -93,6 +93,7 @@ export class StarRatingComponent implements OnInit {
     this.feedbackService.postFeedback(feedbackDto).subscribe({
         next: () => {
           this.spinner.hide();
+          this.notification.success("Feedback submitted. Thank you!");
           this.getPostedFeedback();
           this.feedbackText = '';
         },
@@ -111,6 +112,7 @@ export class StarRatingComponent implements OnInit {
     this.spinner.show();
       this.feedbackService.deleteFeedback(id).subscribe({
           next: () => {
+            this.notification.success("Feedback deleted successfully.");
             this.spinner.hide();
             this.getPostedFeedback();
             this.feedbackText = '';
