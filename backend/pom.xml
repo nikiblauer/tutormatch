@@ -87,6 +87,12 @@
             <scope>provided</scope>
         </dependency>
         <!--lombok-->
+        <!--websocket-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <!--websocket-->
         <!-- security -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

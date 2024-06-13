@@ -36,10 +36,11 @@ public class RatingServiceImpl implements RatingService {
         LOGGER.trace("getRatingOfStudent: {}", student);
         List<Float> ratingList = ratingRepository.findAllByRated(student);
         float[] array = new float[2];
+
         if (ratingList.isEmpty()) {
-            LOGGER.info("Rating" + 0);
             return array;
         }
+
         float rating = 0;
         for (Float userRating : ratingList) {
             rating += userRating;

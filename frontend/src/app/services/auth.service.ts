@@ -4,8 +4,9 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
-import { Globals } from '../global/globals'; 
+import { Globals } from '../global/globals';
 import { Router } from '@angular/router';
+import {WebSocketService} from "./web-socket.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class AuthService {
 
   private authBaseUri: string = this.globals.backendUri + '/authentication';
 
-  constructor(private httpClient: HttpClient, private globals: Globals, private router: Router) {
+  constructor(private httpClient: HttpClient, private globals: Globals, private router: Router, private webSocketService: WebSocketService ) {
   }
 
   /**
@@ -39,8 +40,9 @@ export class AuthService {
   }
 
   logoutUser() {
-    console.log('Logout'); 
-    localStorage.removeItem('authToken'); 
+    console.log('Logout');
+    localStorage.removeItem('authToken');
+    this.webSocketService.disconnect(); // Close the WebSocket connection
     this.router.navigate(['/login']);
   }
 

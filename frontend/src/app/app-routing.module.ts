@@ -16,6 +16,7 @@ import {PasswordResetComponent} from "./components/password-reset/password-reset
 import {RequestResetComponent} from "./components/password-reset/request-reset/request-reset.component";
 import {FeedbackComponent} from "./components/feedback/feedback.component";
 import {AdminFeedbackComponent} from "./components/admin/feedback/admin-feedback.component";
+import {ChatComponent} from "./components/chat/chat.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [AuthGuard]},
@@ -35,6 +36,8 @@ const routes: Routes = [
   {path: 'matches', component: MatchComponent},
   {path: 'myprofile', component: UserProfileComponent, data: {mode: UserMode.user}},
   {path: 'feedback', component: FeedbackComponent, data: {mode: UserMode.user}},
+  {path: 'chat', component: ChatComponent},
+  {path: 'myprofile', component: UserProfileComponent,data: {mode: UserMode.user}},
   {
     path: 'admin', component: AdminComponent, children: [
       {path: 'login', component: LoginComponent, data: {mode: LoginMode.admin}},

@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.*;
+import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.*;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.RatingDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.SubjectDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserDataGenerator;
@@ -9,11 +12,15 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+
 
 public class BaseTest {
 
@@ -23,6 +30,13 @@ public class BaseTest {
     protected UserRepository userRepository;
     @Autowired
     private SubjectRepository subjectRepository;
+
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
+
+    @Autowired
+    private ChatMessageRepository chatMessageRepository;
+
     @Autowired
     private UserSubjectRepository userSubjectRepository;
     @Autowired
@@ -36,13 +50,21 @@ public class BaseTest {
     @Autowired
     private RatingDataGenerator ratingDataGenerator;
 
+    @Autowired
+    private ChatRoomDataGenerator chatRoomDataGenerator;
+
+    @Autowired
+    private ChatMessageDataGenerator chatMessageDataGenerator;
+
+
     @BeforeEach
     public void setUp() throws IOException {
         generateData();
     }
 
+
     @AfterEach
-    public void tearDown() throws IOException {
+    public void tearDown() {
         clearData();
     }
 
@@ -50,13 +72,19 @@ public class BaseTest {
         userDataGenerator.generateApplicationUser();
         subjectDataGenerator.generateSubjects();
         userSubjectDataGenerator.generateUserSubjectRelation();
+        chatRoomDataGenerator.generateChatRooms();
+        chatMessageDataGenerator.generateChatMessages();
         ratingDataGenerator.generateUserSubjectRelation();
     }
 
     private void clearData() {
+        chatMessageRepository.deleteAll();
+        chatRoomRepository.deleteAll();
+
         userSubjectRepository.deleteAll();
         userRepository.deleteAll();
         subjectRepository.deleteAll();
+
         ratingRepository.deleteAll();
     }
 }
