@@ -62,6 +62,7 @@ export class FeedbackComponent {
     this.spinner.show();
     this.feedbackService.deleteFeedback(id).subscribe({
         next: () => {
+          this.notification.success("Feedback successfully deleted.");
           this.spinner.hide();
           this.getReceivedFeedback();
           this.getWrittenFeedback();

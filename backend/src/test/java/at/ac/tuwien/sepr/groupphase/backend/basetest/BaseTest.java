@@ -66,6 +66,9 @@ public class BaseTest {
     @Autowired
     private FeedbackDataGenerator feedbackDataGenerator;
 
+    @Autowired
+    private FeedbackRepository feedbackRepository;
+
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -91,11 +94,10 @@ public class BaseTest {
     private void clearData() {
         chatMessageRepository.deleteAll();
         chatRoomRepository.deleteAll();
-
+        feedbackRepository.deleteAll();
         userSubjectRepository.deleteAll();
         userRepository.deleteAll();
         subjectRepository.deleteAll();
-
         ratingRepository.deleteAll();
     }
 }

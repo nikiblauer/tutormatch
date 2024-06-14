@@ -174,7 +174,6 @@ body {
 
 
 .ellipsis span {
-  position: absolute;
   left: 0;
   right: 0;
   white-space: nowrap;
@@ -182,3 +181,10 @@ body {
   text-overflow: ellipsis;
 }
 
+span {
+ padding-left: 15px;
+}
+
+.delete-button{
+ margin-top: 0;
+}

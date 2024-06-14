@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackDtoNamed;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingDto;
 
 public interface RatingService {
@@ -45,7 +46,7 @@ public interface RatingService {
      * @param student the student who wrote the feedback
      * @return the feedback written by the student
      */
-    FeedbackDto[] getFeedbackByStudent(long student);
+    FeedbackDtoNamed[] getFeedbackByStudent(long student);
 
     FeedbackDto[] getFeedbackByAndForStudent(long id1, long id2);
 

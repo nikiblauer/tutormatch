@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackDtoNamed;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.service.RatingService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -81,7 +82,7 @@ public class FeedbackEndpoint {
     @Secured("ROLE_USER")
     @GetMapping("/me/sent")
     @ResponseStatus(HttpStatus.OK)
-    public FeedbackDto[] getFeedbackBySelf() {
+    public FeedbackDtoNamed[] getFeedbackBySelf() {
         LOGGER.info("GET /api/v1/feedback/me/sent");
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         long id = userService.findApplicationUserByEmail(userEmail).getId();

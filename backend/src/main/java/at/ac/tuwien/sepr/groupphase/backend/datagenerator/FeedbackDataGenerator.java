@@ -58,9 +58,7 @@ public class FeedbackDataGenerator {
             ApplicationUser user2 = verifiedUsers.get((i + 1) % verifiedUsers.size());
 
             if (userMatchService.findMatchingsForUser(user1.getDetails().getEmail()).anyMatch(userMatchDto -> user2.getId().equals(userMatchDto.getId()))) {
-                log.info("Rater={}", user1.getId());
-                log.info("Rated={}", user2.getId());
-                feedbackRepository.save(new Feedback((long) (i + 1), user2.getId(), user1.getId(), "test", new Date()));
+                feedbackRepository.save(new Feedback((long) (i + 1), user2.getId(), user1.getId(), "Feedback from user" + user1.getId() + " to user " + user2.getId(), new Date()));
             }
 
         }

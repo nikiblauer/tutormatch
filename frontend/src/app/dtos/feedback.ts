@@ -4,4 +4,5 @@ export class FeedbackDto {
   created?: Date;
   rated: number;
   rating?:number;
+  ratedName?:string;
 }

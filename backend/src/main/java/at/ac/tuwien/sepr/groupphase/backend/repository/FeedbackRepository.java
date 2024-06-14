@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface FeedbackRepository extends JpaRepository<Feedback, String> {
+public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
 
     Feedback findFeedbackById(Long id);
 

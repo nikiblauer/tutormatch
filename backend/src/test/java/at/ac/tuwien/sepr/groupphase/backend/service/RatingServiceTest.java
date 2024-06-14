@@ -112,6 +112,16 @@ public class RatingServiceTest {
         }).isInstanceOf(ValidationException.class).hasMessageContaining("A chat between the participants must exist");
     }
 
+    @Test
+    public void giveFeedbackThrowsExceptionWhenMoreThan500Words() throws Exception {
+        FeedbackCreateDto feedbackCreateDto = new FeedbackCreateDto();
+        feedbackCreateDto.setFeedback(new String(new char[501]).replace('\0', '\n'));
+        feedbackCreateDto.setRated(1L);
+        assertThatThrownBy(() -> {
+            ratingService.giveFeedback(feedbackCreateDto, 2L);
+        }).isInstanceOf(ValidationException.class).hasMessageContaining("Message too long");
+    }
+
 
     @Test
     public void deleteFeedbackByIdStudentSuccessfulWhenRequestUserIdIsRatedId() throws Exception {

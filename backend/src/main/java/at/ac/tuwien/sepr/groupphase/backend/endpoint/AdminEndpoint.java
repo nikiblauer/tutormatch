@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.BanReasonDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CoverageSubjectsStatisticsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackDtoNamed;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
@@ -245,7 +246,7 @@ public class AdminEndpoint {
     @Secured("ROLE_ADMIN")
     @GetMapping("/feedback/out/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public FeedbackCreateDto[] getFeedbackByUser(@PathVariable("id") Long id) {
+    public FeedbackDtoNamed[] getFeedbackByUser(@PathVariable("id") Long id) {
         LOGGER.info("PUT /api/v1/feedback/out/{}", id);
         return ratingService.getFeedbackByStudent(id);
     }

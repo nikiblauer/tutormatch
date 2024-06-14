@@ -2,6 +2,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackDtoNamed;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Feedback;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserRating;
@@ -10,12 +11,14 @@ import at.ac.tuwien.sepr.groupphase.backend.repository.FeedbackRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ChatRoomRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.RatingService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -26,11 +29,14 @@ public class RatingServiceImpl implements RatingService {
     private final RatingRepository ratingRepository;
     private final FeedbackRepository feedbackRepository;
     private final ChatRoomRepository chatRoomRepository;
+    private final UserService userService;
 
-    public RatingServiceImpl(RatingRepository ratingRepository, FeedbackRepository feedbackRepository, ChatRoomRepository chatRoomRepository) {
+
+    public RatingServiceImpl(RatingRepository ratingRepository, FeedbackRepository feedbackRepository, ChatRoomRepository chatRoomRepository, UserService userService) {
         this.ratingRepository = ratingRepository;
         this.feedbackRepository = feedbackRepository;
         this.chatRoomRepository = chatRoomRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -87,11 +93,21 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public FeedbackDto[] getFeedbackByStudent(long student) {
+    public FeedbackDtoNamed[] getFeedbackByStudent(long student) {
         LOGGER.trace("getFeedbackByStudent: {}", student);
         List<Feedback> feedbackList = feedbackRepository.findAllByRater(student);
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(feedbackList, FeedbackDto[].class);
+        ArrayList<FeedbackDtoNamed> feedbackDtosNamed = new ArrayList<>();
+        for (Feedback feedback : feedbackList) {
+            FeedbackDtoNamed feedbackDtoNamed1 = new FeedbackDtoNamed();
+            feedbackDtoNamed1.setId(feedback.getId());
+            feedbackDtoNamed1.setFeedback(feedback.getFeedback());
+            feedbackDtoNamed1.setRating(feedback.getRater());
+            feedbackDtoNamed1.setRated(feedback.getRated());
+            feedbackDtoNamed1.setCreated(feedback.getCreated());
+            feedbackDtoNamed1.setRatedName(userService.findApplicationUserById(feedback.getRated()).getFirstname() + " " + userService.findApplicationUserById(feedback.getRated()).getLastname());
+            feedbackDtosNamed.add(feedbackDtoNamed1);
+        }
+        return feedbackDtosNamed.toArray(new FeedbackDtoNamed[feedbackDtosNamed.size()]);
     }
 
     @Override
