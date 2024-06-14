@@ -34,7 +34,7 @@ public class ChatMessage {
     @ManyToOne
     @JoinColumn(name = "RECIPIENT_ID")
     private ApplicationUser recipientId;
-    @Column(length=500)
+    @Column(length = 500)
     private String content;
     private Date timestamp;
 }
