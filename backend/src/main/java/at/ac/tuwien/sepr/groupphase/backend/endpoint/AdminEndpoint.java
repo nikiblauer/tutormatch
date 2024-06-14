@@ -19,6 +19,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.SubjectMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
+import at.ac.tuwien.sepr.groupphase.backend.exception.SubjectPreviewException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.TissClientException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.StatisticService;
@@ -223,7 +224,7 @@ public class AdminEndpoint {
             return subjectMapper.subjectToSubjectDetailDto(preview);
         } catch (TissClientException e) {
             LOGGER.error("Error loading subject preview from TISS for course number: {} and semester: {}", courseNr, semester, e);
-            throw new RuntimeException("Could not load subject from Tiss. Reason: " + e.getMessage(), e);
+            throw new SubjectPreviewException("Could not load subject from Tiss. Reason: " + e.getMessage(), e);
         }
     }
 

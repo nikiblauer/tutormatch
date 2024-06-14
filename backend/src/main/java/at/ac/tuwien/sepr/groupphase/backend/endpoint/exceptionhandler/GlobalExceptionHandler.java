@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.exceptionhandler;
 import at.ac.tuwien.sepr.groupphase.backend.exception.BannedUserException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ErrorListException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.SubjectPreviewException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.TissClientException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.TissClientHttpException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.UnverifiedAccountException;
@@ -111,7 +112,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     //get all unhandled runtime exceptions to have a consistent error response
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(value = {RuntimeException.class})
+    @ExceptionHandler(value = {SubjectPreviewException.class})
     @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content = @Content)
     protected ResponseEntity<Object> handleRuntimeException(RuntimeException ex, WebRequest request) {
         LOGGER.warn(ex.getMessage());
