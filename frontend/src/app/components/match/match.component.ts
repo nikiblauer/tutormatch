@@ -121,9 +121,10 @@ export class MatchComponent implements OnInit {
           if (!exits){
             this.chatService.createChatRoom(chatRoomToCreate).subscribe({
               next: value => {
-                console.log(value);
+                this.notification.success("Chat successfully created")
                 this.router.navigate(["/chat"])
               }, error: error => {
+                this.notification.error("Chat Creation Failed")
                 console.log(error);
               }
             })

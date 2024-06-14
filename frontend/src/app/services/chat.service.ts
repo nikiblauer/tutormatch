@@ -17,14 +17,8 @@ export class ChatService {
   }
 
   createChatRoom(toCreate: CreateChatRoomDto): Observable<ChatRoomDto> {
-
     console.log('Create chatroom');
-    console.log("---------" + toCreate.recipientId);
     return this.httpClient.post<ChatRoomDto>(this.chatUri + "/room", toCreate, {responseType: "json"});
-  }
-
-  getChatRooms() {
-    return this.httpClient.get<ChatRoomDto[]>(this.chatUri + "/room/user", {responseType: "json"});
   }
 
   getMessagesByChatRoomId(chatRoomId: string) {

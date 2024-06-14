@@ -3,7 +3,7 @@ import {AuthService} from "./auth.service";
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "./user.service";
 import {Observable, Subject} from "rxjs";
-import {ChatMessageDto} from "../dtos/chat";
+import {ChatMessageDto, WebSocketErrorDto} from "../dtos/chat";
 
 
 declare var SockJS: any;
@@ -16,6 +16,7 @@ export class WebSocketService {
   private stompClient: any;
   connected: boolean = false;
   private messageSubject = new Subject<any>();
+  private webSocketError = new Subject<any>();
 
   constructor(private userService: UserService) {
 
@@ -49,6 +50,7 @@ export class WebSocketService {
 
           this.stompClient.subscribe(`/user/${id}/queue/errors`, error=> {
             if (error.body){
+              this.onErrorReceived(JSON.parse(error.body))
               console.log(JSON.parse(error.body));
             }
           })
@@ -64,7 +66,6 @@ export class WebSocketService {
   }
 
   onMessageReceived(parsedObject: any) {
-    console.log(parsedObject);
     let receivedMessage;
     try {
       if (parsedObject && parsedObject.content) {
@@ -84,9 +85,27 @@ export class WebSocketService {
       return null;
     }
   }
-
+  onErrorReceived(parsedObject: any) {
+    let receivedError;
+    try {
+      if (parsedObject && parsedObject.errorMsg) {
+        receivedError = new WebSocketErrorDto();
+        receivedError.errorMsg = parsedObject.errorMsg;
+        this.webSocketError.next(parsedObject);
+        return receivedError;
+      } else {
+        throw new Error("Error extracting content");
+      }
+    } catch (error) {
+      console.error('Error parsing JSON or extracting content:', error);
+      return null;
+    }
+  }
   onNewMessage(): Observable<any> {
     return this.messageSubject.asObservable();
+  }
+  onNewError(): Observable<any>{
+    return this.webSocketError.asObservable();
   }
 
   disconnect() {

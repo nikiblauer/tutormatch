@@ -1,6 +1,6 @@
 import {AfterViewChecked, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {WebSocketService} from "../../services/web-socket.service";
-import {ChatMessageDto, ChatRoomDto, CreateChatRoomDto} from "../../dtos/chat";
+import {ChatMessageDto, ChatRoomDto, CreateChatRoomDto, WebSocketErrorDto} from "../../dtos/chat";
 import {ChatService} from "../../services/chat.service";
 import {UserService} from "../../services/user.service";
 import {RatingService} from "../../services/rating.service";
@@ -32,6 +32,7 @@ export class ChatComponent implements OnInit {
   info: boolean;
   messageReceived: ChatMessageDto;
   messageSubscription: Subscription;
+  errorSubscription: Subscription;
 
   constructor(private chatService: ChatService,
               private userService: UserService,
@@ -48,6 +49,9 @@ export class ChatComponent implements OnInit {
       this.messages.push(receivedMessage);
       this.scrollToBottom();
     });
+    this.errorSubscription = this.webSocketService.onNewError().subscribe(error => {
+      this.notification.error("Error sending message: " + error.errorMsg)
+    })
     this.webSocketService.connect();
   }
 
@@ -57,21 +61,6 @@ export class ChatComponent implements OnInit {
     this.filteredChatRooms = this.chatRooms.filter(chatRoom =>
       `${chatRoom.recipientFirstName} ${chatRoom.recipientLastName}`.toLowerCase().includes(this.searchString.toLowerCase())
     );
-  }
-
-  createChat() {
-    const chatRoom: CreateChatRoomDto = {
-      recipientId: this.user2
-    }
-
-
-    this.chatService.createChatRoom(chatRoom).subscribe({
-      next: value => {
-        console.log(value);
-      }, error: error => {
-        console.log(error);
-      }
-    })
   }
 
   getChatRoomsForUser() {
@@ -115,7 +104,7 @@ export class ChatComponent implements OnInit {
 
   sendMessage() {
     if (this.message.trim() == "") {
-      return; // Do not send empty messages
+      return; // prevents sending empty msg
     }
     const chatMessage: ChatMessageDto = {
       chatRoomId: this.activeChatRoom.chatRoomId,
@@ -134,7 +123,7 @@ export class ChatComponent implements OnInit {
     try {
       setTimeout(() => {
         this.chatHistoryContainer.nativeElement.scrollTop = this.chatHistoryContainer.nativeElement.scrollHeight;
-      }, 50); // You can adjust the delay if necessary
+      }, 50);
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
     }
