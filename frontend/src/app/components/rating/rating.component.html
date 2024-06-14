@@ -115,19 +115,19 @@
     <table class="table" style="width:calc(100%)">
       <thead>
       <tr>
-        <th>Your previous messages</th>
+        <th>Your last feedback</th>
         <th>Date</th>
         <th>Delete</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let feedback of postedFeedback">
+      <tr>
         <td class="ellipsis first">
-          <span>{{ feedback.feedback }}</span>
+          <span>{{ postedFeedback[0].feedback }}</span>
         </td>
-        <td>{{ feedback.created | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+        <td>{{ postedFeedback[0].created | date:'MM/dd/yyyy HH:mm:ss'}}</td>
         <td>
-          <button class="btn btn-primary custom-button delete-button" style="margin-top: 0px" (click)="deleteFeedback(feedback.id)">
+          <button class="btn btn-primary custom-button delete-button" style="margin-top: 0px" (click)="deleteFeedback(postedFeedback[0].id)">
             <i class="bi bi-x"></i>
           </button>
         </td>
