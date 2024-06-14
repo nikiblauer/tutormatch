@@ -10,6 +10,7 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.BanRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.FeedbackRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
@@ -44,12 +45,13 @@ public class CustomUserDetailService implements UserService {
     private final UserValidator validator;
     private final EmailSmtpService emailService;
     private final RatingRepository ratingRepository;
+    private final FeedbackRepository feedbackRepository;
 
     @Autowired
     public CustomUserDetailService(UserRepository userRepository, BanRepository banRepository,
                                    PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer,
                                    UserValidator validator, EmailSmtpService emailService,
-                                   RatingRepository ratingRepository) {
+                                   RatingRepository ratingRepository, FeedbackRepository feedbackRepository) {
         this.userRepository = userRepository;
         this.banRepository = banRepository;
         this.passwordEncoder = passwordEncoder;
@@ -57,6 +59,7 @@ public class CustomUserDetailService implements UserService {
         this.validator = validator;
         this.emailService = emailService;
         this.ratingRepository = ratingRepository;
+        this.feedbackRepository = feedbackRepository;
     }
 
     @Override
@@ -211,6 +214,7 @@ public class CustomUserDetailService implements UserService {
 
         //delete ratings of student
         ratingRepository.deleteAllByStudentId(id);
+        feedbackRepository.deleteFeedbackByRater(id);
 
         Banned userBan = new Banned();
         userBan.setUser(applicationUser);

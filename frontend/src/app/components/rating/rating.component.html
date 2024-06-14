@@ -1,8 +1,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <div class="card">
-  <div id="half-stars-example">
-    <div class="rating-group" *ngIf="!isEditable">
+  <div id="half-stars-example" style="padding-bottom: 1em">
+    <div class="rating-group"  *ngIf="!isEditable">
       <i class="star star-under fa fa-star">
         <i class="star star-over fa fa-star" style="width: {{this.ratingStars[0]}}%"></i>
       </i>
@@ -92,6 +92,49 @@
       <div>
         <p style="color: gray;">Select your rating by clicking on the stars</p>
       </div>
+      <div *ngIf="chatExists">
+        <form (ngSubmit)="postFeedback(feedbackForm)" #feedbackForm="ngForm">
+        <div class="form-group">
+          <textarea rows="6" name="text" class="form-control" id="inputText" required
+                    aria-describedby="textHelp" placeholder="Write anonymous feedback:" [(ngModel)]="feedbackText" maxlength="500"
+          ></textarea>
+          <div *ngIf="submitted && feedbackForm.controls.text.errors" class="error">
+            <small class="form-text text-warning" *ngIf="feedbackForm.controls.text.errors.required" >Your text is
+              required!
+            </small>
+          </div>
+        </div>
+        <button type="button" (click)="postFeedback(feedbackForm)" id="add-msg" class="btn btn-primary custom-button float-right">Add message</button>
+        </form>
+        <span [ngStyle]="{'color': getCharsLeft() === 500 ? 'red' : 'gray'}" class="char-count">{{getCharsLeft() + "/500"}}</span>
+      </div>
+      </div>
     </div>
+  <div *ngIf="!chatExists">You can leave feedback after starting a chat with this user</div>
+  <div *ngIf="postedFeedback.length !== 0" style="width: 90%">
+    <table class="table" style="width:calc(100%)">
+      <thead>
+      <tr>
+        <th>Your last feedback</th>
+        <th>Date</th>
+        <th>Delete</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let feedback of postedFeedback">
+        <td class="ellipsis first">
+          <span>{{ feedback.feedback }}</span>
+        </td>
+        <td>{{ feedback.created | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+        <td>
+          <button class="btn btn-primary custom-button" (click)="deleteFeedback(feedback.id)">
+            <i class="bi bi-x"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
+
 </div>
+

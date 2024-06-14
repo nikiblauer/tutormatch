@@ -24,8 +24,8 @@
   </div>
 </div>
 
-<div class="popup-overlay" (click)="closeMatch()" *ngIf="selectedMatch && selectedUserRating !== -2">
-  <div class="popup-container" (click)="$event.stopPropagation()">
+<div class="popup-overlay popup-overlay-matches" (click)="closeMatch()" *ngIf="selectedMatch && selectedUserRating !== -2">
+  <div class="popup-container popup-container-matches" (click)="$event.stopPropagation()">
     <div class="header-container">
       <h1>Match Details</h1>
       <button class="close-btn" (click)="startChat()"><i class="bi bi-chat-dots"></i></button>

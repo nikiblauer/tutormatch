@@ -1,0 +1,53 @@
+<div style="padding-top:20px;">
+<h2>Received feedback:</h2>
+    <table class="table table-striped" style="width:calc(100%)">
+      <thead>
+      <tr>
+        <th style="width:calc(70%)">Message</th>
+        <th style="width:calc(15%)">Date</th>
+        <th class="my-personal-class">Report</th>
+        <th class="my-personal-class">Delete</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let feedback of receivedFeedback">
+        <td >{{ feedback.feedback }}</td>
+        <td >{{ feedback.created  | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+        <td>
+          <button class="btn btn-warning custom-button">
+            <i class="bi bi-exclamation"></i>
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-danger custom-button" (click)="deleteFeedback(feedback.id)">
+            <i class="bi bi-x"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+  <h2>Written feedback:</h2>
+  <table class="table table-striped" style="width:calc(100%)">
+    <thead>
+    <tr>
+      <th style="width:calc(70%)" class="my-personal-class">Message</th>
+      <th style="width:calc(10%)" class="my-personal-class">Date</th>
+      <th style="width:calc(15%)" class="my-personal-class">To</th>
+      <th class="my-personal-class">Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let feedback of writtenFeedback">
+      <td >{{ feedback.feedback }}</td>
+      <td >{{ feedback.created  | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+      <td >{{ feedback.ratedName }}</td>
+      <td>
+        <button class="btn btn-danger custom-button" (click)="deleteFeedback(feedback.id)">
+          <i class="bi bi-x"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

@@ -26,8 +26,10 @@ public class BaseTest {
 
     @Autowired
     protected UserMatchService userMatchService;
+
     @Autowired
     protected UserRepository userRepository;
+
     @Autowired
     private SubjectRepository subjectRepository;
 
@@ -39,14 +41,19 @@ public class BaseTest {
 
     @Autowired
     private UserSubjectRepository userSubjectRepository;
+
     @Autowired
     private UserDataGenerator userDataGenerator;
+
     @Autowired
     private UserSubjectDataGenerator userSubjectDataGenerator;
+
     @Autowired
     private SubjectDataGenerator subjectDataGenerator;
+
     @Autowired
     private RatingRepository ratingRepository;
+
     @Autowired
     private RatingDataGenerator ratingDataGenerator;
 
@@ -55,6 +62,12 @@ public class BaseTest {
 
     @Autowired
     private ChatMessageDataGenerator chatMessageDataGenerator;
+
+    @Autowired
+    private FeedbackDataGenerator feedbackDataGenerator;
+
+    @Autowired
+    private FeedbackRepository feedbackRepository;
 
 
     @BeforeEach
@@ -74,17 +87,17 @@ public class BaseTest {
         userSubjectDataGenerator.generateUserSubjectRelation();
         chatRoomDataGenerator.generateChatRooms();
         chatMessageDataGenerator.generateChatMessages();
+        feedbackDataGenerator.generateFeedback();
         ratingDataGenerator.generateUserSubjectRelation();
     }
 
     private void clearData() {
         chatMessageRepository.deleteAll();
         chatRoomRepository.deleteAll();
-
+        feedbackRepository.deleteAll();
         userSubjectRepository.deleteAll();
         userRepository.deleteAll();
         subjectRepository.deleteAll();
-
         ratingRepository.deleteAll();
     }
 }
