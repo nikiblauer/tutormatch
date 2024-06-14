@@ -55,17 +55,17 @@ public class FeedbackEndpointTest extends BaseTest {
 
     @Test
     void deleteFeedbackByIdStudentReturns422WhenRequestUserIdIsNotRatedIdOrRaterId() throws Exception {
-        Feedback feedback = feedbackRepository.findFeedbackById(1L);
+        ApplicationUser user = userRepository.findApplicationUserByDetails_Email(DEFAULT_USER_EMAIL);
+        Feedback feedback = feedbackRepository.findAll().stream().filter(item -> !Objects.equals(item.getRated(), user.getId()) && !Objects.equals(item.getRater(), user.getId())).findFirst().orElse(null);
         assertNotNull(feedback);
-        long idNotInRatedOrRater = Math.max(feedback.getRated(), feedback.getRater()) + 1;
-        List<ApplicationUser> users = userRepository.findAll();
-        var expectedUser = users.get((int) idNotInRatedOrRater);
+        assertNotEquals(feedback.getRater(), user.getId());
+        assertNotEquals(feedback.getRated(), user.getId());
         MvcResult result = mockMvc.perform(
-                                delete("/api/v1/feedback/delete/" + 1)
-                               .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(expectedUser.getDetails().getEmail(), USER_ROLES)))
+                                delete("/api/v1/feedback/delete/" + feedback.getId())
+                               .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES)))
                                .andExpect(status().isUnprocessableEntity())
                                .andReturn();
-        assertNotNull(feedbackRepository.findFeedbackById(1L));
+        assertNotNull(feedbackRepository.findFeedbackById(feedback.getId()));
 
     }
 
