@@ -65,16 +65,10 @@ body {
 }
 
 .people-list {
-  background: #F0F2F7; /* Light blue background */
+  background: #F0F2F7;
   border-right: 1px solid #e6e6e6;
   width: 25%;
   padding: 20px;
-  /*overflow-y: auto; /* Ensure content can be scrolled if it overflows
-  height: calc(75vh);
-  -moz-transition: .5s;
-  -o-transition: .5s;
-  -webkit-transition: .5s;
-  transition: .5s*/
 }
 
 .people-list .chat-list li {
@@ -113,6 +107,7 @@ body {
   vertical-align: center;
   padding-left: 10px
 }
+
 .chat .chat-header .infobtn {
   float: right;
   vertical-align: center
@@ -134,6 +129,7 @@ body {
 .chat .chat-history ul li:last-child {
   margin-bottom: 0px
 }
+
 .chat .chat-history ul li:first-child {
   margin-top: 15px
 }
@@ -191,7 +187,7 @@ body {
   float: right
 }
 
-.timestamp{
+.timestamp {
   display: block;
   font-size: 0.75rem;
   text-align: right;
@@ -208,38 +204,48 @@ body {
 .input-group .btn {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  //background-color: #143975;
-  border: #33709C solid 2px;
 }
-.chat .btn{
-  justify-content: flex-end;
-  border:  solid 1px;
-  //background-color: #143975;
+
+.chat-btn {
+  background-color: #33709c;
+  border-color: #33709c;
 }
+
+.chat-btn:hover {
+  background-color: #143349 !important;
+  border-color: #143349!important;
+  color: #FFF;
+}
+
 .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center; /* Aligns items vertically in the center */
   padding: 10px; /* Optional: add some padding */
 }
+
 .header-container .btn {
   background-color: red;
 }
-.sticky{
+
+.sticky {
   overflow-y: auto;
-  height: calc(64vh) ;
+  height: calc(64vh);
   -moz-transition: .5s;
   -o-transition: .5s;
   -webkit-transition: .5s;
   transition: .5s
 }
+
 .message-content {
   white-space: pre-wrap;
 }
+
 .char-count {
   font-size: 0.8rem;
   float: right;
 }
+
 ::-webkit-scrollbar {
   width: 4px;
   margin-left: 2px;
@@ -249,16 +255,20 @@ body {
   background-color: lightgray;
   border-radius: 5px;
 }
+
 ::-webkit-scrollbar-thumb {
   background-color: lightgray;
 }
+
 .form-control {
   box-shadow: none !important;
 }
+
 .form-control:focus {
   border-color: lightgray;
   box-shadow: none !important;
 }
+
 .circle {
   display: inline-block;
   background-color: #33709C;

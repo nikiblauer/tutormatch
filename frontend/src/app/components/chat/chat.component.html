@@ -8,7 +8,7 @@
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Search..." (input)="onSearch()">
               <div class="input-group-append">
-                <span class="input-group-text" class="btn primary-btn"><i class="fa fa-search"></i></span>
+                <span class="input-group-text" class="btn btn-primary chat-btn"><i class="fa fa-search"></i></span>
               </div>
             </div>
             <div class="sticky">
@@ -35,7 +35,7 @@
                     <p>{{ user2Name }}</p>
                   </div>
                   <div class="infobtn">
-                    <button (click)="recipientInfo()" class="btn primary-btn"><i class="fa fa-info"></i></button>
+                    <button (click)="recipientInfo()" class="btn btn-primary chat-btn"><i class="fa fa-info"></i></button>
                   </div>
                 </div>
               </div>
@@ -61,7 +61,7 @@
                        (keydown.enter)="sendMessage()">
                 <div class="input-group-append">
                   <button
-                    (click)="sendMessage()" class="btn primary-btn"><i class="fa fa-send"></i></button>
+                    (click)="sendMessage()" class="btn btn-primary chat-btn"><i class="fa fa-send"></i></button>
                 </div>
               </div>
               <span [ngStyle]="{'color': getCharsLeft() === 500 ? 'red' : 'gray'}" class="char-count">{{getCharsLeft() + "/500"}}</span>
