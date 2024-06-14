@@ -1,10 +1,5 @@
-body {
-  background-color: #f4f7f6;
-  margin-top: 20px;
-}
-
 .chat-window {
-  padding-top: 25px;
+  padding-top: 1.5rem;
 }
 
 .card {
@@ -26,42 +21,48 @@ body {
 
 
 .chat {
-  width: 75%; /* Take up the remaining space */
-  padding: 20px;
+  width: 75%;
+  padding: 20px 20px 0;
   display: flex;
   flex-direction: column;
 }
 
 .card.chat-room {
-  width: 100%; /* Make button fill the width of the list item */
-  border: 2px solid white; /* Remove border */
-  background: white; /* Remove default background */
-  text-align: left; /* Align text to the left */
-  padding: 10px 15px; /* Add padding to the button */
+  width: 100%;
+  border: 2px solid white;
+  background: white;
+  text-align: left;
+  padding: 10px 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .card.chat-room:hover {
-  background-color: #efefef; /* Add a hover effect */
+  background-color: #efefef;
   border: 2px solid #efefef;
-  cursor: pointer; /* Change cursor to pointer */
+  cursor: pointer;
 }
 
 .active-chat-room {
-  width: 100%; /* Make button fill the width of the list item */
-  border: 2px solid orange; /* Remove border */
-  text-align: left; /* Align text to the left */
-  padding: 10px 15px; /* Add padding to the button */
+  width: 100%;
+  border: 2px solid orange;
+  text-align: left;
+  padding: 10px 15px;
   transition: .5s;
   border-radius: .55rem;
   position: relative;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
   background-color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .active-chat-room:hover {
-  background-color: #efefef; /* Add a hover effect */
+  background-color: #efefef;
   border: 2px solid orange;
-  cursor: pointer; /* Change cursor to pointer */
+  cursor: pointer;
 }
 
 .people-list {
@@ -74,7 +75,7 @@ body {
 .people-list .chat-list li {
   padding: 10px 15px;
   list-style: none;
-  border-radius: 3px
+  border-radius: 3px;
 }
 
 .people-list .chat-list li.active {
@@ -85,20 +86,9 @@ body {
   font-size: 15px
 }
 
-.people-list .chat-list img {
-  width: 45px;
-  border-radius: 50%
-}
-
 .chat .chat-header {
   padding: 15px 20px;
   border-bottom: 2px solid #f4f7f6
-}
-
-.chat .chat-header img {
-  float: left;
-  border-radius: 40px;
-  width: 40px
 }
 
 .chat .chat-header .chat-name {
@@ -116,9 +106,9 @@ body {
 .chat .chat-history {
   border-bottom: 2px solid #fff;
   overflow-y: auto;
-  flex-grow: 1; /* Allow chat history to grow and fill available space */
-  height: calc(55vh); /* Fixed height for chat history based on the screen height */
-  min-height: 0; /* Prevents shrinking below the min height */
+  flex-grow: 1;
+  height: calc(55vh);
+  min-height: 0;
 }
 
 .chat .chat-history ul li {
@@ -172,15 +162,8 @@ body {
 }
 
 .chat .chat-message {
-  padding: 10px
-}
-
-.online,
-.offline,
-.me {
-  margin-right: 2px;
-  font-size: 8px;
-  vertical-align: middle
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 .float-right {
@@ -212,16 +195,16 @@ body {
 }
 
 .chat-btn:hover {
-  background-color: #143349 !important;
-  border-color: #143349!important;
+  background-color: #143349;
+  border-color: #143349;
   color: #FFF;
 }
 
 .header-container {
   display: flex;
   justify-content: space-between;
-  align-items: center; /* Aligns items vertically in the center */
-  padding: 10px; /* Optional: add some padding */
+  align-items: center;
+  padding: 10px;
 }
 
 .header-container .btn {
