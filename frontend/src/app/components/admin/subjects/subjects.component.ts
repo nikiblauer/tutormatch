@@ -36,6 +36,7 @@ export class SubjectComponent implements OnInit {
   selectedSubject: SubjectDetailDto;
 
   subjectToDelete: SubjectDetailDto = null;
+  public autofillUrlInput: string = '';
 
   ngOnInit() {
 
@@ -227,6 +228,24 @@ export class SubjectComponent implements OnInit {
       },
       error: (e) => {
         this.spinner.hide();
+        this.handleError(e)
+      }
+    });
+  }
+
+  autofillUrl() {
+    const urlObj = new URL(this.autofillUrlInput);
+    const params = new URLSearchParams(urlObj.search);
+
+    this.adminService.getPreviewSubject(params.get("courseNr"), params.get("semester"))
+    .subscribe({
+      next: previewSubject => {
+        this.createdSubject = {
+          ...previewSubject,
+          id: null
+        };
+      },
+      error: (e) => {
         this.handleError(e)
       }
     });

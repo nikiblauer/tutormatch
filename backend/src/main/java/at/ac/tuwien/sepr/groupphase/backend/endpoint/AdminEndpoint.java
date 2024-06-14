@@ -17,6 +17,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.SubjectMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
+import at.ac.tuwien.sepr.groupphase.backend.exception.TissClientException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.StatisticService;
 import at.ac.tuwien.sepr.groupphase.backend.service.SubjectService;
@@ -202,6 +203,23 @@ public class AdminEndpoint {
         LOGGER.info("PUT /api/v1/user/subjects body:{}", listDto);
         ApplicationUser student = userService.findApplicationUserById(id);
         subjectService.setUserSubjects(student, listDto.traineeSubjects, listDto.tutorSubjects);
+    }
+
+    @Operation(
+        description = "Retrieves a preview of the subject for the given course number and semester.",
+        summary = "Get subject preview by course number and semester"
+    )
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/subject/courses/{courseNr}/semesters/{semester}/preview")
+    @ResponseStatus(HttpStatus.OK)
+    public SubjectCreateDto getSubjectPreview(@PathVariable("courseNr") String courseNr, @PathVariable("semester") String semester) {
+        try {
+            var preview = subjectService.createSubjectPreviewFromTiss(courseNr, semester);
+            return subjectMapper.subjectToSubjectDetailDto(preview);
+        } catch (TissClientException e) {
+            LOGGER.error("Error loading subject preview from TISS for course number: {} and semester: {}", courseNr, semester, e);
+            throw new RuntimeException("Could not load subject from Tiss. Reason: " + e.getMessage(), e);
+        }
     }
 
     @Operation(
