@@ -50,7 +50,7 @@ export class ChatComponent implements OnInit {
       this.scrollToBottom();
     });
     this.errorSubscription = this.webSocketService.onNewError().subscribe(error => {
-      this.notification.error("Error sending message: " + error.errorMsg)
+      this.notification.error(error.errorMsg, "Error sending message: ")
     })
     this.webSocketService.connect();
   }
@@ -89,7 +89,6 @@ export class ChatComponent implements OnInit {
 
   loadHistory() {
     if (!this.activeChatRoom.chatRoomId) {
-      console.log("Active chat room is not set");
       return;
     }
     this.chatService.getMessagesByChatRoomId(this.activeChatRoom.chatRoomId).subscribe({

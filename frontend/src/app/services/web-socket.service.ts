@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import {AuthService} from "./auth.service";
-import {HttpClient} from "@angular/common/http";
 import {UserService} from "./user.service";
 import {Observable, Subject} from "rxjs";
 import {ChatMessageDto, WebSocketErrorDto} from "../dtos/chat";
@@ -29,6 +27,7 @@ export class WebSocketService {
     let socket = null;
     socket = new SockJS('http://localhost:8080/ws')
     this.stompClient = Stomp.over(socket);
+    this.stompClient.debug = () => { };     //removes websocket logs
 
     const token = localStorage.getItem('authToken');
     if (!token){
@@ -36,10 +35,7 @@ export class WebSocketService {
     }
 
     this.stompClient.connect({ 'Authorization': token}, frame => {
-      console.log('Connected: ' + frame);
       this.connected = true;
-
-
       this.userService.getUserId().subscribe({
         next: id => {
           this.stompClient.subscribe(`/user/${id}/queue/messages`, message=> {
@@ -51,7 +47,6 @@ export class WebSocketService {
           this.stompClient.subscribe(`/user/${id}/queue/errors`, error=> {
             if (error.body){
               this.onErrorReceived(JSON.parse(error.body))
-              console.log(JSON.parse(error.body));
             }
           })
         }, error: err => {
@@ -111,7 +106,6 @@ export class WebSocketService {
   disconnect() {
     if (this.stompClient && this.connected) {
       this.stompClient.disconnect(() => {
-        console.log('Disconnected');
         this.connected = false;
       });
     }
