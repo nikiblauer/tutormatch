@@ -508,4 +508,5 @@ public class AdminEndpointTest extends BaseTest {
             () -> assertEquals(id, banDetails.getId())
         );
     }
+
 }

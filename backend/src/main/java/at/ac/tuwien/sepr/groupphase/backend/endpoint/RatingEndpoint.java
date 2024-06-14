@@ -58,4 +58,5 @@ public class RatingEndpoint {
         long ratingUserid = userService.findApplicationUserByEmail(userEmail).getId();
         return ratingService.getRatingFromStudent(id, ratingUserid);
     }
+
 }

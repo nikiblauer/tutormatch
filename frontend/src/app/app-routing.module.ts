@@ -14,6 +14,8 @@ import {UserMode, UserProfileComponent} from './components/user-profile/user-pro
 import {SubjectComponent} from "./components/admin/subjects/subjects.component";
 import {PasswordResetComponent} from "./components/password-reset/password-reset.component";
 import {RequestResetComponent} from "./components/password-reset/request-reset/request-reset.component";
+import {FeedbackComponent} from "./components/feedback/feedback.component";
+import {AdminFeedbackComponent} from "./components/admin/feedback/admin-feedback.component";
 import {ChatComponent} from "./components/chat/chat.component";
 
 const routes: Routes = [
@@ -32,6 +34,8 @@ const routes: Routes = [
   },
   {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
   {path: 'matches', component: MatchComponent},
+  {path: 'myprofile', component: UserProfileComponent, data: {mode: UserMode.user}},
+  {path: 'feedback', component: FeedbackComponent, data: {mode: UserMode.user}},
   {path: 'chat', component: ChatComponent},
   {path: 'myprofile', component: UserProfileComponent,data: {mode: UserMode.user}},
   {
@@ -40,6 +44,7 @@ const routes: Routes = [
       {path: 'dashboard', component: DashboardComponent},
       {path: 'students', component: StudentsComponent},
       {path: 'students/:id', component: UserProfileComponent, data: {mode: UserMode.admin}},
+      {path: 'students/feedback/:id', component: AdminFeedbackComponent},
       {path: 'subjects', component: SubjectComponent}
     ]
   }

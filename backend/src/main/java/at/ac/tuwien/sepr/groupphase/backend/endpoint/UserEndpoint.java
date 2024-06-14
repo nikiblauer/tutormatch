@@ -201,7 +201,7 @@ public class UserEndpoint {
         return user.getId();
     }
 
-    @Secured("ROLE_USER")
+    @PermitAll
     @GetMapping("/visibility")
     @ResponseStatus(HttpStatus.OK)
     public boolean getVisibilityOfUser() {

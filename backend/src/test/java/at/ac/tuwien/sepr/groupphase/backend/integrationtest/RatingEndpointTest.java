@@ -40,7 +40,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @ActiveProfiles({"test", "generateData"})
 @AutoConfigureMockMvc
 @Import(SubjectEndpointTest.JacksonConfig.class)
-public class RatingEndpointTest {
+public class
+RatingEndpointTest {
     @Autowired
     private MockMvc mockMvc;
 
