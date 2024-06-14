@@ -121,13 +121,13 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
+      <tr *ngFor="let feedback of postedFeedback">
         <td class="ellipsis first">
-          <span>{{ postedFeedback[0].feedback }}</span>
+          <span>{{ feedback.feedback }}</span>
         </td>
-        <td>{{ postedFeedback[0].created | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+        <td>{{ feedback.created | date:'MM/dd/yyyy HH:mm:ss'}}</td>
         <td>
-          <button class="btn btn-primary custom-button delete-button" style="margin-top: 0px" (click)="deleteFeedback(postedFeedback[0].id)">
+          <button class="btn btn-primary custom-button" (click)="deleteFeedback(feedback.id)">
             <i class="bi bi-x"></i>
           </button>
         </td>
