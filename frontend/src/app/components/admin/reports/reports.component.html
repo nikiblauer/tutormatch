@@ -1,0 +1,32 @@
+<div style="padding-top:20px;">
+  <h2>Received feedback:</h2>
+  <table class="table table-striped" style="width:calc(100%)">
+    <thead>
+    <tr>
+      <th style="width:calc(35%)">Reported</th>
+      <th style="width:calc(35%)">Reporter</th>
+      <th class="my-personal-class">Reason</th>
+      <th class="my-personal-class">Ban Reported</th>
+      <th class="my-personal-class">Delete</th>
+    </tr>
+    </thead>
+    <tbody *ngIf="reports">
+    <tr *ngFor="let report of this.reports">
+      <td> {{ report.Firstname_Reported }} {{ report.LastName_Reported }}</td>
+      <td>{{ report.Firstname_Reporter }}</td>
+      <td>{{ report.reason }}</td>
+      <td>
+        <button class="btn btn-warning custom-button" data-bs-toggle="modal" data-bs-target="#reportModal">
+          <i class="bi bi-exclamation"></i>
+        </button>
+      </td>
+      <td>
+        <button class="btn btn-danger custom-button">
+          <i class="bi bi-x"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
