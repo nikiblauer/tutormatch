@@ -7,26 +7,15 @@
       <div class="detail-row">
         <h3 class="detail-label">All Subjects:</h3>
       </div>
-      <a class="mb-5 btn btn-123 btn-primary float-end" data-bs-toggle="popup" data-bs-target="#openSubjectCreate"
-        (click)="create = true">Create new Subject</a>
-      <div class="detail-row">
-        <h3 class="detail-label">All Subjects:</h3>
-      </div>
     </div>
 
     <div class="mb-4 input-group">
-      <input type="text" placeholder="Search Subjects ..." [(ngModel)]="searchQuery" (input)="onSearchChange()"
-        class="form-control mb-2">
       <input type="text" placeholder="Search Subjects ..." [(ngModel)]="searchQuery" (input)="onSearchChange()"
         class="form-control mb-2">
     </div>
     <div class="mb-4 table-responsive">
       <table class="table">
         <thead [class.disable-sticky]="selectedSubject || create || delete" class="sticky-top">
-          <tr>
-            <th class="table-header">Subject Name</th>
-            <th class="table-header text-right">Actions</th>
-          </tr>
           <tr>
             <th class="table-header">Subject Name</th>
             <th class="table-header text-right">Actions</th>
@@ -44,26 +33,7 @@
                 <a (click)="onInfo(subject)" data-bs-toggle="popup" data-bs-target="#openSubjectInfo" type="button"
                   class="btn btn-sm responsive-info-button ">
                   <i class="bi bi-info-circle"></i>
-          <tr *ngFor="let subject of subjects">
-            <td>{{ subject.name }}</td>
-            <td class="text-right btn-container">
-              <div class="btn-group">
-                <a class="btn btn-sm responsive-danger-button" data-bs-toggle="popup" data-bs-target="#openDeleteDialog"
-                  type="button" (click)="onDelete(subject.id, $event)">
-                  <i class="bi bi-trash"></i>
-                </a>
-                <a (click)="onInfo(subject)" data-bs-toggle="popup" data-bs-target="#openSubjectInfo" type="button"
-                  class="btn btn-sm responsive-info-button ">
-                  <i class="bi bi-info-circle"></i>
 
-                </a>
-                <a (click)="onEdit(subject)" data-bs-toggle="popup" data-bs-target="#openSubjectEdit" type="button"
-                  class="btn btn-sm responsive-warning-button" aria-label="Edit Subject">
-                  <i class="bi bi-pencil"></i>
-                </a>
-              </div>
-            </td>
-          </tr>
                 </a>
                 <a (click)="onEdit(subject)" data-bs-toggle="popup" data-bs-target="#openSubjectEdit" type="button"
                   class="btn btn-sm responsive-warning-button" aria-label="Edit Subject">
@@ -80,15 +50,10 @@
 
 <div class="popup popup-overlay" (click)="closeSubjectInfo()" id="openSubjectInfo" tabindex="-1"
   aria-labelledby="openSubjectInfoLabel" aria-hidden="true" *ngIf="info">
-  aria-labelledby="openSubjectInfoLabel" aria-hidden="true" *ngIf="info">
   <div class="popup-container" (click)="$event.stopPropagation()">
     <div class="header-container mb-4">
       <div>
         <a class="mb-10 btn btn-123 btn-close float-end" type="button" data-bs-toggle="popup"
-          data-bs-target="#openSubjectCreate" (click)="closeSubjectInfo()"></a>
-        <div class="detail-row">
-          <h2 class="detail-label">Subject Info:</h2>
-        </div>
           data-bs-target="#openSubjectCreate" (click)="closeSubjectInfo()"></a>
         <div class="detail-row">
           <h2 class="detail-label">Subject Info:</h2>
@@ -108,22 +73,8 @@
           selectedSubject.description }}</span></div>
       <div class="detail-row"><span class="detail-label">URL:</span> <span *ngIf="selectedSubject">{{
           selectedSubject.url }}</span></div>
-      <div class="detail-row"><span class="detail-label">Number:</span> <span *ngIf="selectedSubject">{{
-          selectedSubject.number }}</span></div>
-      <div class="detail-row"><span class="detail-label">Semester:</span> <span *ngIf="selectedSubject">{{
-          selectedSubject.semester }}</span></div>
-      <div class="detail-row"><span class="detail-label">Title:</span> <span *ngIf="selectedSubject">{{
-          selectedSubject.title }}</span></div>
-      <div class="detail-row"><span class="detail-label">Type:</span> <span *ngIf="selectedSubject">{{
-          selectedSubject.type }}</span></div>
-      <div class="detail-row"><span class="detail-label">Description:</span> <span *ngIf="selectedSubject">{{
-          selectedSubject.description }}</span></div>
-      <div class="detail-row"><span class="detail-label">URL:</span> <span *ngIf="selectedSubject">{{
-          selectedSubject.url }}</span></div>
       <div class="button-container">
         <a class="btn btn-danger w-50" role="button" (click)="onDelete(selectedSubject.id, $event)">Delete</a>
-        <a (click)="onEdit(null)" data-bs-toggle="popup" data-bs-target="#openSubjectEdit" type="button"
-          class="btn btn-edit w-50" role="button">Edit</a>
         <a (click)="onEdit(null)" data-bs-toggle="popup" data-bs-target="#openSubjectEdit" type="button"
           class="btn btn-edit w-50" role="button">Edit</a>
       </div>
@@ -133,15 +84,10 @@
 
 <div class="popup popup-overlay" (click)="closeSubjectEdit()" id="openSubjectEdit" tabindex="-1"
   aria-labelledby="openSubjectInfoLabel" aria-hidden="true" *ngIf="edit">
-  aria-labelledby="openSubjectInfoLabel" aria-hidden="true" *ngIf="edit">
   <div class="popup-container" (click)="$event.stopPropagation()">
     <div class="header-container mb-4">
       <div>
         <a class="mb-10 btn btn-123 btn-close float-end" type="button" data-bs-toggle="popup"
-          data-bs-target="#openSubjectCreate" (click)="closeSubjectEdit()"></a>
-        <div class="detail-row">
-          <h2 class="detail-label">Edit Subject:</h2>
-        </div>
           data-bs-target="#openSubjectCreate" (click)="closeSubjectEdit()"></a>
         <div class="detail-row">
           <h2 class="detail-label">Edit Subject:</h2>
@@ -152,24 +98,18 @@
       <div class="detail-row">
         <span class="detail-label">Number:</span>
         <input id="subjectNumber" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.number" class="form-control" />
-        <input id="subjectNumber" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.number" class="form-control" />
       </div>
       <div class="detail-row w-100">
         <span class="detail-label">Semester:</span>
         <input id="subjectSemester" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.semester"
           class="form-control" />
       </div>
-          class="form-control" />
-      </div>
       <div class="detail-row">
         <span class="detail-label">Title:</span>
-        <input id="subjectTitle" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.title" class="form-control" />
         <input id="subjectTitle" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.title" class="form-control" />
       </div>
       <div class="detail-row">
         <span class="detail-label">Type:</span>
-        <input id="subjectType" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.type" class="form-control" />
-      </div>
         <input id="subjectType" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.type" class="form-control" />
       </div>
       <div class="detail-row">
@@ -197,15 +137,10 @@
 
 <div class="popup popup-overlay" (click)="closeSubjectCreate()" id="openSubjectCreate" tabindex="-1"
   aria-labelledby="openSubjectInfoLabel" aria-hidden="true" *ngIf="this.create">
-  aria-labelledby="openSubjectInfoLabel" aria-hidden="true" *ngIf="this.create">
   <div class="popup-container" (click)="$event.stopPropagation()">
     <div class="header-container mb-4">
       <div>
         <a class="mb-10 btn btn-123 btn-close float-end" type="button" data-bs-toggle="popup"
-          data-bs-target="#openSubjectCreate" (click)="closeCreate()"></a>
-        <div class="detail-row">
-          <h2 class="detail-label">Create Subject:</h2>
-        </div>
           data-bs-target="#openSubjectCreate" (click)="closeCreate()"></a>
         <div class="detail-row">
           <h2 class="detail-label">Create Subject:</h2>
@@ -226,7 +161,6 @@
       <div class="detail-row">
         <span class="detail-label">Title:</span>
         <input id="subjectTitle1" [(ngModel)]="createdSubject.title" class="form-control" />
-        <input id="subjectTitle1" [(ngModel)]="createdSubject.title" class="form-control" />
       </div>
       <div class="detail-row">
         <span class="detail-label">Type:</span>
@@ -235,8 +169,8 @@
       </div>
       <div class="detail-row">
         <span class="detail-label">Description:</span>
-        <input id="subjectDescription1" *ngIf="createdSubject" [(ngModel)]="createdSubject.description"
-          class="form-control" />
+        <textarea id="subjectDescription1" *ngIf="createdSubject" [(ngModel)]="createdSubject.description"
+          class="form-control mb-2 description-scrollable"></textarea>
       </div>
       <div class="detail-row"><span class="detail-label">URL:</span>
         <input id="subjectUrl1" *ngIf="createdSubject" [(ngModel)]="createdSubject.url" class="form-control"
@@ -250,7 +184,7 @@
         <label for="autofillUrlInput" class="detail-label">Autofill URL:</label>
         <input id="autofillUrlInput" [(ngModel)]="autofillUrlInput" class="form-control"
           placeholder="Enter Tiss URL to autofill" />
-        <button class="btn btn-autofill" (click)="autofillUrl()" aria-label="Autofill URL with input value">Autofill
+        <button class="btn primary-btn" (click)="autofillUrl()" aria-label="Autofill URL with input value">Autofill
           URL</button>
       </div>
       <div class="button-container">
@@ -281,3 +215,4 @@
     </div>
   </div>
 </div>
+

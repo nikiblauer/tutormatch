@@ -74,6 +74,8 @@ public class TissClientImpl implements TissClient {
     }
 
     private static List<String> extractOrgUnitsFromResponse(String response) {
+        logger.debug("Extracting org units from response: {}", response);
+
         // get all orgUnits from response with regex
         String regex = "E\\d+";
         Pattern pattern = Pattern.compile(regex);
@@ -84,13 +86,16 @@ public class TissClientImpl implements TissClient {
         while (matcher.find()) {
             var orgUnit = matcher.group();
             if (!orgUnits.contains(orgUnit)) {
+                logger.debug("Found new org unit: {}", orgUnit);
                 orgUnits.add(matcher.group());
             }
         }
+        logger.debug("Extracted org units: {}", orgUnits);
         return List.copyOf(orgUnits);
     }
 
     private String sendGetRequest(String endpoint) throws IOException, TissClientHttpException {
+        logger.info("Sending GET request to endpoint: {}", endpoint);
         var url = URI.create(endpoint);
         HttpURLConnection conn = (HttpURLConnection) url.toURL().openConnection();
         conn.setRequestMethod("GET");
@@ -98,6 +103,7 @@ public class TissClientImpl implements TissClient {
 
         int responseCode = conn.getResponseCode();
         if (responseCode != 200) {
+            logger.info("Received HTTP response code: {}", responseCode);
             throw new TissClientHttpException("Failed : HTTP error code : " + responseCode, responseCode);
         }
 
@@ -107,11 +113,11 @@ public class TissClientImpl implements TissClient {
             while ((output = br.readLine()) != null) {
                 response.append(output);
             }
+            logger.debug("Received response: {}", response.toString());
             conn.disconnect();
             return response.toString();
         } finally {
             conn.disconnect();
         }
-
     }
 }
