@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {UserService} from "./user.service";
 import {Observable, Subject} from "rxjs";
 import {ChatMessageDto, WebSocketErrorDto} from "../dtos/chat";
+import {Globals} from "../global/globals";
 
 
 declare var SockJS: any;
@@ -16,16 +17,17 @@ export class WebSocketService {
   private messageSubject = new Subject<any>();
   private webSocketError = new Subject<any>();
 
-  constructor(private userService: UserService) {
+  private webSocketUri: string = this.globals.websocketUri;
+
+  constructor(private userService: UserService, private globals: Globals) {
 
   }
-
   connect() {
     if (this.connected){
       return;
     }
     let socket = null;
-    socket = new SockJS('http://localhost:8080/ws')
+    socket = new SockJS(this.webSocketUri);
     this.stompClient = Stomp.over(socket);
     this.stompClient.debug = () => { };     //removes websocket logs
 
