@@ -225,10 +225,12 @@ export class SubjectComponent implements OnInit {
         event.stopPropagation();
         this.create = false;
         this.notification.success("Successfully created subject", "Created subject!")
+        this.autofillUrlInput = "";
       },
       error: (e) => {
         this.spinner.hide();
         this.handleError(e)
+        this.autofillUrlInput = "";
       }
     });
   }
