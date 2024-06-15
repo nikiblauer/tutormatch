@@ -25,6 +25,6 @@ public class Subject {
     private String semester;
     @Column(nullable = false, length = 255)
     private String url;
-    @Column()
+    @Column(length = 1000)
     private String description;
 }
