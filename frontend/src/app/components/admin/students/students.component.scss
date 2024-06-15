@@ -7,8 +7,8 @@ td {
 .email-column {
   max-width: 250px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  font-size: 0.9em;
 }
 
 .form-inline {
@@ -67,12 +67,17 @@ td {
 
 .form-control {
   text-align: center;
-  text-align-last: center;
-  -moz-text-align-last: center;
-  -webkit-text-align-last: center;
+  text-align-last: center; 
+  -moz-text-align-last: center; // For Firefox
+  -webkit-text-align-last: center; // For Chrome and Safari
   margin-top: 5px;
+  white-space: nowrap; 
 }
 
 .dropdown-menu {
-  width: 20em;
+  white-space: nowrap;
+}
+
+.btn {
+  margin: 5px; 
 }
