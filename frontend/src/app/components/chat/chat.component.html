@@ -1,26 +1,26 @@
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
-<div class="chat-window">
+<div class="chat-window" *ngIf="chatRooms && chatRooms.length > 0; else noChatRooms">
   <div class="card col-md-8 shadow">
     <div class="row clearfix">
       <div class="col-lg-12">
         <div class="card chat-app">
           <div id="plist" class="card people-list">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search..." (input)="onSearch()">
+              <input type="text" class="form-control" placeholder="Search..." (input)="onSearch()">
               <div class="input-group-append">
                 <span class="input-group-text" class="btn btn-primary chat-btn"><i class="fa fa-search"></i></span>
               </div>
             </div>
             <div class="sticky">
               <ul class="list-unstyled chat-list mt-2 mb-0">
-                  <li class="list-group-item d-flex justify-content-between align-items-center"
-                      *ngFor="let chatRoom of filteredChatRooms">
-                    <button
-                      [ngClass]="{'card active-chat-room': chatRoom === activeChatRoom, 'card chat-room': chatRoom !== activeChatRoom}"
-                      (click)="setActiveChatRoom(chatRoom)">
-                      {{ chatRoom.recipientFirstName }} {{ chatRoom.recipientLastName }}
-                    </button>
-                  </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center"
+                    *ngFor="let chatRoom of filteredChatRooms">
+                  <button
+                    [ngClass]="{'card active-chat-room': chatRoom === activeChatRoom, 'card chat-room': chatRoom !== activeChatRoom}"
+                    (click)="setActiveChatRoom(chatRoom)">
+                    {{ chatRoom.recipientFirstName }} {{ chatRoom.recipientLastName }}
+                  </button>
+                </li>
               </ul>
             </div>
           </div>
@@ -29,13 +29,15 @@
               <div class="row">
                 <div>
                   <div class="circle">
-                    <p class="circle-inner">{{activeChatRoom?.senderFirstName?.[0]}}{{activeChatRoom?.senderLastName?.[0]}}</p>
+                    <p
+                      class="circle-inner">{{ activeChatRoom?.senderFirstName?.[0] }}{{ activeChatRoom?.senderLastName?.[0] }}</p>
                   </div>
                   <div class="chat-name">
                     <p>{{ user2Name }}</p>
                   </div>
                   <div class="infobtn">
-                    <button (click)="recipientInfo()" class="btn btn-primary chat-btn"><i class="fa fa-info"></i></button>
+                    <button (click)="recipientInfo()" class="btn btn-primary chat-btn"><i class="fa fa-info"></i>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -44,7 +46,7 @@
               <ul class="m-b-0">
                 <li class="clearfix" *ngFor="let message of messages;">
                   <div *ngIf="message.recipientId === user2" class="message my-message float-right">
-                    <span class="ml-3 message-content" >{{ message.content }}</span>
+                    <span class="ml-3 message-content">{{ message.content }}</span>
                     <span class="timestamp">{{ message.timestamp | date:'dd MMM HH:mm' }}</span>
                   </div>
                   <div *ngIf="message.recipientId === user1" class="message other-message">
@@ -64,7 +66,8 @@
                     (click)="sendMessage()" class="btn btn-primary chat-btn"><i class="fa fa-send"></i></button>
                 </div>
               </div>
-              <span [ngStyle]="{'color': getCharsLeft() === 500 ? 'red' : 'gray'}" class="char-count">{{getCharsLeft() + "/500"}}</span>
+              <span [ngStyle]="{'color': getCharsLeft() === 500 ? 'red' : 'gray'}"
+                    class="char-count">{{ getCharsLeft() + "/500" }}</span>
             </div>
           </div>
         </div>
@@ -95,3 +98,9 @@
     </div>
   </div>
 </div>
+<ng-template #noChatRooms>
+  <div class="shadow no-chatRooms">
+      <h2>You don't have any chats yet! :(</h2>
+      <p>Head to <a [routerLink]="['/matches']">Matches</a> to start a chat with someone you've matched.</p>
+  </div>
+</ng-template>
