@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import {AuthService} from "./auth.service";
-import {HttpClient} from "@angular/common/http";
 import {UserService} from "./user.service";
 import {Observable, Subject} from "rxjs";
-import {ChatMessageDto} from "../dtos/chat";
+import {ChatMessageDto, WebSocketErrorDto} from "../dtos/chat";
+import {Globals} from "../global/globals";
 
 
 declare var SockJS: any;
@@ -16,18 +15,21 @@ export class WebSocketService {
   private stompClient: any;
   connected: boolean = false;
   private messageSubject = new Subject<any>();
+  private webSocketError = new Subject<any>();
 
-  constructor(private userService: UserService) {
+  private webSocketUri: string = this.globals.websocketUri;
+
+  constructor(private userService: UserService, private globals: Globals) {
 
   }
-
   connect() {
     if (this.connected){
       return;
     }
     let socket = null;
-    socket = new SockJS('http://localhost:8080/ws')
+    socket = new SockJS(this.webSocketUri);
     this.stompClient = Stomp.over(socket);
+    this.stompClient.debug = () => { };     //removes websocket logs
 
     const token = localStorage.getItem('authToken');
     if (!token){
@@ -35,10 +37,7 @@ export class WebSocketService {
     }
 
     this.stompClient.connect({ 'Authorization': token}, frame => {
-      console.log('Connected: ' + frame);
       this.connected = true;
-
-
       this.userService.getUserId().subscribe({
         next: id => {
           this.stompClient.subscribe(`/user/${id}/queue/messages`, message=> {
@@ -49,7 +48,7 @@ export class WebSocketService {
 
           this.stompClient.subscribe(`/user/${id}/queue/errors`, error=> {
             if (error.body){
-              console.log(JSON.parse(error.body));
+              this.onErrorReceived(JSON.parse(error.body))
             }
           })
         }, error: err => {
@@ -64,7 +63,6 @@ export class WebSocketService {
   }
 
   onMessageReceived(parsedObject: any) {
-    console.log(parsedObject);
     let receivedMessage;
     try {
       if (parsedObject && parsedObject.content) {
@@ -84,15 +82,32 @@ export class WebSocketService {
       return null;
     }
   }
-
+  onErrorReceived(parsedObject: any) {
+    let receivedError;
+    try {
+      if (parsedObject && parsedObject.errorMsg) {
+        receivedError = new WebSocketErrorDto();
+        receivedError.errorMsg = parsedObject.errorMsg;
+        this.webSocketError.next(parsedObject);
+        return receivedError;
+      } else {
+        throw new Error("Error extracting content");
+      }
+    } catch (error) {
+      console.error('Error parsing JSON or extracting content:', error);
+      return null;
+    }
+  }
   onNewMessage(): Observable<any> {
     return this.messageSubject.asObservable();
+  }
+  onNewError(): Observable<any>{
+    return this.webSocketError.asObservable();
   }
 
   disconnect() {
     if (this.stompClient && this.connected) {
       this.stompClient.disconnect(() => {
-        console.log('Disconnected');
         this.connected = false;
       });
     }

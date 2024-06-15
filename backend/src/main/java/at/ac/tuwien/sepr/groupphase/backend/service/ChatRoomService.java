@@ -19,7 +19,7 @@ public interface ChatRoomService {
     /**
      * Creates a new chatroom for sender and toCreate.getRecipient()
      *
-     * @param sender user who requested to create new chatroom
+     * @param sender   user who requested to create new chatroom
      * @param toCreate dto containing the other chatroom participant
      * @return ChatRoomDto from creators perspective
      */
@@ -32,4 +32,6 @@ public interface ChatRoomService {
      * @return chatroom dto
      */
     ChatRoomDto getChatRoomByChatRoomId(String chatRoomId);
+
+    Boolean checkChatRoomExistsByRecipient(Long senderId, Long recipientId);
 }

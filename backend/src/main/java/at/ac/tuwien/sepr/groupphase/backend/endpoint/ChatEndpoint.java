@@ -78,6 +78,15 @@ public class ChatEndpoint {
         return chatRoomService.createChatRoom(user, chatRoomCreateDto);
     }
 
+    @Secured("ROLE_USER")
+    @GetMapping("/room/recipient/{id}")
+    public Boolean checkChatRoomExistsByRecipient(@PathVariable(name = "id") Long recipientId) {
+        LOGGER.info("GET /api/v1/chat/room/recipient body: {}", recipientId);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        ApplicationUser sender = userService.findApplicationUserByEmail(userEmail);
+        return chatRoomService.checkChatRoomExistsByRecipient(sender.getId(), recipientId);
+    }
+
     @Operation(
         description = "Gets all messages of a chatroom with the specified id.",
         summary = "Get all messages of chatroom")
