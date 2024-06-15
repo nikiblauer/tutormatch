@@ -22,9 +22,10 @@
         <jjwt.version>0.12.5</jjwt.version>
         <springdoc-openapi-ui.version>2.5.0</springdoc-openapi-ui.version>
         <jib-maven-plugin.version>3.4.2</jib-maven-plugin.version>
-        <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
-        <checkstyle.version>10.15.0</checkstyle.version>
+        <maven-checkstyle-plugin.version>3.4.0</maven-checkstyle-plugin.version>
+        <checkstyle.version>10.17.0</checkstyle.version>
         <git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
+        <zstd-jni.version>1.5.6-3</zstd-jni.version>
     </properties>
 
     <dependencyManagement>
@@ -203,9 +204,16 @@
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
                 <version>${jib-maven-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.github.luben</groupId>
+                        <artifactId>zstd-jni</artifactId>
+                        <version>${zstd-jni.version}</version>
+                    </dependency></dependencies>
+
                 <configuration>
                     <from>
-                        <image>registry.reset.inso-w.at/pub/docker/eclipse-temurin:17</image>
+                        <image>registry.reset.inso-w.at/pub/docker/eclipse-temurin:21</image>
                     </from>
                     <container>
                         <ports>

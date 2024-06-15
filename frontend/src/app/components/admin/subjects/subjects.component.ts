@@ -151,6 +151,8 @@ export class SubjectComponent implements OnInit {
       next: _ => {
         this.spinner.hide();
         this.delete = false;
+        this.edit = false;
+        this.info = false;
         this.updateSubjectList();
         this.notification.success("Successfully deleted subject", "Deleted subject!");
       },

@@ -18,30 +18,29 @@
             </button>
             <div class="dropdown-menu p-3" [ngClass]="{'show': showFilter}" aria-labelledby="filterDropdown">
                 <div class="form-group">
-                    <label class="form-label" for="status">Filter by status:</label>
+                    <label class="form-label" for="status">Filter Profile Status:</label>
                     <select class="form-control mt-1 form-select" id="status" [(ngModel)]="tmpFilterStatus"
                         (change)="updateTmpFilterStatus($event.target.value)">
-                        <option value="">All</option>
+                        <option value="" [selected]="tmpFilterStatus === ''">Indifferent</option>
                         <option value="active">Active</option>
                         <option value="banned">Banned</option>
                     </select>
                 </div>
+                <hr>
                 <div class="form-group mt-2">
-                    <label class="form-label" for="status">Filter by registration status:</label>
+                    <label class="form-label" for="status">Filter Verified Status:</label>
                     <select class="form-control mt-1 form-select" id="verifiedFilter" name="verifiedStatus"
-                [(ngModel)]="verifiedFilter" >
-                <option value="all" selected>Registration Status: Indifferent</option>
-                <option value="verified">Registration Stauts: Verified</option>
-                <option value="notVerified">Registration Status: Not Verified</option>
-            </select>
+                        [(ngModel)]="verifiedFilter">
+                        <option value="all" [selected]="verifiedFilter === 'all'">Indifferent</option>
+                        <option value="verified">Verified</option>
+                        <option value="notVerified">Not Verified</option>
+                    </select>
                 </div>
                 <button type="button" class="btn btn-primary mt-2" (click)="applyFilters()">Apply Filters</button>
             </div>
         </div>
 
     </form>
-
-
 
     <table class="table table-striped">
         <thead>
@@ -71,7 +70,8 @@
                     </button>
                 </td>
                 <td>
-                    <button class="btn btn-danger me-2" [disabled]="student.isBanned" (click)="banUser(student, banModal)">
+                    <button class="btn btn-danger me-2" [disabled]="student.isBanned"
+                        (click)="banUser(student, banModal)">
                         <span *ngIf="student.isBanned">
                             <i class="bi bi-ban"></i> Banned
                         </span>

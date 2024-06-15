@@ -12,8 +12,6 @@ import { AuthService } from "src/app/services/auth.service";
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-
-
 interface StudentListing {
   id: number;
   firstname: string;
@@ -179,7 +177,8 @@ export class StudentsComponent implements OnInit {
       this.withSpinner(this.adminService.banUser(this.selectedBanUser.id, reason), this.spinner)
         .subscribe({
           next: (_) => {
-            this.search(true);
+            this.search(true); 
+            this.banForm.reset(); 
           },
           error: (error: any) => {
             console.error('Error:', error);
