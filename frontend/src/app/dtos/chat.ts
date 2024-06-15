@@ -24,3 +24,8 @@ export class ChatRoomDto {
 export class WebSocketErrorDto {
   errorMsg: string;
 }
+
+export class ReportChatRoomDto {
+  chatroom: ChatRoomDto;
+  reason: string;
+}

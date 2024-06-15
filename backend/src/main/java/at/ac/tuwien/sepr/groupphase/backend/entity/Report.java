@@ -19,10 +19,8 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @Column(nullable = false)
     private ApplicationUser reporter;
     @ManyToOne
-    @Column(nullable = false)
     private ApplicationUser reportedUser;
     @ManyToOne
     private Feedback reportedFeedback;

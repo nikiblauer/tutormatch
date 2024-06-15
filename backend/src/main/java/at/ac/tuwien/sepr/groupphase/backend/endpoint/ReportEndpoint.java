@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatRoomDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ReportDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ReportMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Feedback;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/report")
@@ -32,10 +36,12 @@ public class ReportEndpoint {
     private final RatingService ratingService;
     private final ReportService reportService;
 
-    public ReportEndpoint(UserService userService, RatingService ratingService, ReportService reportService) {
+    private final ReportMapper reportMapper;
+    public ReportEndpoint(UserService userService, RatingService ratingService, ReportService reportService, ReportMapper reportMapper) {
         this.userService = userService;
         this.ratingService = ratingService;
         this.reportService = reportService;
+        this.reportMapper = reportMapper;
     }
 
     @Operation(
@@ -78,5 +84,17 @@ public class ReportEndpoint {
         ApplicationUser student = userService.findApplicationUserByEmail(userEmail);
         //this.reportService.reportUserChat();
     }
+    @Operation(
+        summary = "returns all reports",
+        description = "a list of all reports with all informations"
+    )
+    @Secured("ROLE_ADMIN")
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public List<ReportDto> getAllReports() {
+        var reports =  reportService.getAllReports();
+        return this.reportMapper.reportToReportDto(reports);
+    }
+
 
 }

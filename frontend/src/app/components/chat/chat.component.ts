@@ -1,6 +1,6 @@
 import {AfterViewChecked, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {WebSocketService} from "../../services/web-socket.service";
-import {ChatMessageDto, ChatRoomDto, CreateChatRoomDto, WebSocketErrorDto} from "../../dtos/chat";
+import {ChatMessageDto, ChatRoomDto, CreateChatRoomDto, ReportChatRoomDto, WebSocketErrorDto} from "../../dtos/chat";
 import {ChatService} from "../../services/chat.service";
 import {UserService} from "../../services/user.service";
 import {RatingService} from "../../services/rating.service";
@@ -8,6 +8,7 @@ import {NgxSpinnerService} from "ngx-spinner";
 import {ToastrService} from "ngx-toastr";
 import {StudentDto} from "../../dtos/user";
 import {Subscription} from "rxjs";
+import {ReportService} from "../../services/report.service";
 
 @Component({
   selector: 'app-chat',
@@ -33,13 +34,15 @@ export class ChatComponent implements OnInit {
   messageReceived: ChatMessageDto;
   messageSubscription: Subscription;
   errorSubscription: Subscription;
+  reportReason: string = "";
 
   constructor(private chatService: ChatService,
               private userService: UserService,
               private webSocketService: WebSocketService,
               private ratingService: RatingService,
               private spinner: NgxSpinnerService,
-              private notification: ToastrService) {
+              private notification: ToastrService,
+              private reportService: ReportService) {
   }
 
   ngOnInit() {
@@ -168,5 +171,18 @@ export class ChatComponent implements OnInit {
 
   public getSelectedUserAddressAsString(user: StudentDto) {
     return StudentDto.getAddressAsString(user);
+  }
+
+  submitReport() {
+    this.reportService.reportUser(this.user2, this.reportReason).subscribe({
+        next: () => {
+          this.notification.success("Successfully Reported.");
+        },
+        error: error => {
+          console.error("Error reporting", error);
+          this.notification.error(error.error, "Something went wrong!");
+        }
+      }
+    );
   }
 }

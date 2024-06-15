@@ -7,19 +7,24 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ReportRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.ReportService;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @Service
 public class ReportServiceImpl implements ReportService {
     private final ReportRepository reportRepository;
+    private final UserService userService;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public ReportServiceImpl(ReportRepository reportRepository) {
+    public ReportServiceImpl(ReportRepository reportRepository, UserService userService) {
         this.reportRepository = reportRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -51,6 +56,11 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void reportUserChat(ApplicationUser reporter, ApplicationUser chat, String reason) {
 
+    }
+
+    @Override
+    public List<Report> getAllReports() {
+        return this.reportRepository.findAll();
     }
 
     private void validateReason(String reason) throws ValidationException {
