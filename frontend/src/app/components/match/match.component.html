@@ -1,18 +1,25 @@
 <ngx-spinner type="square-jelly-box"></ngx-spinner>
 <div class="matches-container">
-  <h3 class="matches-title">Your matches:</h3>
+  <div class="matches-header">
+    <h3 class="matches-title">Your matches:</h3>
+    <button class="btn btn-primary filter-btn" (click)="openFilter()"
+            data-bs-toggle="modal" data-bs-target="#filterModal"
+    ><i class="bi bi-filter"></i>filter
+    </button>
+  </div>
   <div class="container">
     <div class="row">
       <div class="col-12 col-md-6 col-lg-3 mb-4 rounded" *ngFor="let match of matches">
         <div class="card h-100 rounded bg-light shadow" (click)="openMatch(match)">
           <div class="card-body">
             <h5 class="card-title">{{ match.firstname }} {{ match.lastname }}</h5>
-            <app-star-rating [rating]="this.match.rating" [isEditable]="false" [amount]="match.amount"></app-star-rating>
+            <app-star-rating [rating]="this.match.rating" [isEditable]="false"
+                             [amount]="match.amount"></app-star-rating>
             <div class="card-text">
-              <span class="sub-headline">Offers: </span>
+              <span class="sub-headline">Needs: </span>
               <span>{{ trimStringByComma(match.traineeSubjects) }}</span>
               <div class="needs">
-                <span class="sub-headline">Needs: </span>
+                <span class="sub-headline">Offers: </span>
                 <span>{{ trimStringByComma(match.tutorSubjects) }}</span>
               </div>
             </div>
@@ -24,7 +31,8 @@
   </div>
 </div>
 
-<div class="popup-overlay popup-overlay-matches" (click)="closeMatch()" *ngIf="selectedMatch && selectedUserRating !== -2">
+<div class="popup-overlay popup-overlay-matches" (click)="closeMatch()"
+     *ngIf="selectedMatch && selectedUserRating !== -2">
   <div class="popup-container popup-container-matches" (click)="$event.stopPropagation()">
     <div class="header-container">
       <h1>Match Details</h1>
@@ -36,9 +44,12 @@
       </div>
       <div class="detail-row"><span class="detail-label">Name:</span>
         <span>{{ selectedMatch.firstname }} {{ selectedMatch.lastname }}</span></div>
-      <div class="detail-row"><span class="detail-label">Email:</span> <span *ngIf="selectedUser">{{ selectedUser.email }}</span></div>
-      <div class="detail-row"><span class="detail-label">Address:</span> <span *ngIf="selectedUser">{{ getSelectedUserAddressAsString(selectedUser) }}</span></div>
-      <div class="detail-row"><span class="detail-label">Phone:</span> <span *ngIf="selectedUser">{{ selectedUser.telNr }}</span></div>
+      <div class="detail-row"><span class="detail-label">Email:</span> <span
+        *ngIf="selectedUser">{{ selectedUser.email }}</span></div>
+      <div class="detail-row"><span class="detail-label">Address:</span> <span
+        *ngIf="selectedUser">{{ getSelectedUserAddressAsString(selectedUser) }}</span></div>
+      <div class="detail-row"><span class="detail-label">Phone:</span> <span
+        *ngIf="selectedUser">{{ selectedUser.telNr }}</span></div>
       <div class="flex-container">
         <div class="flex-item">
           <div class="detail-row"><span class="detail-label">Needs:</span>
@@ -48,6 +59,40 @@
           <div class="detail-row"><span class="detail-label">Offers:</span>
             <span>{{ selectedMatch.traineeSubjects }}</span></div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true"
+     *ngIf="filter">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="filterModalLabel">Select Filters</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <h6 class="font-weight-bold mb-3">Needs:</h6>
+            <div class="form-check mb-3" *ngFor="let offer of userOffer; let i = index">
+              <input class="form-check-input" type="checkbox" value="new" id="'offer-checkbox-' + i"
+                     (change)="toggleSelection(offer, $event.target.checked, filterSubjectsNeeds)">
+              <label class="form-check-label" for="'offer-checkbox-' + i">
+                {{offer.name}}
+              </label>
+            </div>
+            <h6 class="font-weight-bold mb-3">Offers:</h6>
+            <div class="form-check mb-3" *ngFor="let need of userNeed; let j = index">
+              <input class="form-check-input" type="checkbox" [value]="need" [id]="'need-checkbox-' + j"
+                     (change)="toggleSelection(need, $event.target.checked, filterSubjectsOffers)">
+              <label class="form-check-label" [for]="'need-checkbox-' + j">
+                {{ need.name }}
+              </label>
+            </div>
+            <button type="button" class="btn btn-primary mt-2" (click)="saveSelectedCourses()">Save</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
