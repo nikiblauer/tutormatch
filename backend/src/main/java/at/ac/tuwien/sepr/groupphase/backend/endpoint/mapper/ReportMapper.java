@@ -24,9 +24,9 @@ public interface ReportMapper {
             } else {
                 a.setFeedback("");
             }
-            if (value.getChatRoomId() != null){
+            if (value.getChatRoomId() != null) {
                 a.setChatRoomId(value.getChatRoomId());
-            } else{
+            } else {
                 a.setChatRoomId("");
             }
             a.setReporterId(value.getReporter().getId());

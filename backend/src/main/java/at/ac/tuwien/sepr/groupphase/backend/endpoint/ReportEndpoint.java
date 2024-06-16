@@ -100,6 +100,7 @@ public class ReportEndpoint {
         var reports = reportService.getAllReports();
         return this.reportMapper.reportToReportDto(reports);
     }
+
     @Operation(
         summary = "deletes a report",
         description = "deletes a report"

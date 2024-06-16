@@ -65,9 +65,9 @@ public class ReportServiceImpl implements ReportService {
         ChatRoomDto c = this.chatRoomService.getChatRoomByChatRoomId(chatId);
         Report r = new Report();
         r.setReporter(reporter);
-        if (Objects.equals(c.getRecipientId(), reporter.getId())){
+        if (Objects.equals(c.getRecipientId(), reporter.getId())) {
             r.setReportedUser(this.userService.findApplicationUserById(c.getSenderId()));
-        }else{
+        } else {
             r.setReportedUser(this.userService.findApplicationUserById(c.getRecipientId()));
         }
         r.setReason(reason);
