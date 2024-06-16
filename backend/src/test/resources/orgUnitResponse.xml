@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<tuvienna xmlns="https://tiss.tuwien.ac.at/api/schemas/course/v10" xmlns:ns2="https://tiss.tuwien.ac.at/api/schemas/i18n/v10" xmlns:ns3="https://tiss.tuwien.ac.at/api/schemas/course/v11" xmlns:ns4="https://tiss.tuwien.ac.at/api/schemas/hasCourse/v10" version="1.0">
+    <course>
+        <courseNumber>191109</courseNumber>
+        <semesterCode>2024S</semesterCode>
+        <courseType>VU</courseType>
+        <title>
+            <ns2:de>Dependable Systems</ns2:de>
+            <ns2:en>Dependable Systems</ns2:en>
+        </title>
+        <objective>
+            <ns2:de>&lt;p&gt;Fachliche und Methodische Kenntnisse: Fundierte Kenntnisse über die Konstruktion und Modellierung von zuverlässigen Systemen. Diese inkludieren Kenntnisse über Fehlerarten, Fehlermodelle, Fehlererkennung, Fehleranalyse, Redundanzverfahren, Zuverlässigkeitsmodellierung.&lt;/p&gt;
+                &lt;p&gt;Kognitive und praktische Fertigkeiten: Fähigkeit zur Einschätzung von Fehler- und Ausfallsrisiken, Kenntnis von Verfahren zur Erhöhung der Zuverlässigkeit von Computersystemen, Tool-unterstützte Fehlermodellierung (inkl. Warteschlangenmodell-Simulation) von Computersystemen.&lt;/p&gt;
+                &lt;p&gt;Soziale Kompetenzen, Innovationskompetenz und Kreativität: Fähigkeit zur Risikoabschätzung und zur Konstruktion sicherer Computersysteme, Erhöhung der Zuverlässigkeit von Applikationen, kritische Analyse von Systemvarianten und Dokumentation der Zuverlässigkeit von Systemen.&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;Technical and methodic skills: constuction and modeling of dependable systems, including types of faults, fault/error/failure models, error detection and analysis, redundancy strategies, dependability modeling.&lt;/p&gt;
+                &lt;p&gt;Cognitive and practical skills: risk assessment, strategies for increasing the dependability of computer systems, tool-based failure modeling (including simulation).&lt;/p&gt;
+                &lt;p&gt;Social competence, qualifications in innovation, creativity: risk assessment and construction of safe computer systems, dependability improvement, dependability analysis of system variants, documentation of dependability.&lt;/p&gt;</ns2:en>
+        </objective>
+        <teachingContent>
+            <ns2:de>&lt;p&gt;Die Lehrveranstaltung behandelt folgende Inhalte:&lt;/p&gt;
+                &lt;ul&gt;
+                &lt;li&gt;Grundlagen: Zuverlässigkeit, Wartbarkeit, Verfügbarkeit, MTTF&lt;/li&gt;
+                &lt;li&gt;Quantitative Analysen: Blockdiagramme, Fehlerbäume, Markov-Prozesse&lt;/li&gt;
+                &lt;li&gt;Sicherheit, Fehlermodelle, Wartung, Alterungsfehler, Entwurfsfehler&lt;/li&gt;
+                &lt;li&gt;Fehlertolerante Computersysteme: Redundanz, Fehlerlatenz, Voting, Recovery Blocks, N-Version Programming, Synchronisation&lt;/li&gt;
+                &lt;li&gt;Fallstudien von zuverlässigen bzw. fehlertoleranten Systemen&lt;/li&gt;
+                &lt;li&gt;Fehler und Zuverlässigkeitesmodellierung/analyse mit Tools&lt;/li&gt;
+                &lt;/ul&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;Course contents:&lt;/p&gt;
+                &lt;ul&gt;
+                &lt;li&gt;Foundations: Dependability, reliability, availability, safety, availability, MTTF&lt;/li&gt;
+                &lt;li&gt;quanititative analysis: block diagrams, fault trees, markov processes&lt;/li&gt;
+                &lt;li&gt;Safety, fault models, maintenance, aging, design errors&lt;/li&gt;
+                &lt;li&gt;Fault-tolerant computer systems: redundancy, error latency, voting, recovery blocks, N-version programming, synchronization&lt;/li&gt;
+                &lt;li&gt;case studies of dependable and fault tolerant systems&lt;/li&gt;
+                &lt;li&gt;tool-based modeling of dependable systems&lt;/li&gt;
+                &lt;/ul&gt;</ns2:en>
+        </teachingContent>
+        <additionalInformation>
+            <ns2:de>&lt;p&gt;ECTS-Breakdown: 3 ECTS = 75 Stunden; 20 Vorlesung, 20 Vor- und Nachbereitung, 1 Prüfung, 2 Einführung Laborbeispiel, 32 Laborbeispiele und Laborberichte.&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;ECTS breakdown: 3 ECTS = 75 hours; 20 lectures, 20 preparation and study, 1 exam, 2 lab introduction, 32 lab homeworks and reports.&lt;/p&gt;</ns2:en>
+        </additionalInformation>
+        <lectureNotes>
+            <ns2:de></ns2:de>
+            <ns2:en></ns2:en>
+        </lectureNotes>
+        <examinationModalities>
+            <ns2:de>&lt;p&gt;Die Beurteilung erfolgt aufgrund der Ergebnisse im Laborteil und der mündlichen Prüfung.&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;Grading is based on results from lab assignments and an oral exam.&lt;/p&gt;</ns2:en>
+        </examinationModalities>
+        <related>
+            <recommendation>
+                <ns2:de>&lt;p&gt;Inhalte aus den Modulen Grundlagen digitaler Systeme, Theoretische Informatik und Logik, Wahrscheinlichkeitstheorie und Stochastische Prozesse, Rechnerstrukturen und Betriebssysteme, Microcontroller und Betriebssysteme.&lt;/p&gt;</ns2:de>
+                <ns2:en>&lt;p&gt;Materials taught in the following modules of the curriculum: Foundations of digital systems, theoretical computer science and logic, probability theory and stochastic processes, computer architectures and operating systems, microcontrollers and operating systems.&lt;/p&gt;</ns2:en>
+            </recommendation>
+            <accompanyingCourses>
+                <course>182713</course>
+            </accompanyingCourses>
+        </related>
+        <weeklyHours>2.0</weeklyHours>
+        <lecturers>
+            <oid>1182621</oid>
+            <oid>3068397</oid>
+            <oid>2124685</oid>
+        </lecturers>
+        <tutors/>
+        <instituteCode>E191</instituteCode>
+        <instituteName>
+            <ns2:de>Institut für Computer Engineering</ns2:de>
+            <ns2:en>Institute of Computer Engineering</ns2:en>
+        </instituteName>
+        <url>https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=191109&amp;semester=2024S</url>
+        <uses54EctsRule>false</uses54EctsRule>
+        <registration>TISS</registration>
+        <eLearning>https://tuwel.tuwien.ac.at/course/view.php?id=63986</eLearning>
+        <language>
+            <ns2:de>Deutsch</ns2:de>
+            <ns2:en>German</ns2:en>
+        </language>
+    </course>
+    <course>
+        <courseNumber>191005</courseNumber>
+        <semesterCode>2024S</semesterCode>
+        <courseType>PR</courseType>
+        <title>
+            <ns2:de>Praktikum Technische Informatik</ns2:de>
+            <ns2:en>Computer Engineering Practical</ns2:en>
+        </title>
+        <objective>
+            <ns2:de></ns2:de>
+            <ns2:en></ns2:en>
+        </objective>
+        <teachingContent>
+            <ns2:de>&lt;p&gt;Bearbeitung einer vorgegebenen praktischen Aufgabenstellung und Dokumentation der Ergebnisse in einem Abschlussbericht.&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;Developing a solution for a practical problem and writing-up the results in a final report.&lt;/p&gt;</ns2:en>
+        </teachingContent>
+        <additionalInformation>
+            <ns2:de></ns2:de>
+            <ns2:en></ns2:en>
+        </additionalInformation>
+        <lectureNotes>
+            <ns2:de></ns2:de>
+            <ns2:en></ns2:en>
+        </lectureNotes>
+        <examinationModalities>
+            <ns2:de>&lt;p&gt;Studierende werden aufgrund der Qualität der praktischen Implementierung und deren Dokumentation beurteilt&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;Students are graded based on the quality of the implementation of the prototype system and its documentation.&lt;/p&gt;</ns2:en>
+        </examinationModalities>
+        <related>
+            <recommendation>
+                <ns2:de></ns2:de>
+                <ns2:en></ns2:en>
+            </recommendation>
+        </related>
+        <weeklyHours>4.0</weeklyHours>
+        <lecturers>
+            <oid>571677</oid>
+            <oid>2124685</oid>
+            <oid>714665</oid>
+            <oid>10821885</oid>
+            <oid>468205</oid>
+            <oid>2129433</oid>
+            <oid>8619293</oid>
+            <oid>1128481</oid>
+            <oid>4995109</oid>
+            <oid>14517413</oid>
+            <oid>13588589</oid>
+            <oid>6066813</oid>
+            <oid>21186725</oid>
+            <oid>11809561</oid>
+            <oid>604961</oid>
+            <oid>23377897</oid>
+            <oid>10685473</oid>
+            <oid>7094185</oid>
+            <oid>23117385</oid>
+        </lecturers>
+        <tutors/>
+        <instituteCode>E191</instituteCode>
+        <instituteName>
+            <ns2:de>Institut für Computer Engineering</ns2:de>
+            <ns2:en>Institute of Computer Engineering</ns2:en>
+        </instituteName>
+        <url>https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=191005&amp;semester=2024S</url>
+        <uses54EctsRule>false</uses54EctsRule>
+        <registration>NONE</registration>
+        <language>
+            <ns2:de>Deutsch</ns2:de>
+            <ns2:en>German</ns2:en>
+        </language>
+    </course>
+    <course>
+        <courseNumber>182692</courseNumber>
+        <semesterCode>2024S</semesterCode>
+        <courseType>LU</courseType>
+        <title>
+            <ns2:de>Elektrotechnische Grundlagen</ns2:de>
+            <ns2:en>Electrical Engineering</ns2:en>
+        </title>
+        <objective>
+            <ns2:de>&lt;p&gt;Vermittlung praktischer Kenntnisse in den elektrotechnischen Grundlagen der Mess- und Schaltungstechnik.&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;Course and course material in German.&lt;/p&gt;</ns2:en>
+        </objective>
+        <teachingContent>
+            <ns2:de>&lt;p&gt;Ergänzende Laborübung zur Vorlesung "Elektrotechnische Grundlagen 182.691"&lt;/p&gt;&#13;
+                &lt;p&gt;Die korrekte Messung von Spannungen und Strömen sowie die Bedienung der entsprechenden Geräte soll erlernt werden.&lt;br&gt;Weiters werden einfache Filter (Hochpass, Tiefpass, Bandpass, Filter 2. Ordnung) simuliert und diese Simulation mit dem realen Verhalten solcher Schaltungen verglichen.&lt;br&gt;Die Funktionsweise von Grundschaltungen mit Operationsverstärkern wird ebenso untersucht. Die Frequenzspektren von Signalen werden mit dem Oszilloskop analysiert und die Grenzen solcher Analysen aufgezeigt.&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;Course and course material in German.&lt;br&gt;See German section for content.&lt;/p&gt;</ns2:en>
+        </teachingContent>
+        <additionalInformation>
+            <ns2:de>&lt;p&gt;&lt;em&gt;Für HTL-Absolventen einer einschlägigen Fachrichtung besteht die Möglichkeit eine schriftliche Ersatzprüfung abzulegen. Diese wird im Rahmen der Vorlesung abgehalten. Bitte melden sie sich im TISS zur schriftlichen Prüfung an. Zur Vorbereitung finden sie im TISS/Unterlagen einen Fragenkatalog. Aus diesen Themenbereichen werden 4-6 Beispiele zu lösen bzw. Fragen zu beantworten sein. Ausserdem ist das Jahresabschluss- und Maturazeugnis als Nachweis vorzulegen.&lt;br&gt;Die Ersatzprüfung kann ersatzweise auch mündlich abgelegt werden. Für die mündliche Prüfung melden sie sich bitte im TISS zur mündlichen Prüfung an.&lt;/em&gt;&lt;/p&gt;&#13;
+                &lt;p&gt;Für Fragen sind die Tutoren unter folgenden e-mail Adressen erreichbar:&lt;/p&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;Nadine Liebl, nadine.liebl@tuwien.ac.at&lt;/li&gt;&#13;
+                &lt;li&gt;Victoria Liebl, victoria.liebl@tuwien.ac.at&lt;/li&gt;&#13;
+                &lt;li&gt;Paul Tschirk, e1607515@student.tuwien.ac.at&lt;/li&gt;&#13;
+                &lt;li&gt;Stefan Bichler, e11810859@student.tuwien.ac.at&lt;/li&gt;&#13;
+                &lt;li&gt;Johann Kleinhofer, e12028175@student.tuwien.ac.at&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;p&gt;Die Besprechungen werden von den Tutoren während der regulären Übungzeiten abgehalten.&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;&lt;em&gt;HTL graduates from a relevant subject area have the opportunity to take a written substitute examination. This will be held as part of the lecture. Please register for the written exam in TISS. To prepare, you will find a list of questions in TISS/documents. You will have to solve 4-6 examples or answer questions from these subject areas. In addition, the annual report and school-leaving certificate must be shown as proof.&lt;/em&gt;&lt;br&gt;&lt;em&gt;The substitute examination can also be taken orally. For the oral examination, please register for the oral examination in TISS.&lt;/em&gt;&lt;br&gt;&lt;br&gt;If you have any questions, the tutors can be contacted at the following e-mail addresses:&lt;br&gt;&lt;br&gt;&lt;/p&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;Nadine Liebl, nadine.liebl@tuwien.ac.at&lt;/li&gt;&#13;
+                &lt;li&gt;Victoria Liebl, victoria.liebl@tuwien.ac.at&lt;/li&gt;&#13;
+                &lt;li&gt;Paul Tschirk, e1607515@student.tuwien.ac.at&lt;/li&gt;&#13;
+                &lt;li&gt;Stefan Bichler, e11810859@student.tuwien.ac.at&lt;/li&gt;&#13;
+                &lt;li&gt;Johann Kleinhofer, e12028175@student.tuwien.ac.at&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;p&gt;&lt;br&gt;The meetings are held by the tutors during the regular exercise times.&lt;/p&gt;</ns2:en>
+        </additionalInformation>
+        <lectureNotes>
+            <ns2:de></ns2:de>
+            <ns2:en></ns2:en>
+        </lectureNotes>
+        <examinationModalities>
+            <ns2:de>&lt;p&gt;Besprechungen (kurze mündliche Prüfung) zu den Inhalten der Laborübungen, Anfertigung von Protokollen.&lt;/p&gt;&#13;
+                &lt;p&gt;Die Besprechungen werden parallel während den praktischen Übungen abgehalten.&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;Short oral exams about the topics in the lab, preparation of protocols.&lt;/p&gt;&#13;
+                &lt;p&gt;Oral exams are during the lab-exercises.&lt;/p&gt;</ns2:en>
+        </examinationModalities>
+        <related>
+            <recommendation>
+                <ns2:de>&lt;p&gt;Die regelmäßige Teilnahme an der Vorlesung wird empfohlen.&lt;/p&gt;</ns2:de>
+                <ns2:en>&lt;p&gt;Regular attendance of the lecture is recommended.&lt;/p&gt;</ns2:en>
+            </recommendation>
+            <continuativeCourses>
+                <course>164324</course>
+            </continuativeCourses>
+        </related>
+        <weeklyHours>3.5</weeklyHours>
+        <lecturers>
+            <oid>1545225</oid>
+        </lecturers>
+        <tutors>
+            <oid>13481041</oid>
+            <oid>19295993</oid>
+            <oid>22869521</oid>
+            <oid>12850545</oid>
+            <oid>13815361</oid>
+        </tutors>
+        <instituteCode>E191</instituteCode>
+        <instituteName>
+            <ns2:de>Institut für Computer Engineering</ns2:de>
+            <ns2:en>Institute of Computer Engineering</ns2:en>
+        </instituteName>
+        <url>https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=182692&amp;semester=2024S</url>
+        <uses54EctsRule>false</uses54EctsRule>
+        <registration>TISS</registration>
+        <eLearning>https://tuwel.tuwien.ac.at/course/view.php?id=57830</eLearning>
+        <language>
+            <ns2:de>Deutsch</ns2:de>
+            <ns2:en>German</ns2:en>
+        </language>
+    </course>
+    <course>
+        <courseNumber>182070</courseNumber>
+        <semesterCode>2024S</semesterCode>
+        <courseType>SE</courseType>
+        <title>
+            <ns2:de>Seminar für DissertantInnen</ns2:de>
+            <ns2:en>Doctorand's seminar</ns2:en>
+        </title>
+        <objective>
+            <ns2:de>&lt;p&gt;Erfahrung in der Präsentation und Verteidigung eigener wissenschaftlicher Ergebnisse, Austausch von Ideen und Erfahrungen mit anderen Doktoranden.&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;Experience in the presentation and defense of scientific results, exchange of ideas and experiences with other doctoral students.&lt;/p&gt;</ns2:en>
+        </objective>
+        <teachingContent>
+            <ns2:de>&lt;p&gt;Vorstellung von (Zwischen-)Ergebnissen der Dissertation in einer Problem-adäquaten Form (Vortrag, Diskussion, Vorführung).&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;Presentation of (intermediate) results of the dissertation in an appropriate way (presentation, discussion, demo).&lt;/p&gt;</ns2:en>
+        </teachingContent>
+        <additionalInformation>
+            <ns2:de>&lt;p&gt;ECTS Aufstellung:&lt;/p&gt;
+                &lt;p&gt;60h ... laufende Diskussionen mit Betreuer bzw. mit Kollegen bei deren Vorträgen&lt;br&gt;15h ... Vorbereitung und Abhaltung der beiden eigenen Vorträge&lt;br&gt;-------------------&lt;br&gt;75h ... entsprechen 3 ECTS&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;ECTS breakdown:&lt;/p&gt;
+                &lt;p&gt;60h ... continuous discussions with the advisor and with colleagues after their talks&lt;br&gt;15h ... preparation and presentation of two own talks&lt;br&gt;-------------------&lt;br&gt;75h ... corresponding to 3 ECTS&lt;/p&gt;</ns2:en>
+        </additionalInformation>
+        <lectureNotes>
+            <ns2:de></ns2:de>
+            <ns2:en></ns2:en>
+        </lectureNotes>
+        <examinationModalities>
+            <ns2:de>&lt;p&gt;Beurteilung der Qualität der eigenen Präsentation sowie der Beiträge in den Diskussionen&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;assessment of quality of own presentation and contributions in the discussions&lt;/p&gt;</ns2:en>
+        </examinationModalities>
+        <related>
+            <recommendation>
+                <ns2:de></ns2:de>
+                <ns2:en></ns2:en>
+            </recommendation>
+        </related>
+        <weeklyHours>2.0</weeklyHours>
+        <lecturers>
+            <oid>604961</oid>
+            <oid>571677</oid>
+        </lecturers>
+        <tutors/>
+        <instituteCode>E191</instituteCode>
+        <instituteName>
+            <ns2:de>Institut für Computer Engineering</ns2:de>
+            <ns2:en>Institute of Computer Engineering</ns2:en>
+        </instituteName>
+        <url>https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=182070&amp;semester=2024S</url>
+        <uses54EctsRule>false</uses54EctsRule>
+        <registration>NONE</registration>
+        <language>
+            <ns2:de>Englisch</ns2:de>
+            <ns2:en>English</ns2:en>
+        </language>
+    </course>
+</tuvienna>

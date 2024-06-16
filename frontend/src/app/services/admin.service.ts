@@ -104,4 +104,9 @@ export class AdminService {
     const url = `${this.baseUri}/statistics/coverage?x=${x}`;
     return this.http.get<CoverageStatisticsDto>(url);
   }
+
+  getPreviewSubject(courseNr: string, semester: string): Observable<SubjectCreateDto> {
+    const url = `${this.baseUri}/subject/courses/${courseNr}/semesters/${semester}/preview`
+    return this.http.get<SubjectCreateDto>(url);
+  }
 }

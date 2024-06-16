@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<tuvienna xmlns="https://tiss.tuwien.ac.at/api/schemas/course/v10" xmlns:ns2="https://tiss.tuwien.ac.at/api/schemas/i18n/v10" xmlns:ns3="https://tiss.tuwien.ac.at/api/schemas/course/v11" xmlns:ns4="https://tiss.tuwien.ac.at/api/schemas/hasCourse/v10" version="1.0">
+    <course>
+        <courseNumber>185A92</courseNumber>
+        <semesterCode>2024S</semesterCode>
+        <courseType>VU</courseType>
+        <title>
+            <ns2:de>Einführung in die Programmierung 2</ns2:de>
+            <ns2:en>Introduction to Programming 2</ns2:en>
+        </title>
+        <objective>
+            <ns2:de>&lt;h3&gt;Fachliche und methodische Kenntnisse:&lt;/h3&gt;
+                &lt;p&gt;Nach positiver Absolvierung von Einführung in die Programmierung 2 können die Studierenden Folgendes beschreiben:&lt;/p&gt;
+                &lt;ul&gt;
+                &lt;li&gt;systematische Vorgehensweisen beim Programmieren (vor allem zum Erstellen und Verwenden von Datenabstraktionen sowie zum Durchlaufen und Modifizieren rekursiver Datenstrukturen),&lt;/li&gt;
+                &lt;li&gt;beispielhaft ausgewählte Algorithmen, Datenstrukturen und Datenabstraktionen,&lt;/li&gt;
+                &lt;li&gt;häufige Fehlerquellen sowie Techniken zur Qualitätssicherung (Verifikation von Eingabedaten, Exception-Handling, Testen, Dokumentation, Code-Review).&lt;/li&gt;
+                &lt;/ul&gt;
+                &lt;h3&gt;Kognitive und praktische Fertigkeiten:&lt;/h3&gt;
+                &lt;p&gt;Nach positiver Absolvierung von Einführung in die Programmierung 2 können die Studierenden&lt;/p&gt;
+                &lt;ul&gt;
+                &lt;li&gt;Inhalte in natürlicher Sprache formulierter Programmieraufgaben in ausführbare Java-Programme umsetzen,&lt;/li&gt;
+                &lt;li&gt;beschriebene Datenabstraktionen, Algorithmen und Datenstrukturen implementieren und verwenden,&lt;/li&gt;
+                &lt;li&gt;Sprachelemente und Techniken zur Datenabstraktion, zum Durchlaufen und Modifizieren rekursiver Datenstrukturen, zur Ein- und Ausgabe über Dateien sowie zur Qualitätssicherung anwenden.&lt;/li&gt;
+                &lt;/ul&gt;
+                &lt;h3&gt;Soziale und persönliche Kompetenzen:&lt;/h3&gt;
+                &lt;p&gt;Nach positiver Absolvierung von Einführung in die Programmierung 2 können die Studierenden&lt;/p&gt;
+                &lt;ul&gt;
+                &lt;li&gt;beim Lösen von Programmieraufgaben selbständig vorgehen sowie in Zweierteams zusammenarbeiten,&lt;/li&gt;
+                &lt;li&gt;Eigenschaften von Programmen kommunizieren.&lt;/li&gt;
+                &lt;/ul&gt;</ns2:de>
+            <ns2:en>&lt;h3&gt;Technical and Methodological Knowledge:&lt;/h3&gt;
+                &lt;p&gt;After successfully participating in this course students can describe&lt;/p&gt;
+                &lt;ul&gt;
+                &lt;li&gt;systematic approaches to programming (especially for creating and using data abstractions, traversing and modifying recursive data structures),&lt;/li&gt;
+                &lt;li&gt;selected algorithms, data structures and data abstractions,&lt;/li&gt;
+                &lt;li&gt;important sources of errors as well as quality assurance techniques (verifying input data, exception handling, testing, documentation, code-review).&lt;/li&gt;
+                &lt;/ul&gt;
+                &lt;h3&gt;Cognitive and Practical Skills:&lt;/h3&gt;
+                &lt;p&gt;After successfully participating in this course students can&lt;/p&gt;
+                &lt;ul&gt;
+                &lt;li&gt;translate informal program descriptions given in natural language (i.e. programming tasks) into executable Java programs,&lt;/li&gt;
+                &lt;li&gt;implement and use specified data abstractions, algorithms and data structures,&lt;/li&gt;
+                &lt;li&gt;apply language concepts and techniques for data abstraction, traversal and modification of recursive data structures, input and output through files as well as quality assurance.&lt;/li&gt;
+                &lt;/ul&gt;
+                &lt;h3&gt;Social and Personal Skills:&lt;/h3&gt;
+                &lt;p&gt;After successfully participating in this course students can&lt;/p&gt;
+                &lt;ul&gt;
+                &lt;li&gt;act autonomously as well as team players (teams of 2 persons) when solving programming assignments,&lt;/li&gt;
+                &lt;li&gt;communicate properties of programs.&lt;/li&gt;
+                &lt;/ul&gt;</ns2:en>
+        </objective>
+        <teachingContent>
+            <ns2:de>&lt;ul&gt;&#13;
+                &lt;li&gt;Konzept der Datenabstraktion und Sprachelemente zur Datenabstraktion&lt;/li&gt;&#13;
+                &lt;li&gt;Implementierung und wesentliche Eigenschaften rekursiver Datenstrukturen (wie Listen und Bäume)&lt;/li&gt;&#13;
+                &lt;li&gt;Implementierung und wesentliche Eigenschaften von Algorithmen (etwa zum Einfügen, Löschen, Suchen, Sortieren, Vergleichen, Konvertieren, Iterieren) für verschiedene Datenstrukturen&lt;/li&gt;&#13;
+                &lt;li&gt;Abstraktion über Datenstrukturen mit vergleichbaren Zugriffsfunktionen&lt;/li&gt;&#13;
+                &lt;li&gt;Exception-Handling&lt;/li&gt;&#13;
+                &lt;li&gt;Ein- und Ausgabe über Dateien, Überprüfung von Eingaben&lt;/li&gt;&#13;
+                &lt;li&gt;einfache Testmethoden und Code-Review&lt;/li&gt;&#13;
+                &lt;li&gt;Ansätze zur Programmoptimierung und damit verbundene Fehlerquellen&lt;/li&gt;&#13;
+                &lt;li&gt;Programmierstile und Programmdokumentation&lt;/li&gt;&#13;
+                &lt;/ul&gt;</ns2:de>
+            <ns2:en>&lt;ul&gt;&#13;
+                &lt;li&gt;concept of data abstraction and language features for data abstraction&lt;/li&gt;&#13;
+                &lt;li&gt;implementation and essential properties of recursive data structures (as lists and trees)&lt;/li&gt;&#13;
+                &lt;li&gt;implementation and essential properties of algorithms (for insertion, deletion, search, sorting, comparison, conversion, iterating) on several data structures&lt;/li&gt;&#13;
+                &lt;li&gt;abstraction over data structures with comparable access functions&lt;/li&gt;&#13;
+                &lt;li&gt;exception handling&lt;/li&gt;&#13;
+                &lt;li&gt;input and output over files, validation of input&lt;/li&gt;&#13;
+                &lt;li&gt;simple testing methods and code review&lt;/li&gt;&#13;
+                &lt;li&gt;approaches to program optimization and corresponding sources of errors&lt;/li&gt;&#13;
+                &lt;li&gt;programming styles and program documentation&lt;/li&gt;&#13;
+                &lt;/ul&gt;</ns2:en>
+        </teachingContent>
+        <additionalInformation>
+            <ns2:de>&lt;h2&gt;Wer soll an der Lehrveranstaltung teilnehmen?&lt;/h2&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;Studierenden, die "&lt;span&gt;&lt;a href="https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=185A91" rel="nofollow"&gt;Einführung in die Programmierung 1&lt;/a&gt;&lt;/span&gt;" erfolgreich absolviert haben, wird empfohlen, "&lt;span&gt;Einführung in die Programmierung 2&lt;/span&gt;" in kurzem Abstand danach zu absolvieren.&lt;/li&gt;&#13;
+                &lt;li&gt;Studierenden, die in "&lt;span&gt;&lt;a href="https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=185A91" rel="nofollow"&gt;Einführung in die Programmierung 1&lt;/a&gt;&lt;/span&gt;" nicht positiv beurteilt wurden, wird dringend davon abgeraten, an "&lt;span&gt;Einführung in die Programmierung 2&lt;/span&gt;" teilzunehmen, bevor sie die erste Lehrveranstaltung mit Erfolg wiederholt haben.&lt;/li&gt;&#13;
+                &lt;li&gt;Studierenden, die im Sommersemester in das Studium einsteigen, wird empfohlen, nur dann an "&lt;span&gt;Einführung in die Programmierung 2&lt;/span&gt;" teilzunehmen, wenn schon umfangreiche Programmiererfahrungen in Java vorhanden sind.&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;h2&gt;Anmeldung&lt;/h2&gt;&#13;
+                &lt;p&gt;&lt;span&gt;Um an der Lehrveranstaltung teilnehmen zu können, müssen Sie sich zur Lehrveranstaltung anmelden, siehe "LVA-Anmeldung". Zusätzlich ist eine Anmeldung für eine Übungsgruppe notwendig, siehe "Gruppen-Anmeldung". Bitte halten Sie die Anmeldefristen ein.&lt;br&gt;&lt;/span&gt;&lt;/p&gt;&#13;
+                &lt;h2&gt;Mail&lt;/h2&gt;&#13;
+                &lt;p&gt;Senden Sie Fragen zur Lehrveranstaltung bitte von Ihrer TU-Mailadresse aus an folgende Mailadresse:&lt;/p&gt;&#13;
+                &lt;p&gt;&lt;a href="mailto:ep2@complang.tuwien.ac.at" rel="nofollow"&gt;ep2@complang.tuwien.ac.at&lt;/a&gt;&lt;/p&gt;&#13;
+                &lt;h2&gt;ECTS-Breakdown&lt;/h2&gt;&#13;
+                &lt;p&gt;4 ECTS entsprechen 100 Arbeitsstunden:&lt;/p&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;20 h Teilnahme an Vorlesungen&lt;/li&gt;&#13;
+                &lt;li&gt;06 h Teilnahme an 8 geleiteten Übungseinheiten zu je 45 Minuten&lt;/li&gt;&#13;
+                &lt;li&gt;04 h Teilnahme an 2 regulären Tests zu je 75 Minuten (und anteilsmäßig an Nachtragstests)&lt;/li&gt;&#13;
+                &lt;li&gt;45 h Lösung der 8 Aufgabenblätter (3-9 h pro Aufgabenblatt)&lt;/li&gt;&#13;
+                &lt;li&gt;25 h Selbststudium, Tutorium, Testvorbereitung&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;h2&gt;Präsenz&lt;/h2&gt;&#13;
+                &lt;p&gt;Die Lehrveranstaltung ist in Präsenz geplant. Vorlesungen sollen im Audi.Max. besucht werden. Geleitete Übungseinheiten und das Tutorium werden in den Räumen des InfLab (Frogger, Q*bert und Pong) abgehalten, Tests in vielen Computer-Räumen gleichzeitig. Das ist speziell bei den geleiteten Übungen und Tests zu berücksichtigen, bei denen Anwesenheitspflicht besteht. Wenn eine Übungseinheit oder ein Test aufgrund einer individuellen Situation nicht in Präsenz besucht werden kann, stellt dies keine Ausnahme von der Anwesenheitspflicht dar, sondern es gelten die Bestimmungen, die unter "Leistungsnachweis" zu finden sind.&lt;/p&gt;&#13;
+                &lt;p&gt;Obwohl unwahrscheinlich, muss doch mit der Möglichkeit gerechnet werden, dass eine vollständige Abhaltung in Präsenz nicht möglich und eine Abhaltung in Fernlehre nötig ist. Dies kann auf einen bestimmten Zeitraum und auf bestimmte Lehrveranstaltungsteile beschränkt sein. Der Abhaltemodus wird in diesem Fall für den entsprechenden Zeitraum und für betroffene Lehrveranstaltungsteile (eventuell auch sehr kurzfristig) auf Fernlehre umgestellt. Sie werden über TUWEL-News oder per e-Mail darüber informiert. Die für Tests vorgesehenen Termine können verschoben oder ausgeweitet werden, um eine Testdurchführung in Präsenz zu ermöglichen. Gegebenenfalls werden Sie auch darüber über TUWEL-News oder per e-Mail informiert.&lt;/p&gt;&#13;
+                &lt;p&gt;In jedem Fall gilt für jede Übungseinheit (pro Übungsgruppe) und für jeden Test, dass die Abhaltung entweder vollständig in Präsenz oder vollständig durch Fernlehre erfolgt, nicht im Mischbetrieb. Studierende können nicht frei wählen, ob sie an einer Übungseinheit oder einem Test in Präsenz oder online teilnehmen.&lt;/p&gt;&#13;
+                &lt;h2&gt;Fernlehre&lt;/h2&gt;&#13;
+                &lt;p&gt;Vorlesungen können online verfolgt und als Aufzeichnungen (wiederholt) betrachtet werden, falls die technische Ausstattung zur Online-Übertragung und Aufzeichnung funktionsfähig ist. Es kann vorkommen, dass eine technische Komponente ausfällt. In solchen Fällen kann in der Regel leider kein Ersatz bereitgestellt werden.&lt;/p&gt;&#13;
+                &lt;p&gt;Bei Bedarf (siehe oben) werden Teile der Lehrveranstaltung auf Fernlehre umgestellt. Übungseinheiten und das Tutorium werden in der Fernlehre über Zoom-Meetings organisiert. Online-Tests sind an eigenen Computern durchzuführen, wobei die Aufsicht über ein Zoom-Meeting erfolgt. Informationen zum Ablauf und zur Beurteilung von Online-Tests sind unter "Leistungsnachweis" zu finden, genaue Details zum Ablauf werden im Bedarfsfall über TUWEL-News oder per e-Mail verlautbart. Zugang zu entsprechenden Zoom-Meetings wird über TUWEL ermöglicht, sofern Zugangsdaten nicht individualisiert per e-Mail verschickt werden. Falls die Abhaltung von Vorlesungen im Audi.Max. nicht möglich ist, werden Vorlesungen nicht über LectureTube live verfolgbar sein, sondern zwecks Interaktion über ein Zoom-Meeting; der Zugang erfolgt jedenfalls über TUWEL.&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;h2&gt;Who shall participate in the course&lt;/h2&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;Shortly after successfully completing "&lt;span&gt;&lt;a href="https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=185A91" rel="nofollow"&gt;Einführung in die Programmierung 1&lt;/a&gt;&lt;/span&gt;" students shall participate in "&lt;span&gt;Einführung in die Programmierung 2&lt;/span&gt;".&lt;/li&gt;&#13;
+                &lt;li&gt;Students, who got a negative mark in "&lt;span&gt;&lt;a href="https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=185A91" rel="nofollow"&gt;Einführung in die Programmierung 1&lt;/a&gt;&lt;/span&gt;" shall not participate in "&lt;span&gt;Einführung in die Programmierung 2&lt;/span&gt;" before repeating and successfully completing the first course.&lt;/li&gt;&#13;
+                &lt;li&gt;Students in the first semester shall participate only if they already have much programming experience in Java.&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;h2&gt;Registration&lt;/h2&gt;&#13;
+                &lt;p&gt;To participate, students have to register for the course, see "Course registration". Furthermore, it is necessary to register for a guided exercise group, see "Group registration". Please observe the time frames.&lt;/p&gt;&#13;
+                &lt;h2&gt;Mail&lt;/h2&gt;&#13;
+                &lt;p&gt;For questions concerning this course please use the following mail address:&lt;a href="mailto:ep2@complang.tuwien.ac.at" rel="nofollow"&gt; ep2@complang.tuwien.ac.at&lt;/a&gt;&lt;/p&gt;&#13;
+                &lt;p&gt;Please use your TU mail address for sending mails.&lt;/p&gt;&#13;
+                &lt;h2&gt;ECTS-Breakdown&lt;/h2&gt;&#13;
+                &lt;p&gt;4 ECTS correspond to 100 hours of work:&lt;/p&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;20 h for participation in lectures&lt;/li&gt;&#13;
+                &lt;li&gt;06 h for participation in 8 guided exercise meetings, 45 minutes each&lt;/li&gt;&#13;
+                &lt;li&gt;04 h for participation in 2 regular tests,&amp;nbsp; 75 minutes each (and proportionately in supplementary tests)&lt;/li&gt;&#13;
+                &lt;li&gt;45 h for solving 8 exercise sheets (3-9 h for each sheet)&lt;/li&gt;&#13;
+                &lt;li&gt;25 h for private study, tutorium, test preparation&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;h2&gt;Presence&lt;/h2&gt;&#13;
+                &lt;p&gt;This course is planned to be held in presence. You can participate in lectures in the Audi.Max. Guided exercise units and the tutorium take place in InfLab rooms (Frogger, Q*bert and Pong), tests in a variety of computer rooms at the same time. We have to consider that especially for guided exercises and tests, where attendance is compulsory. Attendance is compulsory even if you cannot attend an exercise unit or test because of your personal situation. In that case we have to apply the rules specified in "Eximination modalities" concerning absence.&lt;/p&gt;&#13;
+                &lt;p&gt;Although unlikely, we have to take into account the possibility of rule changes during the semester that require us to change to distance learning. That could be restricted to a specific time frame and specific learning activities. You will be informed through TUWEL news or e-mail in case of a change to distance learning. Dates and times of tests can be changed and expanded if necessary to allow tests to be taken in presence.&lt;/p&gt;&#13;
+                &lt;p&gt;Each exercise unit (per exercise group) and each test can run only in presence or only using distance learning, not in a mixed mode. Individual students cannot decide by themselves if they want to participate in an exercise unit or test in presence or through distance learning.&lt;/p&gt;&#13;
+                &lt;h2&gt;Distance Learning&lt;/h2&gt;&#13;
+                &lt;p&gt;Lectures can be attented online and recordings of lectures will be provided if possible. There is no guarantee that corresponding technical equipment does not fail. In case of a failure it is not possible to provide recordings as substitute.&lt;/p&gt;&#13;
+                &lt;p&gt;If necessary (see above), parts of the course can be changed to distance learning. In distance learning, exercise units and the tutorial take place in Zoom meetings. An online test runs on your own computer, supervised through a Zoom meeting. More information on online tests can be found in the section on "Examination modalities". More details on the workflow will be provided if necessary in time through TUWEL news or e-mail. Access to Zoom meetings will be provided in TUWEL or by e-mail for individual access data. If it is not possible to attend lectures in the Audi.Max., we will change online access from LectureTube to Zoom in order to facilitate interaction. Access is through TUWEL in any case.&lt;/p&gt;</ns2:en>
+        </additionalInformation>
+        <lectureNotes>
+            <ns2:de>&lt;p&gt;Die beiden zum Download angebotenen Varianten des Skriptums unterscheiden sich nur im Format, nicht im Inhalt.&lt;/p&gt;</ns2:de>
+            <ns2:en>&lt;p&gt;A script is available for download (in German only).&lt;/p&gt;</ns2:en>
+        </lectureNotes>
+        <examinationModalities>
+            <ns2:de>&lt;ul&gt;&#13;
+                &lt;li&gt;Eine positive Beurteilung der Lehrveranstaltung setzt voraus, dass in jedem der folgenden drei Teile mindestens 50% der erreichbaren Leistungen erbracht wurden:&lt;/li&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;Übungsteil&lt;/li&gt;&#13;
+                &lt;li&gt;1. Test (1. regulärer Test oder ersatzweise entsprechender Nachtragstest)&lt;/li&gt;&#13;
+                &lt;li&gt;2. Test (2. regulärer Test oder ersatzweise entsprechender Nachtragstest)&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;li&gt;Bei positiver Beurteilung der Lehrveranstaltung ergibt sich die Note aus dem Durchschnitt der prozentuell in jedem dieser drei Teile erbrachten Leistungen:&lt;br&gt;&lt;ol&gt;&#13;
+                &lt;li&gt;:&amp;nbsp; 87.5% bis 100% (sehr gut)&lt;/li&gt;&#13;
+                &lt;li&gt;:&amp;nbsp; 75% bis unter 87.5% (gut)&lt;/li&gt;&#13;
+                &lt;li&gt;:&amp;nbsp; 62.5% bis unter 75% (befriedigend)&lt;/li&gt;&#13;
+                &lt;li&gt;:&amp;nbsp; 50% bis unter 62.5% (genügend)&lt;/li&gt;&#13;
+                &lt;/ol&gt;&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;Der Prozentsatz erbrachter Leistungen des Übungsteils ist die Summe der auf folgenden Gebieten erreichten Punkte (insgesamt maximal 100 Punkte):&lt;/li&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;Bis zu 52 Punkte: Summe der Beurteilungen der 8 Aufgabenblätter (Anzahl erreichbarer Punkte unterscheidet sich von Aufgabenblatt zu Aufgabenblatt, nur ganze Punkte), die pro Aufgabenblatt so ermittelt werden:&lt;/li&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;Die erste Beurteilung ergibt sich anhand des Feedbacks der Tutor_innen und drückt aus, zu welchem Anteil die Aufgaben des Aufgabenblatts richtig gelöst wurden. Geben Tutor_innen kein Feedback zu einem Aufgabenblatt, wird die maximal erreichbare Punkteanzahl angenommen.&lt;/li&gt;&#13;
+                &lt;li&gt;Übungsgruppenleiter überschreiben Beurteilungen der Tutor_innen, wenn sich neue Erkenntnisse bezüglich der Qualität oder des Zustandekommens von Lösungen ergeben.&lt;/li&gt;&#13;
+                &lt;li&gt;Studierende präsentieren auf Aufforderung in der entsprechenden Übungseinheit eine (bis zum am Aufgabenblatt dafür genannten Termin hochgeladene) möglicherweise nachgebesserte Lösung. Übungsgruppenleiter beurteilen nur die nachgebesserte Lösung, nicht die, auf die sich das Feedback der Tutor_innen (falls vorhanden) bezogen hat. Wenn eine Präsentation nur einen Teil der Aufgaben des Aufgabenblatts betrachtet, wird die Qualität dieses Teils auf das gesamte Aufgabenblatt hochgerechnet.&lt;/li&gt;&#13;
+                &lt;li&gt;Gewinnen Übungsgruppenleiter aus der Diskussion sowie dem Ergebnis des Übungstests den Eindruck, dass vorgeblich eigene Lösungen nicht verstanden werden und unmöglich selbst entwickelt worden sein können, wird das gesamte Aufgabenblatt mit 0 Punkten beurteilt.&lt;/li&gt;&#13;
+                &lt;li&gt;Bei Nichtteilnahme an der Diskussion in einer Übungseinheit (Abwesenheit) erfolgt die Beurteilung des entsprechenden Aufgabenblatts mit 0 Punkten. Wird nur ein Teil der Diskussion versäumt, kommt es zu einer anteilsmäßigen Kürzung der Punkte.&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;li&gt;Bis zu 48 Punkte: Summe der Beurteilungen der 6 Übungstests (maximal 8 Punkte pro Übungstest) durch den Übungsgruppenleiter mit Unterstützung durch Tutor_innen.&lt;/li&gt;&#13;
+                &lt;li&gt;Extrapunkte: Einige Aufgabenblätter können als solche ausgewiesene Zusatzaufgaben enthalten, die nicht zu den verpflichtend zu lösenden Aufgaben zählen. Für die korrekte Lösung solcher Zusatzaufgaben können Extrapunkte vergeben werden. Die Extrapunkte tragen zur Punktesumme für die Beurteilung des Übungsteils bei. Wenn die Punktesumme jedoch mehr als 100 Punkte ergeben würde, wird sie auf 100 Punkte gekürzt (Maximum bleibt auch mit Extrapunkten bei 100 Punkten).&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;li&gt;Tests werden von LVA-Leitern danach beurteilt, zu welchem Anteil Aufgaben richtig gelöst wurden. Als Lösung wird die letzte innerhalb der Arbeitszeit (abhängig von der Testumgebung) am Computer gespeicherte oder über Git von der/dem Studierenden hochgeladene Version betrachtet, sofern diese Version glaubhaft eine von der/dem Studierenden eigenständig (ohne fremde Hilfe und ohne Verwendung unerlaubter Hilfsmittel) erbrachte Leistung darstellt. Sollte die LVA-Leitung nach Ende der Arbeitszeit zur Überzeugung gelangen, dass unerlaubte Hilfsmittel verwendet wurden, Aufgaben mit fremder Hilfe gelöst wurden oder die abgegebene Lösung unmöglich der selbständigen Leistung der/des Studierenden entsprechen kann, wird der Test so beurteilt, als ob die/der Studierende nicht am Test teilgenommen hätte. Regelverletzungen werden von der Testaufsicht so gut wie möglich unterbunden.&lt;/li&gt;&#13;
+                &lt;li&gt;Folgende zusätzlichen Regeln gelten für Tests, die in Fernlehre als Online-Tests durchgeführt werden müssen, für Tests in Präsenz gelten sie nicht:&lt;/li&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;Die Testaufsicht kann jederzeit (vor, während und nach der Arbeitszeit) verlangen, dass die Arbeitsumgebung durch Schwenken der Kamera und von Gegenständen (wiederholt) hergezeigt wird. Im gleichen Raum darf sich während des gesamten Tests keine andere Person aufhalten. Außer üblichen Einrichtungsgegenständen (z.B. auch Gegenstände wie Lampen, Wanduhren und Bilder, die keinen Bildschirm und keine Beschriftung mit lehrveranstaltungsrelevantem Inhalt aufweisen), den zur Testdurchführung verwendeten technischen Einrichtungen (benötigt wird ein Rechner mit einem Bildschirm, Tastatur, Maus, Kamera, Mikrofon und geeigneter Internetanbindung, aber kein Reservegerät; bei Verwendung eines Laptops ist eine Zusatztastatur, ein Zusatzbildschirm und eine Docking-Station erlaubt; bei fest montierter Kamera empfiehlt sich zur Überprüfung der Arbeitsumgebung die Verwendung eines einfachen Spiegels oder einer zweiten Kamera (Smart Phone), welche jedoch nach der Überprüfung außer Griffweite abzulegen ist) dürfen sich in Griffweite und direkter Sichtweite (die ein Ablesen vom Arbeitsplatz aus ermöglichen würde) keine elektronischen Geräte (auch keine Scanner, Drucker, Handys, Smart-Watches, etc.), Bücher, Skripten, beschriftetes Papier, etc. befinden. Auf dem Arbeitstisch sind Lichtbildausweise, wenige Blätter (vor Testbeginn unbeschriftetes) Papier, Schreibstifte und Trinkgefäße erlaubt. Geöffnete Anwendungen am Rechner sind beschränkt auf IntelliJ IDEA als IDE und die zur Video-Überwachung eingesetzte Meeting-Software (voraussichtlich Zoom). In der IDE darf nur ein einziges Projekt geöffnet sein, das (ab Beginn der Arbeitszeit) die Test-Aufgaben und (später) deren Lösungen enthält. Die Daten müssen am lokalen Rechner liegen und dürfen (außer zum vorgegebenen Git-Repository, das die Test-Aufgaben und -Lösungen enthält) nicht auf einen anderen Rechner übertragen werden. Die Meeting-Software muss so eingestellt sein, dass während des Tests stets eine Kamera (die zumindest das Gesicht des/der Studierenden zeigt und keinen virtuellen Hintergrund verwendet) sowie ein Mikrofon eingeschaltet bleibt und alle Bildschirminhalte über Screen-Sharing übertragen werden.&lt;/li&gt;&#13;
+                &lt;li&gt;Vor Beginn des Tests erfolgt per Video die Identitätsfeststellung (unterstützt durch ein zuvor in TUWEL hochgeladenes Foto des Studierendenausweises bzw. eines Lichtbildausweises, der auch am Arbeitsplatz bereit liegt um per Video hergezeigt werden zu können) und eine Überprüfung des Arbeitsplatzes. Eine Teilnahme am Test ist nicht möglich, wenn die Identität nicht zweifelsfrei festgestellt werden kann, der Arbeitsplatz nicht den geforderten Kriterien entspricht oder die Qualität der Netzwerkverbindung nicht ausreicht, um entsprechende Überprüfungen vorzunehmen.&lt;/li&gt;&#13;
+                &lt;li&gt;Nach dem Ende der Arbeitszeit darf das Meeting erst nach entsprechender Anweisung durch die Testaufsicht verlassen werden. Davor ist auf Aufforderung (stichprobenartig) die Arbeitsumgebung nocheinmal herzuzeigen und es sind Fragen zum Test und Teststoff zu beantworten - siehe unten.&lt;/li&gt;&#13;
+                &lt;li&gt;Programme zur Identifikation von Plagiaten oder Textähnlichkeiten können zum Einsatz kommen.&lt;/li&gt;&#13;
+                &lt;li&gt;Die LVA-Leitung kann nach Ende der Arbeitszeit (unmittelbar danach stichprobenartig auch ohne Anlass, zu einem beliebigen späteren Zeitpunkt bei Verdacht auf Unregelmäßigkeiten oder Lücken in der Testaufsicht) verlangen, dass die/der Studierende Fragen zum Test und zum Teststoff in Form einer mündlichen Online-Prüfung beantwortet. Antworten auf diese Fragen wirken sich nur dann wie unten beschrieben auf die Beurteilung aus, wenn die LVA-Leitung zur Überzeugung gelangt, dass keine eigenständig erbrachte Leistung vorliegt oder die Testaufsicht nicht lückenlos war.&lt;/li&gt;&#13;
+                &lt;li&gt;Eine lückenlose Testaufsicht ist nur bei intakter Netzwerkverbindung möglich. Geht die Netzwerkverbindung verloren, ist die/der Studierende verpflichtet, die Verbindung so rasch wie möglich wieder aufzubauen und den aktuellen Zustand des Tests über Git hochzuladen. Nach dem Wiederaufbau der Verbindung ist eine neuerliche Überprüfung des Arbeitsplatzes nötig, bevor die Arbeit am Test fortgesetzt werden kann. Die LVA-Leitung entscheidet im Nachhinein (anhand der Dauer der Unterbrechung, der Konsistenz der ins Git-Repository hochgeladenen Versionen des Tests vor und nach der Unterbrechung, sonstigen Vorkommnissen, sowie eventuell aus einer Befragung der/des Studierenden) ob trotz der Unterbrechung eine lückenlose Aufsicht gegeben zu sein scheint. Andernfalls wird die zuletzt vor dem Abbrechen der Verbindung in Git hochgeladene Version des Tests beurteilt.&lt;/li&gt;&#13;
+                &lt;li&gt;Sollte die Testaufsicht während der Arbeitszeit erkennen, dass unerlaubte Hilfsmittel verwendet oder Aufgaben mit fremder Hilfe gelöst werden, so wird die/der Studierende unverzüglich darauf hingewiesen und ersucht, die Regelverletzung sofort einzustellen und den aktuellen Zustand des IntelliJ-IDEA-Projekts mit dem Test über Git auf den Initial-Zustand (das ist der Zustand zu Testbeginn) zurückzusetzen sowie diesen zurückgesetzten Zustand über Commit zu bestätigen und in Git hochzuladen; weiters wird die/der Studierende angewiesen, keinesfalls wieder auf einen älteren Programmzustand zurückzukehren. Wenn die/der Studierende diese Anweisungen nicht befolgt oder die Testaufsicht ein weiteres Mal erkennt, dass unerlaubte Hilfsmittel verwendet oder Aufgaben mit fremder Hilfe gelöst werden, so wird der Test so beurteilt, als ob die/der Studierende nicht am Test teilgenommen hätte.&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;/ul&gt;</ns2:de>
+            <ns2:en>&lt;ul&gt;&#13;
+                &lt;li&gt;A positive rating of this course requires that at least 50% of the accomplishable achievements were accomplished for each of the following three parts:&lt;/li&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;guided exercises&lt;/li&gt;&#13;
+                &lt;li&gt;first test (first regular test or alternatively the corresponding supplementary test)&lt;/li&gt;&#13;
+                &lt;li&gt;second test (second regular test or alternatively the corresponding supplemantary test)&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;li&gt;If the rating of the course is positive, the mark results from the average of the percentages of achievements of the three parts:&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;ul&gt;&lt;ol&gt;&#13;
+                &lt;li&gt;:&amp;nbsp; 87.5% to 100% (sehr gut)&lt;/li&gt;&#13;
+                &lt;li&gt;:&amp;nbsp; 75% to below 87.5% (gut)&lt;/li&gt;&#13;
+                &lt;li&gt;:&amp;nbsp; 62.5% to below 75% (befriedigend)&lt;/li&gt;&#13;
+                &lt;li&gt;:&amp;nbsp; 50% to below 62.5% (genügend)&lt;/li&gt;&#13;
+                &lt;/ol&gt;&#13;
+                &lt;li&gt;The percentage of achievements for the guided exercises is the sum of "points" in the following three areas (at most 100 points in sum):&lt;/li&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;Up to 52 points: Sum of the ratings of the exercise sheets determined as follows:&lt;/li&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;The first rating results from the feedback of tutors and corresponds to the portion of tasks on the exercise sheet solved correctly. If tutors do not provide feedback, the maximum of achievable points for the exercise sheet is assumed.&lt;/li&gt;&#13;
+                &lt;li&gt;Exercise instructors overwrite ratings of tutors whenever they get new insights on the quality or origin of solutions.&lt;/li&gt;&#13;
+                &lt;li&gt;Exercise instructors rate students who present their program code upon request in the corresponding guided exercise meeting based on the (improved) program code uploaded before the deadline for improvements; the improved program can differ from that previously seen by tutors. The found quality will be projected to the whole exercise sheet even if students present only parts of it.&lt;/li&gt;&#13;
+                &lt;li&gt;If exercise instructors get the impression (from discussions and exercise test results) that a student does not understand his or her supposedly own program code and cannot have developed the code by himself or herself, the corresponding exercise sheet will be rated with 0 points.&lt;/li&gt;&#13;
+                &lt;li&gt;If a student does not participate in a guided exercise meeting (physical absence in the discussions), the corresponding exercise sheet will be rated with 0 points. If a student misses the discussions only partly, points will be reduced proportionately.&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;li&gt;Up to 48 points: Sum of the ratings of exercise tests (6 execise tests, up to 8 points each) by the exercise instructor supported by tutors.&lt;/li&gt;&#13;
+                &lt;li&gt;Extra points: Some exercise sheets can contain optional tasks marked as "Zusatzaufgabe", solving them is not obligatory. Correct solutions of such optional tasks can be honored with extra points. Extra points increase the sum of points for guided exercises, but they cannot increase the sum over the limit of 100 points.&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;li&gt;Instructors rate a test based on the proportion of correctly solved tasks considering the latest version saved on the computer or uploaded through Git within working time (it depends on the test environment whether an upload through Git is necessary or not), provided that this version was believably accomplished by the student herself or himself (without the help of other persons or auxiliary means). If instructors will be convinced (at any time after the test) that a student used forbidden auxiliary means or got help from other persons, or that a test result does not reflect the student's personal merit in any way, then the test will be rated as if the student did not participate in the test. Examination supervisors will prevent breaches of rule as good as possible.&lt;/li&gt;&#13;
+                &lt;li&gt;The following additional rules apply to online tests together with distance learning, they are not applicable to tests in presence:&lt;/li&gt;&#13;
+                &lt;ul&gt;&#13;
+                &lt;li&gt;Examination supervisors can repeatedly require students to show their working environments by panning the video cam and zooming on objects (before, during and after working time). During the whole test no other person must be in the same room. Except of usual home furnishings (including objects like lamps, wall clocks and pictures without screens and without inscriptions related to the contents of this course), technical equipment used for taking the test (you need one computer with one screen, keyboard, mouse, video cam, microphone and an internet connection, but no standby computer; if a laptop is used, there can be an additional screen, keyboard and docking station; if your camera is mounted stationary, it is recommended to use a simple mirror or a second cam (smart phone) to show the working environment, but the second cam has to be deposited out of reach after showing the environment) there must not be any electronic equipment (no scanner, printer, cell phone, smart watch, etc.), any book, script, non-blank paper, etc. within the range of arms or in sighting distance (that would allow reading directly from the working place). On the table there can be identification cards, some sheets of (at the begin of working time blank) paper, pens, and drinking glasses. Open applications on the screen are restricted to InelliJ IDEA as IDE and the meeting software (presumably Zoom) used for video control. Only one project must be open in the IDE, and this project must contain (at working time) the test tasks and (later) their solutions. All data must stay on the local computer and must not be transmitted to another computer (except of the given Git repository containing your test). The meeting software must be used so that the video cam (showing at least the face of the student, not using a virtual background) and the microphone always remain switched on and all screen contents are shared (screen sharing).&lt;/li&gt;&#13;
+                &lt;li&gt;Before the test starts, students have to show their identification cards (the same uploaded before as pictures in TUWEL) and working environments. A student must not participate in the test if the identity cannot be determined beyond doubt, the working environment does not fulfill all requirements stated above, or the internet connection is not stable enough to check all conditions.&lt;/li&gt;&#13;
+                &lt;li&gt;After the end of the working time the meeting software must remain operating until examination supervisors allow students to stop it. On request students have to show their working environments again and answer questions on the test and subject matter (see below).&lt;/li&gt;&#13;
+                &lt;li&gt;Programs to identify plagiarism or similarities in texts can be applied.&lt;/li&gt;&#13;
+                &lt;li&gt;Course instructors can require students to answer questions on the test and subject matter any time after the test (immediately after the test at random without any cause, at a later time on suspicion of an irregularity or gap in the supervision) in the form of oral (online) examinations. Answers to these questions do not affect ratings except if instructors attain conviction that test results do not show the students' own accomplishments or there have been significant gaps in the supervision.&lt;/li&gt;&#13;
+                &lt;li&gt;Test supervision without gaps requires an internet connection in good order. If the internet connection gets lost, students have to reestablish connections as soon as possible and upload current states of the tests through Git. After reesteblishing&amp;nbsp; the connection it is necessary to show working environments again before continuing to work on tests. Course instructors decide in retrospect if a gapless supervision seems to be given despite temporary connection losses (based on the duration, consistency of the versions uploaded before and after connection loss, other occurrences, possibly interviewing students). Otherwise the last versions of tests uploaded via Git before connection losses will be rated.&lt;/li&gt;&#13;
+                &lt;li&gt;If test supervisors find out during working time that a student uses forbidden auxiliary means or gets help from other persons, then they will ask the student to immediately stop to do so and to reset the current state of the IntelliJ IDEA project containing the test to the initial state (this is the state before starting to work on the test) and to commit and upload this initial state using Git; furthermore, supervisers will instruct the student not to reset the state of the project to a previous one anymore. If the student does not follow these instructions or supervisors find out for a second time that the student uses forbidden auxiliary means or gets help from other persons, then the test of the student will be rated in the same way as if the student did not participate in this test.&lt;/li&gt;&#13;
+                &lt;/ul&gt;&#13;
+                &lt;/ul&gt;</ns2:en>
+        </examinationModalities>
+        <related>
+            <recommendation>
+                <ns2:de>&lt;p&gt;Studierende müssen bereits vor der Teilnahme an der Lehrveranstaltung in der Lage sein&lt;/p&gt;&#13;
+                    &lt;ul&gt;&#13;
+                    &lt;li&gt;einfache Programme in Java zu erstellen, modifizieren, debuggen und dokumentieren sowie deren Abläufe nachzuzeichnen,&lt;/li&gt;&#13;
+                    &lt;li&gt;grundlegende prozedurale Konzepte von Java zu beschreiben,&lt;/li&gt;&#13;
+                    &lt;li&gt;grundlegende Such- und Sortier-Algorithmen auf Arrays zu beschreiben,&lt;/li&gt;&#13;
+                    &lt;li&gt;Fehlerquellen in einfachen prozeduralen Programmen zu beschreiben,&lt;/li&gt;&#13;
+                    &lt;li&gt;beim Lösen von einfachen Programmieraufgaben selbständig vorzugehen und einfache Programmeigenschaften zu kommunizieren.&lt;/li&gt;&#13;
+                    &lt;/ul&gt;&#13;
+                    &lt;p&gt;&amp;nbsp;&lt;/p&gt;</ns2:de>
+                <ns2:en>&lt;p&gt;Before participating in the course students must be able to&lt;/p&gt;&#13;
+                    &lt;ul&gt;&#13;
+                    &lt;li&gt;develop, modify, debug and document simple programs in Java as well as trace their executions,&lt;/li&gt;&#13;
+                    &lt;li&gt;describe basic precedural concepts of Java,&lt;/li&gt;&#13;
+                    &lt;li&gt;describe basic algorithms for searching in and sorting of arrays,&lt;/li&gt;&#13;
+                    &lt;li&gt;describe sources of errors in simple procedural programs,&lt;/li&gt;&#13;
+                    &lt;li&gt;act autonomously when solving programming tasks and communicate basic properties of simple programs.&lt;/li&gt;&#13;
+                    &lt;/ul&gt;&#13;
+                    &lt;p&gt;&amp;nbsp;&lt;/p&gt;</ns2:en>
+            </recommendation>
+            <precedingCourses>
+                <course>185A91</course>
+            </precedingCourses>
+            <accompanyingCourses>
+                <course>186866</course>
+            </accompanyingCourses>
+        </related>
+        <weeklyHours>3.0</weeklyHours>
+        <lecturers>
+            <oid>1190781</oid>
+            <oid>2112469</oid>
+            <oid>6675345</oid>
+            <oid>1171501</oid>
+            <oid>1113253</oid>
+            <oid>2162393</oid>
+            <oid>3312045</oid>
+        </lecturers>
+        <tutors>
+            <oid>24762945</oid>
+            <oid>24536857</oid>
+            <oid>24465429</oid>
+            <oid>14171609</oid>
+            <oid>24098845</oid>
+            <oid>20221397</oid>
+            <oid>24466005</oid>
+            <oid>20651477</oid>
+            <oid>13969529</oid>
+            <oid>20512285</oid>
+            <oid>23414365</oid>
+            <oid>5819133</oid>
+            <oid>24491945</oid>
+            <oid>19719745</oid>
+            <oid>18073917</oid>
+            <oid>23211701</oid>
+            <oid>20546905</oid>
+            <oid>24529553</oid>
+            <oid>13973353</oid>
+            <oid>19661297</oid>
+            <oid>24465669</oid>
+        </tutors>
+        <instituteCode>E194</instituteCode>
+        <instituteName>
+            <ns2:de>Institut für Information Systems Engineering</ns2:de>
+            <ns2:en>Institute of Information Systems Engineering</ns2:en>
+        </instituteName>
+        <url>https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=185A92&amp;semester=2024S</url>
+        <uses54EctsRule>false</uses54EctsRule>
+        <registration>TISS</registration>
+        <eLearning>https://tuwel.tuwien.ac.at/course/view.php?id=62969</eLearning>
+        <language>
+            <ns2:de>Deutsch</ns2:de>
+            <ns2:en>German</ns2:en>
+        </language>
+    </course>
+</tuvienna>
