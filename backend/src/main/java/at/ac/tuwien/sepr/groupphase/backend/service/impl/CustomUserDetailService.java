@@ -12,6 +12,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.BanRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.FeedbackRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ReportRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -46,12 +47,13 @@ public class CustomUserDetailService implements UserService {
     private final EmailSmtpService emailService;
     private final RatingRepository ratingRepository;
     private final FeedbackRepository feedbackRepository;
+    private final ReportRepository reportRepository;
 
     @Autowired
     public CustomUserDetailService(UserRepository userRepository, BanRepository banRepository,
                                    PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer,
                                    UserValidator validator, EmailSmtpService emailService,
-                                   RatingRepository ratingRepository, FeedbackRepository feedbackRepository) {
+                                   RatingRepository ratingRepository, FeedbackRepository feedbackRepository, ReportRepository reportRepository) {
         this.userRepository = userRepository;
         this.banRepository = banRepository;
         this.passwordEncoder = passwordEncoder;
@@ -60,6 +62,7 @@ public class CustomUserDetailService implements UserService {
         this.emailService = emailService;
         this.ratingRepository = ratingRepository;
         this.feedbackRepository = feedbackRepository;
+        this.reportRepository = reportRepository;
     }
 
     @Override
@@ -215,6 +218,9 @@ public class CustomUserDetailService implements UserService {
         //delete ratings of student
         ratingRepository.deleteAllByStudentId(id);
         feedbackRepository.deleteFeedbackByRater(id);
+
+        //delete reports of user
+        reportRepository.deleteAllByReportedUser(applicationUser);
 
         Banned userBan = new Banned();
         userBan.setUser(applicationUser);

@@ -25,5 +25,8 @@ export class ReportService {
   getAllReports():Observable<ReportDto[]>{
     return this.httpClient.get<ReportDto[]>(this.baseUri);
   }
+  deleteReport(id: number):Observable<void>{
+    return this.httpClient.delete<void>(this.baseUri + `/${id}`);
+  }
 
 }

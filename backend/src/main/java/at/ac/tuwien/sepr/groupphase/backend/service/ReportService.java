@@ -16,4 +16,6 @@ public interface ReportService {
     void reportUserChat(String chatId, ApplicationUser reporter, String reason) throws ValidationException;
 
     List<Report> getAllReports();
+
+    void deleteReport(Long id);
 }

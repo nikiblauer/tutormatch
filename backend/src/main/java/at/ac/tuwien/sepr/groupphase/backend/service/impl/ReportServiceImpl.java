@@ -2,7 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatRoomDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ChatRoom;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Feedback;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Report;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
@@ -79,7 +78,14 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public List<Report> getAllReports() {
+        LOGGER.trace("getAllReports()");
         return this.reportRepository.findAll();
+    }
+
+    @Override
+    public void deleteReport(Long id) {
+        LOGGER.trace("getAllReports({})", id);
+        this.reportRepository.deleteById(id);
     }
 
     private void validateReason(String reason) throws ValidationException {

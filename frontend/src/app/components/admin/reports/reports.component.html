@@ -17,12 +17,13 @@
       <td>{{ report.firstnameReporter }} {{ report.lastnameReporter }}</td>
       <td>{{ report.reason }}</td>
       <td>
-        <button class="btn btn-warning custom-button" data-bs-toggle="modal" data-bs-target="#reportModal">
-          <i class="bi bi-slash-circle"></i>
+        <button class="btn btn-danger bi-slash-circle"
+                (click)="banUser(report, banModal)">
         </button>
       </td>
       <td>
-        <button class="btn btn-danger custom-button">
+        <button class="btn btn-danger custom-button"
+          (click)="deleteReport(report.id)">
           <i class="bi bi-x"></i>
         </button>
       </td>
@@ -81,3 +82,41 @@
     </div>
   </div>
 </div>
+
+<ng-template #banModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" style="font-size: 2em; color: #33709c;">Ban Student {{ selectedBanUser.firstname }}
+      {{ selectedBanUser.lastname }}</h5>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="banForm" (ngSubmit)="onBanSubmit(modal)">
+      <div class="form-group">
+                    <textarea id="banReason" class="form-control" formControlName="banReason"
+                              placeholder="Type in reason for ban of Student" rows="5" required></textarea>
+        <div *ngIf="banForm.get('banReason').invalid && (banForm.get('banReason').dirty || banForm.get('banReason').touched)"
+             class="invalid-feedback">
+          Reason is required.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+        <button type="submit" class="btn btn-danger" [disabled]="banForm.invalid">Ban User</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!-- Student Ban Reasons Modal -->
+<ng-template #banReasonsModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" style="font-size: 2em; color: #33709c;">Reason for ban of Student
+      {{selectedBanReasonUser.firstname}} {{ selectedBanReasonUser.lastname }}</h5>
+  </div>
+  <div class="modal-body">
+    <p>Reasons for ban</p>
+    <textarea class="form-control" rows="5" readonly>{{ selectedBanReasonUser.reason }}</textarea>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>

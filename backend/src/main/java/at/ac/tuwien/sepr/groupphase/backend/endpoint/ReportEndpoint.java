@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -99,6 +100,14 @@ public class ReportEndpoint {
         var reports = reportService.getAllReports();
         return this.reportMapper.reportToReportDto(reports);
     }
-
-
+    @Operation(
+        summary = "deletes a report",
+        description = "deletes a report"
+    )
+    @Secured("ROLE_ADMIN")
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteReport(@PathVariable(name = "id") Long id) {
+        this.reportService.deleteReport(id);
+    }
 }

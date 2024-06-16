@@ -5,7 +5,22 @@ import {ReportDto} from "../../../dtos/report";
 import {ReportService} from "../../../services/report.service";
 import {ChatService} from "../../../services/chat.service";
 import {ChatMessageDto} from "../../../dtos/chat";
+import {BannedUserDto, StudentDto, StudentSubjectInfoDto} from "../../../dtos/user";
+import {Observable, Subject} from "rxjs";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {AdminService} from "../../../services/admin.service";
+import {AuthService} from "../../../services/auth.service";
+import {Router} from "@angular/router";
+import {debounceTime, finalize, tap} from "rxjs/operators";
+import {Page} from "../../../dtos/page";
 
+interface StudentListing {
+  id: number;
+  firstname: string;
+  lastname: string;
+  isBanned: boolean;
+}
 @Component({
   selector: 'app-report',
   templateUrl: './reports.component.html',
@@ -16,14 +31,32 @@ export class ReportsComponent implements OnInit {
   public selectedReport: ReportDto = null;
   messages: ChatMessageDto[];
 
+  selectedBanUser: StudentListing = new class implements StudentListing {
+    firstname: string;
+    id: number;
+    isBanned: boolean;
+    lastname: string;
+  };
+  selectedBanReasonUser: BannedUserDto | null = null;
+  banReason: string = "";
 
-  constructor(private notification: ToastrService,
-              private spinner: NgxSpinnerService,
-              private reportService: ReportService,
-              private chatService: ChatService) {
+  banForm: FormGroup;
+
+  constructor(private modalService: NgbModal, private adminService: AdminService,
+              private notification: ToastrService, private spinner: NgxSpinnerService,
+              private authService: AuthService, private router: Router, private fb: FormBuilder,
+              private reportService: ReportService,private chatService: ChatService
+  ) {
+    this.banForm = this.fb.group({
+      banReason: ['', Validators.required]
+    });
   }
 
   ngOnInit(): void {
+    this.load();
+  }
+
+  load(){
     this.reportService.getAllReports().subscribe({
       next: reports => {
         this.reports = reports;
@@ -46,5 +79,58 @@ export class ReportsComponent implements OnInit {
       }
     })
     }
+  }
+
+  withSpinner<T>(observable: Observable<T>, spinner: any): Observable<T> {
+    spinner.show();
+    return observable.pipe(
+      tap(() => {
+        spinner.show();
+      }),
+      finalize(() => {
+        spinner.hide();
+      })
+    );
+  }
+
+
+  banUser(report: ReportDto, content: any): void {
+    this.selectedBanUser.lastname = report.lastNameReported;
+    this.selectedBanUser.firstname = report.firstnameReported;
+    this.selectedBanUser.id = report.reportedId;
+    this.modalService.open(content);
+  }
+
+  onBanSubmit(modal: NgbActiveModal) {
+    if (this.banForm.valid) {
+      const reason = this.banForm.value.banReason;
+      console.log(`Banning user ${this.selectedBanUser} for reason: ${reason}`);
+
+      this.withSpinner(this.adminService.banUser(this.selectedBanUser.id, reason), this.spinner)
+        .subscribe({
+          next: (_) => {
+            this.banForm.reset();
+            this.load();
+          },
+          error: (error: any) => {
+            console.error('Error:', error);
+            this.notification.error(error.error, "Error while banning student!");
+          }
+        });
+
+      modal.close('User banned');
+    }
+  }
+
+  deleteReport(id: number){
+    this.reportService.deleteReport(id).subscribe({
+      next: () => {
+        this.notification.success( "Removed report!");
+        this.load();
+      }, error: error => {
+        console.log(error);
+        this.notification.error(error.error, "Report could not be removed")
+      }
+    });
   }
 }
