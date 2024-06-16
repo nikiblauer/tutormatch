@@ -1,0 +1,14 @@
+<div class="pt-5">
+  <div class="row p-4 justify-content-center">
+    <div class="card col-md-8 shadow" style="border: none;">
+      <div class="card-body m-4">
+        <div class="row justify-content-center">
+          <img class="w-25 mb-5" src="/assets/logo.jpg">
+          <h2 class="mb-3 px-5 text-center">{{ verified ? 'You have successfully verified your account' : 'Your account could not be verified' }}</h2>
+          <p class="mb-5 px-5 text-center text-muted">{{ verified ? 'Welcome to TutorMatch. Login to get started!' : 'Please contact support.tutormatch@gmail.com for support on this problem.' }}</p>
+          <button class="btn w-50 primary-btn" *ngIf="verified" (click)="onSubmit()">LOGIN</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,98 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  flex: 3;
+  margin: 20px;
+}
+
+.card-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold;
+}
+
+.card-text span {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.needs {
+  margin-top: 20px;
+}
+
+.sub-headline {
+  color: grey;
+  margin-top: 2px;
+  padding: 0;
+}
+
+
+.match-details {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.matches-container {
+  margin: 20px;
+}
+
+.matches-title {
+  color: #33709c;
+  margin-left: 33px;
+  margin-top: 40px;
+  text-align: left;
+  margin-bottom: 0;
+  font-size: 24px;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-container h1 {
+  margin: 0;
+  color: #33709c;
+}
+
+.close-btn {
+  background-color: #33709c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.match-btn {
+  background-color: #33709c;
+  border-color: #33709c;
+  width: 100%;
+  margin-top: auto;
+}
+.match-btn:hover {
+  background-color: #143349;  /* Ändert die Hintergrundfarbe beim Hovern */
+  border-color: #FFFFFF;  /* Ändert die Randfarbe beim Hovern */
+  color: #FFF;
+}

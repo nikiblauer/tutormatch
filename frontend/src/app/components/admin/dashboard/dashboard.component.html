@@ -1,0 +1,144 @@
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Dashboard:</h2>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Registered Verified Users</h5>
+          <p class="card-text display-4 font-weight-bold">{{statistics?.registeredVerifiedUsers}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Registered Unverified Users</h5>
+          <p class="card-text display-4 font-weight-bold">{{statistics?.registeredUnverifiedUsers}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Ratio Needed / Offered Subjects</h5>
+          <p class="card-text display-4 font-weight-bold" [ngClass]="getRatioClass()">
+            {{statistics?.ratioOfferedNeededSubjects}}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Open Chats/User</h5>
+          <p class="card-text display-4 font-weight-bold">{{statistics?.openChatsPerUser}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4 g-4">
+    <div class="col-md-6"
+      *ngIf="statisticsListExtended?.topXofferedSubjects?.length > 0 && statisticsListExtended?.topXofferedAmount?.length > 0">
+      <div class="card shadow-sm fixed-height-card-top h-100">
+        <div class="card-body">
+          <h5 class="card-title">Top {{listLimitExtendedStatistics}}: Subjects Offered</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th class="text-center">Number of Tutors</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let subject of statisticsListExtended?.topXofferedSubjects; let i = index">
+                <td class="subject-name">{{subject}}</td>
+                <td class="text-center">{{statisticsListExtended?.topXofferedAmount[i]}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6"
+      *ngIf="statisticsListExtended?.topXneededSubjects?.length > 0 && statisticsListExtended?.topXneededAmount?.length > 0">
+      <div class="card shadow-sm fixed-height-card-top h-100">
+        <div class="card-body">
+          <h5 class="card-title">Top {{listLimitExtendedStatistics}}: Subjects Needed</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th class="text-center">Number of Trainees</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let subject of statisticsListExtended?.topXneededSubjects; let i = index">
+                <td class="subject-name">{{subject}}</td>
+                <td class="text-center">{{statisticsListExtended?.topXneededAmount[i]}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6"
+      *ngIf="coverageStatistics?.mostOfferedSubjectsWithoutCoverage?.length > 0 && coverageStatistics?.numberOfStudentsOfferedSubjects?.length > 0">
+      <div class="card shadow-sm fixed-height-card-coverage h-100">
+        <div class="card-body">
+          <h5 class="card-title">Top {{listLimitCoverageStatistics}}: Offered Subjects low coverage</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th class="text-center">Number of Tutors</th>
+                <th class="text-center">Number of Trainees</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let subject of coverageStatistics?.mostOfferedSubjectsWithoutCoverage; let i = index">
+                <td class="subject-name" [ngStyle]="{'color': getColorForOfferedSubject(i)}">
+                  {{subject}}
+                </td>
+                <td class="text-center align-middle">{{getNumberOfTutorsForOfferedSubject(i)}}</td>
+                <td class="text-center align-middle">{{getNumberOfTraineesForOfferedSubject(i)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6"
+      *ngIf="coverageStatistics?.mostRequestedSubjectsWithoutCoverage?.length > 0 && coverageStatistics?.numberOfStudentsRequestedSubjects?.length > 0">
+      <div class="card shadow-sm fixed-height-card-coverage h-100">
+        <div class="card-body">
+          <h5 class="card-title">Top {{listLimitCoverageStatistics}}: Requested Subjects low coverage</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th class="text-center">Number of Tutors</th>
+                <th class="text-center">Number of Trainees</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let subject of coverageStatistics?.mostRequestedSubjectsWithoutCoverage; let i = index">
+                <td class="subject-name" [ngStyle]="{'color': getColorForRequestedSubject(i)}">
+                  {{subject}}
+                </td>
+                <td class="text-center align-middle">{{getNumberOfTutorsForRequestedSubject(i)}}</td>
+                <td class="text-center align-middle">{{getNumberOfTraineesForRequestedSubject(i)}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="padding"></div>
+  </div>
+  <p *ngIf="!statisticsListExtended?.topXneededSubjects">No data for needed subjects.</p>
+  <p *ngIf="!statisticsListExtended?.topXneededAmount">No data for needed subjects amount.</p>
+</div>

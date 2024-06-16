@@ -1,0 +1,191 @@
+/*
+ *  Pure CSS star rating that works without reversing order
+ *  of inputs
+ *  -------------------------------------------------------
+ *  NOTE: For the styling to work, there needs to be a radio
+ *        input selected by default. There also needs to be a
+ *        radio input before the first star, regardless of
+ *        whether you offer a 'no rating' or 0 stars option
+ *
+ */
+
+#half-stars-example {
+
+  /* use display:flex to prevent whitespace issues. alternatively, you can put all the children of .rating-group on a single line */
+  .rating-group {
+    display: flex;
+    align-items: center;
+    /* Center align stars and text vertically */
+    justify-content: center;
+    /* Center align stars and text horizontally */
+    flex-wrap: wrap;
+    /* Allow wrapping to keep stars and text on the same line */
+    max-width: 100%;
+    /* Prevent overflow */
+    padding-bottom: 1em;
+  }
+
+  /* make hover effect work properly in IE */
+  .rating__icon {
+    pointer-events: none;
+  }
+
+  /* hide radio inputs */
+  .rating__input {
+    position: absolute !important;
+    left: -9999px !important;
+  }
+
+  /* set icon padding and size */
+  .rating__label {
+    cursor: pointer;
+    /* if you change the left/right padding, update the margin-right property of .rating__label--half as well. */
+    padding: 0 0.1em;
+    font-size: 2rem;
+  }
+
+  /* add padding and positioning to half star labels */
+  .rating__label--half {
+    padding-right: 0;
+    margin-right: -0.6em;
+    z-index: 2;
+  }
+
+  /* set default star color */
+  .rating__icon--star {
+    color: #f80;
+  }
+
+  /* set color of none icon when unchecked */
+  .rating__icon--none {
+    color: #eee;
+  }
+
+  /* if none icon is checked, make it red */
+  .rating__input--none:checked+.rating__label .rating__icon--none {
+    color: red;
+  }
+
+  /* if any input is checked, make its following siblings grey */
+  .rating__input:checked~.rating__label .rating__icon--star {
+    color: #ddd;
+  }
+
+  /* make all stars orange on rating group hover */
+  .rating-group:hover .rating__label .rating__icon--star,
+  .rating-group:hover .rating__label--half .rating__icon--star {
+    color: #f80;
+  }
+
+  /* make hovered input's following siblings grey on hover */
+  .rating__input:hover~.rating__label .rating__icon--star,
+  .rating__input:hover~.rating__label--half .rating__icon--star {
+    color: #ddd;
+  }
+
+  /* make none icon grey on rating group hover */
+  .rating-group:hover .rating__input--none:not(:hover)+.rating__label .rating__icon--none {
+    color: #eee;
+  }
+
+  /* make none icon red on hover */
+  .rating__input--none:hover+.rating__label .rating__icon--none {
+    color: red;
+  }
+}
+
+body {
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.star-rating .fa {
+  color: #f80;
+  /* Goldfarbe für aktivierte Sterne */
+}
+
+.star-rating .fa-star-o {
+  color: #ccc;
+  /* Graufarbe für nicht ausgewählte Sterne */
+}
+
+.star-rating .fa.hover {
+  color: #f80;
+  /* Orange Farbe beim Hover */
+}
+
+.star {
+  position: relative;
+  display: inline-block;
+  font-size: 25px;
+}
+
+.star-under {
+  color: #ddd;
+}
+
+.star-over {
+  color: #f80;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.gray-text {
+  margin-left: 5px;
+  color: gray;
+  font-size: 24px;
+}
+
+.gray-text-small {
+  margin-left: 3px;
+  color: gray;
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.card {
+  padding: 1rem;
+  margin: 1rem auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  max-width: 600px;
+}
+
+.first {
+  width:calc(80%)
+}
+
+
+.ellipsis {
+  position: relative;
+}
+.ellipsis:before {
+  content: ' ';
+  visibility: hidden;
+}
+
+
+.ellipsis span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+span {
+ padding-left: 15px;
+}
+
+.delete-button{
+ margin-top: 0;
+}
