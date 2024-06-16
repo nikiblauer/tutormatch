@@ -255,6 +255,12 @@ body {
     vertical-align: top;
   }
 
+  .detail-cell {
+    display: table-cell;
+    padding-right: 10px;
+    vertical-align: top;
+  }
+
   .detail-row span {
     display: table-cell;
     padding-bottom: 15px;

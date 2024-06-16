@@ -136,61 +136,98 @@
 
 
 <div class="popup popup-overlay" (click)="closeSubjectCreate()" id="openSubjectCreate" tabindex="-1"
-  aria-labelledby="openSubjectInfoLabel" aria-hidden="true" *ngIf="this.create">
+  aria-labelledby="openSubjectInfoLabel" aria-hidden="true" *ngIf="create">
   <div class="popup-container" (click)="$event.stopPropagation()">
     <div class="header-container mb-4">
       <div>
-        <a class="mb-10 btn btn-123 btn-close float-end" type="button" data-bs-toggle="popup"
-          data-bs-target="#openSubjectCreate" (click)="closeCreate()"></a>
+        <button class="btn btn-danger btn-close float-end" type="button" (click)="closeCreate()">
+          <i class="fas fa-times"></i> <!-- Adjust the icon based on your project -->
+        </button>
         <div class="detail-row">
           <h2 class="detail-label">Create Subject:</h2>
         </div>
       </div>
     </div>
-    <div class="subject-details w-100">
-      <div class="detail-row">
-        <span class="detail-label">Number:</span>
-        <input id="subjectNumber1" [(ngModel)]="createdSubject.number" class="form-control"
-          placeholder="Format: 180.764" />
+    <form (submit)="saveNewSubject(createdSubject, $event)">
+      <div class="subject-details">
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <label for="subjectNumber1" class="form-label">Number:</label>
+          </div>
+          <div class="col-sm-8">
+            <input id="subjectNumber1" [(ngModel)]="createdSubject.number" name="number" class="form-control"
+              placeholder="Format: 180.764" required>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <label for="subjectSemester1" class="form-label">Semester:</label>
+          </div>
+          <div class="col-sm-8">
+            <input id="subjectSemester1" [(ngModel)]="createdSubject.semester" name="semester" class="form-control"
+              placeholder="Format: 2024S" required>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <label for="subjectTitle1" class="form-label">Title:</label>
+          </div>
+          <div class="col-sm-8">
+            <input id="subjectTitle1" [(ngModel)]="createdSubject.title" name="title" class="form-control" required>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <label for="subjectType1" class="form-label">Type:</label>
+          </div>
+          <div class="col-sm-8">
+            <input id="subjectType1" *ngIf="createdSubject" [(ngModel)]="createdSubject.type" name="type"
+              class="form-control" placeholder="Format: VU">
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <label for="subjectDescription1" class="form-label">Description:</label>
+          </div>
+          <div class="col-sm-8">
+            <textarea id="subjectDescription1" *ngIf="createdSubject" [(ngModel)]="createdSubject.description"
+              name="description" class="form-control mb-2 description-scrollable"></textarea>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <label for="subjectUrl1" class="form-label">URL:</label>
+          </div>
+          <div class="col-sm-8">
+            <textarea id="subjectUrl1" *ngIf="createdSubject" [(ngModel)]="createdSubject.url" name="url"
+              class="form-control"
+              placeholder="Format: https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=191109&semester=2024S"></textarea>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-12">
+            <p><strong>Please be careful when creating any Subjects. It can have major effects on the User
+                Experience!</strong></p>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-3">
+            <label for="autofillUrlInput" class="form-label">Autofill URL:</label>
+          </div>
+          <div class="col-sm-8">
+            <input id="autofillUrlInput" [(ngModel)]="autofillUrlInput" name="autofillUrl" class="form-control"
+              placeholder="Enter Tiss URL to autofill">
+              <button type="button" class="btn primary-btn" (click)="autofillUrl()" aria-label="Autofill URL with input value">Autofill
+                URL</button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <button type="submit" class="btn primary-btn w-100">Save</button>
+          </div>
+        </div>
       </div>
-      <div class="detail-row w-100">
-        <span class="detail-label">Semester:</span>
-        <input id="subjectSemester1" [(ngModel)]="createdSubject.semester" class="form-control"
-          placeholder="Format: 2024S" />
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Title:</span>
-        <input id="subjectTitle1" [(ngModel)]="createdSubject.title" class="form-control" />
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Type:</span>
-        <input id="subjectType1" *ngIf="createdSubject" [(ngModel)]="createdSubject.type" class="form-control"
-          placeholder="Format: VU" />
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Description:</span>
-        <textarea id="subjectDescription1" *ngIf="createdSubject" [(ngModel)]="createdSubject.description"
-          class="form-control mb-2 description-scrollable"></textarea>
-      </div>
-      <div class="detail-row"><span class="detail-label">URL:</span>
-        <input id="subjectUrl1" *ngIf="createdSubject" [(ngModel)]="createdSubject.url" class="form-control"
-          placeholder="Format: https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=191109&semester=2024S"/>
-      </div>
-      <div class="detail-row"><span class="detail-label"></span>
-        <span class="pt-3"><strong>Please be careful when creating any Subjects. It can have major effects on the User
-            Experience!</strong></span>
-      </div>
-      <div class="detail-row">
-        <label for="autofillUrlInput" class="detail-label">Autofill URL:</label>
-        <input id="autofillUrlInput" [(ngModel)]="autofillUrlInput" class="form-control"
-          placeholder="Enter Tiss URL to autofill" />
-        <button class="btn primary-btn" (click)="autofillUrl()" aria-label="Autofill URL with input value">Autofill
-          URL</button>
-      </div>
-      <div class="button-container">
-        <a class="btn btn-edit w-50" role="button" (click)="saveNewSubject(createdSubject, $event)">Save</a>
-      </div>
-    </div>
+    </form>
   </div>
 </div>
 
