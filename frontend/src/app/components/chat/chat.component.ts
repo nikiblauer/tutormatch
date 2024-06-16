@@ -1,6 +1,6 @@
-import {AfterViewChecked, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {WebSocketService} from "../../services/web-socket.service";
-import {ChatMessageDto, ChatRoomDto, CreateChatRoomDto, WebSocketErrorDto} from "../../dtos/chat";
+import {ChatMessageDto, ChatRoomDto} from "../../dtos/chat";
 import {ChatService} from "../../services/chat.service";
 import {UserService} from "../../services/user.service";
 import {RatingService} from "../../services/rating.service";

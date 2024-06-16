@@ -12,12 +12,12 @@
 }
 
 .logout-button {
-  background-color: #33709C;
+  background-color: $base-color;
   color: white;
   border-radius: 5px;
   padding: 5px 10px;
 
   &:hover {
-    background-color: darkblue;
+    background-color: #143349;
   }
 }

@@ -5,7 +5,7 @@ import {StudentDto} from "../../dtos/user";
 import {ToastrService} from "ngx-toastr";
 import {NgxSpinnerService} from "ngx-spinner";
 import {RatingService} from "../../services/rating.service";
-import {provideRouter, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {CreateChatRoomDto} from "../../dtos/chat";
 import {ChatService} from "../../services/chat.service";
 import {ReportService} from "../../services/report.service";
@@ -123,7 +123,7 @@ export class MatchComponent implements OnInit {
         next: exits => {
           if (!exits){
             this.chatService.createChatRoom(chatRoomToCreate).subscribe({
-              next: value => {
+              next: () => {
                 this.notification.success("Chat successfully created")
                 this.router.navigate(["/chat"])
               }, error: error => {

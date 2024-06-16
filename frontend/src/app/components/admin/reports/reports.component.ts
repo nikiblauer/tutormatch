@@ -5,15 +5,14 @@ import {ReportDto} from "../../../dtos/report";
 import {ReportService} from "../../../services/report.service";
 import {ChatService} from "../../../services/chat.service";
 import {ChatMessageDto} from "../../../dtos/chat";
-import {BannedUserDto, StudentDto, StudentSubjectInfoDto} from "../../../dtos/user";
-import {Observable, Subject} from "rxjs";
+import {BannedUserDto} from "../../../dtos/user";
+import {Observable} from "rxjs";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {AdminService} from "../../../services/admin.service";
 import {AuthService} from "../../../services/auth.service";
 import {Router} from "@angular/router";
-import {debounceTime, finalize, tap} from "rxjs/operators";
-import {Page} from "../../../dtos/page";
+import {finalize, tap} from "rxjs/operators";
 
 interface StudentListing {
   id: number;

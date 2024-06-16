@@ -1,4 +1,3 @@
-import {ChatRoomDto} from "./chat";
 
 export class ReportDto {
   firstnameReported: string;
