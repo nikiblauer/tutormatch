@@ -3,21 +3,22 @@
   <table class="table table-striped" style="width:calc(100%)">
     <thead>
     <tr>
-      <th style="width:calc(35%)">Reported</th>
-      <th style="width:calc(35%)">Reporter</th>
-      <th class="my-personal-class">Reason</th>
-      <th class="my-personal-class">Ban Reported</th>
-      <th class="my-personal-class">Delete</th>
+      <th style="width:calc(20%)">Reported</th>
+      <th style="width:calc(20%)">Reporter</th>
+      <th class="my-personal-class" style="width:calc(30%)">Reason</th>
+      <th class="my-personal-class" style="width:calc(5%)">Ban</th>
+      <th class="my-personal-class" style="width:calc(5%)">Delete</th>
+      <th class="my-personal-class" style="width:calc(5%)">info</th>
     </tr>
     </thead>
     <tbody *ngIf="reports">
     <tr *ngFor="let report of this.reports">
-      <td> {{ report.Firstname_Reported }} {{ report.LastName_Reported }}</td>
-      <td>{{ report.Firstname_Reporter }}</td>
+      <td> {{ report.firstnameReported }} {{ report.lastNameReported }}</td>
+      <td>{{ report.firstnameReporter }} {{ report.lastnameReporter }}</td>
       <td>{{ report.reason }}</td>
       <td>
         <button class="btn btn-warning custom-button" data-bs-toggle="modal" data-bs-target="#reportModal">
-          <i class="bi bi-exclamation"></i>
+          <i class="bi bi-slash-circle"></i>
         </button>
       </td>
       <td>
@@ -25,8 +26,58 @@
           <i class="bi bi-x"></i>
         </button>
       </td>
+      <td>
+        <button data-bs-toggle="modal" data-bs-target="#reportModal" class="btn primary-btn custom-button"
+                (click)="infoButton(report)">
+          <i class="bi bi-info"></i>
+        </button>
+      </td>
     </tr>
     </tbody>
   </table>
 </div>
 
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     #reportModal>
+  <div class="modal-dialog">
+    <div *ngIf="selectedReport !== null" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Reported {{ selectedReport.firstnameReported }} {{ selectedReport.lastNameReported }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="selectedReport.feedback !== ''" class="mb-3">
+          <label class="form-label">Feedback was reported:</label>
+          <p>{{ selectedReport.feedback }}</p>
+        </div>
+        <div *ngIf="selectedReport.chatRoomId !== ''" class="mb-3">
+          <label class="form-label">ChatRoom was reported:</label>
+          <div class="card chat-app">
+          <div class="chat">
+            <div class="chat-history">
+              <ul class="m-b-0">
+                <li class="clearfix" *ngFor="let message of messages;">
+                  <div *ngIf="message.recipientId === selectedReport.reportedId" class="message my-message float-right">
+                    <span class="ml-3 message-content">{{ message.content }}</span>
+                  </div>
+                  <div *ngIf="message.recipientId === selectedReport.reporterId" class="message other-message">
+                    <span class="ml-3 message-content">{{ message.content }}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          </div>
+        </div>
+        <div *ngIf="selectedReport.chatRoomId === '' && selectedReport.feedback === ''" class="mb-3">
+          <label class="form-label">User was reported:</label>
+          <p>{{ selectedReport.reason }}</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!--button type="button" class="btn btn-primary" (click)="submitReport()">Submit Report</button-->
+      </div>
+    </div>
+  </div>
+</div>

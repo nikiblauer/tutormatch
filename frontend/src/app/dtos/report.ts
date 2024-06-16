@@ -1,9 +1,20 @@
+import {ChatRoomDto} from "./chat";
+
 export class ReportDto {
-  Firstname_Reported: string;
-  LastName_Reported: string;
+  firstnameReported: string;
+  lastNameReported: string;
+  reporterId: number;
+  reportedId: number;
   reason: string;
   id: number;
-  Firstname_Reporter: string;
-  Lastname_Reporter: string;
-  Feedback: string;
+  firstnameReporter: string;
+  lastnameReporter: string;
+  feedback: string;
+  chatRoomId: string;
+
+}
+
+export class ReportChatRoomDto {
+  chatId: string;
+  reason: string;
 }

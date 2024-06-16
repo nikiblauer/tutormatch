@@ -26,4 +26,5 @@ public class Report {
     private Feedback reportedFeedback;
     @Column(length = 100)
     private String reason;
+    private String chatRoomId;
 }

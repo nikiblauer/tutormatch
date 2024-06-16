@@ -2,14 +2,18 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ReportDto {
-    String Firstname_Reported;
-    String LastName_Reported;
+    String firstnameReported;
+    String lastNameReported;
+    Long reportedId;
+    Long reporterId;
     String reason;
     Long id;
-    String Firstname_Reporter;
-    String Lastname_Reporter;
-    String Feedback;
-
+    String firstnameReporter;
+    String lastnameReporter;
+    String feedback;
+    String chatRoomId;
 }

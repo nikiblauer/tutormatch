@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatRoomDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ReportChatDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ReportDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ReportMapper;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
@@ -37,6 +37,7 @@ public class ReportEndpoint {
     private final ReportService reportService;
 
     private final ReportMapper reportMapper;
+
     public ReportEndpoint(UserService userService, RatingService ratingService, ReportService reportService, ReportMapper reportMapper) {
         this.userService = userService;
         this.ratingService = ratingService;
@@ -57,6 +58,7 @@ public class ReportEndpoint {
         ApplicationUser reportedUser = userService.findApplicationUserById(id);
         this.reportService.reportUser(reporter, reportedUser, reason);
     }
+
     @Operation(
         summary = "report a user because of a feedback",
         description = "In this put request the user can report a user to the admin because of a feedback"
@@ -71,6 +73,7 @@ public class ReportEndpoint {
         ApplicationUser reportedUser = userService.findApplicationUserById(feedback1.getId());
         this.reportService.reportUserFeedback(reporter, reportedUser, reason, feedback1);
     }
+
     @Operation(
         summary = "report a user because of a chat",
         description = "In this put request the user can report a user to the admin because of a chat"
@@ -78,12 +81,13 @@ public class ReportEndpoint {
     @Secured("ROLE_USER")
     @PostMapping("/chat")
     @ResponseStatus(HttpStatus.CREATED)
-    public void reportUserChat(@RequestBody ChatRoomDto chatRoom, @RequestBody String reason) {
+    public void reportUserChat(@RequestBody ReportChatDto chatRoom) throws ValidationException {
         LOGGER.info("POST /api/v1/report/chat: {}", chatRoom);
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         ApplicationUser student = userService.findApplicationUserByEmail(userEmail);
-        //this.reportService.reportUserChat();
+        this.reportService.reportUserChat(chatRoom.getChatId(), student, chatRoom.getReason());
     }
+
     @Operation(
         summary = "returns all reports",
         description = "a list of all reports with all informations"
@@ -92,7 +96,7 @@ public class ReportEndpoint {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public List<ReportDto> getAllReports() {
-        var reports =  reportService.getAllReports();
+        var reports = reportService.getAllReports();
         return this.reportMapper.reportToReportDto(reports);
     }
 

@@ -2,8 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
-import {ChatRoomDto, ReportChatRoomDto} from "../dtos/chat";
-import {ReportDto} from "../dtos/report";
+import {ReportChatRoomDto, ReportDto} from "../dtos/report";
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +19,8 @@ export class ReportService {
   reportUserFeedback(feedback: number, reason: string):Observable<void>{
     return this.httpClient.post<void>(this.baseUri + `/feedback/${feedback}`, reason);
   }
-  reportUserChat(a: ReportChatRoomDto):Observable<void>{
-    return this.httpClient.post<void>(this.baseUri + `/chat`, `${a}`);
+  reportUserChat(r: ReportChatRoomDto):Observable<void>{
+    return this.httpClient.post<void>(this.baseUri + `/chat`, r);
   }
   getAllReports():Observable<ReportDto[]>{
     return this.httpClient.get<ReportDto[]>(this.baseUri);

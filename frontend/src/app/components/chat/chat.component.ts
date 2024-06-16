@@ -1,6 +1,6 @@
 import {AfterViewChecked, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {WebSocketService} from "../../services/web-socket.service";
-import {ChatMessageDto, ChatRoomDto, CreateChatRoomDto, ReportChatRoomDto, WebSocketErrorDto} from "../../dtos/chat";
+import {ChatMessageDto, ChatRoomDto, CreateChatRoomDto, WebSocketErrorDto} from "../../dtos/chat";
 import {ChatService} from "../../services/chat.service";
 import {UserService} from "../../services/user.service";
 import {RatingService} from "../../services/rating.service";
@@ -9,6 +9,7 @@ import {ToastrService} from "ngx-toastr";
 import {StudentDto} from "../../dtos/user";
 import {Subscription} from "rxjs";
 import {ReportService} from "../../services/report.service";
+import {ReportChatRoomDto} from "../../dtos/report";
 
 @Component({
   selector: 'app-chat',
@@ -174,7 +175,11 @@ export class ChatComponent implements OnInit {
   }
 
   submitReport() {
-    this.reportService.reportUser(this.user2, this.reportReason).subscribe({
+    let r = new ReportChatRoomDto();
+    r.chatId = this.activeChatRoom.chatRoomId;
+    r.reason = this.reportReason;
+    console.log(r)
+    this.reportService.reportUserChat(r).subscribe({
         next: () => {
           this.notification.success("Successfully Reported.");
         },

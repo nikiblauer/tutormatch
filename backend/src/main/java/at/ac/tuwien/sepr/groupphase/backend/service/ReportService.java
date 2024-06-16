@@ -10,8 +10,10 @@ import java.util.List;
 
 public interface ReportService {
     void reportUser(ApplicationUser reporter, ApplicationUser reportedUser, String reason) throws ValidationException;
+
     void reportUserFeedback(ApplicationUser reporter, ApplicationUser reportedUser, String reason, Feedback feedback) throws ValidationException;
-    void reportUserChat(ApplicationUser reporter, ApplicationUser chat, String reason);
+
+    void reportUserChat(String chatId, ApplicationUser reporter, String reason) throws ValidationException;
 
     List<Report> getAllReports();
 }

@@ -9,14 +9,14 @@ import java.util.List;
 
 @Mapper
 public interface ReportMapper {
-    default List<ReportDto> reportToReportDto(List<Report> report){
+    default List<ReportDto> reportToReportDto(List<Report> report) {
         List<ReportDto> list = new ArrayList<>();
         for (Report value : report) {
             ReportDto a = new ReportDto();
-            a.setLastName_Reported(value.getReportedUser().getLastname());
-            a.setFirstname_Reported(value.getReportedUser().getFirstname());
-            a.setFirstname_Reporter(value.getReporter().getFirstname());
-            a.setLastname_Reporter(value.getReporter().getLastname());
+            a.setLastNameReported(value.getReportedUser().getLastname());
+            a.setFirstnameReported(value.getReportedUser().getFirstname());
+            a.setFirstnameReporter(value.getReporter().getFirstname());
+            a.setLastnameReporter(value.getReporter().getLastname());
             a.setReason(value.getReason());
             a.setId(value.getId());
             if (value.getReportedFeedback() != null) {
@@ -24,6 +24,13 @@ public interface ReportMapper {
             } else {
                 a.setFeedback("");
             }
+            if (value.getChatRoomId() != null){
+                a.setChatRoomId(value.getChatRoomId());
+            } else{
+                a.setChatRoomId("");
+            }
+            a.setReporterId(value.getReporter().getId());
+            a.setReportedId(value.getReportedUser().getId());
             list.add(a);
         }
         return list;
