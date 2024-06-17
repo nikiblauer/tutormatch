@@ -97,11 +97,11 @@ public class ReportEndpointTest {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertAll(
-            () -> assertEquals(HttpStatus.OK.value(), response.getStatus()),
+            () -> assertEquals(HttpStatus.CREATED.value(), response.getStatus()),
             () -> {
                 //Reads the errors from the body
                 String content = response.getContentAsString();
-                assertEquals(145, content.length());
+                assertEquals(0, content.length());
             }
         );
     }
