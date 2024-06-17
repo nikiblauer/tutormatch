@@ -30,6 +30,7 @@ export class ReportsComponent implements OnInit {
   public selectedReport: ReportDto = null;
   messages: ChatMessageDto[];
 
+  public reportToDelete: number;
   selectedBanUser: StudentListing = new class implements StudentListing {
     firstname: string;
     id: number;
@@ -121,7 +122,11 @@ export class ReportsComponent implements OnInit {
     }
   }
 
-  deleteReport(id: number){
+  deleteReportFirst(id: number, content: any){
+    this.reportToDelete = id;
+    this.modalService.open(content);
+  }
+  deleteReport(id: number, modal: any){
     this.reportService.deleteReport(id).subscribe({
       next: () => {
         this.notification.success( "Removed report!");
@@ -131,5 +136,6 @@ export class ReportsComponent implements OnInit {
         this.notification.error(error.error, "Report could not be removed")
       }
     });
+    modal.close('Report deleted');
   }
 }
