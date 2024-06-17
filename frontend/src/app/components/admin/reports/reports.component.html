@@ -5,10 +5,10 @@
     <tr>
       <th style="width:calc(20%)">Reported</th>
       <th style="width:calc(20%)">Reporter</th>
-      <th class="my-personal-class" style="width:calc(30%)">Reason</th>
-      <th class="my-personal-class" style="width:calc(5%)">Ban</th>
-      <th class="my-personal-class" style="width:calc(5%)">Delete</th>
-      <th class="my-personal-class" style="width:calc(5%)">info</th>
+      <th class="nowrap" style="width:calc(30%)">Reason</th>
+      <th class="nowrap" style="width:calc(5%)">Ban</th>
+      <th class="nowrap" style="width:calc(5%)">Delete</th>
+      <th class="nowrap" style="width:calc(5%)">info</th>
     </tr>
     </thead>
     <tbody *ngIf="reports">
@@ -75,9 +75,6 @@
           <label class="form-label">User was reported:</label>
           <p>{{ selectedReport.reason }}</p>
         </div>
-      </div>
-      <div class="modal-footer">
-        <!--button type="button" class="btn btn-primary" (click)="submitReport()">Submit Report</button-->
       </div>
     </div>
   </div>
