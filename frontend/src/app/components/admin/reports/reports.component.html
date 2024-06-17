@@ -1,5 +1,5 @@
 <div style="padding-top:20px;">
-  <h2>Received feedback:</h2>
+  <h2>All reports:</h2>
   <table class="table table-striped" style="width:calc(100%)">
     <thead>
     <tr>
@@ -23,7 +23,7 @@
       </td>
       <td>
         <button class="btn btn-danger custom-button"
-          (click)="deleteReport(report.id)">
+                (click)="deleteReport(report.id)">
           <i class="bi bi-x"></i>
         </button>
       </td>
@@ -50,29 +50,32 @@
       <div class="modal-body">
         <div *ngIf="selectedReport.feedback !== ''" class="mb-3">
           <label class="form-label">Feedback was reported:</label>
+          <hr>
           <p>{{ selectedReport.feedback }}</p>
         </div>
         <div *ngIf="selectedReport.chatRoomId !== ''" class="mb-3">
           <label class="form-label">ChatRoom was reported:</label>
           <div class="card chat-app">
-          <div class="chat">
-            <div class="chat-history">
-              <ul class="m-b-0">
-                <li class="clearfix" *ngFor="let message of messages;">
-                  <div *ngIf="message.recipientId === selectedReport.reportedId" class="message my-message float-right">
-                    <span class="ml-3 message-content">{{ message.content }}</span>
-                  </div>
-                  <div *ngIf="message.recipientId === selectedReport.reporterId" class="message other-message">
-                    <span class="ml-3 message-content">{{ message.content }}</span>
-                  </div>
-                </li>
-              </ul>
+            <div class="chat">
+              <div class="chat-history">
+                <ul class="m-b-0">
+                  <li class="clearfix" *ngFor="let message of messages;">
+                    <div *ngIf="message.recipientId === selectedReport.reportedId"
+                         class="message my-message float-right">
+                      <span class="ml-3 message-content">{{ message.content }}</span>
+                    </div>
+                    <div *ngIf="message.recipientId === selectedReport.reporterId" class="message other-message">
+                      <span class="ml-3 message-content">{{ message.content }}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
           </div>
         </div>
         <div *ngIf="selectedReport.chatRoomId === '' && selectedReport.feedback === ''" class="mb-3">
           <label class="form-label">User was reported:</label>
+          <hr>
           <p>{{ selectedReport.reason }}</p>
         </div>
       </div>
@@ -90,8 +93,9 @@
       <div class="form-group">
                     <textarea id="banReason" class="form-control" formControlName="banReason"
                               placeholder="Type in reason for ban of Student" rows="5" required></textarea>
-        <div *ngIf="banForm.get('banReason').invalid && (banForm.get('banReason').dirty || banForm.get('banReason').touched)"
-             class="invalid-feedback">
+        <div
+          *ngIf="banForm.get('banReason').invalid && (banForm.get('banReason').dirty || banForm.get('banReason').touched)"
+          class="invalid-feedback">
           Reason is required.
         </div>
       </div>
@@ -107,7 +111,7 @@
 <ng-template #banReasonsModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title" style="font-size: 2em; color: #33709c;">Reason for ban of Student
-      {{selectedBanReasonUser.firstname}} {{ selectedBanReasonUser.lastname }}</h5>
+      {{ selectedBanReasonUser.firstname }} {{ selectedBanReasonUser.lastname }}</h5>
   </div>
   <div class="modal-body">
     <p>Reasons for ban</p>

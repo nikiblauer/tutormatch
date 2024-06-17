@@ -10,6 +10,7 @@ import {StudentDto} from "../../dtos/user";
 import {Subscription} from "rxjs";
 import {ReportService} from "../../services/report.service";
 import {ReportChatRoomDto} from "../../dtos/report";
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-chat',
