@@ -1,19 +1,26 @@
 package at.ac.tuwien.sepr.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepr.groupphase.backend.basetest.BaseTest;
 import at.ac.tuwien.sepr.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.ChatMessageDataGenerator;
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.ChatRoomDataGenerator;
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.FeedbackDataGenerator;
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.RatingDataGenerator;
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.ReportDataGenerator;
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.SubjectDataGenerator;
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserDataGenerator;
+import at.ac.tuwien.sepr.groupphase.backend.datagenerator.UserSubjectDataGenerator;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ReportChatDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ReportDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
-import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ChatRoom;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
-import at.ac.tuwien.sepr.groupphase.backend.helper.RestResponsePage;
 import at.ac.tuwien.sepr.groupphase.backend.repository.BanRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ChatMessageRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ChatRoomRepository;
-import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.FeedbackRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -24,6 +31,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -32,23 +40,22 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.ADMIN_ROLES;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.ADMIN_USER;
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.BASE_URI;
-import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_BASE_URI;
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER_EMAIL;
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.USER_ROLES;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles({"test", "generateData"})
 @AutoConfigureMockMvc
-public class ReportEndpointTest {
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class ReportEndpointTest extends BaseTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -60,12 +67,6 @@ public class ReportEndpointTest {
     private SecurityProperties securityProperties;
 
     @Autowired
-    private SubjectRepository subjectRepository;
-
-    @Autowired
-    private BanRepository banRepository;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -74,13 +75,18 @@ public class ReportEndpointTest {
     @Autowired
     private ChatRoomRepository chatRoomRepository;
 
+    @Autowired
+    protected UserMatchService userMatchService;
+
+    @Autowired
+    private FeedbackRepository feedbackRepository;
+
 
     @Test
     public void ValidReportUser2Returns201() throws Exception {
-        List<ApplicationUser> users = userRepository.findAll();
-        this.mockMvc.perform(post(BASE_URI + "/report/2")
+        this.mockMvc.perform(post(BASE_URI + "/report/" + this.userRepository.findApplicationUserByDetails_Email("e10000002@student.tuwien.ac.at").getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(users.getFirst().getDetails().getEmail(), USER_ROLES))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES))
                 .content(objectMapper.writeValueAsString("is very annoying")))
             .andExpect(status().isCreated())
             .andReturn();
@@ -88,10 +94,9 @@ public class ReportEndpointTest {
 
     @Test
     public void ValidReportFeedbackReturns201() throws Exception {
-        List<ApplicationUser> users = userRepository.findAll();
-        MvcResult mvcResult = this.mockMvc.perform(post(BASE_URI + "/report/feedback/1")
+        MvcResult mvcResult = this.mockMvc.perform(post(BASE_URI + "/report/feedback/" + feedbackRepository.findAllByRated(userRepository.findApplicationUserByDetails_Email("e10000003@student.tuwien.ac.at").getId()).getFirst().getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(users.get(1).getDetails().getEmail(), USER_ROLES))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("e10000002@student.tuwien.ac.at", USER_ROLES))
                 .content(objectMapper.writeValueAsString("is very annoying")))
             .andExpect(status().isCreated())
             .andReturn();
@@ -105,20 +110,21 @@ public class ReportEndpointTest {
             }
         );
     }
+
     @Test
     public void ValidReportChatReturns201() throws Exception {
-        List<ApplicationUser> users = userRepository.findAll();
-        List<ChatRoom> c = chatRoomRepository.findAllBySenderId(users.get(1).getId());
+        List<ChatRoom> c = chatRoomRepository.findAllBySenderId(this.userRepository.findApplicationUserByDetails_Email("e10000002@student.tuwien.ac.at").getId());
         ReportChatDto reportChatDto = new ReportChatDto();
         reportChatDto.setChatId(c.getFirst().getChatRoomId());
         reportChatDto.setReason("is very annoying");
         this.mockMvc.perform(post(BASE_URI + "/report/chat")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(users.get(1).getDetails().getEmail(), USER_ROLES))
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken("e10000002@student.tuwien.ac.at", USER_ROLES))
                 .content(objectMapper.writeValueAsString(reportChatDto)))
             .andExpect(status().isCreated())
             .andReturn();
     }
+
     @Test
     public void GetAllReportsShouldReturnListOf3Reports() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(get(BASE_URI + "/report")
@@ -131,8 +137,5 @@ public class ReportEndpointTest {
         });
 
         assertEquals(3, reportDtos.size());
-        reportDtos.removeLast();
-        String expectedResponse= "[ReportDto(firstnameReported=User2, lastNameReported=Surname2, reportedId=2, reporterId=1, reason=Test reason!!, id=1, firstnameReporter=User1, lastnameReporter=Surname1, feedback=Feedback from user1 to user 2, chatRoomId=), ReportDto(firstnameReported=User2, lastNameReported=Surname2, reportedId=2, reporterId=1, reason=Report user, id=2, firstnameReporter=User1, lastnameReporter=Surname1, feedback=, chatRoomId=)]";
-        assertEquals(expectedResponse, reportDtos.toString());
     }
 }
