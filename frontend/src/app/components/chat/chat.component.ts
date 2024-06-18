@@ -8,6 +8,9 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { ToastrService } from "ngx-toastr";
 import { StudentDto } from "../../dtos/user";
 import { Subscription } from "rxjs";
+import {ReportService} from "../../services/report.service";
+import {ReportChatRoomDto} from "../../dtos/report";
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-chat',
@@ -32,13 +35,15 @@ export class ChatComponent implements OnInit, AfterViewInit {
   messageReceived: ChatMessageDto;
   messageSubscription: Subscription;
   errorSubscription: Subscription;
+  reportReason: string = "";
 
   constructor(private chatService: ChatService,
               private userService: UserService,
               private webSocketService: WebSocketService,
               private ratingService: RatingService,
               private spinner: NgxSpinnerService,
-              private notification: ToastrService) {
+              private notification: ToastrService,
+              private reportService: ReportService) {
   }
 
   ngOnInit() {
@@ -174,5 +179,22 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   public getSelectedUserAddressAsString(user: StudentDto) {
     return StudentDto.getAddressAsString(user);
+  }
+
+  submitReport() {
+    let r = new ReportChatRoomDto();
+    r.chatId = this.activeChatRoom.chatRoomId;
+    r.reason = this.reportReason;
+    console.log(r)
+    this.reportService.reportUserChat(r).subscribe({
+        next: () => {
+          this.notification.success("Successfully Reported.");
+        },
+        error: error => {
+          console.error("Error reporting", error);
+          this.notification.error(error.error, "Something went wrong!");
+        }
+      }
+    );
   }
 }

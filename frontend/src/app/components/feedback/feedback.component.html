@@ -5,8 +5,8 @@
       <tr>
         <th style="width:calc(70%)">Message</th>
         <th style="width:calc(15%)">Date</th>
-        <th class="my-personal-class">Report</th>
-        <th class="my-personal-class">Delete</th>
+        <th class="nowrap">Report</th>
+        <th class="nowrap">Delete</th>
       </tr>
       </thead>
       <tbody>
@@ -14,9 +14,7 @@
         <td >{{ feedback.feedback }}</td>
         <td >{{ feedback.created  | date:'MM/dd/yyyy HH:mm:ss'}}</td>
         <td>
-          <button class="btn btn-warning custom-button">
-            <i class="bi bi-exclamation"></i>
-          </button>
+          <button class="btn btn-warning custom-button bi bi-exclamation-triangle" data-bs-toggle="modal" data-bs-target="#reportModal" (click)="reportFeedback = feedback.id"></button>
         </td>
         <td>
           <button class="btn btn-danger custom-button" (click)="deleteFeedback(feedback.id)">
@@ -31,10 +29,10 @@
   <table class="table table-striped" style="width:calc(100%)">
     <thead>
     <tr>
-      <th style="width:calc(70%)" class="my-personal-class">Message</th>
-      <th style="width:calc(10%)" class="my-personal-class">Date</th>
-      <th style="width:calc(15%)" class="my-personal-class">To</th>
-      <th class="my-personal-class">Delete</th>
+      <th style="width:calc(70%)" class="nowrap">Message</th>
+      <th style="width:calc(10%)" class="nowrap">Date</th>
+      <th style="width:calc(15%)" class="nowrap">To</th>
+      <th class="nowrap">Delete</th>
     </tr>
     </thead>
     <tbody>
@@ -50,4 +48,24 @@
     </tr>
     </tbody>
   </table>
+</div>
+
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #reportModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Report Feedback</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="reportReason" class="form-label">Reason for Reporting</label>
+          <textarea type="text" class="form-control" id="reportReason" [(ngModel)]="reportReason"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn primary-btn" (click)="submitReport()" data-bs-dismiss="modal">Submit Report</button>
+      </div>
+    </div>
+  </div>
 </div>

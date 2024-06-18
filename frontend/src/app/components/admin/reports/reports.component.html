@@ -1,0 +1,132 @@
+<div style="padding-top:20px;">
+  <h2>All reports:</h2>
+  <table class="table table-striped" style="width:calc(100%)">
+    <thead>
+    <tr>
+      <th style="width:calc(20%)">Reported</th>
+      <th style="width:calc(20%)">Reporter</th>
+      <th class="nowrap" style="width:calc(30%)">Reason</th>
+      <th class="nowrap" style="width:calc(5%)">Ban</th>
+      <th class="nowrap" style="width:calc(5%)">Delete</th>
+      <th class="nowrap" style="width:calc(5%)">info</th>
+    </tr>
+    </thead>
+    <tbody *ngIf="reports">
+    <tr *ngFor="let report of this.reports">
+      <td> {{ report.firstnameReported }} {{ report.lastNameReported }}</td>
+      <td>{{ report.firstnameReporter }} {{ report.lastnameReporter }}</td>
+      <td>{{ report.reason }}</td>
+      <td>
+        <button class="btn btn-danger bi-slash-circle"
+                (click)="banUser(report, banModal)">
+        </button>
+      </td>
+      <td>
+        <button class="btn btn-danger custom-button bi bi-x"
+                (click)="deleteReportFirst(report.id, deleteModal)">
+        </button>
+      </td>
+      <td>
+        <button data-bs-toggle="modal" data-bs-target="#reportModal" class="btn primary-btn custom-button"
+                (click)="infoButton(report)">
+          <i class="bi bi-info"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     #reportModal>
+  <div class="modal-dialog">
+    <div *ngIf="selectedReport !== null" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Reported {{ selectedReport.firstnameReported }} {{ selectedReport.lastNameReported }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="selectedReport.feedback !== ''" class="mb-3">
+          <label class="form-label">Feedback was reported:</label>
+          <hr>
+          <p>{{ selectedReport.feedback }}</p>
+        </div>
+        <div *ngIf="selectedReport.chatRoomId !== ''" class="mb-3">
+          <label class="form-label">ChatRoom was reported:</label>
+          <div class="card chat-app">
+            <div class="chat">
+              <div class="chat-history">
+                <ul class="m-b-0">
+                  <li class="clearfix" *ngFor="let message of messages;">
+                    <div *ngIf="message.recipientId === selectedReport.reportedId"
+                         class="message my-message float-right">
+                      <span class="ml-3 message-content">{{ message.content }}</span>
+                    </div>
+                    <div *ngIf="message.recipientId === selectedReport.reporterId" class="message other-message">
+                      <span class="ml-3 message-content">{{ message.content }}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="selectedReport.chatRoomId === '' && selectedReport.feedback === ''" class="mb-3">
+          <label class="form-label">User was reported:</label>
+          <hr>
+          <p>{{ selectedReport.reason }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #banModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" style="font-size: 2em; color: #33709c;">Ban Student {{ selectedBanUser.firstname }}
+      {{ selectedBanUser.lastname }}</h5>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="banForm" (ngSubmit)="onBanSubmit(modal)">
+      <div class="form-group">
+                    <textarea id="banReason" class="form-control" formControlName="banReason"
+                              placeholder="Type in reason for ban of Student" rows="5" required></textarea>
+        <div
+          *ngIf="banForm.get('banReason').invalid && (banForm.get('banReason').dirty || banForm.get('banReason').touched)"
+          class="invalid-feedback">
+          Reason is required.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+        <button type="submit" class="btn btn-danger" [disabled]="banForm.invalid">Ban User</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!-- Student Ban Reasons Modal -->
+<ng-template #banReasonsModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" style="font-size: 2em; color: #33709c;">Reason for ban of Student
+      {{ selectedBanReasonUser.firstname }} {{ selectedBanReasonUser.lastname }}</h5>
+  </div>
+  <div class="modal-body">
+    <p>Reasons for ban</p>
+    <textarea class="form-control" rows="5" readonly>{{ selectedBanReasonUser.reason }}</textarea>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>
+
+<ng-template #deleteModal let-modal>
+  <div class="modal-body">
+    <p>Are you sure you want to delete this Report?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    <button type="button" class="btn btn-danger" (click)="deleteReport(reportToDelete, modal)">Delete</button>
+  </div>
+</ng-template>

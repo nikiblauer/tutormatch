@@ -34,7 +34,10 @@
   <div class="popup-container popup-container-matches" (click)="$event.stopPropagation()">
     <div class="header-container">
       <h1>Match Details</h1>
-      <button class="close-btn" (click)="startChat()"><i class="bi bi-chat-dots"></i></button>
+      <div>
+        <button class="btn btn-danger bi bi-exclamation-triangle" data-bs-toggle="modal" data-bs-target="#reportModal"></button>
+        <button class="btn primary-btn chat-btn pl-3 bi bi-chat-dots" (click)="startChat()"></button>
+      </div>
     </div>
     <div class="match-details">
       <div>
@@ -54,6 +57,27 @@
           <div class="detail-row"><span class="detail-label">Offers:</span>
             <span>{{ selectedMatch.traineeSubjects }}</span></div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #reportModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Report User</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="reportReason" class="form-label">Reason for Reporting</label>
+          <textarea type="text" class="form-control" id="reportReason" [(ngModel)]="reportReason"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn primary-btn" (click)="submitReport()" data-bs-dismiss="modal">Submit Report</button>
       </div>
     </div>
   </div>

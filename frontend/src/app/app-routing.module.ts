@@ -14,6 +14,7 @@ import {RequestResetComponent} from "./components/password-reset/request-reset/r
 import {FeedbackComponent} from "./components/feedback/feedback.component";
 import {AdminFeedbackComponent} from "./components/admin/feedback/admin-feedback.component";
 import {ChatComponent} from "./components/chat/chat.component";
+import {ReportsComponent} from "./components/admin/reports/reports.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/myprofile', pathMatch: 'full'},
@@ -40,7 +41,8 @@ const routes: Routes = [
       {path: 'students', component: StudentsComponent},
       {path: 'students/:id', component: UserProfileComponent, data: {mode: UserMode.admin}},
       {path: 'students/feedback/:id', component: AdminFeedbackComponent},
-      {path: 'subjects', component: SubjectComponent}
+      {path: 'subjects', component: SubjectComponent},
+      {path: 'report', component: ReportsComponent}
     ]
   }
 ];
