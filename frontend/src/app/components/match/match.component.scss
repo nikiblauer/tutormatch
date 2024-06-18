@@ -97,14 +97,18 @@
   margin-top: auto;
 }
 
-.btn .match-btn {
-  width: 100%;
-}
-
 .btn:hover {
   background-color: #143349; /* Ändert die Hintergrundfarbe beim Hovern */
   border-color: #FFFFFF; /* Ändert die Randfarbe beim Hovern */
   color: #FFF;
+}
+
+.btn .match-btn {
+  width: 100%;
+}
+
+.filter-btn {
+  float: right;
 }
 
 .no-matches {

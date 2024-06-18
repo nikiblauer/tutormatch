@@ -68,8 +68,7 @@
     </div>
   </div>
 </div>
-<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true"
-     *ngIf="filter">
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -79,8 +78,7 @@
       <div class="modal-body">
         <form>
           <div class="mb-3">
-
-            <h6 class="font-weight-bold mb-3">Needs:</h6>
+            <h6 class="font-weight-bold mb-3">Needs of match:</h6>
             <div class="form-check mb-3" *ngFor="let offer of matchNeeds; let i = index">
               <input class="form-check-input" type="checkbox" [id]="'offer-checkbox-' + i"
                      [checked]="isSelected(offer, filterSubjectsNeeds)"
@@ -90,7 +88,7 @@
               </label>
             </div>
 
-            <h6 class="font-weight-bold mb-3">Offers:</h6>
+            <h6 class="font-weight-bold mb-3">Offers of match:</h6>
             <div class="form-check mb-3" *ngFor="let need of matchOffer; let j = index">
               <input class="form-check-input" type="checkbox" [id]="'need-checkbox-' + j"
               [checked]="isSelected(need, filterSubjectsOffers)"
@@ -99,8 +97,7 @@
                 {{ need.name }}
               </label>
             </div>
-
-            <button type="button" class="btn btn-primary mt-2" (click)="saveSelectedCourses()">Save</button>
+            <button type="button" class="btn btn-primary mt-2" (click)="applyFilter()">Save</button>
           </div>
         </form>
       </div>

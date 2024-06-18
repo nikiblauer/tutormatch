@@ -162,12 +162,6 @@ export class MatchComponent implements OnInit {
     this.getUserSubjects();
   }
 
-  public saveSelectedCourses() {
-    this.filterMatches();
-    this.placeHolderMatches = this.filteredMatches;
-    console.log(this.filteredMatches)
-  }
-
   public getUserSubjects() {
     this.userService.getUserSubjects().subscribe({
       next: userProfile => {
@@ -181,6 +175,11 @@ export class MatchComponent implements OnInit {
     });
   }
 
+  public applyFilter() {
+    this.filterMatches();
+    this.placeHolderMatches = this.filteredMatches;
+  }
+
   toggleSelection(course: Subject, isChecked: boolean, filterSubjects: Subject[]) {
     const index = filterSubjects.findIndex(item => item.id === course.id);
 
@@ -189,6 +188,10 @@ export class MatchComponent implements OnInit {
     } else if (!isChecked && index !== -1) {
       filterSubjects.splice(index, 1); // Remove the course if it's unchecked and in the array
     }
+  }
+
+  isSelected(item: Subject, collection: Subject[]): boolean {
+    return collection.some(selectedItem => selectedItem.id === item.id);
   }
 
   filterMatches() {
@@ -203,8 +206,6 @@ export class MatchComponent implements OnInit {
 
       const tutorSubjectsOfMatch = match.tutorSubjects.split(', ').map(subject => subject);
       const traineeSubjectsOfMatch = match.traineeSubjects.split(', ').map(subject => subject.trim());
-      console.log(this.filterCourseNumOffers)
-      console.log(this.filterCourseNumNeeds)
       const containsAllOffers = this.filterCourseNumOffers.every(courseNum => {
         return tutorSubjectsOfMatch.some(tutorSubject => {
           return tutorSubject.includes(courseNum);
@@ -215,13 +216,10 @@ export class MatchComponent implements OnInit {
           return traineeSubject.includes(courseNum);
         });
       });
-      console.log(containsAllOffers)
-      console.log(containsAllNeeds)
       if(containsAllOffers && containsAllNeeds){
         this.filteredMatches.push(match)
       }
     }
-    console.log(this.filteredMatches.length)
   }
 
   extractCourseNumber(courseString: string): string | null {
@@ -233,7 +231,6 @@ export class MatchComponent implements OnInit {
     const match = courseString.match(regex);
     return match ? match[0] : null;
   }
-
   getCourseNumberArray(filterArray: Subject[], courseNumberArray: String[]): void {
     courseNumberArray.length = 0;
     for (let subject of filterArray) {
@@ -242,9 +239,6 @@ export class MatchComponent implements OnInit {
         courseNumberArray.push(courseNumber);
       }
     }
-  }
-  isSelected(item: Subject, collection: Subject[]): boolean {
-    return collection.some(selectedItem => selectedItem.id === item.id);
   }
 }
 
