@@ -7,9 +7,14 @@
     ><i class="bi bi-filter"></i>filter
     </button>
   </div>
+  <div *ngIf="this.placeHolderMatches.length === 0 &&
+  (this.filterCourseNumNeeds.length !== 0 || this.filterSubjectsOffers.length !== 0)" class="shadow no-matches">
+    <h2>No matches found! :(</h2>
+    <p>Try to adjust your filters.</p>
+  </div>
   <div class="container">
     <div class="row">
-      <div class="col-12 col-md-6 col-lg-3 mb-4 rounded" *ngFor="let match of matches">
+      <div class="col-12 col-md-6 col-lg-3 mb-4 rounded" *ngFor="let match of this.placeHolderMatches">
         <div class="card h-100 rounded bg-light shadow" (click)="openMatch(match)">
           <div class="card-body">
             <h5 class="card-title">{{ match.firstname }} {{ match.lastname }}</h5>
@@ -74,22 +79,27 @@
       <div class="modal-body">
         <form>
           <div class="mb-3">
+
             <h6 class="font-weight-bold mb-3">Needs:</h6>
-            <div class="form-check mb-3" *ngFor="let offer of userOffer; let i = index">
-              <input class="form-check-input" type="checkbox" value="new" id="'offer-checkbox-' + i"
+            <div class="form-check mb-3" *ngFor="let offer of matchNeeds; let i = index">
+              <input class="form-check-input" type="checkbox" [id]="'offer-checkbox-' + i"
+                     [checked]="isSelected(offer, filterSubjectsNeeds)"
                      (change)="toggleSelection(offer, $event.target.checked, filterSubjectsNeeds)">
-              <label class="form-check-label" for="'offer-checkbox-' + i">
-                {{offer.name}}
+              <label class="form-check-label" [for]="'offer-checkbox-' + i">
+                {{ offer.name }}
               </label>
             </div>
+
             <h6 class="font-weight-bold mb-3">Offers:</h6>
-            <div class="form-check mb-3" *ngFor="let need of userNeed; let j = index">
-              <input class="form-check-input" type="checkbox" [value]="need" [id]="'need-checkbox-' + j"
-                     (change)="toggleSelection(need, $event.target.checked, filterSubjectsOffers)">
+            <div class="form-check mb-3" *ngFor="let need of matchOffer; let j = index">
+              <input class="form-check-input" type="checkbox" [id]="'need-checkbox-' + j"
+              [checked]="isSelected(need, filterSubjectsOffers)"
+              (change)="toggleSelection(need, $event.target.checked, filterSubjectsOffers)">
               <label class="form-check-label" [for]="'need-checkbox-' + j">
                 {{ need.name }}
               </label>
             </div>
+
             <button type="button" class="btn btn-primary mt-2" (click)="saveSelectedCourses()">Save</button>
           </div>
         </form>

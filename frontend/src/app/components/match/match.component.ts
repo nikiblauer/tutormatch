@@ -19,16 +19,19 @@ import contains from "@popperjs/core/lib/dom-utils/contains";
   styleUrls: ['./match.component.scss']
 })
 export class MatchComponent implements OnInit {
+  public placeHolderMatches: UserMatchDto[] = [];
   public matches: UserMatchDto[] = [];
+  public filteredMatches: UserMatchDto[] = [];
   public selectedMatch: UserMatchDto;
   public selectedUser: StudentDto;
   public selectedUserRating: number = -2;
   public filter: boolean;
-  public filterSubjectsNeeds: string[] = [];
-  public filterSubjectsOffers: string[] = [];
-  userNeed: Subject[];
-  userOffer: Subject[];
-  filteredMatches: UserMatchDto[] = [];
+  public filterSubjectsNeeds: Subject[] = [];
+  public filterSubjectsOffers: Subject[] = [];
+  public filterCourseNumNeeds: string[] = [];
+  public filterCourseNumOffers: string[] = [];
+  public matchOffer: Subject[];
+  public matchNeeds: Subject[];
 
   constructor(private userService: UserService, private notification: ToastrService,
               private spinner: NgxSpinnerService, private ratingService: RatingService,
@@ -44,6 +47,7 @@ export class MatchComponent implements OnInit {
         clearTimeout(timeout);
         this.spinner.hide();
         this.matches = matches;
+        this.placeHolderMatches = this.matches;
       },
       error: error => {
         clearTimeout(timeout);
@@ -159,80 +163,88 @@ export class MatchComponent implements OnInit {
   }
 
   public saveSelectedCourses() {
-
-    //console.log('Selected courses:', this.filterSubjectsNeeds);
-    //console.log('Selected courses:', this.filterSubjectsOffers);
     this.filterMatches();
-    //console.log(this.filteredMatches);
-    // Here you can also send the selectedCourses array to your server using your service
+    this.placeHolderMatches = this.filteredMatches;
+    console.log(this.filteredMatches)
   }
 
   public getUserSubjects() {
     this.userService.getUserSubjects().subscribe({
       next: userProfile => {
         this.spinner.hide();
-        this.userOffer = userProfile.subjects.filter(item => item.role == "tutor");
-        this.userNeed = userProfile.subjects.filter(item => item.role == "trainee");
+        this.matchNeeds = userProfile.subjects.filter(item => item.role == "tutor");
+        this.matchOffer = userProfile.subjects.filter(item => item.role == "trainee");
       },
       error: (e) => {
+        console.log(e)
       }
     });
   }
 
-  toggleSelection(course: any, isChecked: boolean, filterSubjects: string[]) {
-    if (isChecked) {
-      filterSubjects.push(course);
-    } else {
-      const index = filterSubjects.indexOf(course);
-      if (index !== -1) {
-        filterSubjects.splice(index, 1);
-      }
+  toggleSelection(course: Subject, isChecked: boolean, filterSubjects: Subject[]) {
+    const index = filterSubjects.findIndex(item => item.id === course.id);
+
+    if (isChecked && index === -1) {
+      filterSubjects.push(course); // Add the course if it's checked and not already in the array
+    } else if (!isChecked && index !== -1) {
+      filterSubjects.splice(index, 1); // Remove the course if it's unchecked and in the array
     }
   }
 
   filterMatches() {
+    if(this.filterSubjectsNeeds.length == 0 && this.filterSubjectsOffers.length == 0){
+      this.placeHolderMatches = this.matches;
+    }
+    this.filteredMatches.length = 0;
+    this.getCourseNumberArray(this.filterSubjectsOffers, this.filterCourseNumOffers)
+    this.getCourseNumberArray(this.filterSubjectsNeeds, this.filterCourseNumNeeds)
     for (let i = 0; i < this.matches.length; i++) {
       const match = this.matches[i];
 
       const tutorSubjectsOfMatch = match.tutorSubjects.split(', ').map(subject => subject);
       const traineeSubjectsOfMatch = match.traineeSubjects.split(', ').map(subject => subject.trim());
-      console.log(tutorSubjectsOfMatch)// stimmt für needs
-      //console.log(traineeSubjectsOfMatch)
-      console.log(this.filterSubjectsOffers)
-      //console.log(this.filterSubjectsNeeds)
-      this.containsAllOffers(tutorSubjectsOfMatch, this.filterSubjectsOffers)
-      const containsAllNeeds = this.filterSubjectsNeeds.every(subject => {
-        return traineeSubjectsOfMatch.includes(subject);
+      console.log(this.filterCourseNumOffers)
+      console.log(this.filterCourseNumNeeds)
+      const containsAllOffers = this.filterCourseNumOffers.every(courseNum => {
+        return tutorSubjectsOfMatch.some(tutorSubject => {
+          return tutorSubject.includes(courseNum);
+        });
       });
-      console.log("contains all offers for match " + this.matches[i].firstname + ": " + this.containsAllOffers(tutorSubjectsOfMatch, this.filterSubjectsOffers))
-      //console.log("contains all needs: " + containsAllNeeds)
-      if (this.containsAllOffers(tutorSubjectsOfMatch, this.filterSubjectsOffers)) {
-        this.filteredMatches.push(match);
+      const containsAllNeeds = this.filterCourseNumNeeds.every(courseNum => {
+        return traineeSubjectsOfMatch.some(traineeSubject => {
+          return traineeSubject.includes(courseNum);
+        });
+      });
+      console.log(containsAllOffers)
+      console.log(containsAllNeeds)
+      if(containsAllOffers && containsAllNeeds){
+        this.filteredMatches.push(match)
+      }
+    }
+    console.log(this.filteredMatches.length)
+  }
+
+  extractCourseNumber(courseString: string): string | null {
+    if (typeof courseString !== 'string') {
+      throw new TypeError('Input must be a string');
+    }
+
+    const regex = /\b\d{3}\.\d{3}\b/;
+    const match = courseString.match(regex);
+    return match ? match[0] : null;
+  }
+
+  getCourseNumberArray(filterArray: Subject[], courseNumberArray: String[]): void {
+    courseNumberArray.length = 0;
+    for (let subject of filterArray) {
+      const courseNumber = this.extractCourseNumber(subject.name); // Assuming 'name' holds the course string
+      if (courseNumber) {
+        courseNumberArray.push(courseNumber);
       }
     }
   }
-   containsAllOffers(tutorSubjectsOfMatch, filterSubjectsOffers) {
-    // Iterate over each subject in filterSubjectsOffers
-    for (let i = 0; i < filterSubjectsOffers.length; i++) {
-      let found = false;
-      const subjectToFind = filterSubjectsOffers[i];
-
-      // Check if subjectToFind exists in tutorSubjectsOfMatch
-      for (let j = 0; j < tutorSubjectsOfMatch.length; j++) {
-        if (tutorSubjectsOfMatch[j] === subjectToFind) {
-          found = true;
-          break;
-        }
-      }
-
-      // If subjectToFind was not found in tutorSubjectsOfMatch, return false
-      if (!found) {
-        return false;
-      }
-    }
-
-    // If all subjects in filterSubjectsOffers were found in tutorSubjectsOfMatch, return true
-    return true;
+  isSelected(item: Subject, collection: Subject[]): boolean {
+    return collection.some(selectedItem => selectedItem.id === item.id);
   }
-
 }
+

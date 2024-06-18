@@ -106,3 +106,19 @@
   border-color: #FFFFFF; /* Ändert die Randfarbe beim Hovern */
   color: #FFF;
 }
+
+.no-matches {
+  background-color: #FFFFFF;
+  transition: .5s;
+  border-radius: .55rem;
+  position: relative;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+  margin: 3rem auto;
+  padding: 1rem;
+  justify-content: center;
+  align-items: center;
+  height: 7rem;
+  text-align: center;
+  border: 1px solid lightgray;
+  width: 30rem;
+}
