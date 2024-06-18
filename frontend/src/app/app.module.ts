@@ -1,32 +1,30 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
-
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
-import {HeaderComponent} from './components/header/header.component';
-import {FooterComponent} from './components/footer/footer.component';
-import {HomeComponent} from './components/home/home.component';
-import {LoginComponent} from './components/login/login.component';
-import {MessageComponent} from './components/message/message.component';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {httpInterceptorProviders} from './interceptors';
-import {MatchComponent} from "./components/match/match.component";
-import {UserProfileComponent} from './components/user-profile/user-profile.component';
-import {NgOptimizedImage} from "@angular/common";
-import {StudentsComponent} from './components/admin/students/students.component';
-import {DashboardComponent} from './components/admin/dashboard/dashboard.component';
-import {AdminComponent} from './components/admin/admin.component';
-import {SubjectComponent} from "./components/admin/subjects/subjects.component";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {ToastrModule} from "ngx-toastr";
-import {RegisterComponent} from "./components/register/register.component";
-import {NgxSpinnerModule} from "ngx-spinner";
-import {ChatComponent} from "./components/chat/chat.component";
-import {WebSocketService} from "./services/web-socket.service";
-import {StarRatingComponent} from "./components/rating/rating.component";
-
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
+import { MessageComponent } from './components/message/message.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { httpInterceptorProviders } from './interceptors';
+import { MatchComponent } from "./components/match/match.component";
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { NgOptimizedImage } from "@angular/common";
+import { StudentsComponent } from './components/admin/students/students.component';
+import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
+import { AdminComponent } from './components/admin/admin.component';
+import { SubjectComponent } from "./components/admin/subjects/subjects.component";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ToastrModule } from "ngx-toastr";
+import { RegisterComponent } from "./components/register/register.component";
+import { NgxSpinnerModule } from "ngx-spinner";
+import { ChatComponent } from "./components/chat/chat.component";
+import { WebSocketService } from "./services/web-socket.service";
+import { StarRatingComponent } from "./components/rating/rating.component";
 
 @NgModule({
   declarations: [
@@ -58,8 +56,10 @@ import {StarRatingComponent} from "./components/rating/rating.component";
     NgxSpinnerModule,
     ToastrModule.forRoot()
   ],
-  providers: [httpInterceptorProviders, WebSocketService],
+  providers: [
+    httpInterceptorProviders,
+    WebSocketService
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule { }

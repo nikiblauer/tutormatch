@@ -36,6 +36,14 @@ spring:
           starttls:
             enable: true
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  spring:
+    resources:
+      static-locations: classpath:/static/, classpath:/index.html
+
 security:
   auth:
     header: Authorization

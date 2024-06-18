@@ -47,13 +47,12 @@ const routes: Routes = [
       { path: 'students/:id', component: UserProfileComponent, data: { mode: UserMode.admin } },
       { path: 'students/feedback/:id', component: AdminFeedbackComponent },
       { path: 'subjects', component: SubjectComponent }
-    ]
-  }
+    ]}, 
+    {path: '**', redirectTo: 'login'}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: false })],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule { }
