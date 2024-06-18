@@ -53,8 +53,6 @@ export class PasswordResetComponent {
       return;
     }
     if (form.valid) {
-      console.log(this.token);
-      console.log(this.passwordResetDto);
       this.userService.changePasswordWithResetToken(this.token, this.passwordResetDto).subscribe({
         next: () => {
           this.spinner.hide();

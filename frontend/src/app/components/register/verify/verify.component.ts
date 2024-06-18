@@ -27,7 +27,6 @@ export class VerifyComponent {
 
     this.userService.verifyUser(this.token).subscribe({
         next: () => {
-          console.log("verified");
           this.verified = true;
         },
         error: error => {

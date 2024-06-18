@@ -40,7 +40,6 @@ export class AuthService {
   }
 
   logoutUser() {
-    console.log('Logout');
     localStorage.removeItem('authToken');
     this.webSocketService.disconnect(); // Close the WebSocket connection
     this.router.navigate(['/login']);

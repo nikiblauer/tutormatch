@@ -26,7 +26,6 @@ export class FeedbackService {
     return this.httpClient.get<FeedbackDto[]>(this.baseUri + `/me/sent`)
   }
   postFeedback(feedbackDto: FeedbackDto) {
-    console.log(feedbackDto);
     return this.httpClient.post<FeedbackDto[]>(this.baseUri, feedbackDto);
   }
   deleteFeedback(deleteUserId:number){

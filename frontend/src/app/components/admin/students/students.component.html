@@ -20,7 +20,7 @@
                 <div class="form-group">
                     <label class="form-label" for="status">Filter Profile Status:</label>
                     <select class="form-control mt-1 form-select" id="status" [(ngModel)]="tmpFilterStatus"
-                        (change)="updateTmpFilterStatus($event.target.value)">
+                        (change)="updateTmpFilterStatus($event.target.value)" name="profileStatus">
                         <option value="" [selected]="tmpFilterStatus === ''">Indifferent</option>
                         <option value="active">Active</option>
                         <option value="banned">Banned</option>

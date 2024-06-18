@@ -49,22 +49,17 @@ export class LoginComponent implements OnInit {
    * @param authRequest authentication data from the user login form
    */
   authenticateUser(authRequest: AuthRequest) {
-    console.log('Try to authenticate user: ' + authRequest.email);
-  
     this.spinner.show();
     this.authService.loginUser(authRequest).subscribe({
       next: () => {
         this.spinner.hide();
         if (this.mode === LoginMode.admin && this.isAdmin()) {
-          console.log('Successfully logged in admin: ' + authRequest.email);
           this.router.navigate(['/admin/dashboard']);
         } else if (this.mode === LoginMode.admin){
           this.handleError({ error: 'Invalid admin email' });
         } else if (this.mode === LoginMode.user && this.isAdmin()) {
-          console.log('Successfully logged in admin: ' + authRequest.email);
           this.router.navigate(['/admin/dashboard']);
         } else if (this.mode === LoginMode.user) {
-          console.log('Successfully logged in user: ' + authRequest.email);
           this.router.navigate(['/matches']);
         }
       },

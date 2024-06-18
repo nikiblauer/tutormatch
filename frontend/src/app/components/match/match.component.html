@@ -2,7 +2,7 @@
 <div class="matches-container">
   <h3 class="matches-title">Your matches:</h3>
   <div class="container">
-    <div class="row">
+    <div *ngIf="matches.length > 0" class="row">
       <div class="col-12 col-md-6 col-lg-3 mb-4 rounded" *ngFor="let match of matches">
         <div class="card h-100 rounded bg-light shadow" (click)="openMatch(match)">
           <div class="card-body">
@@ -19,6 +19,12 @@
             <button class="btn btn-primary match-btn">More Information</button>
           </div>
         </div>
+      </div>
+    </div>
+    <div *ngIf="matches.length < 1" id="no_match_display" class="row justify-content-center align-items-center">
+      <div class="col text-center">
+        <h2 class="display-4">No matches yet!</h2>
+        <h3>Please select subjects in your profile, to get matches.</h3>
       </div>
     </div>
   </div>
