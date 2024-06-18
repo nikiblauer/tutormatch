@@ -1,24 +1,17 @@
 import { Component } from '@angular/core';
-import {NgIf} from "@angular/common";
-import {ActivatedRoute, Router} from "@angular/router";
-import {UserService} from "../../../services/user.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { UserService } from "../../../services/user.service";
 
 @Component({
   selector: 'app-verify',
-  standalone: true,
-  imports: [
-    NgIf
-  ],
   templateUrl: './verify.component.html',
-  styleUrl: './verify.component.scss'
+  styleUrls: ['./verify.component.scss']
 })
 export class VerifyComponent {
   verified: boolean = false;
   token: string = "";
 
-  constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) {
-
-  }
+  constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -34,10 +27,7 @@ export class VerifyComponent {
         }
       }
     );
-
-
   }
-
 
   onSubmit(): void {
     this.router.navigate(['/login']);

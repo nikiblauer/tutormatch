@@ -25,7 +25,6 @@ import {WebSocketService} from "./services/web-socket.service";
 import {StarRatingComponent} from "./components/rating/rating.component";
 import {ReportsComponent} from "./components/admin/reports/reports.component";
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,8 +53,10 @@ import {ReportsComponent} from "./components/admin/reports/reports.component";
     NgxSpinnerModule,
     ToastrModule.forRoot()
   ],
-  providers: [httpInterceptorProviders, WebSocketService],
+  providers: [
+    httpInterceptorProviders,
+    WebSocketService
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule { }

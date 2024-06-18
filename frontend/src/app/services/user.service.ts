@@ -73,5 +73,4 @@ export class UserService {
   updateVisibility(visibility: boolean): Observable<void>{
     return this.httpClient.put<void>(this.userUri + '/visibility', visibility);
   }
-
 }
