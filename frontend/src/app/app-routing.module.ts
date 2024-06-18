@@ -1,13 +1,10 @@
 import {NgModule} from '@angular/core';
 import {mapToCanActivate, RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from './components/home/home.component';
 import {LoginComponent, LoginMode} from './components/login/login.component';
 import {AuthGuard} from './guards/auth.guard';
-import {MessageComponent} from './components/message/message.component';
 import {RegisterComponent} from "./components/register/register.component";
 import {VerifyComponent} from "./components/register/verify/verify.component";
 import {MatchComponent} from "./components/match/match.component";
-import {AdminComponent} from './components/admin/admin.component';
 import {DashboardComponent} from './components/admin/dashboard/dashboard.component';
 import {StudentsComponent} from './components/admin/students/students.component';
 import {UserMode, UserProfileComponent} from './components/user-profile/user-profile.component';
@@ -19,27 +16,25 @@ import {AdminFeedbackComponent} from "./components/admin/feedback/admin-feedback
 import {ChatComponent} from "./components/chat/chat.component";
 
 const routes: Routes = [
-  {path: '', component: HomeComponent, canActivate: [AuthGuard]},
-  {path: 'login', component: LoginComponent, data: {mode: LoginMode.user} },
+  {path: '', redirectTo: '/myprofile', pathMatch: 'full'},
+  {path: 'login', component: LoginComponent, data: {mode: LoginMode.user}, canActivate: [AuthGuard]},
   {
-    path: 'register', children: [
+    path: 'register', canActivate: [AuthGuard], children: [
       {path: '', component: RegisterComponent},
       {path: 'verify/:token', component: VerifyComponent}
     ]
   },
-  {    path: 'password_reset', children: [
+  {path: 'password_reset', children: [
       {path: '', component: RequestResetComponent},
       {path: ':token', component: PasswordResetComponent}
     ]
   },
-  {path: 'message', canActivate: mapToCanActivate([AuthGuard]), component: MessageComponent},
-  {path: 'matches', component: MatchComponent},
-  {path: 'myprofile', component: UserProfileComponent, data: {mode: UserMode.user}},
-  {path: 'feedback', component: FeedbackComponent, data: {mode: UserMode.user}},
-  {path: 'chat', component: ChatComponent},
-  {path: 'myprofile', component: UserProfileComponent,data: {mode: UserMode.user}},
+  {path: 'matches', component: MatchComponent, canActivate: [AuthGuard]},
+  {path: 'feedback', component: FeedbackComponent, data: {mode: UserMode.user}, canActivate: [AuthGuard]},
+  {path: 'chat', component: ChatComponent, canActivate: [AuthGuard]},
+  {path: 'myprofile', component: UserProfileComponent,data: {mode: UserMode.user}, canActivate: [AuthGuard]},
   {
-    path: 'admin', component: AdminComponent, children: [
+    path: 'admin', canActivate: [AuthGuard], children: [
       {path: 'login', component: LoginComponent, data: {mode: LoginMode.admin}},
       {path: 'dashboard', component: DashboardComponent},
       {path: 'students', component: StudentsComponent},
