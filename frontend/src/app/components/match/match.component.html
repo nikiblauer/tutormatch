@@ -7,14 +7,14 @@
     ><i class="bi bi-filter"></i>filter
     </button>
   </div>
-  <div *ngIf="this.placeHolderMatches.length === 0 &&
-  (this.filterCourseNumNeeds.length !== 0 || this.filterSubjectsOffers.length !== 0)" class="shadow no-matches">
+  <div *ngIf="this.placeholderMatches.length === 0 &&
+  (this.filterCourseNumNeeds.length !== 0 || this.filterOffers.length !== 0)" class="shadow no-matches">
     <h2>No matches found! :(</h2>
     <p>Try to adjust your filters.</p>
   </div>
   <div class="container">
     <div class="row">
-      <div class="col-12 col-md-6 col-lg-3 mb-4 rounded" *ngFor="let match of this.placeHolderMatches">
+      <div class="col-12 col-md-6 col-lg-3 mb-4 rounded" *ngFor="let match of this.placeholderMatches">
         <div class="card h-100 rounded bg-light shadow" (click)="openMatch(match)">
           <div class="card-body">
             <h5 class="card-title">{{ match.firstname }} {{ match.lastname }}</h5>
@@ -81,8 +81,8 @@
             <h6 class="font-weight-bold mb-3">Needs of match:</h6>
             <div class="form-check mb-3" *ngFor="let offer of matchNeeds; let i = index">
               <input class="form-check-input" type="checkbox" [id]="'offer-checkbox-' + i"
-                     [checked]="isSelected(offer, filterSubjectsNeeds)"
-                     (change)="toggleSelection(offer, $event.target.checked, filterSubjectsNeeds)">
+                     [checked]="isSelected(offer, filterNeeds)"
+                     (change)="toggleSelection(offer, $event.target.checked, filterNeeds)">
               <label class="form-check-label" [for]="'offer-checkbox-' + i">
                 {{ offer.name }}
               </label>
@@ -91,13 +91,13 @@
             <h6 class="font-weight-bold mb-3">Offers of match:</h6>
             <div class="form-check mb-3" *ngFor="let need of matchOffer; let j = index">
               <input class="form-check-input" type="checkbox" [id]="'need-checkbox-' + j"
-              [checked]="isSelected(need, filterSubjectsOffers)"
-              (change)="toggleSelection(need, $event.target.checked, filterSubjectsOffers)">
+              [checked]="isSelected(need, filterOffers)"
+              (change)="toggleSelection(need, $event.target.checked, filterOffers)">
               <label class="form-check-label" [for]="'need-checkbox-' + j">
                 {{ need.name }}
               </label>
             </div>
-            <button type="button" class="btn btn-primary mt-2" (click)="applyFilter()">Save</button>
+            <button type="button" class="btn btn-primary save-btn" (click)="applyFilter()">Save</button>
           </div>
         </form>
       </div>

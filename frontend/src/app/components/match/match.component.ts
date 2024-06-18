@@ -19,19 +19,19 @@ import contains from "@popperjs/core/lib/dom-utils/contains";
   styleUrls: ['./match.component.scss']
 })
 export class MatchComponent implements OnInit {
-  public placeHolderMatches: UserMatchDto[] = [];
+  public placeholderMatches: UserMatchDto[] = [];
   public matches: UserMatchDto[] = [];
   public filteredMatches: UserMatchDto[] = [];
   public selectedMatch: UserMatchDto;
   public selectedUser: StudentDto;
   public selectedUserRating: number = -2;
   public filter: boolean;
-  public filterSubjectsNeeds: Subject[] = [];
-  public filterSubjectsOffers: Subject[] = [];
+  public filterNeeds: Subject[] = [];
+  public filterOffers: Subject[] = [];
   public filterCourseNumNeeds: string[] = [];
   public filterCourseNumOffers: string[] = [];
-  public matchOffer: Subject[];
   public matchNeeds: Subject[];
+  public matchOffer: Subject[];
 
   constructor(private userService: UserService, private notification: ToastrService,
               private spinner: NgxSpinnerService, private ratingService: RatingService,
@@ -47,7 +47,7 @@ export class MatchComponent implements OnInit {
         clearTimeout(timeout);
         this.spinner.hide();
         this.matches = matches;
-        this.placeHolderMatches = this.matches;
+        this.placeholderMatches = this.matches;
       },
       error: error => {
         clearTimeout(timeout);
@@ -177,7 +177,7 @@ export class MatchComponent implements OnInit {
 
   public applyFilter() {
     this.filterMatches();
-    this.placeHolderMatches = this.filteredMatches;
+    this.placeholderMatches = this.filteredMatches;
   }
 
   toggleSelection(course: Subject, isChecked: boolean, filterSubjects: Subject[]) {
@@ -195,12 +195,12 @@ export class MatchComponent implements OnInit {
   }
 
   filterMatches() {
-    if(this.filterSubjectsNeeds.length == 0 && this.filterSubjectsOffers.length == 0){
-      this.placeHolderMatches = this.matches;
+    if(this.filterNeeds.length == 0 && this.filterOffers.length == 0){
+      this.placeholderMatches = this.matches;
     }
     this.filteredMatches.length = 0;
-    this.getCourseNumberArray(this.filterSubjectsOffers, this.filterCourseNumOffers)
-    this.getCourseNumberArray(this.filterSubjectsNeeds, this.filterCourseNumNeeds)
+    this.getCourseNumberArray(this.filterOffers, this.filterCourseNumOffers)
+    this.getCourseNumberArray(this.filterNeeds, this.filterCourseNumNeeds)
     for (let i = 0; i < this.matches.length; i++) {
       const match = this.matches[i];
 
