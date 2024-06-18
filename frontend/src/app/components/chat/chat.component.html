@@ -39,6 +39,10 @@
                     <button (click)="recipientInfo()" class="btn btn-primary chat-btn"><i class="fa fa-info"></i>
                     </button>
                   </div>
+                  <div class="infobtn">
+                    <button class="btn btn-danger bi bi-exclamation-triangle" data-bs-toggle="modal" data-bs-target="#reportModal"><i class="fa fa-warn"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -104,3 +108,23 @@
       <p>Head to <a [routerLink]="['/matches']">Matches</a> to start a chat with someone you've matched.</p>
   </div>
 </ng-template>
+
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #reportModal>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Report Feedback</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="reportReason" class="form-label">Reason for Reporting</label>
+          <textarea type="text" class="form-control" id="reportReason" [(ngModel)]="reportReason"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn primary-btn" (click)="submitReport()" data-bs-dismiss="modal">Submit Report</button>
+      </div>
+    </div>
+  </div>
+</div>
