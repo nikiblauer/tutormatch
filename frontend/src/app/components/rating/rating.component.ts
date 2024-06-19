@@ -58,7 +58,7 @@ export class StarRatingComponent implements OnInit {
         this.postedFeedback = postedFeedback;
       },
       error: error => {
-        console.log(error);
+        console.error(error);
         if (error.status == 404) {
           this.postedFeedback = [];
           return;

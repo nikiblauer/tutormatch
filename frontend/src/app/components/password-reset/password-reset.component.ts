@@ -59,15 +59,15 @@ export class PasswordResetComponent {
           this.submitted = true
         },
         error: error => {
+          console.error(error);
           this.spinner.hide();
           this.notification.error(error.error, "Password change failed");
           this.submitted = false;
-          console.log("Error changing password", error.error);
         }
       }
       );
     } else {
-      console.log('Invalid input');
+      console.error('Invalid input');
     }
   }
 }

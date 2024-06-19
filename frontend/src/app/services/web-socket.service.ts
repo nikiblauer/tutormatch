@@ -35,7 +35,7 @@ export class WebSocketService {
     if (!token) {
       return;
     }
-    
+
     this.stompClient.connect({ 'Authorization': token }, frame => {
       this.connected = true;
       this.userService.getUserId().subscribe({
@@ -51,8 +51,8 @@ export class WebSocketService {
               this.onErrorReceived(JSON.parse(error.body))
             }
           })
-        }, error: err => {  
-          console.log(err);
+        }, error: err => {
+          console.error(err);
         }
       })
     })

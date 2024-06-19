@@ -23,7 +23,7 @@ export class VerifyComponent {
           this.verified = true;
         },
         error: error => {
-          console.log("Error when verifying user");
+          console.error("Error when verifying user");
         }
       }
     );

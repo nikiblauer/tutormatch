@@ -6,7 +6,6 @@ import {HttpClientModule} from '@angular/common/http';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
-import {FooterComponent} from './components/footer/footer.component';
 import {LoginComponent} from './components/login/login.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {httpInterceptorProviders} from './interceptors';
@@ -25,12 +24,12 @@ import {WebSocketService} from "./services/web-socket.service";
 import {StarRatingComponent} from "./components/rating/rating.component";
 import {ReportsComponent} from "./components/admin/reports/reports.component";
 import {NotFoundComponent} from "./components/not-found/not-found.component";
+import {VerifyComponent} from "./components/register/verify/verify.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    FooterComponent,
     RegisterComponent,
     LoginComponent,
     MatchComponent,
@@ -41,7 +40,8 @@ import {NotFoundComponent} from "./components/not-found/not-found.component";
     ChatComponent,
     StarRatingComponent,
     ReportsComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    VerifyComponent
   ],
   imports: [
     BrowserModule,

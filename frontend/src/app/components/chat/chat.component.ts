@@ -79,7 +79,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
           this.setActiveChatRoom(this.filteredChatRooms[0]);
         }
       }, error: error => {
-        console.log(error);
+        console.error(error);
       }
     });
   }
@@ -105,7 +105,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
         // Ensure scrollToBottom is called after messages are loaded
         this.scrollToBottom();
       }, error: error => {
-        console.log(error);
+        console.error(error);
         this.notification.error(error.error, "Messages could not be loaded")
       }
     });
@@ -185,7 +185,6 @@ export class ChatComponent implements OnInit, AfterViewInit {
     let r = new ReportChatRoomDto();
     r.chatId = this.activeChatRoom.chatRoomId;
     r.reason = this.reportReason;
-    console.log(r)
     this.reportService.reportUserChat(r).subscribe({
         next: () => {
           this.notification.success("Successfully Reported.");

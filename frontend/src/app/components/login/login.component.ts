@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
       const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
       this.authenticateUser(authRequest);
     } else {
-      console.log('Invalid input');
+      console.error('Invalid input');
     }
   }
 
@@ -71,8 +71,7 @@ export class LoginComponent implements OnInit {
   }
 
   private handleError(error: any): void {
-    console.log('Could not log in due to:');
-    console.log(error);
+    console.error(error);
     let errorMessage = ""
     if (typeof error.error === 'object') {
       errorMessage = error.error.error;
