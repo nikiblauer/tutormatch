@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {UserService} from "./user.service";
-import {Observable, Subject} from "rxjs";
-import {ChatMessageDto, WebSocketErrorDto} from "../dtos/chat";
-import {Globals} from "../global/globals";
+import { UserService } from "./user.service";
+import { Observable, Subject } from "rxjs";
+import { ChatMessageDto, WebSocketErrorDto } from "../dtos/chat";
+import { Globals } from "../global/globals";
 
 
 declare var SockJS: any;
@@ -23,7 +23,7 @@ export class WebSocketService {
 
   }
   connect() {
-    if (this.connected){
+    if (this.connected) {
       return;
     }
     let socket = null;
@@ -32,33 +32,33 @@ export class WebSocketService {
     this.stompClient.debug = () => { };     //removes websocket logs
 
     const token = localStorage.getItem('authToken');
-    if (!token){
+    if (!token) {
       return;
     }
-
-    this.stompClient.connect({ 'Authorization': token}, frame => {
+    
+    this.stompClient.connect({ 'Authorization': token }, frame => {
       this.connected = true;
       this.userService.getUserId().subscribe({
         next: id => {
-          this.stompClient.subscribe(`/user/${id}/queue/messages`, message=> {
-            if (message.body){
+          this.stompClient.subscribe(`/user/${id}/queue/messages`, message => {
+            if (message.body) {
               this.onMessageReceived(JSON.parse(message.body));
             }
           });
 
-          this.stompClient.subscribe(`/user/${id}/queue/errors`, error=> {
-            if (error.body){
+          this.stompClient.subscribe(`/user/${id}/queue/errors`, error => {
+            if (error.body) {
               this.onErrorReceived(JSON.parse(error.body))
             }
           })
-        }, error: err => {
+        }, error: err => {  
           console.log(err);
         }
       })
     })
   }
 
-  sendMessage(chatMessage: any){
+  sendMessage(chatMessage: any) {
     this.stompClient.send('/app/chat', {}, JSON.stringify(chatMessage));
   }
 
@@ -101,7 +101,7 @@ export class WebSocketService {
   onNewMessage(): Observable<any> {
     return this.messageSubject.asObservable();
   }
-  onNewError(): Observable<any>{
+  onNewError(): Observable<any> {
     return this.webSocketError.asObservable();
   }
 
