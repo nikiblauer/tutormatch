@@ -7,8 +7,10 @@ import com.icegreen.greenmail.imap.AuthorizationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,10 +35,10 @@ public class LoginEndpoint {
         summary = "Login User")
     @PermitAll
     @PostMapping
-    public String login(@RequestBody UserLoginDto userLoginDto) {
-        LOGGER.info("POST /api/v1/authentication, user = {}", userLoginDto.getEmail());
-        return loginService.login(userLoginDto);
+    public String login(@RequestBody UserLoginDto userLoginDto, HttpServletRequest request) {
+        String origin = request.getHeader(HttpHeaders.ORIGIN);
+        LOGGER.info("POST /api/v1/authentication, user = {}, origin = {}", userLoginDto.getEmail(), origin);
+        return loginService.login(userLoginDto, origin);
     }
-
 
 }
