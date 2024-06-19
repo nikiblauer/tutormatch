@@ -47,8 +47,8 @@ const routes: Routes = [
       { path: 'students/:id', component: UserProfileComponent, data: { mode: UserMode.admin } },
       { path: 'students/feedback/:id', component: AdminFeedbackComponent },
       { path: 'subjects', component: SubjectComponent }
-    ]}, 
-    {path: '**', redirectTo: 'login'}
+    ]
+  }
 ];
 
 @NgModule({
