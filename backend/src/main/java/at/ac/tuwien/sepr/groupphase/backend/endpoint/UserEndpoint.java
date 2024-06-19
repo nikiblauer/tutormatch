@@ -164,7 +164,7 @@ public class UserEndpoint {
     @Operation(
         description = "Get the contact details of any user.",
         summary = "Get UserDetails")
-    @PermitAll
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("{id}")
     public StudentBaseInfoDto getUserDetailsById(@PathVariable("id") Long id) {
         ApplicationUser user = userService.findApplicationUserById(id);
@@ -174,7 +174,7 @@ public class UserEndpoint {
     @Operation(
         description = "Get all subjects that are mapped to a user via his id.",
         summary = "Get subject of user by id")
-    @PermitAll
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("{id}/subjects")
     @ResponseStatus(HttpStatus.OK)
     public StudentSubjectsDto getUserSubjectsById(@PathVariable("id") Long id) {
@@ -187,7 +187,7 @@ public class UserEndpoint {
     @Operation(
         description = "Get all subjects that are mapped to a user via his email.",
         summary = "Get subject of user by email")
-    @PermitAll
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("subjects")
     @ResponseStatus(HttpStatus.OK)
     public StudentSubjectsDto getUserSubjectsByEmail() {
@@ -206,7 +206,7 @@ public class UserEndpoint {
         return user.getId();
     }
 
-    @PermitAll
+    @Secured("ROLE_USER")
     @GetMapping("/visibility")
     @ResponseStatus(HttpStatus.OK)
     public boolean getVisibilityOfUser() {
