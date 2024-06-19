@@ -7,12 +7,14 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Banned;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ContactDetails;
+import at.ac.tuwien.sepr.groupphase.backend.entity.UserBlock;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.BanRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.FeedbackRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.RatingRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ReportRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserBlockRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
@@ -47,13 +49,15 @@ public class CustomUserDetailService implements UserService {
     private final EmailSmtpService emailService;
     private final RatingRepository ratingRepository;
     private final FeedbackRepository feedbackRepository;
+    private final UserBlockRepository userBlockRepository;
     private final ReportRepository reportRepository;
 
     @Autowired
     public CustomUserDetailService(UserRepository userRepository, BanRepository banRepository,
                                    PasswordEncoder passwordEncoder, JwtTokenizer jwtTokenizer,
                                    UserValidator validator, EmailSmtpService emailService,
-                                   RatingRepository ratingRepository, FeedbackRepository feedbackRepository, ReportRepository reportRepository) {
+                                   RatingRepository ratingRepository, FeedbackRepository feedbackRepository,
+                                   ReportRepository reportRepository, UserBlockRepository userBlockRepository) {
         this.userRepository = userRepository;
         this.banRepository = banRepository;
         this.passwordEncoder = passwordEncoder;
@@ -61,6 +65,7 @@ public class CustomUserDetailService implements UserService {
         this.validator = validator;
         this.emailService = emailService;
         this.ratingRepository = ratingRepository;
+        this.userBlockRepository = userBlockRepository;
         this.feedbackRepository = feedbackRepository;
         this.reportRepository = reportRepository;
     }
@@ -199,6 +204,42 @@ public class CustomUserDetailService implements UserService {
         } else {
             throw new NotFoundException("User not found");
         }
+    }
+
+    @Override
+    public void blockUser(Long userId, Long userIdToBlock) {
+        LOGGER.trace("Block user with id: {} blocks user with id: {}", userId, userIdToBlock);
+        if (userId.equals(userIdToBlock)) {
+            throw new IllegalArgumentException("A user cannot block themselves");
+        }
+
+        ApplicationUser user = userRepository.findById(userId)
+            .orElseThrow(() -> new NotFoundException(String.format("User with id %d not found", userId)));
+        ApplicationUser userToBlock = userRepository.findById(userIdToBlock)
+            .orElseThrow(() -> new NotFoundException(String.format("User with id %d not found", userIdToBlock)));
+
+        UserBlock userBlock = new UserBlock();
+        userBlock.setUser(user);
+        userBlock.setBlockedUser(userToBlock);
+
+        userBlockRepository.save(userBlock);
+    }
+
+    @Override
+    public void unblockUser(Long userId, Long userIdToUnblock) {
+        LOGGER.trace("Unblock user with id: {} unblocks user with id: {}", userId, userIdToUnblock);
+        UserBlock userBlock = userBlockRepository.findByUserAndBlockedUser(userId, userIdToUnblock)
+            .orElseThrow(() -> new NotFoundException(String.format("No block found for user with id %d by user with id %d", userIdToUnblock, userId)));
+
+        userBlockRepository.delete(userBlock);
+    }
+
+    @Override
+    public List<Long> getBlockedUsers(Long userId) {
+        LOGGER.trace("Get blocked users for user with id: {}", userId);
+        userRepository.findById(userId)
+            .orElseThrow(() -> new NotFoundException(String.format("User with id %d not found", userId)));
+        return userBlockRepository.getBlockedUsers(userId);
     }
 
     @Override

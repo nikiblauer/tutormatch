@@ -212,6 +212,29 @@
   background-color: red;
 }
 
+.block-button-container .btn-block {
+  background-color: #33709C; 
+  color: white;
+}
+
+.block-button-container .btn-block:hover {
+  background-color: #4283b3;
+}
+
+.block-button-container .btn-unblock {
+  background-color: red; 
+  color: white;
+}
+
+.block-button-container .btn-unblock:hover {
+  background-color: #e86161; 
+}
+
+.block-button-container {
+  display: flex;
+  justify-content: center;
+}
+
 .sticky {
   overflow-y: auto;
   height: calc(64vh);
