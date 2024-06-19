@@ -72,7 +72,7 @@ public interface UserService extends UserDetailsService {
      * @return The created User Entry in the database
      * @throws ValidationException If any validation errors occur. (no name, ...)
      */
-    ApplicationUser create(CreateStudentDto applicationUserDto) throws ValidationException;
+    ApplicationUser create(CreateStudentDto applicationUserDto, String origin) throws ValidationException;
 
     /**
      * Finds a User with a given ID.
@@ -102,7 +102,7 @@ public interface UserService extends UserDetailsService {
     /**
      * sends a new verification email if user with this email exists and is not verified yet.
      */
-    void resendVerificationEmail(String email);
+    void resendVerificationEmail(String email, String origin);
 
     /**
      * Bans a user by creating a new Ban entity in the database.

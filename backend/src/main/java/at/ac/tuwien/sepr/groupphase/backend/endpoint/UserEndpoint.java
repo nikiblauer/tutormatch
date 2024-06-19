@@ -20,9 +20,11 @@ import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -66,9 +68,10 @@ public class UserEndpoint {
         summary = "Creates a new user")
     @PermitAll
     @PostMapping
-    public StudentDto create(@RequestBody CreateStudentDto toCreate) throws ValidationException {
-        LOGGER.info("POST /api/v1/user/ body: {}", toCreate);
-        ApplicationUser user = userService.create(toCreate);
+    public StudentDto create(@RequestBody CreateStudentDto toCreate, HttpServletRequest request) throws ValidationException {
+        String origin = request.getHeader(HttpHeaders.ORIGIN);
+        LOGGER.info("POST /api/v1/user/ body: {}, origin {}", toCreate, origin);
+        ApplicationUser user = userService.create(toCreate, origin);
         return mapper.applicationUserToDto(user);
     }
 
@@ -77,9 +80,10 @@ public class UserEndpoint {
         summary = "Resend verification email")
     @PermitAll
     @PostMapping(value = "/verify/resend")
-    public ResponseEntity resendVerificationEmail(@RequestBody Map<String, String> payload) {
-        LOGGER.info("POST /api/v1/user/ body: {}", payload);
-        userService.resendVerificationEmail(payload.get("email"));
+    public ResponseEntity resendVerificationEmail(@RequestBody Map<String, String> payload, HttpServletRequest request) {
+        String origin = request.getHeader(HttpHeaders.ORIGIN);
+        LOGGER.info("POST /api/v1/user/ body: {}, origin {}", payload, origin);
+        userService.resendVerificationEmail(payload.get("email"), origin);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -102,9 +106,10 @@ public class UserEndpoint {
         summary = "Request to reset password")
     @PostMapping(value = "/reset_password")
     @PermitAll
-    public ResponseEntity requestPasswordReset(@RequestBody EmailDto emailDto) {
-        LOGGER.info("GET api/v1/authentication/reset_password with email: {}", emailDto.email);
-        loginService.requestPasswordReset(emailDto.email);
+    public ResponseEntity requestPasswordReset(@RequestBody EmailDto emailDto, HttpServletRequest request) {
+        String origin = request.getHeader(HttpHeaders.ORIGIN);
+        LOGGER.info("GET api/v1/authentication/reset_password with email: {}, origin {}", emailDto.email, origin);
+        loginService.requestPasswordReset(emailDto.email, origin);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

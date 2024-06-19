@@ -100,7 +100,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser create(CreateStudentDto toCreate) throws ValidationException {
+    public ApplicationUser create(CreateStudentDto toCreate, String origin) throws ValidationException {
         LOGGER.trace("Create user by applicationUserDto: {}", toCreate);
         validator.validateForCreate(toCreate);
         if (userRepository.findApplicationUserByDetails_Email(toCreate.email) != null) {
@@ -118,7 +118,7 @@ public class CustomUserDetailService implements UserService {
             toCreate.matrNumber,
             details,
             false);
-        emailService.sendVerificationEmail(toCreate);
+        emailService.sendVerificationEmail(toCreate, origin);
         return userRepository.save(applicationUser);
     }
 
@@ -163,7 +163,7 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public void resendVerificationEmail(String email) {
+    public void resendVerificationEmail(String email, String origin) {
         LOGGER.trace("Resend verification email :{}", email);
         try {
             UserDetails userDetails = loadUserByUsername(email);
@@ -178,7 +178,7 @@ public class CustomUserDetailService implements UserService {
                     studentDto.setEmail(email);
                     studentDto.setFirstname(applicationUser.getFirstname());
                     studentDto.setLastname(applicationUser.getLastname());
-                    emailService.sendVerificationEmail(studentDto);
+                    emailService.sendVerificationEmail(studentDto, origin);
                 }
             }
         } catch (UsernameNotFoundException | NotFoundException e) {
