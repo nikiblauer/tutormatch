@@ -3,12 +3,12 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatMessageDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.WebSocketErrorDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.UserBlock;
 import at.ac.tuwien.sepr.groupphase.backend.exception.InvalidMessageException;
+import at.ac.tuwien.sepr.groupphase.backend.repository.UserBlockRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.ChatMessageService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import at.ac.tuwien.sepr.groupphase.backend.service.impl.CustomUserDetailService;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Controller;
 
 import java.lang.invoke.MethodHandles;
 import java.security.Principal;
-import java.util.Map;
+import java.util.Optional;
 
 
 @Controller
@@ -25,15 +25,17 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
 
     private final ChatMessageService chatMessageService;
+    private final UserBlockRepository userBlockRepository;
     private final UserService userService;
 
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public ChatController(SimpMessagingTemplate messagingTemplate, ChatMessageService chatMessageService, UserService userService) {
+    public ChatController(SimpMessagingTemplate messagingTemplate, ChatMessageService chatMessageService, UserService userService, UserBlockRepository userBlockRepository) {
         this.messagingTemplate = messagingTemplate;
         this.chatMessageService = chatMessageService;
         this.userService = userService;
+        this.userBlockRepository = userBlockRepository;
     }
 
     @MessageMapping("/chat")
@@ -48,6 +50,13 @@ public class ChatController {
             throw new InvalidMessageException("Sender does not match authenticated user.", authenticatedUserId);
         }
 
+        // Check if sender has blocked recipient or vice versa
+        Optional<UserBlock> senderBlockOptional = userBlockRepository.findByUserAndBlockedUser(chatMessageDto.getSenderId(), chatMessageDto.getRecipientId());
+        Optional<UserBlock> recipientBlockOptional = userBlockRepository.findByUserAndBlockedUser(chatMessageDto.getRecipientId(), chatMessageDto.getSenderId());
+        if (senderBlockOptional.isPresent() || recipientBlockOptional.isPresent()) {
+            LOGGER.warn("Chat messages is blocked.");
+            throw new InvalidMessageException("Recipient has blocked you/or you have blocked recipient.", authenticatedUserId);
+        }
 
         // Persist message in database
         if (!chatMessageService.saveChatMessage(chatMessageDto)) {

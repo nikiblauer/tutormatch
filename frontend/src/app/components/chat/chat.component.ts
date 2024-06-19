@@ -10,7 +10,8 @@ import {StudentDto} from "../../dtos/user";
 import {Subscription} from "rxjs";
 import {ReportService} from "../../services/report.service";
 import {ReportChatRoomDto} from "../../dtos/report";
-import { Modal } from 'bootstrap';
+import { HttpResponse } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-chat',
@@ -35,8 +36,12 @@ export class ChatComponent implements OnInit {
   info: boolean;
   messageReceived: ChatMessageDto;
   messageSubscription: Subscription;
-  errorSubscription: Subscription;
   reportReason: string = "";
+  errorSubscription: Subscription;
+  // Arrays to store blocked users for the sender and recipient
+  blockedUsers: number[] = [];
+  senderBlockedUsers: number[] = [];
+  recipientBlockedUsers: number[] = [];
 
   constructor(private chatService: ChatService,
               private userService: UserService,
@@ -50,6 +55,7 @@ export class ChatComponent implements OnInit {
   ngOnInit() {
     this.getChatRoomsForUser();
     this.scrollToBottom();
+    this.fetchBlockedUsers(this.user1, true);
     this.messageSubscription = this.webSocketService.onNewMessage().subscribe(receivedMessage => {
       this.messages.push(receivedMessage);
       this.scrollToBottom();
@@ -85,6 +91,8 @@ export class ChatComponent implements OnInit {
   setActiveChatRoom(chatRoom: ChatRoomDto) {
     this.activeChatRoom = chatRoom;
     this.user1 = chatRoom.senderId;
+    this.fetchBlockedUsers(chatRoom.senderId, true); // fetch blocked users for the sender
+    this.fetchBlockedUsers(chatRoom.recipientId, false); // fetch blocked users for the recipient
     this.user1Name = chatRoom.senderFirstName + " " + chatRoom.senderLastName;
     this.user2 = chatRoom.recipientId;
     this.user2Name = chatRoom.recipientFirstName + " " + chatRoom.recipientLastName;
@@ -107,6 +115,10 @@ export class ChatComponent implements OnInit {
   }
 
   sendMessage() {
+    if (this.blockedUsers.includes(this.user2)) {
+      return; // prevents sending msg to blocked user
+    }
+
     if (this.message.trim() == "") {
       return; // prevents sending empty msg
     }
@@ -133,7 +145,7 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  getCharsLeft(){
+  getCharsLeft() {
     return this.message.length;
   }
 
@@ -173,6 +185,52 @@ export class ChatComponent implements OnInit {
 
   public getSelectedUserAddressAsString(user: StudentDto) {
     return StudentDto.getAddressAsString(user);
+  }
+
+  // method to block or unblock users, if the user is already blocked, unblock the user, if not, block the user
+  blockUser(userId: number) {
+    if (this.senderBlockedUsers.includes(userId) || this.recipientBlockedUsers.includes(userId)) {
+      // Unblock the user
+      this.chatService.unblockUser(userId).subscribe((response: HttpResponse<any>) => {
+        const indexSender = this.senderBlockedUsers.indexOf(userId);
+        const indexRecipient = this.recipientBlockedUsers.indexOf(userId);
+        if (indexSender > -1) { // check if the user is blocked by the sender
+          this.senderBlockedUsers.splice(indexSender, 1); // remove the user from the blocked users list
+        }
+        if (indexRecipient > -1) { // check if the user is blocked by the recipient
+          this.recipientBlockedUsers.splice(indexRecipient, 1); // remove the user from the blocked users list
+        }
+      }, error => {
+        console.error(`Error unblocking user with ID ${userId}:`, error);
+      });
+    } else {
+      // Block the user
+      this.chatService.blockUser(userId).subscribe((response: HttpResponse<any>) => {
+        this.senderBlockedUsers.push(userId);
+        this.recipientBlockedUsers.push(userId);
+      }, error => {
+        console.error(`Error blocking user with ID ${userId}:`, error);
+      });
+    }
+  }
+
+  // fetches blocked users for the sender and recipient and saves it in the respective arrays for both users
+  fetchBlockedUsers(userId: number, isSender: boolean) {
+    console.log(userId);
+    this.chatService.getBlockedUsers(userId).subscribe(blockedUsers => {
+      if (isSender) {
+        this.senderBlockedUsers = blockedUsers;
+      } else {
+        this.recipientBlockedUsers = blockedUsers;
+      }
+      if (blockedUsers.includes(userId)) {
+        console.log('User is blocked');
+      } else {
+        console.log('User is not blocked');
+      }
+    }, error => {
+      console.error('Error fetching blocked users:', error);
+    });
   }
 
   submitReport() {
