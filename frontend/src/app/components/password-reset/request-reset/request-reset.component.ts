@@ -51,12 +51,12 @@ export class RequestResetComponent {
             this.spinner.hide();
             this.notification.error(error.error, "Sending password reset email failed");
             this.submitted = false;
-            console.log("Error sending password reset email",error.error);
+            console.error("Error sending password reset email",error.error);
           }
         }
       );
     } else {
-      console.log('Invalid input');
+      console.error('Invalid input');
     }
   }
 }

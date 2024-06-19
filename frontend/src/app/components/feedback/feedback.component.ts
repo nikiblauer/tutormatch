@@ -42,7 +42,7 @@ export class FeedbackComponent implements OnInit{
         this.receivedFeedback = receivedFeedback;
       },
       error: error => {
-        console.log(error);
+        console.error(error);
         if (error.status == 404) {
           this.receivedFeedback = [];
           return;
@@ -58,7 +58,7 @@ export class FeedbackComponent implements OnInit{
         this.writtenFeedback = writtenFeedback;
       },
       error: error => {
-        console.log(error);
+        console.error(error);
         if (error.status == 404) {
           this.receivedFeedback = [];
           return;
@@ -86,7 +86,6 @@ export class FeedbackComponent implements OnInit{
   }
 
   submitReport() {
-    console.log(this.reportFeedback);
     this.reportService.reportUserFeedback(this.reportFeedback, this.reportReason).subscribe({
         next: () => {
           this.notification.success("Successfully Reported.");

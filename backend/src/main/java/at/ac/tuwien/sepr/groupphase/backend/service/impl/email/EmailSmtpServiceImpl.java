@@ -31,8 +31,6 @@ public class EmailSmtpServiceImpl implements EmailSmtpService {
 
     private final JwtTokenizer jwtTokenizer;
 
-
-
     @Value("${spring.mail.username}")
     private String senderEmail;
 
@@ -59,7 +57,7 @@ public class EmailSmtpServiceImpl implements EmailSmtpService {
             Map<String, Object> variables = new HashMap<>();
             variables.put("full_name", dto.getFirstname() + " " + dto.getLastname());
             String token = jwtTokenizer.buildVerificationToken(dto.getEmail());
-            variables.put("verification_link", "http://localhost:4200/#/register/verify/" + token);
+            variables.put("verification_link", "http://localhost:4200/register/verify/" + token);
             helper.setText(thymeleafService.createContent("verification_email.html", variables), true);
             helper.setFrom(senderEmail);
             mailSender.send(message);
@@ -84,7 +82,7 @@ public class EmailSmtpServiceImpl implements EmailSmtpService {
             Map<String, Object> variables = new HashMap<>();
             variables.put("full_name", dto.getFirstname() + " " + dto.getLastname());
             String token = jwtTokenizer.buildVerificationToken(dto.getDetails().getEmail());
-            variables.put("password_reset_link", "http://localhost:4200/#/password_reset/" + token);
+            variables.put("password_reset_link", "http://localhost:4200/password_reset/" + token);
             helper.setText(thymeleafService.createContent("password_reset_email.html", variables), true);
             helper.setFrom(senderEmail);
             mailSender.send(message);

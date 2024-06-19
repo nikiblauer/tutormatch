@@ -74,7 +74,7 @@ export class ReportsComponent implements OnInit {
         next: messages => {
         this.messages = messages;
         }, error: error => {
-        console.log(error);
+        console.error(error);
         this.notification.error(error.error, "Messages could not be loaded")
       }
     })
@@ -104,7 +104,6 @@ export class ReportsComponent implements OnInit {
   onBanSubmit(modal: NgbActiveModal) {
     if (this.banForm.valid) {
       const reason = this.banForm.value.banReason;
-      console.log(`Banning user ${this.selectedBanUser} for reason: ${reason}`);
 
       this.withSpinner(this.adminService.banUser(this.selectedBanUser.id, reason), this.spinner)
         .subscribe({
@@ -132,7 +131,7 @@ export class ReportsComponent implements OnInit {
         this.notification.success( "Removed report!");
         this.load();
       }, error: error => {
-        console.log(error);
+        console.error(error);
         this.notification.error(error.error, "Report could not be removed")
       }
     });

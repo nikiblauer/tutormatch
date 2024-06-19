@@ -57,7 +57,7 @@ export class AdminFeedbackComponent {
         this.writtenFeedback = writtenFeedback;
       },
       error: error => {
-        console.log(error);
+        console.error(error);
         if (error.status == 404) {
           this.writtenFeedback = [];
           return;
@@ -87,7 +87,6 @@ export class AdminFeedbackComponent {
   onBanSubmit(modal: NgbActiveModal) {
     if (this.banForm.valid) {
       const reason = this.banForm.value.banReason;
-      console.log(`Banning user ${this.selectedStudentDetails} for reason: ${reason}`);
       this.adminService.banUser(this.userId, reason).subscribe({
           next: (_) => {
             this.notification.success(`User  ${this.selectedStudentDetails} banned`);

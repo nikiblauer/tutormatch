@@ -276,7 +276,7 @@ export class UserProfileComponent implements OnInit {
 
 
   private handleError(error: HttpErrorResponse) {
-    console.log(error.error);
+    console.error(error.error);
     if (error.status === 400 || error.status === 422) {
       const errorString = error.error;
       const startIndex = errorString.indexOf("[");

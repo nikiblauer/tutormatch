@@ -1,13 +1,13 @@
-import { Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {WebSocketService} from "../../services/web-socket.service";
-import {ChatMessageDto, ChatRoomDto} from "../../dtos/chat";
-import {ChatService} from "../../services/chat.service";
-import {UserService} from "../../services/user.service";
-import {RatingService} from "../../services/rating.service";
-import {NgxSpinnerService} from "ngx-spinner";
-import {ToastrService} from "ngx-toastr";
-import {StudentDto} from "../../dtos/user";
-import {Subscription} from "rxjs";
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { WebSocketService } from "../../services/web-socket.service";
+import { ChatMessageDto, ChatRoomDto } from "../../dtos/chat";
+import { ChatService } from "../../services/chat.service";
+import { UserService } from "../../services/user.service";
+import { RatingService } from "../../services/rating.service";
+import { NgxSpinnerService } from "ngx-spinner";
+import { ToastrService } from "ngx-toastr";
+import { StudentDto } from "../../dtos/user";
+import { Subscription } from "rxjs";
 import {ReportService} from "../../services/report.service";
 import {ReportChatRoomDto} from "../../dtos/report";
 import { HttpResponse } from '@angular/common/http';
@@ -18,8 +18,7 @@ import { HttpResponse } from '@angular/common/http';
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
-
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, AfterViewInit {
   @ViewChild('chatHistory') private chatHistoryContainer: ElementRef;
   message: string = "";
   user1: number = 1;
@@ -62,8 +61,12 @@ export class ChatComponent implements OnInit {
     });
     this.errorSubscription = this.webSocketService.onNewError().subscribe(error => {
       this.notification.error(error.errorMsg, "Error sending message: ")
-    })
+    });
     this.webSocketService.connect();
+  }
+
+  ngAfterViewInit() {
+    this.scrollToBottom();
   }
 
   onSearch() {
@@ -83,9 +86,9 @@ export class ChatComponent implements OnInit {
           this.setActiveChatRoom(this.filteredChatRooms[0]);
         }
       }, error: error => {
-        console.log(error);
+        console.error(error);
       }
-    })
+    });
   }
 
   setActiveChatRoom(chatRoom: ChatRoomDto) {
@@ -97,6 +100,7 @@ export class ChatComponent implements OnInit {
     this.user2 = chatRoom.recipientId;
     this.user2Name = chatRoom.recipientFirstName + " " + chatRoom.recipientLastName;
     this.loadHistory();
+    // Ensure scrollToBottom is called after the view updates
     this.scrollToBottom();
   }
 
@@ -107,11 +111,13 @@ export class ChatComponent implements OnInit {
     this.chatService.getMessagesByChatRoomId(this.activeChatRoom.chatRoomId).subscribe({
       next: messages => {
         this.messages = messages;
+        // Ensure scrollToBottom is called after messages are loaded
+        this.scrollToBottom();
       }, error: error => {
-        console.log(error);
+        console.error(error);
         this.notification.error(error.error, "Messages could not be loaded")
       }
-    })
+    });
   }
 
   sendMessage() {
@@ -137,9 +143,11 @@ export class ChatComponent implements OnInit {
 
   scrollToBottom(): void {
     try {
-      setTimeout(() => {
-        this.chatHistoryContainer.nativeElement.scrollTop = this.chatHistoryContainer.nativeElement.scrollHeight;
-      }, 50);
+      if (this.chatHistoryContainer) {
+        setTimeout(() => {
+          this.chatHistoryContainer.nativeElement.scrollTop = this.chatHistoryContainer.nativeElement.scrollHeight;
+        }, 50);
+      }
     } catch (err) {
       console.error('Error scrolling to bottom:', err);
     }
@@ -148,7 +156,6 @@ export class ChatComponent implements OnInit {
   getCharsLeft() {
     return this.message.length;
   }
-
 
   recipientInfo() {
     this.info = true;
@@ -165,7 +172,7 @@ export class ChatComponent implements OnInit {
         console.error("Error when user match details", error);
         this.notification.error(error.error, "Something went wrong!");
       }
-    })
+    });
     this.ratingService.getRatingFromUser(this.user2).subscribe({
       next: (value) => {
         this.selectedUserRating = value;
@@ -176,7 +183,7 @@ export class ChatComponent implements OnInit {
         console.error("Error when getting match rating", err);
         this.notification.error(err.error, "Something went wrong!");
       }
-    })
+    });
   }
 
   public closeInfo() {
@@ -237,7 +244,6 @@ export class ChatComponent implements OnInit {
     let r = new ReportChatRoomDto();
     r.chatId = this.activeChatRoom.chatRoomId;
     r.reason = this.reportReason;
-    console.log(r)
     this.reportService.reportUserChat(r).subscribe({
         next: () => {
           this.notification.success("Successfully Reported.");

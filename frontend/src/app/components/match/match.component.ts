@@ -128,7 +128,7 @@ export class MatchComponent implements OnInit {
                 this.router.navigate(["/chat"])
               }, error: error => {
                 this.notification.error("Chat Creation Failed")
-                console.log(error);
+                console.error(error);
               }
             })
           } else {
@@ -136,7 +136,7 @@ export class MatchComponent implements OnInit {
           }
 
         }, error: err => {
-          console.log(err)
+          console.error(err)
         }
     }
 
