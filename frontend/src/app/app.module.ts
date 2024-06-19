@@ -24,6 +24,7 @@ import {ChatComponent} from "./components/chat/chat.component";
 import {WebSocketService} from "./services/web-socket.service";
 import {StarRatingComponent} from "./components/rating/rating.component";
 import {ReportsComponent} from "./components/admin/reports/reports.component";
+import {NotFoundComponent} from "./components/not-found/not-found.component";
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {ReportsComponent} from "./components/admin/reports/reports.component";
     SubjectComponent,
     ChatComponent,
     StarRatingComponent,
-    ReportsComponent
+    ReportsComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
