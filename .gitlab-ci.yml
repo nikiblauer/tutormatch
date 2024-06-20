@@ -85,6 +85,6 @@ deploy:
     name: development
   script: 
     - cp backend/src/main/resources/static/index.html backend/src/main/resources/static/404.html 
-    - curl -H 'X-DeployToken: '$DEPLOY_TOKEN -H 'Content-type: application/json' -vf -XPUT --data '{"image": "'$CI_PROJECT_PATH'", "tag": "'$CI_PIPELINE_ID'"}' https://reset.inso.tuwien.ac.at/api/dockerDeployment
+    - curl -H "X-DeployToken: $DEPLOY_TOKEN" -H "Content-type: application/json" -vf -XPUT --data "{\"image\": \"$CI_PROJECT_PATH\", \"tag\": \"$CI_PIPELINE_ID\"}" https://reset.inso.tuwien.ac.at/api/dockerDeployment
   only:
     - master
