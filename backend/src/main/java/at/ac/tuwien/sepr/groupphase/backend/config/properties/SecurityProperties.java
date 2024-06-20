@@ -25,10 +25,6 @@ public class SecurityProperties {
         return auth.getPrefix();
     }
 
-    public String getLoginUri() {
-        return auth.getLoginUri();
-    }
-
     public String getJwtSecret() {
         return jwt.getSecret();
     }
