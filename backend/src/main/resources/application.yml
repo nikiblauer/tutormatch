@@ -42,7 +42,7 @@ spring:
 
   spring:
     resources:
-      static-locations: classpath:/static/, classpath:/index.html
+      static-locations: classpath:/index.html
 
 security:
   auth:
