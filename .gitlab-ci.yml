@@ -73,7 +73,7 @@ build-image:
   script:
     - mkdir -p backend/src/main/resources/static/
     - cp -rv frontend/dist/sepr-group-phase/browser/* gitinspector.html backend/src/main/resources/static/
-    - cp /frontend/dist/sepr-group-phase/browser/index.html /frontend/dist/sepr-group-phase/browser/404.html
+    - cp frontend/dist/sepr-group-phase/browser/index.html frontend/dist/sepr-group-phase/browser/404.html
     - cd backend
     - mvn -B clean install -DskipTests
     - mvn -B jib:build -Djib.to.image=registry.reset.inso-w.at/$CI_PROJECT_PATH -Djib.to.tags=$CI_PIPELINE_ID -Djib.to.auth.username=$CI_REGISTRY_USER -Djib.to.auth.password=$CI_REGISTRY_PASSWORD
