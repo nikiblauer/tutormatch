@@ -36,6 +36,13 @@ spring:
           starttls:
             enable: true
 
+  resources:
+    static-locations: classpath:/frontend/dist/sepr-group-phase/browser/
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 security:
   auth:
     header: Authorization
