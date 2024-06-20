@@ -1,23 +1,15 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormsModule, NgForm } from "@angular/forms";
-import { PasswordResetDto, SendPasswordResetDto } from "../../dtos/user";
+import { FormGroup, NgForm } from "@angular/forms";
+import { PasswordResetDto, } from "../../dtos/user";
 import { UserService } from "../../services/user.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ToastrService } from "ngx-toastr";
-import { NgxSpinnerComponent, NgxSpinnerService } from "ngx-spinner";
-import { NgClass, NgIf } from "@angular/common";
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-password-reset',
-  standalone: true,
-  imports: [
-    FormsModule,
-    NgIf,
-    NgxSpinnerComponent,
-    NgClass
-  ],
   templateUrl: './password-reset.component.html',
-  styleUrl: './password-reset.component.scss'
+  styleUrls: ['./password-reset.component.scss']
 })
 export class PasswordResetComponent {
   form: FormGroup;

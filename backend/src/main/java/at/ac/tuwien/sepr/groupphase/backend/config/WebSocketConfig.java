@@ -30,11 +30,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    @Autowired
-    private JwtTokenizer jwtTokenizer;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private WebSocketSecurityConfig webSocketSecurityConfig;
