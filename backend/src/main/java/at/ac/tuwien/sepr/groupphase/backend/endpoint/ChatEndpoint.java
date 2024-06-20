@@ -81,6 +81,10 @@ public class ChatEndpoint {
         return chatRoomService.createChatRoom(user, chatRoomCreateDto);
     }
 
+    @Operation(
+        description = "Checks if a chatroom with recipient exists.",
+        summary = "Check if chatroom exists"
+    )
     @Secured("ROLE_USER")
     @GetMapping("/room/recipient/{id}")
     public Boolean checkChatRoomExistsByRecipient(@PathVariable(name = "id") Long recipientId) {

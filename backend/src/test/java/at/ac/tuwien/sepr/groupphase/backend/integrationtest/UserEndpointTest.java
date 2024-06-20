@@ -242,7 +242,9 @@ public class UserEndpointTest extends BaseTest {
             .mapToLong(Long::longValue)
             .toArray();
         // Perform a GET request to the "/api/v1/user/{id}/subjects" endpoint
-        MvcResult result = mockMvc.perform(get("/api/v1/user/" + expectedUser.getId() + "/subjects"))
+        MvcResult result = mockMvc.perform(get("/api/v1/user/" + expectedUser.getId() + "/subjects")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(users.getFirst().getDetails().getEmail(), USER_ROLES))
+            )
             .andExpect(status().isOk())
             .andReturn();
 

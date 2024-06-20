@@ -164,7 +164,7 @@ public class UserEndpoint {
     @Operation(
         description = "Get the contact details of any user.",
         summary = "Get UserDetails")
-    @PermitAll
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("{id}")
     public StudentBaseInfoDto getUserDetailsById(@PathVariable("id") Long id) {
         ApplicationUser user = userService.findApplicationUserById(id);
@@ -174,7 +174,7 @@ public class UserEndpoint {
     @Operation(
         description = "Get all subjects that are mapped to a user via his id.",
         summary = "Get subject of user by id")
-    @PermitAll
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("{id}/subjects")
     @ResponseStatus(HttpStatus.OK)
     public StudentSubjectsDto getUserSubjectsById(@PathVariable("id") Long id) {
@@ -187,7 +187,7 @@ public class UserEndpoint {
     @Operation(
         description = "Get all subjects that are mapped to a user via his email.",
         summary = "Get subject of user by email")
-    @PermitAll
+    @Secured({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("subjects")
     @ResponseStatus(HttpStatus.OK)
     public StudentSubjectsDto getUserSubjectsByEmail() {
@@ -198,6 +198,10 @@ public class UserEndpoint {
     }
 
     // Needed for setting up websockets in frontend
+    @Operation(
+        description = "Retrieves UserId for sent token.",
+        summary = "Get UserId"
+    )
     @Secured("ROLE_USER")
     @GetMapping("id")
     public Long getUserId() {
@@ -206,7 +210,11 @@ public class UserEndpoint {
         return user.getId();
     }
 
-    @PermitAll
+    @Operation(
+        description = "Get visibility status of user.",
+        summary = "Get visibility"
+    )
+    @Secured("ROLE_USER")
     @GetMapping("/visibility")
     @ResponseStatus(HttpStatus.OK)
     public boolean getVisibilityOfUser() {
@@ -215,6 +223,10 @@ public class UserEndpoint {
         return userService.getVisibility(user);
     }
 
+    @Operation(
+        description = "Set the visibility of a user.",
+        summary = "Set visibility"
+    )
     @Secured("ROLE_USER")
     @PutMapping("/visibility")
     public void setVisibilityOfUser(@RequestBody Boolean flag) {
