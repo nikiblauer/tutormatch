@@ -10,15 +10,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-feedback',
-  standalone: true,
-  imports: [
-    NgForOf,
-    RouterLink,
-    FormsModule,
-    DatePipe
-  ],
   templateUrl: './feedback.component.html',
-  styleUrl: './feedback.component.scss'
+  styleUrls: ['./feedback.component.scss']
 })
 export class FeedbackComponent implements OnInit{
   public receivedFeedback: FeedbackDto[] = [];

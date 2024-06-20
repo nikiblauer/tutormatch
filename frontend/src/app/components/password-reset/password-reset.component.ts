@@ -9,15 +9,8 @@ import { NgClass, NgIf } from "@angular/common";
 
 @Component({
   selector: 'app-password-reset',
-  standalone: true,
-  imports: [
-    FormsModule,
-    NgIf,
-    NgxSpinnerComponent,
-    NgClass
-  ],
   templateUrl: './password-reset.component.html',
-  styleUrl: './password-reset.component.scss'
+  styleUrls: ['./password-reset.component.scss']
 })
 export class PasswordResetComponent {
   form: FormGroup;

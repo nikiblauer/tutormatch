@@ -10,17 +10,9 @@ import {FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
-  selector: 'app-feedback',
-  standalone: true,
-  imports: [
-    DatePipe,
-    NgIf,
-    NgForOf,
-    RouterLink,
-    ReactiveFormsModule
-  ],
+  selector: 'app-admin-feedback',
   templateUrl: './admin-feedback.component.html',
-  styleUrl: './admin-feedback.component.scss'
+  styleUrls: ['./admin-feedback.component.scss']
 })
 export class AdminFeedbackComponent {
   public writtenFeedback: FeedbackDto[] = [];

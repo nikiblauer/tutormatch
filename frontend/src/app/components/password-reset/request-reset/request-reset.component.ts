@@ -17,13 +17,6 @@ import {NgxSpinnerComponent, NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-request-reset',
-  standalone: true,
-  imports: [
-    NgIf,
-    ReactiveFormsModule,
-    FormsModule,
-    NgxSpinnerComponent
-  ],
   templateUrl: './request-reset.component.html',
   styleUrl: './request-reset.component.scss'
 })
