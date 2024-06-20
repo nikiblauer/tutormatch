@@ -18,12 +18,13 @@ import java.nio.file.Paths;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Controller
 public class FallbackController {
-    @RequestMapping(value = "/**/{path:[^\\.]*}", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/{path:^(?!api).*$}", method = RequestMethod.GET)
     @ResponseBody
-    public String redirect(HttpServletRequest request) throws IOException {
-        Resource resource = new ClassPathResource("/frontend/dist/sepr-group-phase/browser/index.html");
+    public String redirect() throws IOException {
+        ClassPathResource resource = new ClassPathResource("/frontend/dist/sepr-group-phase/browser/index.html");
         Path path = Paths.get(resource.getURI());
-        String content = new String(Files.readAllBytes(path), "UTF-8");
-        return content;
+        return new String(Files.readAllBytes(path), "UTF-8");
     }
+
 }
