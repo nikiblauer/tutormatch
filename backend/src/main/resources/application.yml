@@ -38,7 +38,7 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-    static-path-pattern: /static/**
+    static-path-pattern: /**
   web:
     resources:
       static-locations: classpath:/frontend/dist/sepr-group-phase/browser/
