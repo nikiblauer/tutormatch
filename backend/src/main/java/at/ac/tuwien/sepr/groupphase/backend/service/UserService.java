@@ -72,7 +72,7 @@ public interface UserService extends UserDetailsService {
      * @return The created User Entry in the database
      * @throws ValidationException If any validation errors occur. (no name, ...)
      */
-    ApplicationUser create(CreateStudentDto applicationUserDto) throws ValidationException;
+    ApplicationUser create(CreateStudentDto applicationUserDto, String origin) throws ValidationException;
 
     /**
      * Finds a User with a given ID.
@@ -102,7 +102,7 @@ public interface UserService extends UserDetailsService {
     /**
      * sends a new verification email if user with this email exists and is not verified yet.
      */
-    void resendVerificationEmail(String email);
+    void resendVerificationEmail(String email, String origin);
 
     /**
      * Bans a user by creating a new Ban entity in the database.
@@ -137,4 +137,30 @@ public interface UserService extends UserDetailsService {
      * @param user the user for whom the visibility is updated.
      */
     void updateVisibility(boolean flag, ApplicationUser user);
+
+    /**
+     * Blocks a user if the user is not already blocked.
+     * Blocking takes place in info modal in chat room
+     *
+     * @param userId        the user who wants to block another user
+     * @param userIdToBlock the user who should be blocked
+     */
+    void blockUser(Long userId, Long userIdToBlock);
+
+    /**
+     * Unblocks a user if the user is blocked.
+     *
+     * @param userIdToUnblock the user who should be unblocked
+     * @param userId the user who wants to unblock another user
+     */
+    void unblockUser(Long userId, Long userIdToUnblock);
+
+
+    /**
+     * Gets a list of all user IDs that the user with the given ID has blocked.
+     *
+     * @param userId the user for whom to retrieve the blocked users
+     * @return a list of user IDs that the user has blocked
+     */
+    List<Long> getBlockedUsers(Long userId);
 }

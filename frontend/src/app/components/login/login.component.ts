@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
       const authRequest: AuthRequest = new AuthRequest(this.loginForm.controls.username.value, this.loginForm.controls.password.value);
       this.authenticateUser(authRequest);
     } else {
-      console.log('Invalid input');
+      console.error('Invalid input');
     }
   }
 
@@ -49,22 +49,17 @@ export class LoginComponent implements OnInit {
    * @param authRequest authentication data from the user login form
    */
   authenticateUser(authRequest: AuthRequest) {
-    console.log('Try to authenticate user: ' + authRequest.email);
-  
     this.spinner.show();
     this.authService.loginUser(authRequest).subscribe({
       next: () => {
         this.spinner.hide();
         if (this.mode === LoginMode.admin && this.isAdmin()) {
-          console.log('Successfully logged in admin: ' + authRequest.email);
           this.router.navigate(['/admin/dashboard']);
         } else if (this.mode === LoginMode.admin){
           this.handleError({ error: 'Invalid admin email' });
         } else if (this.mode === LoginMode.user && this.isAdmin()) {
-          console.log('Successfully logged in admin: ' + authRequest.email);
           this.router.navigate(['/admin/dashboard']);
         } else if (this.mode === LoginMode.user) {
-          console.log('Successfully logged in user: ' + authRequest.email);
           this.router.navigate(['/matches']);
         }
       },
@@ -76,8 +71,7 @@ export class LoginComponent implements OnInit {
   }
 
   private handleError(error: any): void {
-    console.log('Could not log in due to:');
-    console.log(error);
+    console.error(error);
     let errorMessage = ""
     if (typeof error.error === 'object') {
       errorMessage = error.error.error;

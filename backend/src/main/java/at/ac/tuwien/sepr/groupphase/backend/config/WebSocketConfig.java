@@ -95,6 +95,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         LOGGER.trace("configureClientInboundChannel({})", registration);
         registration.interceptors(webSocketSecurityConfig);
     }
-
 }
 

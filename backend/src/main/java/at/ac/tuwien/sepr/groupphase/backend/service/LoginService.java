@@ -14,14 +14,14 @@ public interface LoginService {
      * @return the JWT, if successful
      * @throws org.springframework.security.authentication.BadCredentialsException if credentials are bad
      */
-    String login(UserLoginDto userLoginDto);
+    String login(UserLoginDto userLoginDto, String origin);
 
     /**
      * sends a password reset email to user if email exists.
      *
      * @param email the email of the user
      */
-    void requestPasswordReset(String email);
+    void requestPasswordReset(String email, String origin);
 
     /**
      * changes token user password to new password if token is valid.

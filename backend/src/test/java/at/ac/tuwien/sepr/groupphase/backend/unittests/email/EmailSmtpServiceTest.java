@@ -56,7 +56,7 @@ public class EmailSmtpServiceTest extends BaseTest {
         testDto.setEmail(mailTo);
         testDto.setFirstname("Max");
         testDto.setLastname("Mustermann");
-        emailService.sendVerificationEmail(testDto);
+        emailService.sendVerificationEmail(testDto, "test.at");
 
         assertTrue(greenMail.waitForIncomingEmail(5000, 1));
         MimeMessage[] messages = greenMail.getReceivedMessagesForDomain(mailTo);
@@ -64,7 +64,7 @@ public class EmailSmtpServiceTest extends BaseTest {
         assertEquals(mailSubject, messages[0].getSubject());
         String body = GreenMailUtil.getBody(messages[0]).replaceAll("=\r?\n", "");
         assertThat(body, containsString("Max Mustermann"));
-        assertThat(body, containsString("/register/verify/"));
+        assertThat(body, containsString("test.at/register/verify/"));
     }
     @Test
 
@@ -77,7 +77,7 @@ public class EmailSmtpServiceTest extends BaseTest {
         testDto.setDetails(new ContactDetails(null,mailTo,null));
         testDto.setFirstname("Max");
         testDto.setLastname("Mustermann");
-        emailService.sendPasswordResetEmail(testDto);
+        emailService.sendPasswordResetEmail(testDto, "testdomain.at");
 
         assertTrue(greenMail.waitForIncomingEmail(5000, 1));
         MimeMessage[] messages = greenMail.getReceivedMessagesForDomain(mailTo);

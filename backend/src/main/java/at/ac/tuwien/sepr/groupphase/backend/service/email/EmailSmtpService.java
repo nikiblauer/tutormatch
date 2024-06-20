@@ -9,12 +9,12 @@ public interface EmailSmtpService {
      * Send a verification email to provided application user.
      *
      */
-    public void sendVerificationEmail(CreateStudentDto dto);
+    public void sendVerificationEmail(CreateStudentDto dto, String origin);
 
 
     /**
      * Send a password reset email to provided email.
      *
      */
-    void sendPasswordResetEmail(ApplicationUser email);
+    void sendPasswordResetEmail(ApplicationUser email, String origin);
 }

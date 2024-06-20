@@ -4,6 +4,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackDtoNamed;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingDto;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Feedback;
 
 public interface RatingService {
     /**
@@ -90,4 +91,6 @@ public interface RatingService {
      * @throws Exception if student is neither giver nor receiver of feedback with given deleteId
      */
     void deleteFeedbackByIdStudent(long deleteId, long requestUserId) throws Exception;
+
+    Feedback getFeedbackByFeedbackId(Long id);
 }
