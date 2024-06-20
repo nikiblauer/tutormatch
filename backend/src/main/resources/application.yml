@@ -35,6 +35,9 @@ spring:
           auth: true
           starttls:
             enable: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 security:
   auth:
@@ -48,6 +51,7 @@ security:
     audience: secure-app
     # 12 hours in milliseconds
     expiration-time: 43200000
+
 
 management:
   server:
