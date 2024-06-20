@@ -3,7 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.service.impl;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CoverageSubjectsStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TopStatisticsDto;
-import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
+import at.ac.tuwien.sepr.groupphase.backend.repository.ChatRoomRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.StatisticService;
@@ -19,14 +19,14 @@ public class StatisticsServiceImpl implements StatisticService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
-    private final SubjectRepository subjectRepository;
     private final UserSubjectRepository userSubjectRepository;
+    private final ChatRoomRepository chatRoomRepository;
 
     @Autowired
-    public StatisticsServiceImpl(UserRepository userRepository, SubjectRepository subjectRepository, UserSubjectRepository userSubjectRepository) {
+    public StatisticsServiceImpl(UserRepository userRepository, UserSubjectRepository userSubjectRepository, ChatRoomRepository chatRoomRepository) {
         this.userRepository = userRepository;
-        this.subjectRepository = subjectRepository;
         this.userSubjectRepository = userSubjectRepository;
+        this.chatRoomRepository = chatRoomRepository;
     }
 
     @Override
@@ -43,9 +43,7 @@ public class StatisticsServiceImpl implements StatisticService {
         statistics.setRegisteredVerifiedUsers((int) registeredUsers);
         statistics.setRegisteredUnverifiedUsers((int) unverifiedUsers);
         statistics.setRatioOfferedNeededSubjects(ratioOfferedNeededSubjects);
-
-        //TODO open chats, wait till chat is implemented, return now 5 for example value
-        statistics.setOpenChatsPerUser(5);
+        statistics.setOpenChatsPerUser((double) chatRoomRepository.count() / 2);
         return statistics;
     }
 
