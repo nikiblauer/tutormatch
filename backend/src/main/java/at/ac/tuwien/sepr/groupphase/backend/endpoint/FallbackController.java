@@ -23,9 +23,8 @@ public class FallbackController {
     @RequestMapping(value = "/**/{path:[^\\.]*}", method = RequestMethod.GET)
     @ResponseBody
     public String redirect(HttpServletRequest request) throws IOException {
-        Resource resource = new ClassPathResource("/index.html");
+        Resource resource = new ClassPathResource("/frontend/dist/sepr-group-phase/browser/index.html");
         Path path = Paths.get(resource.getURI());
-        String content = new String(Files.readAllBytes(path), "UTF-8");
-        return content;
+        return new String(Files.readAllBytes(path), "UTF-8");
     }
 }
