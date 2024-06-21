@@ -8,9 +8,6 @@ import {RatingService} from "../../services/rating.service";
 import {provideRouter, Router} from "@angular/router";
 import {CreateChatRoomDto} from "../../dtos/chat";
 import {ChatService} from "../../services/chat.service";
-import {timeout} from "rxjs";
-import {forEach} from "lodash";
-import contains from "@popperjs/core/lib/dom-utils/contains";
 
 
 @Component({
@@ -169,8 +166,9 @@ export class MatchComponent implements OnInit {
         this.matchNeeds = userProfile.subjects.filter(item => item.role == "tutor");
         this.matchOffer = userProfile.subjects.filter(item => item.role == "trainee");
       },
-      error: (e) => {
-        console.log(e)
+      error: (errorMessage) => {
+        console.log(errorMessage);
+        this.notification.error(errorMessage, "Loading of matches failed.")
       }
     });
   }
@@ -223,10 +221,6 @@ export class MatchComponent implements OnInit {
   }
 
   extractCourseNumber(courseString: string): string | null {
-    if (typeof courseString !== 'string') {
-      throw new TypeError('Input must be a string');
-    }
-
     const regex = /\b\d{3}\.\d{3}\b/;
     const match = courseString.match(regex);
     return match ? match[0] : null;
