@@ -20,7 +20,7 @@ export class Globals {
       return 'http://localhost:8080/ws';
     } else {
       // assume deployed somewhere and backend is available at same host/port as frontend
-      return window.location.protocol + '//' + window.location.host + window.location.pathname + 'ws';
+      return window.location.protocol + '//' + window.location.host + '/ws';
     }
   }
 }
