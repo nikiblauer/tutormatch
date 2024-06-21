@@ -1,16 +1,16 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { WebSocketService } from "../../services/web-socket.service";
-import { ChatMessageDto, ChatRoomDto } from "../../dtos/chat";
-import { ChatService } from "../../services/chat.service";
-import { UserService } from "../../services/user.service";
-import { RatingService } from "../../services/rating.service";
-import { NgxSpinnerService } from "ngx-spinner";
-import { ToastrService } from "ngx-toastr";
-import { StudentDto } from "../../dtos/user";
-import { Subscription } from "rxjs";
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {WebSocketService} from "../../services/web-socket.service";
+import {ChatMessageDto, ChatRoomDto} from "../../dtos/chat";
+import {ChatService} from "../../services/chat.service";
+import {UserService} from "../../services/user.service";
+import {RatingService} from "../../services/rating.service";
+import {NgxSpinnerService} from "ngx-spinner";
+import {ToastrService} from "ngx-toastr";
+import {StudentDto} from "../../dtos/user";
+import {Subscription} from "rxjs";
 import {ReportService} from "../../services/report.service";
 import {ReportChatRoomDto} from "../../dtos/report";
-import { HttpResponse } from '@angular/common/http';
+import {HttpResponse} from '@angular/common/http';
 
 
 @Component({
@@ -19,7 +19,6 @@ import { HttpResponse } from '@angular/common/http';
   styleUrl: './chat.component.scss'
 })
 export class ChatComponent implements OnInit, AfterViewInit {
-  @ViewChild('chatHistory') private chatHistoryContainer: ElementRef;
   message: string = "";
   user1: number = 1;
   user2: number = 2;
@@ -30,7 +29,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   filteredChatRooms: ChatRoomDto[];
   searchString: string;
   messages: ChatMessageDto[];
-  selectedUserRating: number;
+  selectedUserRating: number = -2;
   recipientToGetInfo: StudentDto;
   info: boolean;
   messageReceived: ChatMessageDto;
@@ -41,6 +40,8 @@ export class ChatComponent implements OnInit, AfterViewInit {
   blockedUsers: number[] = [];
   senderBlockedUsers: number[] = [];
   recipientBlockedUsers: number[] = [];
+  feedbackActive: boolean = false;
+  @ViewChild('chatHistory') private chatHistoryContainer: ElementRef;
 
   constructor(private chatService: ChatService,
               private userService: UserService,
@@ -67,6 +68,20 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.scrollToBottom();
+    const modalElement = document.getElementById('infoModal');
+    const feedbackModalElement = document.getElementById('feedbackModal2');
+    if (modalElement) {
+      modalElement.addEventListener('hidden.bs.modal', () => {
+        if (!feedbackModalElement.classList.contains('show')) {
+          this.closeInfo();
+        }
+      });
+    }
+    if (feedbackModalElement) {
+      feedbackModalElement.addEventListener('hidden.bs.modal', () => {
+        this.closeInfo();
+      });
+    }
   }
 
   onSearch() {
@@ -254,5 +269,13 @@ export class ChatComponent implements OnInit, AfterViewInit {
         }
       }
     );
+  }
+
+  openFeedbackModal() {
+    this.feedbackActive = true;
+  }
+
+  closeFeedbackModal() {
+    this.feedbackActive = false;
   }
 }

@@ -2,7 +2,7 @@
 
 <div class="card">
   <div id="half-stars-example" style="padding-bottom: 1em">
-    <div class="rating-group"  *ngIf="!isEditable">
+    <div class="rating-group" *ngIf="!isEditable">
       <i class="star star-under fa fa-star">
         <i class="star star-over fa fa-star" style="width: {{this.ratingStars[0]}}%"></i>
       </i>
@@ -23,7 +23,7 @@
     </div>
 
     <div *ngIf="isEditable">
-      <div class="rating-group">
+      <div *ngIf="!feedbackActive" class="rating-group">
         <input class="rating__input rating__input--none" checked name="rating2" id="rating2-0" value="0" type="radio">
         <label aria-label="0 stars" class="rating__label" for="rating2-0">&nbsp;</label>
         <label aria-label="0.5 stars" class="rating__label rating__label--half" for="rating2-05"><i
@@ -87,31 +87,44 @@
         <input class="rating__input" name="rating2" id="rating2-50" value="5" (change)="setRating(5)" type="radio"
                [checked]="this.ratingStars[4] === 100">
 
-        <div *ngIf="rating !== -1" class="m-2 gray-text">({{ rating }})</div>
+        <div *ngIf="rating !== -1" class="gray-text">({{ rating }})</div>
       </div>
-      <div>
-        <p style="color: gray;">Select your rating by clicking on the stars</p>
+      <div *ngIf="!feedbackActive">
+        <p class="gray-text">Select your rating by clicking on the stars</p>
       </div>
-      <div *ngIf="chatExists">
+      <div *ngIf="chatExists && feedbackActive">
+        <p class="gray-text">Give this user an anonymous feedback</p>
+      </div>
+      <div *ngIf="!chatExists && feedbackActive">
+        <p class="gray-text">You cannot give feedback yet</p>
+      </div>
+      <div *ngIf="chatExists && feedbackActive">
         <form (ngSubmit)="postFeedback(feedbackForm)" #feedbackForm="ngForm">
-        <div class="form-group">
+          <div class="form-group">
           <textarea rows="6" name="text" class="form-control" id="inputText" required
-                    aria-describedby="textHelp" placeholder="Write anonymous feedback:" [(ngModel)]="feedbackText" maxlength="500"
+                    aria-describedby="textHelp" placeholder="Your feedback here:" [(ngModel)]="feedbackText"
+                    maxlength="500"
           ></textarea>
-          <div *ngIf="submitted && feedbackForm.controls.text.errors" class="error">
-            <small class="form-text text-warning" *ngIf="feedbackForm.controls.text.errors.required" >Your text is
-              required!
-            </small>
+            <div *ngIf="submitted && feedbackForm.controls.text.errors" class="error">
+              <small class="form-text text-warning" *ngIf="feedbackForm.controls.text.errors.required">Your text is
+                required!
+              </small>
+            </div>
           </div>
-        </div>
-        <button type="button" (click)="postFeedback(feedbackForm)" id="add-msg" class="btn btn-primary custom-button float-right">Add message</button>
+          <div class="button-with-text-align-center">
+          <button type="button" (click)="postFeedback(feedbackForm)" id="add-msg"
+                  class="btn primary-btn custom-button float-right">Submit
+          </button>
+          </div>
         </form>
-        <span [ngStyle]="{'color': getCharsLeft() === 500 ? 'red' : 'gray'}" class="char-count">{{getCharsLeft() + "/500"}}</span>
-      </div>
+        <div class="button-with-text-align-center">
+        <a [ngStyle]="{'color': getCharsLeft() === 500 ? 'red' : 'gray'}"
+              class="char-count">{{ getCharsLeft() + "/500" }}</a>
+        </div>
       </div>
     </div>
-  <div *ngIf="!chatExists">You can leave feedback after starting a chat with this user</div>
-  <div *ngIf="postedFeedback.length !== 0" style="width: 90%">
+  </div>
+  <div *ngIf="postedFeedback.length !== 0 && chatExists && feedbackActive" style="width: 90%">
     <table class="table" style="width:calc(100%)">
       <thead>
       <tr>
@@ -125,9 +138,9 @@
         <td class="ellipsis first">
           <span>{{ feedback.feedback }}</span>
         </td>
-        <td>{{ feedback.created | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+        <td>{{ feedback.created | date:'MM/dd/yyyy HH:mm:ss' }}</td>
         <td>
-          <button class="btn btn-primary custom-button" (click)="deleteFeedback(feedback.id)">
+          <button class="btn btn-danger custom-button" (click)="deleteFeedback(feedback.id)">
             <i class="bi bi-x"></i>
           </button>
         </td>
