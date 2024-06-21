@@ -2,8 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepr.groupphase.backend.service.LoginService;
-import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
-import com.icegreen.greenmail.imap.AuthorizationException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.PermitAll;
@@ -40,5 +38,4 @@ public class LoginEndpoint {
         LOGGER.info("POST /api/v1/authentication, user = {}, origin = {}", userLoginDto.getEmail(), origin);
         return loginService.login(userLoginDto, origin);
     }
-
 }
