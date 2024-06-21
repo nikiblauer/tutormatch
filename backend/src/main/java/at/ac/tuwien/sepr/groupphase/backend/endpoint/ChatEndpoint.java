@@ -10,12 +10,14 @@ import at.ac.tuwien.sepr.groupphase.backend.service.ChatRoomService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.PermitAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -78,6 +81,10 @@ public class ChatEndpoint {
         return chatRoomService.createChatRoom(user, chatRoomCreateDto);
     }
 
+    @Operation(
+        description = "Checks if a chatroom with recipient exists.",
+        summary = "Check if chatroom exists"
+    )
     @Secured("ROLE_USER")
     @GetMapping("/room/recipient/{id}")
     public Boolean checkChatRoomExistsByRecipient(@PathVariable(name = "id") Long recipientId) {
@@ -95,5 +102,41 @@ public class ChatEndpoint {
     public List<ChatMessageDto> getMessagesByChatRoomId(@PathVariable(name = "chatRoomId") String chatRoomId) {
         LOGGER.info("GET /api/v1/chat/room/{}", chatRoomId);
         return chatMessageService.getChatMessagesByChatRoomId(chatRoomId);
+    }
+
+    @Operation(
+        description = "Blocks a user for the user identified by the id",
+        summary = "Block a user")
+    @Secured("ROLE_USER")
+    @PostMapping("/block/{userIdToBlock}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void blockUser(@PathVariable(name = "userIdToBlock") Long userIdToBlock) {
+        LOGGER.info("POST /api/v1/chat/block/{}", userIdToBlock);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        ApplicationUser user = userService.findApplicationUserByEmail(userEmail);
+        userService.blockUser(user.getId(), userIdToBlock);
+    }
+
+    @Operation(
+        description = "Unblocks a user for the user identified by the id",
+        summary = "Unblock a user")
+    @Secured("ROLE_USER")
+    @DeleteMapping("/unblock/{userIdToUnblock}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void unblockUser(@PathVariable(name = "userIdToUnblock") Long userIdToUnblock) {
+        LOGGER.info("DELETE /api/v1/chat/unblock/{}", userIdToUnblock);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        ApplicationUser user = userService.findApplicationUserByEmail(userEmail);
+        userService.unblockUser(user.getId(), userIdToUnblock);
+    }
+
+    @Operation(
+        description = "Gets a list of all user IDs that the user with the given ID has blocked",
+        summary = "Get blocked users")
+    @Secured("ROLE_USER")
+    @GetMapping("/block/{userId}")
+    public List<Long> getBlockedUsers(@PathVariable("userId") Long userId) {
+        LOGGER.info("GET /api/v1/chat/block/{}", userId);
+        return userService.getBlockedUsers(userId);
     }
 }

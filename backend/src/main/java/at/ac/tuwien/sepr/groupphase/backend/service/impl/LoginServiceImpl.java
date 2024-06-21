@@ -48,7 +48,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public String login(UserLoginDto userLoginDto) {
+    public String login(UserLoginDto userLoginDto, String origin) {
         LOGGER.trace("Login as User: {}", userLoginDto);
         UserDetails userDetails;
         ApplicationUser applicationUser;
@@ -59,7 +59,7 @@ public class LoginServiceImpl implements LoginService {
             throw new NotFoundException("No user found with this email");
         }
         if (!applicationUser.getVerified()) {
-            userService.resendVerificationEmail(userLoginDto.getEmail());
+            userService.resendVerificationEmail(userLoginDto.getEmail(), origin);
             throw new UnverifiedAccountException("Account is not verified yet. Please verify your account to log in.");
         }
         if (applicationUser.isBanned()) {
@@ -82,7 +82,7 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public void requestPasswordReset(String email) {
+    public void requestPasswordReset(String email, String origin) {
         LOGGER.trace("Send Password Reset Email to :{}", email);
         try {
             UserDetails userDetails = userService.loadUserByUsername(email);
@@ -92,7 +92,7 @@ public class LoginServiceImpl implements LoginService {
                 && userDetails.isCredentialsNonExpired()
             ) {
                 ApplicationUser applicationUser = userService.findApplicationUserByEmail(email);
-                emailService.sendPasswordResetEmail(applicationUser);
+                emailService.sendPasswordResetEmail(applicationUser, origin);
             }
         } catch (UsernameNotFoundException | NotFoundException ignored) {
             LOGGER.warn("Password Reset Email Request with non-existent User: {}", email);

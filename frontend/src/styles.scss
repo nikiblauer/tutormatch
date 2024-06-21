@@ -5,6 +5,14 @@ $base-color: #33709C;
 .admin-header {
   border: 4px solid #d87000;
 }
+
+//autoscroll for textarea
+.description-scrollable {
+  max-height: 200px;
+  height: 200px;
+  overflow-y: auto;
+}
+
 /* error box for displaying error messages, see admin.component.html for usage */
 .error-box {
   position: fixed;
@@ -243,6 +251,12 @@ body {
   .detail-label {
     display: table-cell;
     font-weight: bold;
+    padding-right: 10px;
+    vertical-align: top;
+  }
+
+  .detail-cell {
+    display: table-cell;
     padding-right: 10px;
     vertical-align: top;
   }

@@ -55,11 +55,10 @@ export class StarRatingComponent implements OnInit {
     if (!this.isEditable) return;
     this.feedbackService.getPostedFeedback(this.ratedUserId).subscribe({
       next: (postedFeedback) => {
-        console.log(postedFeedback);
         this.postedFeedback = postedFeedback;
       },
       error: error => {
-        console.log(error);
+        console.error(error);
         if (error.status == 404) {
           this.postedFeedback = [];
           return;

@@ -14,9 +14,11 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TopStatisticsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserBanDetailsDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import at.ac.tuwien.sepr.groupphase.backend.helper.RestResponsePage;
 import at.ac.tuwien.sepr.groupphase.backend.repository.BanRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
+import at.ac.tuwien.sepr.groupphase.backend.tiss.TissClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -46,6 +49,9 @@ import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -72,6 +78,41 @@ public class AdminEndpointTest extends BaseTest {
 
     @Autowired
     private BanRepository banRepository;
+
+    @MockBean
+    private TissClient tissClientMock;
+
+
+    @Test
+    void testGetSubjectPreview_ShouldReturnSubject() throws Exception {
+        //Mock Tiss response
+        Subject mockedSubject = new Subject(); // Create a mock Subject object
+        mockedSubject.setType("VU");
+        mockedSubject.setUrl("https://tiss.tuwien.ac.at/course/courseDetails.xhtml?courseNr=185A92&semester=2024S");
+        mockedSubject.setTitle("Programmierung 2");
+        mockedSubject.setNumber("185.A92");
+        mockedSubject.setSemester("2024S");
+        mockedSubject.setDescription("description");
+
+        when(tissClientMock.getCourseInfo(anyString(), anyString())).thenReturn(mockedSubject);
+
+        String token = loginAsAdmin();
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/subject/courses/189189/semesters/2024S/preview")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+        String responseBody = mvcResult.getResponse().getContentAsString();
+        SubjectCreateDto subject = objectMapper.readValue(responseBody, SubjectCreateDto.class);
+        assertAll(
+            () -> assertEquals(mockedSubject.getTitle(), subject.getTitle()),
+            () -> assertEquals(mockedSubject.getType(), subject.getType()),
+            () -> assertEquals(mockedSubject.getUrl(), subject.getUrl()),
+            () -> assertEquals(mockedSubject.getSemester(), subject.getSemester()),
+            () -> assertEquals(mockedSubject.getNumber(), subject.getNumber()),
+            () -> assertEquals(mockedSubject.getDescription(),subject.getDescription())
+        );
+    }
 
     @Test
     void testQueryUser2Surname2() throws Exception {

@@ -172,13 +172,11 @@ export class StudentsComponent implements OnInit {
   onBanSubmit(modal: NgbActiveModal) {
     if (this.banForm.valid) {
       const reason = this.banForm.value.banReason;
-      console.log(`Banning user ${this.selectedBanUser} for reason: ${reason}`);
-
       this.withSpinner(this.adminService.banUser(this.selectedBanUser.id, reason), this.spinner)
         .subscribe({
           next: (_) => {
-            this.search(true); 
-            this.banForm.reset(); 
+            this.search(true);
+            this.banForm.reset();
           },
           error: (error: any) => {
             console.error('Error:', error);

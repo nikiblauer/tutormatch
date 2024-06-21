@@ -22,7 +22,6 @@ export class UserService {
   }
 
   createUser(toCreate: CreateStudentDto): Observable<StudentDto> {
-    console.log('Create user');
     return this.httpClient.post<StudentDto>(this.userUri, toCreate, { responseType: 'json' });
   }
   resendVerification(email: string) {
@@ -32,7 +31,6 @@ export class UserService {
     return this.httpClient.get((this.userUri + "/verify/" + token));
   }
   requestPasswordReset(emailSendPasswordResetDto: SendPasswordResetDto): Observable<any> {
-    console.log(emailSendPasswordResetDto)
     return this.httpClient.post(this.userUri + '/reset_password', emailSendPasswordResetDto);
   }
   changePasswordWithResetToken(token: String, passwordResetDto: PasswordResetDto): Observable<any> {
@@ -73,5 +71,4 @@ export class UserService {
   updateVisibility(visibility: boolean): Observable<void>{
     return this.httpClient.put<void>(this.userUri + '/visibility', visibility);
   }
-
 }

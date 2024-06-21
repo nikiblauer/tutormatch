@@ -1,26 +1,17 @@
 import { Component } from '@angular/core';
-import {FeedbackDto} from "../../../dtos/feedback";
-import {ToastrService} from "ngx-toastr";
-import {NgxSpinnerService} from "ngx-spinner";
-import {AdminService} from "../../../services/admin.service";
-import {StudentSubjectInfoDto} from "../../../dtos/user";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
-import {DatePipe, NgForOf, NgIf} from "@angular/common";
-import {FormGroup, ReactiveFormsModule} from "@angular/forms";
-import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
-
+import { FeedbackDto } from "../../../dtos/feedback";
+import { ToastrService } from "ngx-toastr";
+import { NgxSpinnerService } from "ngx-spinner";
+import { AdminService } from "../../../services/admin.service";
+import { StudentSubjectInfoDto } from "../../../dtos/user";
+import { ActivatedRoute, Router } from "@angular/router";
+import { FormGroup } from "@angular/forms";
+import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { FormBuilder, Validators } from '@angular/forms';
 @Component({
-  selector: 'app-feedback',
-  standalone: true,
-  imports: [
-    DatePipe,
-    NgIf,
-    NgForOf,
-    RouterLink,
-    ReactiveFormsModule
-  ],
+  selector: 'app-admin-feedback',
   templateUrl: './admin-feedback.component.html',
-  styleUrl: './admin-feedback.component.scss'
+  styleUrls: ['./admin-feedback.component.scss']
 })
 export class AdminFeedbackComponent {
   public writtenFeedback: FeedbackDto[] = [];
@@ -30,17 +21,22 @@ export class AdminFeedbackComponent {
 
   banForm: FormGroup;
 
-  constructor(private modalService: NgbModal, private notification: ToastrService, private adminService: AdminService, private route: ActivatedRoute, private router: Router, private spinner: NgxSpinnerService) {
+  constructor(private modalService: NgbModal, private notification: ToastrService, private adminService: AdminService, private route: ActivatedRoute, private router: Router, private spinner: NgxSpinnerService,
+    private fb: FormBuilder) {
   }
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.userId = Number(params.get('id'));
     });
     this.getUserDetails(this.userId);
-    this.getWrittenFeedback(this.userId);
+    this.getWrittenFeedback(this.userId); 
+
+    this.banForm = this.fb.group({
+      banReason: ['', Validators.required]
+    });
   }
 
-  getUserDetails(id:number) {
+  getUserDetails(id: number) {
     this.adminService.getUserDetails(id).subscribe({
       next: (response: StudentSubjectInfoDto) => {
         this.selectedStudentDetails = response;
@@ -51,13 +47,13 @@ export class AdminFeedbackComponent {
       }
     });
   }
-  getWrittenFeedback(id:number) {
+  getWrittenFeedback(id: number) {
     this.adminService.getWrittenFeedback(this.userId).subscribe({
       next: (writtenFeedback) => {
         this.writtenFeedback = writtenFeedback;
       },
       error: error => {
-        console.log(error);
+        console.error(error);
         if (error.status == 404) {
           this.writtenFeedback = [];
           return;
@@ -69,34 +65,33 @@ export class AdminFeedbackComponent {
   deleteFeedback(feedbackId): void {
     this.spinner.show();
     this.adminService.deleteFeedbackById(feedbackId).subscribe({
-        next: () => {
-          this.spinner.hide();
-          this.getWrittenFeedback(this.userId);
-        },
-        error: error => {
-          this.spinner.hide();
-          console.error("Error deleting feedback", error);
-          this.notification.error(error.error, "Something went wrong!");
-        }
+      next: () => {
+        this.spinner.hide();
+        this.getWrittenFeedback(this.userId);
+      },
+      error: error => {
+        this.spinner.hide();
+        console.error("Error deleting feedback", error);
+        this.notification.error(error.error, "Something went wrong!");
       }
+    }
     );
   }
-  openBanModal(content:any) {
-  this.modalService.open(content);
+  openBanModal(content: any) {
+    this.modalService.open(content);
   }
   onBanSubmit(modal: NgbActiveModal) {
     if (this.banForm.valid) {
       const reason = this.banForm.value.banReason;
-      console.log(`Banning user ${this.selectedStudentDetails} for reason: ${reason}`);
       this.adminService.banUser(this.userId, reason).subscribe({
-          next: (_) => {
-            this.notification.success(`User  ${this.selectedStudentDetails} banned`);
-          },
-          error: (error: any) => {
-            console.error('Error:', error);
-            this.notification.error(error.error, "Error while banning student!");
-          }
-        });
+        next: (_) => {
+          this.notification.success(`User  ${this.selectedStudentDetails} banned`);
+        },
+        error: (error: any) => {
+          console.error('Error:', error);
+          this.notification.error(error.error, "Error while banning student!");
+        }
+      });
 
       modal.close('User banned');
     }

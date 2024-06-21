@@ -7,12 +7,14 @@ import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubjectKey;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepr.groupphase.backend.exception.TissClientException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.SubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.repository.UserSubjectRepository;
 import at.ac.tuwien.sepr.groupphase.backend.service.SubjectService;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.SubjectValidator;
 import at.ac.tuwien.sepr.groupphase.backend.service.validators.UserSubjectValidator;
+import at.ac.tuwien.sepr.groupphase.backend.tiss.TissClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -31,12 +33,15 @@ public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
     private final UserSubjectValidator userSubjectValidator;
     private final SubjectValidator subjectValidator;
+    private final TissClient tissClient;
 
-    public SubjectServiceImpl(UserSubjectRepository userSubjectRepository, SubjectRepository subjectRepository, UserSubjectValidator validator, SubjectValidator subjectValidator) {
+    public SubjectServiceImpl(UserSubjectRepository userSubjectRepository, SubjectRepository subjectRepository,
+                              UserSubjectValidator validator, SubjectValidator subjectValidator, TissClient tissClient) {
         this.userSubjectRepository = userSubjectRepository;
         this.subjectRepository = subjectRepository;
         this.userSubjectValidator = validator;
         this.subjectValidator = subjectValidator;
+        this.tissClient = tissClient;
     }
 
     @Override
@@ -120,6 +125,12 @@ public class SubjectServiceImpl implements SubjectService {
             throw new NotFoundException("Subject not found");
         }
         return subject;
+    }
+
+    @Override
+    public Subject createSubjectPreviewFromTiss(String courseNr, String semester) throws TissClientException {
+        LOGGER.trace("createSubjectPreviewFromTiss: courseNr{}, semester{}", courseNr, semester);
+        return tissClient.getCourseInfo(courseNr, semester);
     }
 
     private void saveSubjectDetailDto(SubjectCreateDto subject, Subject s) {

@@ -37,6 +37,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
+import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -114,7 +115,9 @@ public class SubjectEndpointTest extends BaseTest {
     @MethodSource("provideParameters")
     void testGetSubjects(String query, int expectedSize) throws Exception {
         // Perform a GET request to the endpoint
-        MvcResult result = mockMvc.perform(get(query))
+        MvcResult result = mockMvc.perform(get(query)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_EMAIL, ADMIN_ROLES))
+            )
             .andExpect(status().isOk())
             .andReturn();
 
@@ -127,7 +130,9 @@ public class SubjectEndpointTest extends BaseTest {
     @Test
     void testGetSubjectsShouldReturnSingleSubjects() throws Exception {
         // Perform a GET request to the "/api/v1/user/{id}/subjects" endpoint
-        MvcResult result = mockMvc.perform(get("/api/v1/subject?q=VO 183.129 3D Vision"))
+        MvcResult result = mockMvc.perform(get("/api/v1/subject?q=VO 183.129 3D Vision")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(DEFAULT_USER_EMAIL, USER_ROLES))
+            )
             .andExpect(status().isOk())
             .andReturn();
 

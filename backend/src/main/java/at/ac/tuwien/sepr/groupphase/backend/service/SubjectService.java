@@ -5,6 +5,7 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import at.ac.tuwien.sepr.groupphase.backend.entity.UserSubject;
+import at.ac.tuwien.sepr.groupphase.backend.exception.TissClientException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,4 +67,14 @@ public interface SubjectService {
      * @return the persisted Subject for the corresponding id
      */
     Subject getSubjectById(Long id);
+
+
+    /**
+     * Creates a preview of a subject based on the course number and semester from the TISS system.
+     *
+     * @param courseNr the course number for which the subject preview is to be created
+     * @param semester the semester for which the subject preview is to be created
+     * @return a {@link Subject} object containing the preview of the subject for the specified course number and semester
+     */
+    Subject createSubjectPreviewFromTiss(String courseNr, String semester) throws TissClientException;
 }

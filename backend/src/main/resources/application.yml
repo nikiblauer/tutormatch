@@ -49,6 +49,7 @@ security:
     # 12 hours in milliseconds
     expiration-time: 43200000
 
+
 management:
   server:
     port: 8081

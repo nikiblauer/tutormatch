@@ -1,26 +1,28 @@
-import { Component } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FeedbackDto} from "../../dtos/feedback";
 import {ToastrService} from "ngx-toastr";
 import {FeedbackService} from "../../services/feedback.service";
-import {DatePipe, NgForOf} from "@angular/common";
+import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {RouterLink} from "@angular/router";
 import {NgxSpinnerService} from "ngx-spinner";
+import {ReportService} from "../../services/report.service";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-feedback',
-  standalone: true,
-  imports: [
-    NgForOf,
-    RouterLink,
-    DatePipe
-  ],
   templateUrl: './feedback.component.html',
-  styleUrl: './feedback.component.scss'
+  styleUrls: ['./feedback.component.scss']
 })
-export class FeedbackComponent {
+export class FeedbackComponent implements OnInit{
   public receivedFeedback: FeedbackDto[] = [];
   public writtenFeedback: FeedbackDto[] = [];
-  constructor(private notification: ToastrService, private feedbackService: FeedbackService,private spinner: NgxSpinnerService) {
+  reportReason: string = "";
+  reportFeedback: number;
+
+  constructor(private notification: ToastrService,
+              private feedbackService: FeedbackService,
+              private spinner: NgxSpinnerService,
+              private reportService: ReportService) {
   }
   ngOnInit(): void {
   this.getReceivedFeedback();
@@ -33,7 +35,7 @@ export class FeedbackComponent {
         this.receivedFeedback = receivedFeedback;
       },
       error: error => {
-        console.log(error);
+        console.error(error);
         if (error.status == 404) {
           this.receivedFeedback = [];
           return;
@@ -49,7 +51,7 @@ export class FeedbackComponent {
         this.writtenFeedback = writtenFeedback;
       },
       error: error => {
-        console.log(error);
+        console.error(error);
         if (error.status == 404) {
           this.receivedFeedback = [];
           return;
@@ -70,6 +72,19 @@ export class FeedbackComponent {
         error: error => {
           this.spinner.hide();
           console.error("Error deleting feedback", error);
+          this.notification.error(error.error, "Something went wrong!");
+        }
+      }
+    );
+  }
+
+  submitReport() {
+    this.reportService.reportUserFeedback(this.reportFeedback, this.reportReason).subscribe({
+        next: () => {
+          this.notification.success("Successfully Reported.");
+        },
+        error: error => {
+          console.error("Error reporting", error);
           this.notification.error(error.error, "Something went wrong!");
         }
       }
