@@ -57,12 +57,7 @@ public class ImportServiceImpl implements ImportService {
         this.progressMap = new ConcurrentHashMap<>();
     }
 
-
-    /**
-     * Retrieves the last import status from the repository and maps it to a DTO.
-     *
-     * @return an {@link ImportStatusDto} representing the last import status.
-     */
+    @Override
     public ImportStatusDto getLastImportStatus() {
         var status = importStatusRepository.findLastImportStatus();
         return mapper.importStatusToDto(status, progressMap.getOrDefault(status.getImportId(), 0));
@@ -75,13 +70,6 @@ public class ImportServiceImpl implements ImportService {
         startImport(importId);
     }
 
-    /**
-     * Starts the Tiss import process asynchronously.
-     *
-     * @param importId the import ID
-     * @throws InterruptedException if the import process is interrupted
-     * @throws TissClientException if an error occurs while fetching data from Tiss
-     */
     @Override
     public void startImport(String importId) throws InterruptedException, TissClientException, ValidationException {
         LOGGER.info("Starting import with ID: {}", importId);
@@ -154,12 +142,6 @@ public class ImportServiceImpl implements ImportService {
     }
 
 
-    /**
-     * Retrieves the status of a Tiss import process.
-     *
-     * @param importId the import ID
-     * @return the import status DTO
-     */
     @Override
     public ImportStatusDto getImportStatus(String importId) {
         ImportStatus status = this.importStatusRepository.findByImportId(importId);
@@ -169,11 +151,6 @@ public class ImportServiceImpl implements ImportService {
         return mapper.importStatusToDto(status, progressMap.getOrDefault(importId, 0));
     }
 
-    /**
-     * Cancels the Tiss import process.
-     *
-     * @param importId the import ID
-     */
     @Override
     public void cancelImport(String importId) {
         ImportStatus status = importStatusRepository.findByImportId(importId);
