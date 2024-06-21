@@ -7,7 +7,7 @@ import { StudentSubjectInfoDto } from "../../../dtos/user";
 import { ActivatedRoute, Router } from "@angular/router";
 import { FormGroup } from "@angular/forms";
 import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
-
+import { FormBuilder, Validators } from '@angular/forms';
 @Component({
   selector: 'app-admin-feedback',
   templateUrl: './admin-feedback.component.html',
@@ -21,14 +21,19 @@ export class AdminFeedbackComponent {
 
   banForm: FormGroup;
 
-  constructor(private modalService: NgbModal, private notification: ToastrService, private adminService: AdminService, private route: ActivatedRoute, private router: Router, private spinner: NgxSpinnerService) {
+  constructor(private modalService: NgbModal, private notification: ToastrService, private adminService: AdminService, private route: ActivatedRoute, private router: Router, private spinner: NgxSpinnerService,
+    private fb: FormBuilder) {
   }
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.userId = Number(params.get('id'));
     });
     this.getUserDetails(this.userId);
-    this.getWrittenFeedback(this.userId);
+    this.getWrittenFeedback(this.userId); 
+
+    this.banForm = this.fb.group({
+      banReason: ['', Validators.required]
+    });
   }
 
   getUserDetails(id: number) {
