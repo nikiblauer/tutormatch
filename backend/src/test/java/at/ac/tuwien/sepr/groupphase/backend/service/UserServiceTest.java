@@ -44,7 +44,7 @@ public class UserServiceTest {
         CreateStudentDto applicationUserDto = userMapper.mapUserToCreateApplicationUserDto(user);
 
 
-        ApplicationUser createdApplicationUser = userService.create(applicationUserDto);
+        ApplicationUser createdApplicationUser = userService.create(applicationUserDto, "test.at");
 
         assertTrue(passwordEncoder.matches(user.getPassword(), createdApplicationUser.getPassword()));
 

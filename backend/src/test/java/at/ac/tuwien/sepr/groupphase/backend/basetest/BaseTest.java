@@ -71,6 +71,11 @@ public class BaseTest {
     private FeedbackRepository feedbackRepository;
 
     @Autowired
+    private ReportDataGenerator reportDataGenerator;
+
+    @Autowired
+    private ReportRepository reportRepository;
+    @Autowired
     protected ImportStatusRepository importStatusRepository;
 
 
@@ -93,11 +98,13 @@ public class BaseTest {
         chatMessageDataGenerator.generateChatMessages();
         feedbackDataGenerator.generateFeedback();
         ratingDataGenerator.generateUserSubjectRelation();
+        reportDataGenerator.generateReports();
     }
 
     private void clearData() {
         chatMessageRepository.deleteAll();
         chatRoomRepository.deleteAll();
+        reportRepository.deleteAll();
         feedbackRepository.deleteAll();
         userSubjectRepository.deleteAll();
         userRepository.deleteAll();

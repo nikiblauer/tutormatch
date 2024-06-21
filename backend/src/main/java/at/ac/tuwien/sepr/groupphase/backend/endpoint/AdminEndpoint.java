@@ -157,6 +157,10 @@ public class AdminEndpoint {
         return userMapper.mapToUserBanDetailsDto(user, ban);
     }
 
+    @Operation(
+        description = "Create a new subject.",
+        summary = "Create subject"
+    )
     @Secured("ROLE_ADMIN")
     @PostMapping("/subject")
     public SubjectDetailDto createSubject(@Valid @RequestBody SubjectCreateDto subjectDetailDto) throws ValidationException {

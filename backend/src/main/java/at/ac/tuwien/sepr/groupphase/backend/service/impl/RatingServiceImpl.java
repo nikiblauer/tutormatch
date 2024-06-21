@@ -169,4 +169,10 @@ public class RatingServiceImpl implements RatingService {
         feedbackRepository.deleteFeedbackById(deleteId);
     }
 
+    @Override
+    public Feedback getFeedbackByFeedbackId(Long id) {
+        LOGGER.trace("getReporterIdByFeedbackId: {}", id);
+        return feedbackRepository.findFeedbackById(id);
+    }
+
 }

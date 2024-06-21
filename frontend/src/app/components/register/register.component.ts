@@ -32,12 +32,6 @@ export class RegisterComponent {
   }
 
   onSubmit(form: NgForm) {
-    if (form.valid) {
-      console.log('Form Submitted!', form.value);
-    } else {
-      console.log('Form not valid!');
-    }
-
     this.spinner.show();
     this.userService.createUser(this.createUser).subscribe({
       next: () => {
@@ -55,7 +49,6 @@ export class RegisterComponent {
 
   resendEmail() {
     this.spinner.show();
-    console.log(this.createUser.email)
 
     this.userService.resendVerification(this.createUser.email).subscribe({
       next: () => {
