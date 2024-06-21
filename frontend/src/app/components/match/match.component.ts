@@ -182,9 +182,9 @@ export class MatchComponent implements OnInit {
     const index = filterSubjects.findIndex(item => item.id === course.id);
 
     if (isChecked && index === -1) {
-      filterSubjects.push(course); // Add the course if it's checked and not already in the array
+      filterSubjects.push(course);
     } else if (!isChecked && index !== -1) {
-      filterSubjects.splice(index, 1); // Remove the course if it's unchecked and in the array
+      filterSubjects.splice(index, 1);
     }
   }
 
@@ -228,7 +228,7 @@ export class MatchComponent implements OnInit {
   getCourseNumberArray(filterArray: Subject[], courseNumberArray: String[]): void {
     courseNumberArray.length = 0;
     for (let subject of filterArray) {
-      const courseNumber = this.extractCourseNumber(subject.name); // Assuming 'name' holds the course string
+      const courseNumber = this.extractCourseNumber(subject.name);
       if (courseNumber) {
         courseNumberArray.push(courseNumber);
       }
