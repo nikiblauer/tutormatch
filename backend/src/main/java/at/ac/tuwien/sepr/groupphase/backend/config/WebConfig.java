@@ -30,6 +30,5 @@ public class WebConfig implements WebMvcConfigurer {
                         : new ClassPathResource("/static/index.html");
                 }
             });
-        registry.setOrder(Integer.MIN_VALUE);
     }
 }

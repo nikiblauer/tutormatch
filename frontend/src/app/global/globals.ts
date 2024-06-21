@@ -12,7 +12,7 @@ export class Globals {
       return 'http://localhost:8080/api/v1';
     } else {
       // assume deployed somewhere and backend is available at same host/port as frontend
-      return window.location.protocol + '//' + window.location.host + window.location.pathname + 'api/v1';
+      return window.location.protocol + '//' + window.location.host + '/api/v1';
     }
   }
   private findWebSocketBackendUrl(): string {
