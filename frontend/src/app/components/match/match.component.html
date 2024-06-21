@@ -1,5 +1,21 @@
 <ngx-spinner type="square-jelly-box"></ngx-spinner>
-<div class="matches-container">
+<div *ngIf="placeholderMatches.length < 1 &&
+  (this.filterNeeds.length === 0 && this.filterOffers.length === 0)"
+     class="row no-match-display justify-content-center align-items-center">
+  <div class="col text-center">
+    <h2 class="display-4">No matches yet!</h2>
+    <h3 style="font-weight: normal">Please select subjects in your profile, to get matches.</h3>
+  </div>
+</div>
+<div *ngIf="this.placeholderMatches.length === 0 &&
+  (this.filterNeeds.length !== 0 || this.filterOffers.length !== 0)"
+     class="row no-match-display justify-content-center align-items-center">
+  <div class="col text-center">
+    <h2 class="display-4">No matches found! :(</h2>
+    <h3 style="font-weight: normal">Try to adjust your filters.</h3>
+  </div>
+</div>
+<div *ngIf="placeholderMatches.length > 0" class="matches-container">
   <div class="matches-header">
     <h3 class="matches-title">Your matches:</h3>
     <button class="btn btn-primary filter-btn" (click)="openFilter()"
@@ -7,14 +23,10 @@
     ><i class="bi bi-filter"></i>filter
     </button>
   </div>
-  <div *ngIf="this.placeholderMatches.length === 0 &&
-  (this.filterCourseNumNeeds.length !== 0 || this.filterOffers.length !== 0)" class="shadow no-matches">
-    <h2>No matches found! :(</h2>
-    <p>Try to adjust your filters.</p>
-  </div>
+
   <div class="container">
-    <div *ngIf="matches.length > 0" class="row">
-      <div class="col-12 col-md-6 col-lg-3 mb-4 rounded" *ngFor="let match of matches">
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-3 mb-4 rounded" *ngFor="let match of placeholderMatches">
         <div class="card h-100 rounded bg-light shadow" (click)="openMatch(match)">
           <div class="card-body">
             <h5 class="card-title">{{ match.firstname }} {{ match.lastname }}</h5>
@@ -33,12 +45,6 @@
         </div>
       </div>
     </div>
-    <div *ngIf="matches.length < 1" id="no_match_display" class="row justify-content-center align-items-center">
-      <div class="col text-center">
-        <h2 class="display-4">No matches yet!</h2>
-        <h3>Please select subjects in your profile, to get matches.</h3>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -48,7 +54,8 @@
     <div class="header-container">
       <h1>Match Details</h1>
       <div>
-        <button class="btn btn-danger bi bi-exclamation-triangle" data-bs-toggle="modal" data-bs-target="#reportModal"></button>
+        <button class="btn btn-danger bi bi-exclamation-triangle" data-bs-toggle="modal"
+                data-bs-target="#reportModal"></button>
         <button class="btn primary-btn chat-btn pl-3 bi bi-chat-dots" (click)="startChat()"></button>
       </div>
     </div>
@@ -100,8 +107,8 @@
             <h6 class="font-weight-bold mb-3">Offers of match:</h6>
             <div class="form-check mb-3" *ngFor="let need of matchOffer; let j = index">
               <input class="form-check-input" type="checkbox" [id]="'need-checkbox-' + j"
-              [checked]="isSelected(need, filterOffers)"
-              (change)="toggleSelection(need, $event.target.checked, filterOffers)">
+                     [checked]="isSelected(need, filterOffers)"
+                     (change)="toggleSelection(need, $event.target.checked, filterOffers)">
               <label class="form-check-label" [for]="'need-checkbox-' + j">
                 {{ need.name }}
               </label>
@@ -115,7 +122,8 @@
 </div>
 
 
-<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #reportModal>
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     #reportModal>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -129,7 +137,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn primary-btn" (click)="submitReport()" data-bs-dismiss="modal">Submit Report</button>
+        <button type="button" class="btn primary-btn" (click)="submitReport()" data-bs-dismiss="modal">Submit Report
+        </button>
       </div>
     </div>
   </div>
