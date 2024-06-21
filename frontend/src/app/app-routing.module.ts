@@ -16,6 +16,7 @@ import { AdminFeedbackComponent } from './components/admin/feedback/admin-feedba
 import { ChatComponent } from './components/chat/chat.component';
 import { ReportsComponent } from './components/admin/reports/reports.component';
 import {NotFoundComponent} from "./components/not-found/not-found.component";
+import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 
 const routes: Routes = [
   //{ path: '', redirectTo: '/', pathMatch: 'full' },
@@ -47,6 +48,7 @@ const routes: Routes = [
       { path: 'report', component: ReportsComponent }
     ]
   },
+  {path: 'forbidden', component: ForbiddenComponent},
   { path: '**', component: NotFoundComponent, canActivate: [AuthGuard] }
 ];
 
