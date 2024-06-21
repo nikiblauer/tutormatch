@@ -26,6 +26,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -70,11 +71,6 @@ public class ImportServiceTest extends BaseTest {
         mockedSubject.setSemester("2024S");
         mockedSubject.setDescription("description");
         importId = "importId";
-
-        Date sqlDate = Date.valueOf("2024-01-01");
-        importStatusRepository.save(new ImportStatus(null, "ImportId0", ImportStatus.Status.RUNNING, sqlDate));
-        sqlDate = Date.valueOf("2024-01-02");
-        importStatusRepository.save(new ImportStatus(null, "ImportId1", ImportStatus.Status.COMPLETED, sqlDate));
     }
 
     @Test
@@ -115,6 +111,12 @@ public class ImportServiceTest extends BaseTest {
             () -> assertEquals(expectedStatus.getImportDate(), status.getImportDate()),
             () -> assertEquals(expectedStatus.getStatus().toString(), status.getStatus())
         );
+    }
+
+    @Test
+    void getLastImportStatus_ShouldReturnNull() {
+        var status = importService.getLastImportStatus();
+        assertNull(status);
     }
 
     @Test

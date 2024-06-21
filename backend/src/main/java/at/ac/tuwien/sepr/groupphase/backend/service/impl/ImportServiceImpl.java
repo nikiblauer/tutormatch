@@ -60,6 +60,9 @@ public class ImportServiceImpl implements ImportService {
     @Override
     public ImportStatusDto getLastImportStatus() {
         var status = importStatusRepository.findLastImportStatus();
+        if (status == null) {
+            return null;
+        }
         return mapper.importStatusToDto(status, progressMap.getOrDefault(status.getImportId(), 0));
     }
 

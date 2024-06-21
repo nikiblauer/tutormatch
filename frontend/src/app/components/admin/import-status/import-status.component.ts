@@ -10,7 +10,12 @@ import { ImportService } from 'src/app/services/import.service';
   styleUrl: './import-status.component.scss'
 })
 export class ImportStatusComponent implements OnInit {
-  importStatus: ImportStatusDto;
+  importStatus: ImportStatusDto = {
+    importDate: null,
+    importId: null,
+    progress: null,
+    status: null
+  };
   private statusSubscription: Subscription;
 
   loading: boolean = false;
@@ -63,8 +68,11 @@ export class ImportStatusComponent implements OnInit {
   }
 
   updateImportStatus(data: ImportStatusDto): void {
+    if (!data) {
+      return;
+    }
     this.importStatus = data;
-    console.log("the status: " + this.importStatus.status+ " the boolean: "+ this.importStatus.status !== 'RUNNING')
+    console.log("the status: " + this.importStatus.status + " the boolean: " + this.importStatus.status !== 'RUNNING')
     if (this.importStatus.status != 'RUNNING') {
       this.stopFetchingStatus(); //Stop fetching if status is not running initially
     }

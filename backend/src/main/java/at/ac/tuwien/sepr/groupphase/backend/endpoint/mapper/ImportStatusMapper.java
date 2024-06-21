@@ -35,6 +35,9 @@ public interface ImportStatusMapper {
      * @return the import status DTO
      */
     default ImportStatusDto importStatusToDto(ImportStatus importStatus, int progress) {
+        if (importStatus == null) {
+            return null;
+        }
         var dto = importStatusToDto(importStatus);
         dto.setProgress(progress);
         return dto;

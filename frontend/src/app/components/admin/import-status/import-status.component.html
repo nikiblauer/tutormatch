@@ -1,14 +1,14 @@
 <div class="import-status-container">
     <div class="d-flex align-items-center">
         <div class="progress w-75" *ngIf="importStatus && importStatus.status === 'RUNNING'">
-            <div class="progress-bar" role="progressbar" [style.width.%]="importStatus.progress"
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" [style.width.%]="importStatus.progress"
                 [attr.aria-valuenow]="importStatus.progress" aria-valuemin="0" aria-valuemax="100">
                 {{ importStatus.progress }}%
             </div>
         </div>
         <div *ngIf="importStatus && importStatus.status !== 'RUNNING'">
-            <div>Status: {{ importStatus.status }}</div>
-            <div>Last Import Date: {{ importStatus.importDate | date }}</div>
+            <div>Status: {{ importStatus?.status || '---' }}</div>
+            <div>Last Import Date: {{ importStatus?.importDate ? (importStatus.importDate | date) : '---' }}</div>
         </div>
     </div>
 
