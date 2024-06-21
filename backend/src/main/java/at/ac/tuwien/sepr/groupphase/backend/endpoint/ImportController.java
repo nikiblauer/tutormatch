@@ -56,6 +56,7 @@ public class ImportController {
         summary = "Cancels an ongoing import process",
         description = "Cancels an import process given its ID."
     )
+    @Secured("ROLE_ADMIN")
     @PostMapping("/cancel")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelImport(@RequestBody ImportStatusRequestDto importStatus) {
@@ -66,6 +67,7 @@ public class ImportController {
         summary = "Gets the status of an import process",
         description = "Retrieves the current status of an import process."
     )
+    @Secured("ROLE_ADMIN")
     @GetMapping("/{importId}/status")
     @ResponseStatus(HttpStatus.OK)
     public ImportStatusDto getImportStatus(@PathVariable("importId") String importId) {
@@ -76,6 +78,7 @@ public class ImportController {
         summary = "Gets the last import process",
         description = "Retrieves the status of the last import process."
     )
+    @Secured("ROLE_ADMIN")
     @GetMapping("/status")
     @ResponseStatus(HttpStatus.OK)
     public ImportStatusDto getLastImport() {

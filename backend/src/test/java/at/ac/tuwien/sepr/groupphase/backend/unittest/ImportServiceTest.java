@@ -74,7 +74,7 @@ public class ImportServiceTest extends BaseTest {
         Date sqlDate = Date.valueOf("2024-01-01");
         importStatusRepository.save(new ImportStatus(null, "ImportId0", ImportStatus.Status.RUNNING, sqlDate));
         sqlDate = Date.valueOf("2024-01-02");
-        importStatusRepository.save(new ImportStatus(null, importId, ImportStatus.Status.COMPLETED, sqlDate));
+        importStatusRepository.save(new ImportStatus(null, "ImportId1", ImportStatus.Status.COMPLETED, sqlDate));
     }
 
     @Test
@@ -99,7 +99,7 @@ public class ImportServiceTest extends BaseTest {
         mockSubjects.add(mockedSubject);
         when(tissClientMock.getOrgUnitCourses(anyString()))
             .thenReturn(mockSubjects);
-        importService.startImport(importId);
+        importService.startImport("importId3");
         assertEquals(201, subjectRepository.count());
     }
 
@@ -113,7 +113,7 @@ public class ImportServiceTest extends BaseTest {
         assertAll(
             () -> assertEquals(expectedStatus.getImportId(), status.getImportId()),
             () -> assertEquals(expectedStatus.getImportDate(), status.getImportDate()),
-            () -> assertEquals(expectedStatus.getStatus(), status.getStatus())
+            () -> assertEquals(expectedStatus.getStatus().toString(), status.getStatus())
         );
     }
 

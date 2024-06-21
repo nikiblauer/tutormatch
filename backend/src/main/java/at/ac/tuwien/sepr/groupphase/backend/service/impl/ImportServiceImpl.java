@@ -240,7 +240,7 @@ public class ImportServiceImpl implements ImportService {
     }
 
     /**
-     * Initiates a transaction
+     * Initiates a transaction.
      *
      * @param transactionName the name of the transaction
      * @return the initiated transaction class

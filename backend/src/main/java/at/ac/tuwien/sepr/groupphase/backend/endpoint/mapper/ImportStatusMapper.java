@@ -16,9 +16,10 @@ public interface ImportStatusMapper {
      * @param importStatus the import status entity
      * @return the import status DTO
      */
-    default ImportStatusDto importStatusToDto(ImportStatus importStatus){
-        if (importStatus == null)
+    default ImportStatusDto importStatusToDto(ImportStatus importStatus) {
+        if (importStatus == null) {
             return null;
+        }
         var dto = new ImportStatusDto();
         dto.setImportId(importStatus.getImportId());
         dto.setStatus(importStatus.getStatus().toString());
@@ -30,10 +31,10 @@ public interface ImportStatusMapper {
      * Converts an ImportStatus entity to an ImportStatusDto.
      *
      * @param importStatus the import status entity
-     * @param progress the import progress as per cent
+     * @param progress     the import progress as per cent
      * @return the import status DTO
      */
-    default ImportStatusDto importStatusToDto(ImportStatus importStatus, int progress){
+    default ImportStatusDto importStatusToDto(ImportStatus importStatus, int progress) {
         var dto = importStatusToDto(importStatus);
         dto.setProgress(progress);
         return dto;
