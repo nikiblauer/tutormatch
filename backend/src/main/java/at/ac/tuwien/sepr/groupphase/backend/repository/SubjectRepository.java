@@ -3,6 +3,7 @@ package at.ac.tuwien.sepr.groupphase.backend.repository;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Subject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -26,4 +27,8 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
      */
     @Query("SELECT s FROM Subject s where (:searchParam is NULL OR LOWER(concat(s.type, ' ', s.number, ' ', s.title)) LIKE LOWER(concat('%', :searchParam, '%')))")
     Page<Subject> findAllSubjectByQueryParam(@Param("searchParam") String searchParam, Pageable pageable);
+
+
+    boolean existsByTypeAndSemesterAndNumber(String type, String semester, String number);
+
 }

@@ -17,11 +17,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BaseTest {
 
     @Autowired
@@ -69,6 +70,9 @@ public class BaseTest {
     @Autowired
     private FeedbackRepository feedbackRepository;
 
+    @Autowired
+    protected ImportStatusRepository importStatusRepository;
+
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -99,5 +103,6 @@ public class BaseTest {
         userRepository.deleteAll();
         subjectRepository.deleteAll();
         ratingRepository.deleteAll();
+        importStatusRepository.deleteAll();
     }
 }

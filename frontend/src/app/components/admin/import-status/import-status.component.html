@@ -1,0 +1,25 @@
+<div class="import-status-container">
+    <div class="d-flex align-items-center">
+        <div class="progress w-75" *ngIf="importStatus && importStatus.status === 'RUNNING'">
+            <div class="progress-bar" role="progressbar" [style.width.%]="importStatus.progress"
+                [attr.aria-valuenow]="importStatus.progress" aria-valuemin="0" aria-valuemax="100">
+                {{ importStatus.progress }}%
+            </div>
+        </div>
+        <div *ngIf="importStatus && importStatus.status !== 'RUNNING'">
+            <div>Status: {{ importStatus.status }}</div>
+            <div>Last Import Date: {{ importStatus.importDate | date }}</div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <button class="btn btn-primary" *ngIf="importStatus && importStatus.status !== 'RUNNING'"
+            (click)="startImport()">
+            Start Import
+        </button>
+        <button class="btn btn-danger ml-2" *ngIf="importStatus && importStatus.status === 'RUNNING'"
+            (click)="cancelImport()">
+            Cancel Import
+        </button>
+    </div>
+</div>
