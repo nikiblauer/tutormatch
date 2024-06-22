@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {UserService} from "../../services/user.service";
 import {UserMatchDto} from "../../dtos/user-match";
-import {StudentDto} from "../../dtos/user";
+import {StudentDto, Subject} from "../../dtos/user";
 import {ToastrService} from "ngx-toastr";
 import {NgxSpinnerService} from "ngx-spinner";
 import {RatingService} from "../../services/rating.service";
@@ -18,10 +18,19 @@ import {FeedbackService} from "../../services/feedback.service";
   styleUrls: ['./match.component.scss']
 })
 export class MatchComponent implements OnInit, AfterViewInit {
+  public placeholderMatches: UserMatchDto[] = [];
   public matches: UserMatchDto[] = [];
+  public filteredMatches: UserMatchDto[] = [];
   public selectedMatch: UserMatchDto = new UserMatchDto();
   public selectedUser: StudentDto = new StudentDto();
   public selectedUserRating: number = -2;
+  public filter: boolean;
+  public filterNeeds: Subject[] = [];
+  public filterOffers: Subject[] = [];
+  public filterCourseNumNeeds: string[] = [];
+  public filterCourseNumOffers: string[] = [];
+  public matchNeeds: Subject[];
+  public matchOffers: Subject[];
   public reportReason: string;
   public chatExists: boolean = false;
 
@@ -41,6 +50,7 @@ export class MatchComponent implements OnInit, AfterViewInit {
         clearTimeout(timeout);
         this.spinner.hide();
         this.matches = matches;
+        this.placeholderMatches = this.matches;
       },
       error: error => {
         clearTimeout(timeout);
@@ -49,8 +59,20 @@ export class MatchComponent implements OnInit, AfterViewInit {
         this.notification.error(error.error, "Something went wrong!");
       }
     });
+    this.getUserSubjects();
   }
 
+  public trimStringByComma(input: string) {
+    const parts = input.split(',');
+    for (let i = 0; i < parts.length; i++) {
+      parts[i] = parts[i].substring(8);
+    }
+    if (parts.length > 3) {
+      return parts.slice(0, 3).join(",\n") + ", ...";
+    } else {
+      return parts.join(",\n");
+    }
+  }
   ngAfterViewInit() {
     const modalElement = document.getElementById('matchDetailsModal');
     const feedbackModalElement = document.getElementById('feedbackModal');
@@ -67,18 +89,6 @@ export class MatchComponent implements OnInit, AfterViewInit {
       });
     }
   }
-
-    public trimStringByComma(input: string) {
-        const parts = input.split(',');
-      for (let i = 0; i < parts.length; i++) {
-        parts[i] = parts[i].substring(8);
-      }
-        if (parts.length > 3) {
-            return parts.slice(0, 3).join(",\n") + ", ...";
-        } else {
-            return parts.join(",\n");
-        }
-    }
 
     public openMatch(match: UserMatchDto) {
         this.selectedMatch = match;
@@ -129,31 +139,31 @@ export class MatchComponent implements OnInit, AfterViewInit {
         this.reloadAll();
     }
 
-    private reloadAll(){
-      let timeout = setTimeout(() => {
-        this.spinner.show();
-      }, 1500);
-      this.userService.getUserMatcher().subscribe({
-        next: (matches) => {
-          clearTimeout(timeout);
-          this.spinner.hide();
-          this.matches = matches;
-        },
-        error: error => {
-          clearTimeout(timeout);
-          this.spinner.hide();
-          console.error("Error when retrieving matches", error);
-          this.notification.error(error.error, "Something went wrong!");
-        }
-      });
-    }
+  private reloadAll() {
+    let timeout = setTimeout(() => {
+      this.spinner.show();
+    }, 1500);
+    this.userService.getUserMatcher().subscribe({
+      next: (matches) => {
+        clearTimeout(timeout);
+        this.spinner.hide();
+        this.matches = matches;
+      },
+      error: error => {
+        clearTimeout(timeout);
+        this.spinner.hide();
+        console.error("Error when retrieving matches", error);
+        this.notification.error(error.error, "Something went wrong!");
+      }
+    });
+  }
 
   public startChat() {
     let chatRoomToCreate = new CreateChatRoomDto()
     chatRoomToCreate.recipientId = this.selectedMatch.id;
     this.chatService.checkChatRoomExistsByRecipient(chatRoomToCreate.recipientId).subscribe({
         next: exits => {
-          if (!exits){
+          if (!exits) {
             this.chatService.createChatRoom(chatRoomToCreate).subscribe({
               next: () => {
                 this.notification.success("Chat successfully created")
@@ -173,9 +183,106 @@ export class MatchComponent implements OnInit, AfterViewInit {
     });
   }
 
-    public getSelectedUserAddressAsString(user: StudentDto) {
-        return StudentDto.getAddressAsString(user);
+  public getSelectedUserAddressAsString(user: StudentDto) {
+    return StudentDto.getAddressAsString(user);
+  }
+
+  public openFilter() {
+    this.filter = true;
+  }
+
+  public getUserSubjects() {
+    this.userService.getUserSubjects().subscribe({
+      next: userProfile => {
+        this.spinner.hide();
+        this.matchNeeds = userProfile.subjects.filter(item => item.role == "tutor");
+        this.matchOffers = userProfile.subjects.filter(item => item.role == "trainee");
+        this.selectAll();
+      },
+      error: (errorMessage) => {
+        console.log(errorMessage);
+        this.notification.error(errorMessage, "Loading of matches failed.")
+      }
+    });
+
+  }
+
+  public applyFilter() {
+    this.filterMatches();
+    this.placeholderMatches = this.filteredMatches;
+  }
+
+  selectAll(){
+    for(let i = 0; i < this.matchNeeds.length; i++){
+      this.filterNeeds.push(this.matchNeeds[i]);
     }
+    for(let i = 0; i < this.matchOffers.length; i++){
+      this.filterOffers.push(this.matchOffers[i]);
+    }
+  }
+
+  toggleSelection(course: Subject, isChecked: boolean, filterSubjects: Subject[]) {
+    const index = filterSubjects.findIndex(item => item.id === course.id);
+
+    if (isChecked && index === -1) {
+      filterSubjects.push(course);
+    } else if (!isChecked && index !== -1) {
+      filterSubjects.splice(index, 1);
+    }
+  }
+
+  isSelected(item: Subject, collection: Subject[]): boolean {
+    return collection.some(selectedItem => selectedItem.id === item.id);
+  }
+
+  filterMatches() {
+    if(this.filterNeeds.length == 0 && this.filterOffers.length == 0){
+      this.placeholderMatches = this.matches;
+    }
+    this.filteredMatches.length = 0;
+    this.getCourseNumberArray(this.filterOffers, this.filterCourseNumOffers)
+    this.getCourseNumberArray(this.filterNeeds, this.filterCourseNumNeeds)
+    for (let i = 0; i < this.matches.length; i++) {
+      const match = this.matches[i];
+
+      const tutorSubjectsOfMatch = match.tutorSubjects.split(', ').map(subject => subject);
+      const traineeSubjectsOfMatch = match.traineeSubjects.split(', ').map(subject => subject.trim());
+      let containsAtLeastOneOffer: boolean;
+      for(let i = 0; i < tutorSubjectsOfMatch.length; i++){
+        for (let j = 0; j < this.filterCourseNumOffers.length; j++){
+          if(tutorSubjectsOfMatch[i].includes(this.filterCourseNumOffers[j])){
+            containsAtLeastOneOffer = true;
+          }
+        }
+      }
+      let containsAtLeastOneNeed: boolean;
+      for(let i = 0; i < traineeSubjectsOfMatch.length; i++){
+        for (let j = 0; j < this.filterCourseNumNeeds.length; j++){
+          if(traineeSubjectsOfMatch[i].includes(this.filterCourseNumNeeds[j])){
+            containsAtLeastOneNeed = true;
+          }
+        }
+      }
+      if(containsAtLeastOneOffer || containsAtLeastOneNeed){
+        this.filteredMatches.push(match)
+      }
+    }
+  }
+
+  extractCourseNumber(courseString: string): string | null {
+    const regex = /\b\d{3}\.\d{3}\b/;
+    const match = courseString.match(regex);
+    return match ? match[0] : null;
+  }
+  getCourseNumberArray(filterArray: Subject[], courseNumberArray: String[]): void {
+    courseNumberArray.length = 0;
+    for (let subject of filterArray) {
+      const courseNumber = this.extractCourseNumber(subject.name);
+      if (courseNumber) {
+        courseNumberArray.push(courseNumber);
+      }
+    }
+  }
 
   public submitReport(){
     this.reportService.reportUser(this.selectedMatch.id, this.reportReason).subscribe({
