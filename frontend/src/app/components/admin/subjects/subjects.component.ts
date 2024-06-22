@@ -139,8 +139,7 @@ export class SubjectComponent implements OnInit, AfterViewInit {
 
   }
 
-  onDelete(id: number, event: Event) {
-    event.stopPropagation();
+  onDelete(id: number) {
     let timeout = setTimeout(() => {
       this.spinner.show();
     }, 1500);
@@ -205,7 +204,7 @@ export class SubjectComponent implements OnInit, AfterViewInit {
   }
 
   closeSubjectEdit() {
-
+    this.selectedSubject = new SubjectDetailDto();
   }
 
   closeSubjectCreate() {
