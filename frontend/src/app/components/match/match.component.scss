@@ -134,3 +134,23 @@
 .pl-3 {
   margin-left: 10px;
 }
+
+.scrollable-list {
+  padding-left: 1rem;
+  max-height: 12rem;
+  overflow-y: auto;
+}
+
+.scrollable-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb {
+  background-color: #33709C;
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb {
+  background-color: #33709C;
+}

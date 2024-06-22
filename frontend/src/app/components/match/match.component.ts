@@ -29,9 +29,8 @@ export class MatchComponent implements OnInit {
   public filterCourseNumNeeds: string[] = [];
   public filterCourseNumOffers: string[] = [];
   public matchNeeds: Subject[];
-  public matchOffer: Subject[];
+  public matchOffers: Subject[];
   public reportReason: string;
-
   constructor(private userService: UserService, private notification: ToastrService,
               private spinner: NgxSpinnerService, private ratingService: RatingService,
               private router: Router, private chatService: ChatService,
@@ -56,6 +55,7 @@ export class MatchComponent implements OnInit {
         this.notification.error(error.error, "Something went wrong!");
       }
     });
+    this.getUserSubjects();
   }
 
   public trimStringByComma(input: string) {
@@ -159,7 +159,6 @@ export class MatchComponent implements OnInit {
 
   public openFilter() {
     this.filter = true;
-    this.getUserSubjects();
   }
 
   public getUserSubjects() {
@@ -167,18 +166,29 @@ export class MatchComponent implements OnInit {
       next: userProfile => {
         this.spinner.hide();
         this.matchNeeds = userProfile.subjects.filter(item => item.role == "tutor");
-        this.matchOffer = userProfile.subjects.filter(item => item.role == "trainee");
+        this.matchOffers = userProfile.subjects.filter(item => item.role == "trainee");
+        this.selectAll();
       },
       error: (errorMessage) => {
         console.log(errorMessage);
         this.notification.error(errorMessage, "Loading of matches failed.")
       }
     });
+
   }
 
   public applyFilter() {
     this.filterMatches();
     this.placeholderMatches = this.filteredMatches;
+  }
+
+  selectAll(){
+    for(let i = 0; i < this.matchNeeds.length; i++){
+      this.filterNeeds.push(this.matchNeeds[i]);
+    }
+    for(let i = 0; i < this.matchOffers.length; i++){
+      this.filterOffers.push(this.matchOffers[i]);
+    }
   }
 
   toggleSelection(course: Subject, isChecked: boolean, filterSubjects: Subject[]) {
@@ -207,17 +217,23 @@ export class MatchComponent implements OnInit {
 
       const tutorSubjectsOfMatch = match.tutorSubjects.split(', ').map(subject => subject);
       const traineeSubjectsOfMatch = match.traineeSubjects.split(', ').map(subject => subject.trim());
-      const containsAllOffers = this.filterCourseNumOffers.every(courseNum => {
-        return tutorSubjectsOfMatch.some(tutorSubject => {
-          return tutorSubject.includes(courseNum);
-        });
-      });
-      const containsAllNeeds = this.filterCourseNumNeeds.every(courseNum => {
-        return traineeSubjectsOfMatch.some(traineeSubject => {
-          return traineeSubject.includes(courseNum);
-        });
-      });
-      if(containsAllOffers && containsAllNeeds){
+      let containsAtLeastOneOffer: boolean;
+      for(let i = 0; i < tutorSubjectsOfMatch.length; i++){
+        for (let j = 0; j < this.filterCourseNumOffers.length; j++){
+          if(tutorSubjectsOfMatch[i].includes(this.filterCourseNumOffers[j])){
+            containsAtLeastOneOffer = true;
+          }
+        }
+      }
+      let containsAtLeastOneNeed: boolean;
+      for(let i = 0; i < traineeSubjectsOfMatch.length; i++){
+        for (let j = 0; j < this.filterCourseNumNeeds.length; j++){
+          if(traineeSubjectsOfMatch[i].includes(this.filterCourseNumNeeds[j])){
+            containsAtLeastOneNeed = true;
+          }
+        }
+      }
+      if(containsAtLeastOneOffer || containsAtLeastOneNeed){
         this.filteredMatches.push(match)
       }
     }

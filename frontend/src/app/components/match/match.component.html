@@ -1,21 +1,5 @@
 <ngx-spinner type="square-jelly-box"></ngx-spinner>
-<div *ngIf="placeholderMatches.length < 1 &&
-  (this.filterNeeds.length === 0 && this.filterOffers.length === 0)"
-     class="row no-match-display justify-content-center align-items-center">
-  <div class="col text-center">
-    <h2 class="display-4">No matches yet!</h2>
-    <h3 style="font-weight: normal">Please select subjects in your profile, to get matches.</h3>
-  </div>
-</div>
-<div *ngIf="this.placeholderMatches.length === 0 &&
-  (this.filterNeeds.length !== 0 || this.filterOffers.length !== 0)"
-     class="row no-match-display justify-content-center align-items-center">
-  <div class="col text-center">
-    <h2 class="display-4">No matches found! :(</h2>
-    <h3 style="font-weight: normal">Try to adjust your filters.</h3>
-  </div>
-</div>
-<div *ngIf="placeholderMatches.length > 0" class="matches-container">
+<div class="matches-container">
   <div class="matches-header">
     <h3 class="matches-title">Your matches:</h3>
     <button class="btn btn-primary filter-btn" (click)="openFilter()"
@@ -25,7 +9,23 @@
   </div>
 
   <div class="container">
-    <div class="row">
+    <div *ngIf="placeholderMatches.length < 1 &&
+  (this.filterNeeds.length !== 0 || this.filterOffers.length !== 0)"
+         class="row no-match-display justify-content-center align-items-center">
+      <div class="col text-center">
+        <h2 class="display-4">No matches yet!</h2>
+        <h3 style="font-weight: normal">Please select subjects in your profile, to get matches.</h3>
+      </div>
+    </div>
+    <div *ngIf="this.placeholderMatches.length === 0 &&
+  (this.filterNeeds.length === 0 && this.filterOffers.length === 0)"
+         class="row no-match-display justify-content-center align-items-center">
+      <div class="col text-center">
+        <h2 class="display-4">No matches found! :(</h2>
+        <h3 style="font-weight: normal">Try to adjust your filters.</h3>
+      </div>
+    </div>
+    <div *ngIf="placeholderMatches.length > 0" class="row">
       <div class="col-12 col-md-6 col-lg-3 mb-4 rounded" *ngFor="let match of placeholderMatches">
         <div class="card h-100 rounded bg-light shadow" (click)="openMatch(match)">
           <div class="card-body">
@@ -88,30 +88,34 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="filterModalLabel">Select Filters</h5>
+        <h4 class="modal-title" id="filterModalLabel">Filter Subjects</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form>
           <div class="mb-3">
-            <h6 class="font-weight-bold mb-3">Needs of match:</h6>
-            <div class="form-check mb-3" *ngFor="let offer of matchNeeds; let i = index">
-              <input class="form-check-input" type="checkbox" [id]="'offer-checkbox-' + i"
-                     [checked]="isSelected(offer, filterNeeds)"
-                     (change)="toggleSelection(offer, $event.target.checked, filterNeeds)">
-              <label class="form-check-label" [for]="'offer-checkbox-' + i">
-                {{ offer.name }}
-              </label>
+            <h5 class="mb-3">Needs of match:</h5>
+            <div class="scrollable-list">
+              <div class="form-check mb-3" *ngFor="let need of matchNeeds; let i = index">
+                <input class="form-check-input" type="checkbox" [id]="'offer-checkbox-' + i"
+                       [checked]="isSelected(need, filterNeeds)"
+                       (change)="toggleSelection(need, $event.target.checked, filterNeeds)">
+                <label class="form-check-label" [for]="'offer-checkbox-' + i">
+                  {{ need.name }}
+                </label>
+              </div>
             </div>
 
-            <h6 class="font-weight-bold mb-3">Offers of match:</h6>
-            <div class="form-check mb-3" *ngFor="let need of matchOffer; let j = index">
-              <input class="form-check-input" type="checkbox" [id]="'need-checkbox-' + j"
-                     [checked]="isSelected(need, filterOffers)"
-                     (change)="toggleSelection(need, $event.target.checked, filterOffers)">
-              <label class="form-check-label" [for]="'need-checkbox-' + j">
-                {{ need.name }}
-              </label>
+            <h5 class="mb-3">Offers of match:</h5>
+            <div class="scrollable-list">
+              <div class="form-check mb-3 " *ngFor="let offer of matchOffers; let j = index">
+                <input class="form-check-input" type="checkbox" [id]="'need-checkbox-' + j"
+                       [checked]="isSelected(offer, filterOffers)"
+                       (change)="toggleSelection(offer, $event.target.checked, filterOffers)">
+                <label class="form-check-label" [for]="'need-checkbox-' + j">
+                  {{ offer.name }}
+                </label>
+              </div>
             </div>
             <button type="button" class="btn btn-primary save-btn" (click)="applyFilter()">Save</button>
           </div>
