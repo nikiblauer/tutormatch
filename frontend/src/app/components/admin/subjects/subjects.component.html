@@ -30,7 +30,7 @@
                  type="button" (click)="onDelete(subject.id, $event)">
                 <i class="bi bi-trash"></i>
               </a>
-              <a (click)="onInfo(subject)" data-bs-toggle="modal" data-bs-target="#openSubjectInfo" type="button"
+              <a (click)="onInfo(subject)" data-bs-toggle="modal" data-bs-target="#openSubjectInfo1" type="button"
                  class="btn btn-sm responsive-info-button ">
                 <i class="bi bi-info-circle"></i>
 
@@ -48,7 +48,7 @@
   </div>
 </div>
 
-<div aria-hidden="true" aria-labelledby="infoModal" class="modal modal-lg fade" id="openSubjectInfo" tabindex="-1">
+<div aria-hidden="true" aria-labelledby="infoModal" class="modal modal-lg fade" id="openSubjectInfo1" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -92,7 +92,7 @@
 
 <div aria-hidden="true" aria-labelledby="editModal" class="modal modal-lg fade" id="openSubjectEdit" tabindex="-1">
   <div  class="modal-dialog">
-    <div *ngIf="edit" class="modal-content">
+    <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title detail-label">Edit Subject:</h2>
         <a class="btn-close" type="button" data-bs-toggle="modal"

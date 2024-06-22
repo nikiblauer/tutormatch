@@ -1,15 +1,15 @@
 import {AfterViewInit, Component, OnInit} from "@angular/core";
-import { Subject } from "src/app/dtos/user";
-import { AdminService } from "src/app/services/admin.service";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
-import { Subject as RxSubject } from 'rxjs';
-import { SubjectService } from "../../../services/subject.service";
-import { HttpErrorResponse } from "@angular/common/http";
-import { SubjectDetailDto } from "../../../dtos/subject";
-import { ToastrService } from "ngx-toastr";
-import { NgxSpinnerService } from "ngx-spinner";
-import { Router } from '@angular/router';
-import { AuthService } from "src/app/services/auth.service";
+import {Subject} from "src/app/dtos/user";
+import {AdminService} from "src/app/services/admin.service";
+import {debounceTime, distinctUntilChanged} from "rxjs/operators";
+import {Subject as RxSubject} from 'rxjs';
+import {SubjectService} from "../../../services/subject.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {SubjectDetailDto} from "../../../dtos/subject";
+import {ToastrService} from "ngx-toastr";
+import {NgxSpinnerService} from "ngx-spinner";
+import {Router} from '@angular/router';
+import {AuthService} from "src/app/services/auth.service";
 
 @Component({
   selector: "app-subjects",
@@ -18,8 +18,8 @@ import { AuthService } from "src/app/services/auth.service";
 })
 export class SubjectComponent implements OnInit, AfterViewInit {
   constructor(private subjectService: SubjectService, private adminService: AdminService,
-    private notification: ToastrService, private spinner: NgxSpinnerService,
-    private authService: AuthService, private router: Router) {
+              private notification: ToastrService, private spinner: NgxSpinnerService,
+              private authService: AuthService, private router: Router) {
   }
 
   searchSubject$ = new RxSubject<string>();
@@ -58,16 +58,11 @@ export class SubjectComponent implements OnInit, AfterViewInit {
         this.notification.error(error.error, "Loading subjects failed!");
       }
     });
-    this.closeCreate();
-    this.closeDeleteDialog();
-    this.closeSubjectEdit();
-    this.closeSubjectEdit();
-    this.closeSubjectCreate();
   }
 
   ngAfterViewInit(): void {
     const deleteModalElement = document.getElementById('openDeleteDialog');
-    const infoModalElement = document.getElementById('openSubjectInfo');
+    const infoModalElement = document.getElementById('openSubjectInfo1');
     const editModalElement = document.getElementById('openSubjectEdit');
     const createModalElement = document.getElementById('openSubjectCreate');
 
@@ -77,18 +72,22 @@ export class SubjectComponent implements OnInit, AfterViewInit {
       });
     }
     if (infoModalElement) {
-      deleteModalElement.addEventListener('hidden.bs.modal', () => {
-        this.closeSubjectInfo();
+      infoModalElement.addEventListener('hidden.bs.modal', () => {
+        if (!editModalElement) {
+          this.closeSubjectInfo();
+        }
       });
     }
     if (editModalElement) {
-      deleteModalElement.addEventListener('hidden.bs.modal', () => {
-        this.closeSubjectEdit();
+      editModalElement.addEventListener('hidden.bs.modal', () => {
+        if (!infoModalElement.classList.contains('show')) {
+          this.closeSubjectEdit();
+        }
       });
     }
     if (createModalElement) {
-      deleteModalElement.addEventListener('hidden.bs.modal', () => {
-        this.closeCreate();
+      deleteModalElement.addEventListener('show.bs.modal', () => {
+        this.closeSubjectCreate();
       });
     }
   }
@@ -119,43 +118,26 @@ export class SubjectComponent implements OnInit, AfterViewInit {
   }
 
   closeSubjectInfo() {
-    this.info = false;
-    this.selectedSubject = null;
-  }
-
-  closeCreate() {
-    this.create = false;
-    this.createdSubject = new SubjectDetailDto();
+    this.selectedSubject = new SubjectDetailDto();
   }
 
   onInfo(subject: Subject) {
-    if (!this.selectedSubject) {
-      let timeout = setTimeout(() => {
-        this.spinner.show();
-      }, 1500);
-      this.subjectService.getSubjectById(subject.id).subscribe(s => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        this.selectedSubject = s;
-        console.log(s.description);
-      });
-    }
-    this.info = true;
+    let timeout = setTimeout(() => {
+    }, 1500);
+    this.subjectService.getSubjectById(subject.id).subscribe(s => {
+      clearTimeout(timeout);
+      this.selectedSubject = s;
+    });
   }
 
   onEdit(subject: Subject) {
-    if (this.info != true) {
       let timeout = setTimeout(() => {
-        this.spinner.show();
       }, 1500);
       this.subjectService.getSubjectById(subject.id).subscribe(s => {
         clearTimeout(timeout);
-        this.spinner.hide();
         this.selectedSubject = s;
       });
-    }
-    this.info = false;
-    this.edit = true;
+
   }
 
   onDelete(id: number, event: Event) {
@@ -164,20 +146,21 @@ export class SubjectComponent implements OnInit, AfterViewInit {
       this.spinner.show();
     }, 1500);
     this.subjectService.getSubjectById(id).subscribe({
-      next: subject => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        this.subjectToDelete = subject;
-        this.delete = true;
-      },
-      error: (e => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        this.notification.error(e.error, "Maybe it was already deleted?")
-      })
-    }
+        next: subject => {
+          clearTimeout(timeout);
+          this.spinner.hide();
+          this.subjectToDelete = subject;
+          this.delete = true;
+        },
+        error: (e => {
+          clearTimeout(timeout);
+          this.spinner.hide();
+          this.notification.error(e.error, "Maybe it was already deleted?")
+        })
+      }
     );
   }
+
 
   confirmDelete() {
     this.spinner.show();
@@ -200,6 +183,7 @@ export class SubjectComponent implements OnInit, AfterViewInit {
   }
 
   closeDeleteDialog() {
+    console.log(this.selectedSubject.title)
     this.delete = false;
     this.subjectToDelete = new SubjectDetailDto();
   }
@@ -228,8 +212,9 @@ export class SubjectComponent implements OnInit, AfterViewInit {
   }
 
   closeSubjectEdit() {
+    console.log(this.selectedSubject.title)
+
     this.edit = false;
-    this.selectedSubject = null;
   }
 
   closeSubjectCreate() {
@@ -276,16 +261,16 @@ export class SubjectComponent implements OnInit, AfterViewInit {
     const params = new URLSearchParams(urlObj.search);
 
     this.adminService.getPreviewSubject(params.get("courseNr"), params.get("semester"))
-    .subscribe({
-      next: previewSubject => {
-        this.createdSubject = {
-          ...previewSubject,
-          id: null
-        };
-      },
-      error: (e) => {
-        this.handleError(e)
-      }
-    });
+      .subscribe({
+        next: previewSubject => {
+          this.createdSubject = {
+            ...previewSubject,
+            id: null
+          };
+        },
+        error: (e) => {
+          this.handleError(e)
+        }
+      });
   }
 }
