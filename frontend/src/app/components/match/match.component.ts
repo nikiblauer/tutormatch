@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {UserService} from "../../services/user.service";
 import {UserMatchDto} from "../../dtos/user-match";
 import {StudentDto, Subject} from "../../dtos/user";
@@ -9,6 +9,7 @@ import {Router} from "@angular/router";
 import {CreateChatRoomDto} from "../../dtos/chat";
 import {ChatService} from "../../services/chat.service";
 import {ReportService} from "../../services/report.service";
+import {FeedbackService} from "../../services/feedback.service";
 
 
 @Component({
@@ -16,12 +17,12 @@ import {ReportService} from "../../services/report.service";
   templateUrl: './match.component.html',
   styleUrls: ['./match.component.scss']
 })
-export class MatchComponent implements OnInit {
+export class MatchComponent implements OnInit, AfterViewInit {
   public placeholderMatches: UserMatchDto[] = [];
   public matches: UserMatchDto[] = [];
   public filteredMatches: UserMatchDto[] = [];
-  public selectedMatch: UserMatchDto;
-  public selectedUser: StudentDto;
+  public selectedMatch: UserMatchDto = new UserMatchDto();
+  public selectedUser: StudentDto = new StudentDto();
   public selectedUserRating: number = -2;
   public filter: boolean;
   public filterNeeds: Subject[] = [];
@@ -31,10 +32,13 @@ export class MatchComponent implements OnInit {
   public matchNeeds: Subject[];
   public matchOffers: Subject[];
   public reportReason: string;
+  public chatExists: boolean = false;
+
   constructor(private userService: UserService, private notification: ToastrService,
               private spinner: NgxSpinnerService, private ratingService: RatingService,
               private router: Router, private chatService: ChatService,
-              private reportService: ReportService) {
+              private reportService: ReportService,
+              private feedbackService: FeedbackService) {
   }
 
   ngOnInit() {
@@ -69,43 +73,71 @@ export class MatchComponent implements OnInit {
       return parts.join(",\n");
     }
   }
-
-  public openMatch(match: UserMatchDto) {
-    this.selectedMatch = match;
-    let timeout = setTimeout(() => {
-      this.spinner.show();
-    }, 1500);
-    this.userService.getUser(match.id).subscribe({
-      next: (user) => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        this.selectedUser = user;
-      },
-      error: error => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        console.error("Error when user match details", error);
-        this.notification.error(error.error, "Something went wrong!");
-      }
-    })
-    this.ratingService.getRatingFromUser(match.id).subscribe({
-      next: (value) => {
-        this.selectedUserRating = value;
-      },
-      error: err => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        console.error("Error when getting match rating", err);
-        this.notification.error(err.error, "Something went wrong!");
-      }
-    })
+  ngAfterViewInit() {
+    const modalElement = document.getElementById('matchDetailsModal');
+    const feedbackModalElement = document.getElementById('feedbackModal');
+    if (modalElement) {
+      modalElement.addEventListener('hidden.bs.modal', () => {
+        if (!feedbackModalElement.classList.contains('show')) {
+          this.closeMatch();
+        }
+      });
+    }
+    if (feedbackModalElement) {
+      feedbackModalElement.addEventListener('hidden.bs.modal', () => {
+        this.closeMatch();
+      });
+    }
   }
 
-  public closeMatch() {
-    this.selectedMatch = null;
-    this.selectedUserRating = -2;
-    this.reloadAll();
-  }
+    public openMatch(match: UserMatchDto) {
+        this.selectedMatch = match;
+        let timeout = setTimeout(() => {
+          this.spinner.show();
+        }, 1500);
+        this.userService.getUser(match.id).subscribe({
+          next: (user) => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            this.selectedUser = user;
+          },
+          error: error => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            console.error("Error when user match details", error);
+            this.notification.error(error.error, "Something went wrong!");
+          }
+        })
+        this.ratingService.getRatingFromUser(match.id).subscribe({
+          next: (value) =>{
+            this.spinner.hide();
+            this.selectedUserRating = value;
+          },
+          error: err => {
+            clearTimeout(timeout);
+            this.spinner.hide();
+            console.error("Error when getting match rating", err);
+            this.notification.error(err.error, "Something went wrong!");
+          }
+        });
+      this.feedbackService.getChatExists(match.id).subscribe({
+        next: () => {
+          this.chatExists = true;
+        },
+        error: error => {
+          if (error.status == 404) {
+            this.chatExists = false;
+            return;
+          }
+          this.notification.error(error.error, "Something went wrong!");
+        }
+      });
+    }
+
+    public closeMatch() {
+        this.selectedUserRating = -2;
+        this.reloadAll();
+    }
 
   private reloadAll() {
     let timeout = setTimeout(() => {
@@ -148,9 +180,7 @@ export class MatchComponent implements OnInit {
         }, error: err => {
           console.error(err)
         }
-      }
-    )
-
+    });
   }
 
   public getSelectedUserAddressAsString(user: StudentDto) {
