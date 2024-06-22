@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import {AfterViewInit, Component, OnInit} from "@angular/core";
 import { Subject } from "src/app/dtos/user";
 import { AdminService } from "src/app/services/admin.service";
 import { debounceTime, distinctUntilChanged } from "rxjs/operators";
@@ -16,7 +16,7 @@ import { AuthService } from "src/app/services/auth.service";
   templateUrl: "./subjects.component.html",
   styleUrls: ["./subjects.component.scss"],
 })
-export class SubjectComponent implements OnInit {
+export class SubjectComponent implements OnInit, AfterViewInit {
   constructor(private subjectService: SubjectService, private adminService: AdminService,
     private notification: ToastrService, private spinner: NgxSpinnerService,
     private authService: AuthService, private router: Router) {
@@ -35,7 +35,7 @@ export class SubjectComponent implements OnInit {
 
   selectedSubject: SubjectDetailDto;
 
-  subjectToDelete: SubjectDetailDto = null;
+  subjectToDelete: SubjectDetailDto = new SubjectDetailDto();
   public autofillUrlInput: string = '';
 
   ngOnInit() {
@@ -58,6 +58,39 @@ export class SubjectComponent implements OnInit {
         this.notification.error(error.error, "Loading subjects failed!");
       }
     });
+    this.closeCreate();
+    this.closeDeleteDialog();
+    this.closeSubjectEdit();
+    this.closeSubjectEdit();
+    this.closeSubjectCreate();
+  }
+
+  ngAfterViewInit(): void {
+    const deleteModalElement = document.getElementById('openDeleteDialog');
+    const infoModalElement = document.getElementById('openSubjectInfo');
+    const editModalElement = document.getElementById('openSubjectEdit');
+    const createModalElement = document.getElementById('openSubjectCreate');
+
+    if (deleteModalElement) {
+      deleteModalElement.addEventListener('hidden.bs.modal', () => {
+        this.closeDeleteDialog();
+      });
+    }
+    if (infoModalElement) {
+      deleteModalElement.addEventListener('hidden.bs.modal', () => {
+        this.closeSubjectInfo();
+      });
+    }
+    if (editModalElement) {
+      deleteModalElement.addEventListener('hidden.bs.modal', () => {
+        this.closeSubjectEdit();
+      });
+    }
+    if (createModalElement) {
+      deleteModalElement.addEventListener('hidden.bs.modal', () => {
+        this.closeCreate();
+      });
+    }
   }
 
   onSearchChange(): void {
@@ -104,6 +137,7 @@ export class SubjectComponent implements OnInit {
         clearTimeout(timeout);
         this.spinner.hide();
         this.selectedSubject = s;
+        console.log(s.description);
       });
     }
     this.info = true;
@@ -167,7 +201,7 @@ export class SubjectComponent implements OnInit {
 
   closeDeleteDialog() {
     this.delete = false;
-    this.subjectToDelete = null;
+    this.subjectToDelete = new SubjectDetailDto();
   }
 
   private handleError(error: HttpErrorResponse) {
