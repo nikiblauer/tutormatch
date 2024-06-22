@@ -7,6 +7,7 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.service.ImportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +60,8 @@ public class ImportController {
     @Secured("ROLE_ADMIN")
     @PostMapping("/cancel")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancelImport(@RequestBody ImportStatusRequestDto importStatus) {
+    public void cancelImport(@RequestBody @Valid ImportStatusRequestDto importStatus) {
+        LOGGER.info("POST /import/cancel with importId: {}", importStatus.getImportId());
         importService.cancelImport(importStatus.getImportId());
     }
 
