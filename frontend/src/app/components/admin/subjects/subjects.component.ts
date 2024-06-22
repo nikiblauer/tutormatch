@@ -127,12 +127,15 @@ export class SubjectComponent implements OnInit, AfterViewInit {
   }
 
   onEdit(subject: Subject) {
-      let timeout = setTimeout(() => {
-      }, 1500);
-      this.subjectService.getSubjectById(subject.id).subscribe(s => {
-        clearTimeout(timeout);
-        this.selectedSubject = s;
-      });
+    if (subject == null) {
+      return;
+    }
+    let timeout = setTimeout(() => {
+    }, 1500);
+    this.subjectService.getSubjectById(subject.id).subscribe(s => {
+      clearTimeout(timeout);
+      this.selectedSubject = s;
+    });
 
   }
 
