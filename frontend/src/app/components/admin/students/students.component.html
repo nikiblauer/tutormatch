@@ -42,56 +42,52 @@
 
     </form>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th class="email-column">Email</th>
-                <th class="verified-column">Verified</th>
-                <th>Info</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let student of filteredStudents">
-                <td>{{ student.firstname }} {{ student.lastname }}</td>
-                <td class="email-column" title="{{ student.email }}">{{ student.email }}</td>
-                <td class="verified-column"
-                    [ngClass]="{'text-success': student.verified, 'text-danger': !student.verified}">
-                    {{ student.verified }}
-                </td>
-                <td>
-                    <button class="btn btn-info custom-button" routerLink="./{{student.id}}">
-                        <i class="bi bi-pencil"></i>
-                    </button>
+    <div class="table-responsive" #scrollableDiv>
+        <table class="table table-striped" #scrollableTable>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th class="email-column">Email</th>
+                    <th class="verified-column">Verified</th>
+                    <th>Info</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let student of filteredStudents">
+                    <td>{{ student.firstname }} {{ student.lastname }}</td>
+                    <td class="email-column" title="{{ student.email }}">{{ student.email }}</td>
+                    <td class="verified-column"
+                        [ngClass]="{'text-success': student.verified, 'text-danger': !student.verified}">
+                        {{ student.verified }}
+                    </td>
+                    <td>
+                        <button class="btn btn-info custom-button" routerLink="./{{student.id}}">
+                            <i class="bi bi-pencil"></i>
+                        </button>
 
-                    <button class="btn btn-info custom-button" (click)="viewDetails(student, detailsModal)">
-                        <i class="bi bi-info-circle"></i>
-                    </button>
-                </td>
-                <td>
-                    <button class="btn btn-danger me-2" [disabled]="student.isBanned"
-                        (click)="banUser(student, banModal)">
-                        <span *ngIf="student.isBanned">
-                            <i class="bi bi-ban"></i> Banned
-                        </span>
-                        <span *ngIf="!student.isBanned">
-                            Ban User
-                        </span>
-                    </button>
-                    <button *ngIf="student.isBanned" class="btn btn-secondary" id="openReasonsModalButton"
-                        (click)="showBanReason(student, banReasonsModal)">
-                        <i class="bi bi-exclamation-circle"></i> Reason
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="text-center" *ngIf="filteredStudents.length > 0">
-        <button type="button" class="btn btn-primary custom-button" (click)="loadMore()" [disabled]="noMoreResults">Load
-            More</button>
-        <p *ngIf="noMoreResults" class="text-muted">No more results.</p>
+                        <button class="btn btn-info custom-button" (click)="viewDetails(student, detailsModal)">
+                            <i class="bi bi-info-circle"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger me-2" [disabled]="student.isBanned"
+                            (click)="banUser(student, banModal)">
+                            <span *ngIf="student.isBanned">
+                                <i class="bi bi-ban"></i> Banned
+                            </span>
+                            <span *ngIf="!student.isBanned">
+                                Ban User
+                            </span>
+                        </button>
+                        <button *ngIf="student.isBanned" class="btn btn-secondary" id="openReasonsModalButton"
+                            (click)="showBanReason(student, banReasonsModal)">
+                            <i class="bi bi-exclamation-circle"></i> Reason
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <!-- Student Details Modal -->
@@ -109,11 +105,14 @@
             <p>City: {{selectedStudentDetails?.city}}</p>
             <p><em>Trainee Subjects: </em> {{selectedStudentDetails?.traineeSubjects.join(', ')}}</p>
             <p><em>Tutor Subjects: </em> {{selectedStudentDetails?.tutorSubjects.join(', ')}}</p>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary justify-content-start" routerLink="./feedback/{{selectedStudent.id}}" (click)="modal.close('Close click')">Show Feedback by this student</button>
-          <button type="button" class="btn btn-secondary justify-content-start" routerLink="./{{selectedStudent.id}}" (click)="modal.close('Close click')">Edit</button>
-          <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
-        </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary justify-content-start"
+                    routerLink="./feedback/{{selectedStudent.id}}" (click)="modal.close('Close click')">Show Feedback by
+                    this student</button>
+                <button type="button" class="btn btn-secondary justify-content-start"
+                    routerLink="./{{selectedStudent.id}}" (click)="modal.close('Close click')">Edit</button>
+                <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+            </div>
         </div>
 
     </ng-template>

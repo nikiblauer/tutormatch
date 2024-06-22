@@ -11,6 +11,7 @@ import { NgxSpinnerService } from "ngx-spinner";
 import { AuthService } from "src/app/services/auth.service";
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ViewChild, ElementRef } from '@angular/core';
 
 interface StudentListing {
   id: number;
@@ -48,6 +49,7 @@ export class StudentsComponent implements OnInit {
 
   banForm: FormGroup;
 
+  @ViewChild('scrollableDiv', { static: false }) scrollableDiv: ElementRef;
 
   constructor(private modalService: NgbModal, private adminService: AdminService,
     private notification: ToastrService, private spinner: NgxSpinnerService,
@@ -68,6 +70,15 @@ export class StudentsComponent implements OnInit {
       return;
     }
     this.search(false);
+  }
+
+  ngAfterViewInit() {
+    this.scrollableDiv.nativeElement.addEventListener('scroll', () => {
+      let element = this.scrollableDiv.nativeElement;
+      if (!this.noMoreResults && element.scrollTop + element.clientHeight >= element.scrollHeight) {
+        this.loadMore();
+      }
+    });
   }
 
   page = 0; // Current page number (0-indexed)
@@ -92,7 +103,7 @@ export class StudentsComponent implements OnInit {
       this.filteredStudents = []; // Clear the list of filtered students
     }
 
-    this.withSpinner(this.adminService.searchUsers(this.searchName, Number(this.matrNumber), this.filterStatus, this.page, 20), this.spinner).subscribe({
+    this.withSpinner(this.adminService.searchUsers(this.searchName, Number(this.matrNumber), this.filterStatus, this.page, 100), this.spinner).subscribe({
       next: (response: Page<StudentDto>) => {
         this.spinner.hide();
         if (response.content.length === 0) {
