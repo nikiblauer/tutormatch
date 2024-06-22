@@ -46,7 +46,7 @@ public class UserSubjectDataGenerator {
 
         List<UserSubject> userSubjects = new ArrayList<>();
         var subjects = subjectRepository.findAll();
-
+        var subjectSize = subjects.size();
         int i = 0;
 
         // user and subjects are already inserted at this point
@@ -58,14 +58,16 @@ public class UserSubjectDataGenerator {
 
             var role1 = i % 2 == 1 ? "tutor" : "trainee";
             //first four subjects as tutor
-            for (int j = i; j < 4 + i; j++) {
-                userSubjects.add(getUserSubject(applicationUser.getId(), subjects.get(j).getId(), role1));
+            for (int j = i; j < 5 + i; j++) {
+                var subjectIndex = j % subjectSize;
+                userSubjects.add(getUserSubject(applicationUser.getId(), subjects.get(subjectIndex).getId(), role1));
             }
 
             var role2 = i % 2 == 1 ? "trainee" : "tutor";
             //next four subjects as trainee
-            for (int j = 4 + i; j < 8 + i; j++) {
-                userSubjects.add(getUserSubject(applicationUser.getId(), subjects.get(j).getId(), role2));
+            for (int j = 5 + i; j < 10 + i; j++) {
+                var subjectIndex = j % subjectSize;
+                userSubjects.add(getUserSubject(applicationUser.getId(), subjects.get(subjectIndex).getId(), role2));
             }
             i++;
         }

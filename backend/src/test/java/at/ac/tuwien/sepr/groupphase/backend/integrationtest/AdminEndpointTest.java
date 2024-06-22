@@ -116,9 +116,10 @@ public class AdminEndpointTest extends BaseTest {
 
     @Test
     void testQueryUser2Surname2() throws Exception {
+        var expectedUser = userRepository.findAll().get(0);
         String token = loginAsAdmin();
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users")
-                .param("fullname", "User2 Surname2")
+                .param("fullname", expectedUser.getFirstname() + " " + expectedUser.getLastname())
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -130,8 +131,8 @@ public class AdminEndpointTest extends BaseTest {
         List<StudentDto> returnedUsers = returnedPage.getContent();
 
         assertEquals(1, returnedUsers.size());
-        assertEquals("User2", returnedUsers.get(0).getFirstname());
-        assertEquals("Surname2", returnedUsers.get(0).getLastname());
+        assertEquals(expectedUser.getFirstname(), returnedUsers.get(0).getFirstname());
+        assertEquals(expectedUser.getLastname(), returnedUsers.get(0).getLastname());
     }
 
     @Test
@@ -156,10 +157,10 @@ public class AdminEndpointTest extends BaseTest {
     void testGetUserDetailsFromUserWithId1() throws Exception {
         // get the first user from the database
         List<ApplicationUser> users = userRepository.findAll();
-        Long userId = users.get(0).getId();
+        var expectedUser = users.get(0);
 
         String token = loginAsAdmin();
-        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users/" + userId)
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/users/" + expectedUser.getId())
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -169,14 +170,14 @@ public class AdminEndpointTest extends BaseTest {
         StudentSubjectInfoDto returnedUser = objectMapper.readValue(responseBody, StudentSubjectInfoDto.class);
 
         assertAll("User",
-            () -> assertEquals("User1", returnedUser.getFirstname()),
-            () -> assertEquals("Surname1", returnedUser.getLastname()),
-            () -> assertEquals("e10000001@student.tuwien.ac.at", returnedUser.getEmail()),
-            () -> assertEquals("+43660 1111111", returnedUser.getTelNr()),
-            () -> assertEquals(1000, returnedUser.getAreaCode()),
-            () -> assertEquals("Wien", returnedUser.getCity()),
-            () -> assertEquals("[Advanced Information Retrieval, Advanced Model Engineering, Advanced Model Engineering, Advanced Modeling and Simulation, Critical Design]", Arrays.toString(returnedUser.getTutorSubjects())),
-            () -> assertEquals("[3D Vision, 3D Vision, AKNUM Reinforcement Learning, Abstrakte Maschinen, Parallel Computing]", Arrays.toString(returnedUser.getTraineeSubjects()))
+            () -> assertEquals(expectedUser.getFirstname(), returnedUser.getFirstname()),
+            () -> assertEquals(expectedUser.getLastname(), returnedUser.getLastname()),
+            () -> assertEquals(expectedUser.getDetails().getEmail(), returnedUser.getEmail()),
+            () -> assertEquals(expectedUser.getDetails().getTelNr(), returnedUser.getTelNr()),
+            () -> assertEquals(expectedUser.getDetails().getAddress().getAreaCode(), returnedUser.getAreaCode()),
+            () -> assertEquals(expectedUser.getDetails().getAddress().getCity(), returnedUser.getCity()),
+            () -> assertEquals("[Advanced Model Engineering, Advanced Model Engineering, Advanced Modeling and Simulation, Advanced Software Engineering, Advanced Software Engineering, Critical Design]", Arrays.toString(returnedUser.getTutorSubjects())),
+            () -> assertEquals("[3D Vision, 3D Vision, AKNUM Reinforcement Learning, Abstrakte Maschinen, Advanced Information Retrieval, Parallel Computing]", Arrays.toString(returnedUser.getTraineeSubjects()))
         );
     }
 
@@ -376,7 +377,7 @@ public class AdminEndpointTest extends BaseTest {
         SimpleStatisticsDto returnedStatistics = objectMapper.readValue(responseBody, SimpleStatisticsDto.class);
 
         assertAll("Statistics",
-            () -> assertEquals(10, returnedStatistics.getRegisteredVerifiedUsers()),
+            () -> assertEquals(9, returnedStatistics.getRegisteredVerifiedUsers()),
             () -> assertEquals(1.0, returnedStatistics.getRatioOfferedNeededSubjects(), 0.01) // delta is used to compare doubles
         );
     }
@@ -395,17 +396,17 @@ public class AdminEndpointTest extends BaseTest {
 
         List<String> expectedOfferedSubjects = Arrays.asList(
             "193.150 VU Critical Design (2024S)",
-            "188.953 SE Advanced Model Engineering (2024S)",
             "194.056 VU Advanced Modeling and Simulation (2024S)",
-            "183.243 PR Advanced Software Engineering (2024S)",
-            "188.980 VU Advanced Information Retrieval (2024S)"
+            "188.910 PR Advanced Software Engineering (2024S)",
+            "188.952 VU Advanced Model Engineering (2024S)",
+            "183.243 PR Advanced Software Engineering (2024S)"
         );
         List<String> expectedNeededSubjects = Arrays.asList(
             "184.710 VU Parallel Computing (2024S)",
-            "194.056 VU Advanced Modeling and Simulation (2024S)",
-            "188.910 PR Advanced Software Engineering (2024S)",
             "183.243 PR Advanced Software Engineering (2024S)",
-            "188.952 VU Advanced Model Engineering (2024S)"
+            "194.164 SE Advanced Topics in Recommender Systems and Generative AI (2024S)",
+            "188.953 SE Advanced Model Engineering (2024S)",
+            "188.910 PR Advanced Software Engineering (2024S)"
         );
         List<String> alternativeExpectedNeededSubjects = Arrays.asList(
             "184.710 VU Parallel Computing (2024S)",
@@ -415,8 +416,8 @@ public class AdminEndpointTest extends BaseTest {
             "188.953 SE Advanced Model Engineering (2024S)"
         );
 
-        List<Integer> top5OfferedAmount = Arrays.asList(9, 4, 4, 4, 3);
-        List<Integer> top5NeededAmount = Arrays.asList(9, 4, 4, 4, 3);
+        List<Integer> top5OfferedAmount = Arrays.asList(9, 5, 5, 4, 4);
+        List<Integer> top5NeededAmount = Arrays.asList(9, 5, 5, 4, 4);
         assertAll("Statistics",
             () -> assertEquals(5, returnedStatistics.getTopXofferedSubjects().size()),
             () -> assertEquals(5, returnedStatistics.getTopXneededSubjects().size()),

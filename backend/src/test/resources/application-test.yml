@@ -1,3 +1,7 @@
+myapp:
+  userCount: 10
+  seed: 123456789
+
 logging:
   file.name: ./log/backend-test.log
 
