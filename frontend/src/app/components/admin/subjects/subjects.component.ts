@@ -25,10 +25,6 @@ export class SubjectComponent implements OnInit, AfterViewInit {
   searchSubject$ = new RxSubject<string>();
   loadSubjects = false;
   createdSubject: SubjectDetailDto = new SubjectDetailDto();
-  edit: boolean = false;
-  info: boolean = false;
-  create: boolean = false;
-  delete: boolean = false;
 
   searchQuery: string = '';
   subjects: Subject[];
@@ -150,7 +146,6 @@ export class SubjectComponent implements OnInit, AfterViewInit {
           clearTimeout(timeout);
           this.spinner.hide();
           this.subjectToDelete = subject;
-          this.delete = true;
         },
         error: (e => {
           clearTimeout(timeout);
@@ -167,9 +162,6 @@ export class SubjectComponent implements OnInit, AfterViewInit {
     this.adminService.deleteSubject(this.subjectToDelete.id).subscribe({
       next: _ => {
         this.spinner.hide();
-        this.delete = false;
-        this.edit = false;
-        this.info = false;
         this.updateSubjectList();
         this.notification.success("Successfully deleted subject", "Deleted subject!");
       },
@@ -183,8 +175,6 @@ export class SubjectComponent implements OnInit, AfterViewInit {
   }
 
   closeDeleteDialog() {
-    console.log(this.selectedSubject.title)
-    this.delete = false;
     this.subjectToDelete = new SubjectDetailDto();
   }
 
@@ -212,13 +202,10 @@ export class SubjectComponent implements OnInit, AfterViewInit {
   }
 
   closeSubjectEdit() {
-    console.log(this.selectedSubject.title)
 
-    this.edit = false;
   }
 
   closeSubjectCreate() {
-    this.create = false;
     this.createdSubject = new SubjectDetailDto();
   }
 
@@ -228,7 +215,6 @@ export class SubjectComponent implements OnInit, AfterViewInit {
       next: _ => {
         this.spinner.hide();
         event.stopPropagation();
-        this.edit = false;
         this.notification.success("Successfully updated subject information", "Updated subject information!")
       },
       error: (e) => {
@@ -244,7 +230,6 @@ export class SubjectComponent implements OnInit, AfterViewInit {
       next: _ => {
         this.spinner.hide();
         event.stopPropagation();
-        this.create = false;
         this.notification.success("Successfully created subject", "Created subject!")
         this.autofillUrlInput = "";
       },
