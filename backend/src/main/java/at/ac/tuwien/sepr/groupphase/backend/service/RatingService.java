@@ -6,7 +6,19 @@ import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackDtoNamed;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.RatingDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.Feedback;
 
+import java.util.List;
+import java.util.Map;
+
 public interface RatingService {
+
+    /**
+     * Retrieves the ratings for a list of students.
+     *
+     * @param studentIds List of student IDs to retrieve ratings for.
+     * @return A map of student ID to an array where the first element is the average rating and the second element is the count of ratings.
+     */
+    Map<Long, float[]> getRatingsOfStudents(List<Long> studentIds);
+
     /**
      * gets a rating for a student.
      *

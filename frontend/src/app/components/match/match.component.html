@@ -1,83 +1,183 @@
 <ngx-spinner type="square-jelly-box"></ngx-spinner>
 <div class="matches-container">
-  <h3 class="matches-title">Your matches:</h3>
+  <div class="matches-header d-flex justify-content-between align-items-center">
+    <h3 class="matches-title">Your matches:</h3>
+    <button class="btn btn-primary filter-btn" (click)="openFilter()"
+            data-bs-toggle="modal" data-bs-target="#filterModal"
+    ><i class="bi bi-filter"></i>filter
+    </button>
+  </div>
   <div class="container">
-    <div *ngIf="matches.length > 0" class="row">
-      <div class="col-12 col-md-6 col-lg-3 mb-4 rounded" *ngFor="let match of matches">
+    <div *ngIf="placeholderMatches.length < 1 &&
+  (this.filterNeeds.length !== 0 || this.filterOffers.length !== 0)"
+         class="row no-match-display justify-content-center align-items-center">
+      <div class="col text-center">
+        <h2 class="display-4">No matches yet!</h2>
+        <h3 style="font-weight: normal">Please select subjects in your profile, to get matches.</h3>
+      </div>
+    </div>
+    <div *ngIf="this.placeholderMatches.length === 0 &&
+  (this.filterNeeds.length === 0 && this.filterOffers.length === 0)"
+         class="row no-match-display justify-content-center align-items-center">
+      <div class="col text-center">
+        <h2 class="display-4">No matches found! :(</h2>
+        <h3 style="font-weight: normal">Try to adjust your filters.</h3>
+      </div>
+    </div>
+    <div *ngIf="placeholderMatches.length > 0" class="row">
+      <div class="col-12 col-md-6 col-lg-3 mb-4 rounded" *ngFor="let match of placeholderMatches">
         <div class="card h-100 rounded bg-light shadow" (click)="openMatch(match)">
           <div class="card-body">
             <h5 class="card-title">{{ match.firstname }} {{ match.lastname }}</h5>
-            <app-star-rating [rating]="this.match.rating" [isEditable]="false" [amount]="match.amount"></app-star-rating>
+            <app-star-rating [amount]="match.amount" [isEditable]="false" [rating]="match.rating"></app-star-rating>
             <div class="card-text">
-              <span class="sub-headline">Offers: </span>
+              <span class="sub-headline">Needs: </span>
               <span>{{ trimStringByComma(match.traineeSubjects) }}</span>
               <div class="needs">
-                <span class="sub-headline">Needs: </span>
+                <span class="sub-headline">Offers: </span>
                 <span>{{ trimStringByComma(match.tutorSubjects) }}</span>
               </div>
             </div>
-            <button class="btn btn-primary match-btn">More Information</button>
+            <button (click)="openMatch(match)" class="btn btn-primary match-btn" data-bs-target="#matchDetailsModal"
+                    data-bs-toggle="modal">More Information
+            </button>
           </div>
         </div>
       </div>
     </div>
-    <div *ngIf="matches.length < 1" id="no_match_display" class="row justify-content-center align-items-center">
-      <div class="col text-center">
-        <h2 class="display-4">No matches yet!</h2>
-        <h3>Please select subjects in your profile, to get matches.</h3>
+  </div>
+</div>
+
+<!-- Match Details Modal -->
+<div aria-hidden="true"
+     aria-labelledby="matchDetailsModalLabel"
+     class="modal fade"
+     id="matchDetailsModal"
+     tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="matchDetailsModalLabel">Match Details</h2>
+        <div class="ms-auto">
+          <button class="btn btn-danger bi bi-exclamation-triangle" data-bs-target="#reportModal"
+                  data-bs-toggle="modal"></button>
+          <button (click)="startChat()" class="btn btn-primary feedback-btn pl-3 bi bi-chat-dots"
+                  data-bs-dismiss="modal"></button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="header-container">
+
+        </div>
+        <div class="match-details">
+          <div *ngIf="selectedUserRating !== -2">
+            <app-star-rating [ratedUserId]="selectedMatch.id" [rating]="this.selectedUserRating"
+                             [feedbackActive]="false"></app-star-rating>
+          </div>
+          <div class="d-flex flex-column align-items-center my-3">
+            <span *ngIf="chatExists">Feel free to leave a feedback if you feel like it!</span>
+            <span *ngIf="!chatExists">You have to start a chat before giving feedback!</span>
+            <button [disabled]="!chatExists" class="btn btn-primary feedback-btn mt-2" data-bs-toggle="modal"
+                    data-bs-target="#feedbackModal">Give Feedback
+            </button>
+          </div>
+          <div class="detail-row"><span class="detail-label">Name:</span>
+            <span>{{ selectedMatch.firstname }} {{ selectedMatch.lastname }}</span></div>
+          <div class="detail-row"><span class="detail-label">Email:</span> <span
+            *ngIf="selectedUser">{{ selectedUser.email }}</span></div>
+          <div class="detail-row"><span class="detail-label">Address:</span> <span
+            *ngIf="selectedUser">{{ getSelectedUserAddressAsString(selectedUser) }}</span></div>
+          <div class="detail-row"><span class="detail-label">Phone:</span> <span
+            *ngIf="selectedUser">{{ selectedUser.telNr }}</span></div>
+          <div class="flex-container">
+            <div class="flex-item">
+              <div class="detail-row"><span class="detail-label">Needs:</span>
+                <span>{{ selectedMatch.tutorSubjects }}</span></div>
+            </div>
+            <div class="flex-item">
+              <div class="detail-row"><span class="detail-label">Offers:</span>
+                <span>{{ selectedMatch.traineeSubjects }}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="filterModalLabel">Filter Subjects</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <h5 class="mb-3">Needs of match:</h5>
+            <div class="scrollable-list">
+              <div class="form-check mb-3" *ngFor="let need of matchNeeds; let i = index">
+                <input class="form-check-input" type="checkbox" [id]="'offer-checkbox-' + i"
+                       [checked]="isSelected(need, filterNeeds)"
+                       (change)="toggleSelection(need, $event.target.checked, filterNeeds)">
+                <label class="form-check-label" [for]="'offer-checkbox-' + i">
+                  {{ need.name }}
+                </label>
+              </div>
+            </div>
+
+            <h5 class="mb-3">Offers of match:</h5>
+            <div class="scrollable-list">
+              <div class="form-check mb-3 " *ngFor="let offer of matchOffers; let j = index">
+                <input class="form-check-input" type="checkbox" [id]="'need-checkbox-' + j"
+                       [checked]="isSelected(offer, filterOffers)"
+                       (change)="toggleSelection(offer, $event.target.checked, filterOffers)">
+                <label class="form-check-label" [for]="'need-checkbox-' + j">
+                  {{ offer.name }}
+                </label>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary save-btn" data-bs-dismiss="modal" (click)="applyFilter()">Save</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </div>
 
-<div class="popup-overlay popup-overlay-matches" (click)="closeMatch()" *ngIf="selectedMatch && selectedUserRating !== -2">
-  <div class="popup-container popup-container-matches" (click)="$event.stopPropagation()">
-    <div class="header-container">
-      <h1>Match Details</h1>
-      <div>
-        <button class="btn btn-danger bi bi-exclamation-triangle" data-bs-toggle="modal" data-bs-target="#reportModal"></button>
-        <button class="btn primary-btn chat-btn pl-3 bi bi-chat-dots" (click)="startChat()"></button>
-      </div>
-    </div>
-    <div class="match-details">
-      <div>
-        <app-star-rating [rating]="this.selectedUserRating" [ratedUserId]="selectedMatch.id"></app-star-rating>
-      </div>
-      <div class="detail-row"><span class="detail-label">Name:</span>
-        <span>{{ selectedMatch.firstname }} {{ selectedMatch.lastname }}</span></div>
-      <div class="detail-row"><span class="detail-label">Email:</span> <span *ngIf="selectedUser">{{ selectedUser.email }}</span></div>
-      <div class="detail-row"><span class="detail-label">Address:</span> <span *ngIf="selectedUser">{{ getSelectedUserAddressAsString(selectedUser) }}</span></div>
-      <div class="detail-row"><span class="detail-label">Phone:</span> <span *ngIf="selectedUser">{{ selectedUser.telNr }}</span></div>
-      <div class="flex-container">
-        <div class="flex-item">
-          <div class="detail-row"><span class="detail-label">Needs:</span>
-            <span>{{ selectedMatch.tutorSubjects }}</span></div>
-        </div>
-        <div class="flex-item">
-          <div class="detail-row"><span class="detail-label">Offers:</span>
-            <span>{{ selectedMatch.traineeSubjects }}</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #reportModal>
+<!-- Report Modal -->
+<div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="reportModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Report User</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
       </div>
       <div class="modal-body">
         <div class="mb-3">
-          <label for="reportReason" class="form-label">Reason for Reporting</label>
-          <textarea type="text" class="form-control" id="reportReason" [(ngModel)]="reportReason"></textarea>
+          <label class="form-label" for="reportReason">Reason for Reporting</label>
+          <textarea [(ngModel)]="reportReason" class="form-control" id="reportReason" type="text"></textarea>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn primary-btn" (click)="submitReport()" data-bs-dismiss="modal">Submit Report</button>
+        <button (click)="submitReport()" class="btn primary-btn" data-bs-dismiss="modal" type="button">Submit Report
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Feedback Modal -->
+<div aria-hidden="true" aria-labelledby="feedbackModalLabel" class="modal fade" id="feedbackModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="feedbackModalLabel">
+          Feedback: {{ selectedMatch.firstname }} {{ selectedMatch.lastname }}</h5>
+        <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+      </div>
+      <div class="modal-body" *ngIf="selectedUserRating !== -2">
+        <app-star-rating [ratedUserId]="selectedMatch.id" [feedbackActive]="true"></app-star-rating>
       </div>
     </div>
   </div>

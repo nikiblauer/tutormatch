@@ -35,10 +35,10 @@ export class AuthGuard {
 
     // Handle role-based access for authenticated users
     if (role === 'USER' && (url.startsWith('/admin'))) {
-      this.router.navigate(['/myprofile']);
+      this.router.navigate(['/forbidden']);
       return false;
     } else if (role === 'ADMIN' && (url.startsWith('/myprofile') || url.startsWith('/matches') || url.startsWith('/chat') || url.startsWith('/feedback'))) {
-      this.router.navigate(['/admin/dashboard']);
+      this.router.navigate(['/forbidden']);
       return false;
     }
 

@@ -1,41 +1,37 @@
-import { Component, OnInit } from "@angular/core";
-import { Subject } from "src/app/dtos/user";
-import { AdminService } from "src/app/services/admin.service";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
-import { Subject as RxSubject } from 'rxjs';
-import { SubjectService } from "../../../services/subject.service";
-import { HttpErrorResponse } from "@angular/common/http";
-import { SubjectDetailDto } from "../../../dtos/subject";
-import { ToastrService } from "ngx-toastr";
-import { NgxSpinnerService } from "ngx-spinner";
-import { Router } from '@angular/router';
-import { AuthService } from "src/app/services/auth.service";
+import {AfterViewInit, Component, OnInit} from "@angular/core";
+import {Subject} from "src/app/dtos/user";
+import {AdminService} from "src/app/services/admin.service";
+import {debounceTime, distinctUntilChanged} from "rxjs/operators";
+import {Subject as RxSubject} from 'rxjs';
+import {SubjectService} from "../../../services/subject.service";
+import {HttpErrorResponse} from "@angular/common/http";
+import {SubjectDetailDto} from "../../../dtos/subject";
+import {ToastrService} from "ngx-toastr";
+import {NgxSpinnerService} from "ngx-spinner";
+import {Router} from '@angular/router';
+import {AuthService} from "src/app/services/auth.service";
 
 @Component({
   selector: "app-subjects",
   templateUrl: "./subjects.component.html",
   styleUrls: ["./subjects.component.scss"],
 })
-export class SubjectComponent implements OnInit {
+export class SubjectComponent implements OnInit, AfterViewInit {
   constructor(private subjectService: SubjectService, private adminService: AdminService,
-    private notification: ToastrService, private spinner: NgxSpinnerService,
-    private authService: AuthService, private router: Router) {
+              private notification: ToastrService, private spinner: NgxSpinnerService,
+              private authService: AuthService, private router: Router) {
   }
 
   searchSubject$ = new RxSubject<string>();
   loadSubjects = false;
   createdSubject: SubjectDetailDto = new SubjectDetailDto();
-  edit: boolean = false;
-  info: boolean = false;
-  create: boolean = false;
-  delete: boolean = false;
 
   searchQuery: string = '';
   subjects: Subject[];
 
   selectedSubject: SubjectDetailDto;
 
-  subjectToDelete: SubjectDetailDto = null;
+  subjectToDelete: SubjectDetailDto = new SubjectDetailDto();
   public autofillUrlInput: string = '';
 
   ngOnInit() {
@@ -58,6 +54,38 @@ export class SubjectComponent implements OnInit {
         this.notification.error(error.error, "Loading subjects failed!");
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    const deleteModalElement = document.getElementById('openDeleteDialog');
+    const infoModalElement = document.getElementById('openSubjectInfo1');
+    const editModalElement = document.getElementById('openSubjectEdit');
+    const createModalElement = document.getElementById('openSubjectCreate');
+
+    if (deleteModalElement) {
+      deleteModalElement.addEventListener('hidden.bs.modal', () => {
+        this.closeDeleteDialog();
+      });
+    }
+    if (infoModalElement) {
+      infoModalElement.addEventListener('hidden.bs.modal', () => {
+        if (!editModalElement) {
+          this.closeSubjectInfo();
+        }
+      });
+    }
+    if (editModalElement) {
+      editModalElement.addEventListener('hidden.bs.modal', () => {
+        if (!infoModalElement.classList.contains('show')) {
+          this.closeSubjectEdit();
+        }
+      });
+    }
+    if (createModalElement) {
+      deleteModalElement.addEventListener('show.bs.modal', () => {
+        this.closeSubjectCreate();
+      });
+    }
   }
 
   onSearchChange(): void {
@@ -86,73 +114,56 @@ export class SubjectComponent implements OnInit {
   }
 
   closeSubjectInfo() {
-    this.info = false;
-    this.selectedSubject = null;
-  }
-
-  closeCreate() {
-    this.create = false;
-    this.createdSubject = new SubjectDetailDto();
+    this.selectedSubject = new SubjectDetailDto();
   }
 
   onInfo(subject: Subject) {
-    if (!this.selectedSubject) {
-      let timeout = setTimeout(() => {
-        this.spinner.show();
-      }, 1500);
-      this.subjectService.getSubjectById(subject.id).subscribe(s => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        this.selectedSubject = s;
-      });
-    }
-    this.info = true;
+    let timeout = setTimeout(() => {
+    }, 1500);
+    this.subjectService.getSubjectById(subject.id).subscribe(s => {
+      clearTimeout(timeout);
+      this.selectedSubject = s;
+    });
   }
 
   onEdit(subject: Subject) {
-    if (this.info != true) {
-      let timeout = setTimeout(() => {
-        this.spinner.show();
-      }, 1500);
-      this.subjectService.getSubjectById(subject.id).subscribe(s => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        this.selectedSubject = s;
-      });
+    if (subject == null) {
+      return;
     }
-    this.info = false;
-    this.edit = true;
+    let timeout = setTimeout(() => {
+    }, 1500);
+    this.subjectService.getSubjectById(subject.id).subscribe(s => {
+      clearTimeout(timeout);
+      this.selectedSubject = s;
+    });
+
   }
 
-  onDelete(id: number, event: Event) {
-    event.stopPropagation();
+  onDelete(id: number) {
     let timeout = setTimeout(() => {
       this.spinner.show();
     }, 1500);
     this.subjectService.getSubjectById(id).subscribe({
-      next: subject => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        this.subjectToDelete = subject;
-        this.delete = true;
-      },
-      error: (e => {
-        clearTimeout(timeout);
-        this.spinner.hide();
-        this.notification.error(e.error, "Maybe it was already deleted?")
-      })
-    }
+        next: subject => {
+          clearTimeout(timeout);
+          this.spinner.hide();
+          this.subjectToDelete = subject;
+        },
+        error: (e => {
+          clearTimeout(timeout);
+          this.spinner.hide();
+          this.notification.error(e.error, "Maybe it was already deleted?")
+        })
+      }
     );
   }
+
 
   confirmDelete() {
     this.spinner.show();
     this.adminService.deleteSubject(this.subjectToDelete.id).subscribe({
       next: _ => {
         this.spinner.hide();
-        this.delete = false;
-        this.edit = false;
-        this.info = false;
         this.updateSubjectList();
         this.notification.success("Successfully deleted subject", "Deleted subject!");
       },
@@ -166,8 +177,7 @@ export class SubjectComponent implements OnInit {
   }
 
   closeDeleteDialog() {
-    this.delete = false;
-    this.subjectToDelete = null;
+    this.subjectToDelete = new SubjectDetailDto();
   }
 
   private handleError(error: HttpErrorResponse) {
@@ -194,12 +204,10 @@ export class SubjectComponent implements OnInit {
   }
 
   closeSubjectEdit() {
-    this.edit = false;
-    this.selectedSubject = null;
+    this.selectedSubject = new SubjectDetailDto();
   }
 
   closeSubjectCreate() {
-    this.create = false;
     this.createdSubject = new SubjectDetailDto();
   }
 
@@ -209,7 +217,6 @@ export class SubjectComponent implements OnInit {
       next: _ => {
         this.spinner.hide();
         event.stopPropagation();
-        this.edit = false;
         this.notification.success("Successfully updated subject information", "Updated subject information!")
       },
       error: (e) => {
@@ -225,7 +232,6 @@ export class SubjectComponent implements OnInit {
       next: _ => {
         this.spinner.hide();
         event.stopPropagation();
-        this.create = false;
         this.notification.success("Successfully created subject", "Created subject!")
         this.autofillUrlInput = "";
       },
@@ -242,16 +248,16 @@ export class SubjectComponent implements OnInit {
     const params = new URLSearchParams(urlObj.search);
 
     this.adminService.getPreviewSubject(params.get("courseNr"), params.get("semester"))
-    .subscribe({
-      next: previewSubject => {
-        this.createdSubject = {
-          ...previewSubject,
-          id: null
-        };
-      },
-      error: (e) => {
-        this.handleError(e)
-      }
-    });
+      .subscribe({
+        next: previewSubject => {
+          this.createdSubject = {
+            ...previewSubject,
+            id: null
+          };
+        },
+        error: (e) => {
+          this.handleError(e)
+        }
+      });
   }
 }

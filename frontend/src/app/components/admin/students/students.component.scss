@@ -55,6 +55,8 @@ td {
 .table {
   table-layout: fixed;
   width: 100%;
+  border-collapse: separate; 
+  border-spacing: 0; 
 }
 
 .text-success {
@@ -80,4 +82,18 @@ td {
 
 .btn {
   margin: 5px; 
+}
+
+.table-responsive {
+  height: 100vh;
+  overflow-y: auto;
+  border: 1px solid #dee2e6; 
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa; 
+  z-index: 2; 
+  border-top: 1px solid #dee2e6; 
 }

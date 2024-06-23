@@ -92,15 +92,89 @@
   margin-top: auto;
 }
 .match-btn:hover {
-  background-color: #143349;  /* Ändert die Hintergrundfarbe beim Hovern */
-  border-color: #FFFFFF;  /* Ändert die Randfarbe beim Hovern */
+  background-color: #143349;
+  border-color: #FFFFFF;
+  color: #FFF;
+}
+.feedback-btn {
+  background-color: #33709c;
+  border-color: #33709c;
+  margin-top: auto;
+}
+.feedback-btn:hover {
+  background-color: #143349;
+  border-color: #FFFFFF;
+  color: #FFF;
+}
+.btn .match-btn {
+  width: 100%;
+}
+
+.save-btn {
+  background-color: #33709c;
+  border-color: #33709c;
+  margin-top: auto;
+  float: right;
+}
+.save-btn:hover {
+  background-color: #143349;
+  border-color: #FFFFFF;
+  color: #FFF;
+}
+.filter-btn {
+  background-color: #33709c;
+  border-color: #33709c;
+  margin-top: auto;
+  float: right;
+  margin-right: 2rem;
+}
+.filter-btn:hover {
+  background-color: #143349;
+  border-color: #FFFFFF;
   color: #FFF;
 }
 
-#no_match_display {
+.no-matches {
+  background-color: #FFFFFF;
+  transition: .5s;
+  border-radius: .55rem;
+  position: relative;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+  margin: 3rem auto;
+  padding: 1rem;
+  justify-content: center;
+  align-items: center;
+  height: 7rem;
+  text-align: center;
+  border: 1px solid lightgray;
+  width: 30rem;
+}
+
+.no-match-display {
   margin-top: 4rem;
 }
 
+
 .pl-3{
   margin-left: 10px;
+}
+
+.scrollable-list {
+  padding-left: 1rem;
+  max-height: 12rem;
+  overflow-y: auto;
+}
+
+.scrollable-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb {
+  background-color: #33709C;
+  border-radius: 5px;
+  background-color: transparent;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb {
+  background-color: #33709C;
 }
