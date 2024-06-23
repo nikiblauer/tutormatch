@@ -41,13 +41,6 @@ public class RatingServiceImpl implements RatingService {
         this.userService = userService;
     }
 
-
-    /**
-     * Retrieves the ratings for a list of students.
-     *
-     * @param studentIds List of student IDs to retrieve ratings for.
-     * @return A map of student ID to an array where the first element is the average rating and the second element is the count of ratings.
-     */
     public Map<Long, float[]> getRatingsOfStudents(List<Long> studentIds) {
         LOGGER.trace("getRatingsOfStudents: {}", studentIds);
 
