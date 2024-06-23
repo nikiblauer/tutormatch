@@ -29,6 +29,8 @@ import { RequestResetComponent } from "./components/password-reset/request-reset
 import { PasswordResetComponent } from "./components/password-reset/password-reset.component";
 import { FeedbackComponent } from './components/feedback/feedback.component';
 import { AdminFeedbackComponent } from "./components/admin/feedback/admin-feedback.component";
+import { ImportStatusComponent } from './components/admin/import-status/import-status.component';
+
 
 @NgModule({
   declarations: [
@@ -43,6 +45,7 @@ import { AdminFeedbackComponent } from "./components/admin/feedback/admin-feedba
     SubjectComponent,
     ChatComponent,
     StarRatingComponent,
+    ImportStatusComponent,
     ReportsComponent,
     NotFoundComponent,
     VerifyComponent,
