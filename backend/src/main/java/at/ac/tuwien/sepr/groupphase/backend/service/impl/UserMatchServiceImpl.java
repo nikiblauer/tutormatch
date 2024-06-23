@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.stream.Stream;
 
 @Service
@@ -66,12 +67,10 @@ public class UserMatchServiceImpl implements UserMatchService {
         query.setParameter("userId", user.getId());
         query.setMaxResults(100);
 
-
-        return query.getResultList()
+        List<UserMatchDto> matches = query.getResultList()
             .stream()
             .map(objItem -> {
                 var item = (Object[]) objItem;
-                var rating = ratingService.getRatingOfStudent((Long) item[0]);
                 return UserMatchDto
                     .builder()
                     .id((Long) item[0])
@@ -82,9 +81,20 @@ public class UserMatchServiceImpl implements UserMatchService {
                     .totalMatchingcount((Long) item[5])
                     .traineeSubjects((String) item[6])
                     .tutorSubjects((String) item[7])
-                    .rating(rating[0])
-                    .amount((long) rating[1])
+                    .rating(0)
+                    .amount(0)
                     .build();
-            });
+            }).toList();
+
+        var userIds = matches.stream().map(UserMatchDto::getId).toList();
+        var ratingsMap = ratingService.getRatingsOfStudents(userIds);
+
+        return matches.stream().peek(item -> {
+            var rating = ratingsMap.get(item.getId());
+            if (rating != null) {
+                item.setRating(rating[0]);
+                item.setAmount((long) rating[1]);
+            }
+        });
     }
 }

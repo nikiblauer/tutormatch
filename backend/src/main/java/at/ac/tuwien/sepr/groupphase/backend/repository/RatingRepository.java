@@ -12,6 +12,11 @@ import java.util.List;
 @Repository
 public interface RatingRepository extends JpaRepository<UserRating, Long> {
 
+    @Query("SELECT rated, AVG(rating) as avgRating, COUNT(rating) as countRating "
+        + "FROM UserRating WHERE rated IN :ratedStudents GROUP BY rated")
+    List<Object[]> findAggregatedRatingsByRatedStudents(@Param("ratedStudents") List<Long> ratedStudents);
+
+
     @Query("SELECT rating from UserRating where rated = :ratedStudent")
     List<Float> findAllByRated(@Param("ratedStudent") long ratedStudent);
 

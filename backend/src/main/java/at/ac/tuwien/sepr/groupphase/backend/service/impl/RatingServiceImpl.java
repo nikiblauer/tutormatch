@@ -20,7 +20,9 @@ import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -37,6 +39,30 @@ public class RatingServiceImpl implements RatingService {
         this.feedbackRepository = feedbackRepository;
         this.chatRoomRepository = chatRoomRepository;
         this.userService = userService;
+    }
+
+    public Map<Long, float[]> getRatingsOfStudents(List<Long> studentIds) {
+        LOGGER.trace("getRatingsOfStudents: {}", studentIds);
+
+        // Fetch aggregated ratings from the repository
+        List<Object[]> results = ratingRepository.findAggregatedRatingsByRatedStudents(studentIds);
+        Map<Long, float[]> ratingsMap = new HashMap<>();
+
+        // Process the query results
+        for (Object[] result : results) {
+            long studentId = (long) result[0];
+            float averageRating = ((Double) result[1]).floatValue();
+            long count = (long) result[2];
+
+            ratingsMap.put(studentId, new float[]{averageRating, count});
+        }
+
+        // Ensure all requested students are present in the result map
+        for (Long studentId : studentIds) {
+            ratingsMap.putIfAbsent(studentId, new float[]{0, 0});
+        }
+
+        return ratingsMap;
     }
 
     @Override
