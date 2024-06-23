@@ -3,8 +3,6 @@ import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-forbidden',
-  standalone: true,
-  imports: [],
   templateUrl: './forbidden.component.html',
   styleUrl: './forbidden.component.scss'
 })
