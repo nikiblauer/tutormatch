@@ -441,7 +441,7 @@ public class UserEndpointTest extends BaseTest {
 
         expectedMatches.add(UserMatchDto.builder()
             .firstname("Olivia")
-            .lastname("Williams")
+            .lastname("Hill")
             .traineeMatchingcount(2)
             .tutorMatchingcount(2)
             .totalMatchingcount(4)
