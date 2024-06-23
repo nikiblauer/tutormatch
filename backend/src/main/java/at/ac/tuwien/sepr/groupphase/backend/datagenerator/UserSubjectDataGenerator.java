@@ -74,17 +74,27 @@ public class UserSubjectDataGenerator {
 
         // Add a subject that is requested by all users but no one offers
         Subject requestedSubject = subjects.get(178); //Parallel Computing
+        int count = 0;
         for (ApplicationUser applicationUser : userRepository.findAll()) {
+            if (count >= 100) {
+                break; // Exit the loop after processing 100 users
+            }
             if (!applicationUser.getAdmin() && applicationUser.getVerified()) {
                 userSubjects.add(getUserSubject(applicationUser.getId(), requestedSubject.getId(), "trainee"));
+                count++; // Increment the counter when a user is processed
             }
         }
 
         // Add a subject that is offered by all users but no one requests
+        count = 0;
         Subject offeredSubject = subjects.get(61); //Critical Design
         for (ApplicationUser applicationUser : userRepository.findAll()) {
+            if (count >= 100) {
+                break; // Exit the loop after processing 100 users
+            }
             if (!applicationUser.getAdmin() && applicationUser.getVerified()) {
                 userSubjects.add(getUserSubject(applicationUser.getId(), offeredSubject.getId(), "tutor"));
+                count++;
             }
         }
 

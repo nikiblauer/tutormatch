@@ -43,7 +43,7 @@ public class UserDataGenerator {
     };
 
     private static final String[] LAST_NAMES = {
-        "Moser", "Erdogan", "Unterweger", "Harhammer", "Rychkov",
+        "Moser", "Erdogan", "Unterweger", "Harhammer", "Grüner", "Rychkov",
         "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Cosgun", "Miller", "Davis", "Rodriguez", "Martinez",
         "Hernandez", "Lopez", "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Mähr", "Moore", "Jackson", "Martin",
         "Lee", "Perez", "Thompson", "White", "Harris", "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson",
@@ -93,7 +93,7 @@ public class UserDataGenerator {
 
         //generate Banned User
         ApplicationUser bannedUser = createUser(userPassword, "UserBanned", "SurnameBanned", 11000001L,
-            "Teststraße 1111", 1001, "+43660 1111111", "Wien", false);
+            "Teststraße 1111", 1001, "+43660 1111111", "Wien", true);
         bannedUser.getDetails().setEmail(BANNED_USER_EMAIL);
 
         var ban = new Banned();
