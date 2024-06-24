@@ -4,8 +4,6 @@ import at.ac.tuwien.sepr.groupphase.backend.exception.BannedUserException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ErrorListException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.SubjectPreviewException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.TissClientException;
-import at.ac.tuwien.sepr.groupphase.backend.exception.TissClientHttpException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.UnverifiedAccountException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import io.swagger.v3.oas.annotations.media.Content;

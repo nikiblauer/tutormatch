@@ -1,8 +1,6 @@
 package at.ac.tuwien.sepr.groupphase.backend.repository;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ChatMessageDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ChatMessage;
-import at.ac.tuwien.sepr.groupphase.backend.entity.ChatRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

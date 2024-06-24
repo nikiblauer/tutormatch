@@ -3,7 +3,6 @@ package at.ac.tuwien.sepr.groupphase.backend.service;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.ImportStatusDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.TissClientException;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
-import org.springframework.scheduling.annotation.Async;
 
 public interface ImportService {
 
