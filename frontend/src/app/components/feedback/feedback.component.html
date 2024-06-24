@@ -1,20 +1,21 @@
 <div style="padding-top:20px;">
-<h2>Received feedback:</h2>
-    <table class="table table-striped" style="width:calc(100%)">
-      <thead>
+  <h2>Received feedback:</h2>
+  <table class="table table-striped" style="width:100%;">
+    <thead>
       <tr>
-        <th style="width:calc(70%)">Message</th>
-        <th style="width:calc(15%)">Date</th>
-        <th class="nowrap">Report</th>
-        <th class="nowrap">Delete</th>
+        <th style="width:60%;">Message</th>
+        <th style="width:20%;">Date</th>
+        <th style="width:10%;" class="nowrap">Report</th>
+        <th style="width:10%;" class="nowrap">Delete</th>
       </tr>
-      </thead>
-      <tbody>
+    </thead>
+    <tbody>
       <tr *ngFor="let feedback of receivedFeedback">
-        <td >{{ feedback.feedback }}</td>
-        <td >{{ feedback.created  | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+        <td>{{ feedback.feedback }}</td>
+        <td>{{ feedback.created | date:'MM/dd/yyyy HH:mm:ss'}}</td>
         <td>
-          <button class="btn btn-warning custom-button bi bi-exclamation-triangle" data-bs-toggle="modal" data-bs-target="#reportModal" (click)="reportFeedback = feedback.id"></button>
+          <button class="btn btn-warning custom-button bi bi-exclamation-triangle" data-bs-toggle="modal"
+            data-bs-target="#reportModal" (click)="reportFeedback = feedback.id"></button>
         </td>
         <td>
           <button class="btn btn-danger custom-button" (click)="deleteFeedback(feedback.id)">
@@ -22,35 +23,36 @@
           </button>
         </td>
       </tr>
-      </tbody>
-    </table>
+    </tbody>
+  </table>
 
   <h2>Written feedback:</h2>
-  <table class="table table-striped" style="width:calc(100%)">
+  <table class="table table-striped" style="width:100%;">
     <thead>
-    <tr>
-      <th style="width:calc(70%)" class="nowrap">Message</th>
-      <th style="width:calc(10%)" class="nowrap">Date</th>
-      <th style="width:calc(15%)" class="nowrap">To</th>
-      <th class="nowrap">Delete</th>
-    </tr>
+      <tr>
+        <th style="width:55%;" class="nowrap">Message</th>
+        <th style="width:15%;" class="nowrap">Date</th>
+        <th style="width:15%;" class="nowrap">To</th>
+        <th style="width:15%;" class="nowrap">Delete</th>
+      </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let feedback of writtenFeedback">
-      <td >{{ feedback.feedback }}</td>
-      <td >{{ feedback.created  | date:'MM/dd/yyyy HH:mm:ss'}}</td>
-      <td >{{ feedback.ratedName }}</td>
-      <td>
-        <button class="btn btn-danger custom-button" (click)="deleteFeedback(feedback.id)">
-          <i class="bi bi-x"></i>
-        </button>
-      </td>
-    </tr>
+      <tr *ngFor="let feedback of writtenFeedback">
+        <td>{{ feedback.feedback }}</td>
+        <td>{{ feedback.created | date:'MM/dd/yyyy HH:mm:ss'}}</td>
+        <td>{{ feedback.ratedName }}</td>
+        <td>
+          <button class="btn btn-danger custom-button" (click)="deleteFeedback(feedback.id)">
+            <i class="bi bi-x"></i>
+          </button>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
 
-<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" #reportModal>
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+  #reportModal>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -64,7 +66,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn primary-btn" (click)="submitReport()" data-bs-dismiss="modal">Submit Report</button>
+        <button type="button" class="btn primary-btn" (click)="submitReport()" data-bs-dismiss="modal">Submit
+          Report</button>
       </div>
     </div>
   </div>
