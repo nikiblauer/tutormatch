@@ -7,7 +7,7 @@ import { StudentSubjectInfoDto } from '../dtos/user';
 import { Page } from '../dtos/page';
 import { FeedbackDto } from "../dtos/feedback";
 import { SubjectCreateDto, SubjectDetailDto } from "../dtos/subject";
-import { SimpleStaticticsDto, ExtendedStatisticsDto, CoverageStatisticsDto } from '../dtos/statistics';
+import { SimpleStaticticsDto, ExtendedStatisticsDto, CoverageSubjectsStatisticsDto } from '../dtos/statistics';
 
 @Injectable({
   providedIn: 'root'
@@ -103,9 +103,9 @@ export class AdminService {
     return this.http.delete(this.baseUri + `/feedback/delete` + `/${id}`);
   }
 
-  getCoverageStatistics(x: number): Observable<CoverageStatisticsDto> {
+  getCoverageStatistics(x: number): Observable<CoverageSubjectsStatisticsDto[]> {
     const url = `${this.baseUri}/statistics/coverage?x=${x}`;
-    return this.http.get<CoverageStatisticsDto>(url);
+    return this.http.get<CoverageSubjectsStatisticsDto[]>(url);
   }
 
   getPreviewSubject(courseNr: string, semester: string): Observable<SubjectCreateDto> {

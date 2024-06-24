@@ -12,10 +12,9 @@ export interface ExtendedStatisticsDto {
     topXneededAmount: number[];
 }
 
-export interface CoverageStatisticsDto {
-    mostRequestedSubjectsWithoutCoverage: string[];
-    mostOfferedSubjectsWithoutCoverage: string[];
-
-    numberOfStudentsRequestedSubjects: string[];
-    numberOfStudentsOfferedSubjects: string[];
+export interface CoverageSubjectsStatisticsDto {
+    subjectInfo: string;
+    numOfTutors: number;
+    numOfTrainees: number;
+    diff: number;
 }

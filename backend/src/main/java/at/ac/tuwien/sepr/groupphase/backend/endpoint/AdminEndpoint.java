@@ -291,7 +291,7 @@ public class AdminEndpoint {
     )
     @Secured("ROLE_ADMIN")
     @GetMapping("/statistics/coverage")
-    public CoverageSubjectsStatisticsDto getCoverageSubjectsStatistics(@RequestParam(name = "x", defaultValue = "5") int x) {
+    public List<CoverageSubjectsStatisticsDto> getCoverageSubjectsStatistics(@RequestParam(name = "x", defaultValue = "5") int x) {
         return statisticService.getCoverageSubjectsStatistics(x);
     }
 }

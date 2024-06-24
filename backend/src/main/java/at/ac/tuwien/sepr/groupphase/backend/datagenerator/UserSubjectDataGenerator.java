@@ -72,31 +72,7 @@ public class UserSubjectDataGenerator {
             i++;
         }
 
-        // Add a subject that is requested by all users but no one offers
-        Subject requestedSubject = subjects.get(178); //Parallel Computing
-        int count = 0;
-        for (ApplicationUser applicationUser : userRepository.findAll()) {
-            if (count >= 100) {
-                break; // Exit the loop after processing 100 users
-            }
-            if (!applicationUser.getAdmin() && applicationUser.getVerified()) {
-                userSubjects.add(getUserSubject(applicationUser.getId(), requestedSubject.getId(), "trainee"));
-                count++; // Increment the counter when a user is processed
-            }
-        }
-
-        // Add a subject that is offered by all users but no one requests
-        count = 0;
-        Subject offeredSubject = subjects.get(61); //Critical Design
-        for (ApplicationUser applicationUser : userRepository.findAll()) {
-            if (count >= 100) {
-                break; // Exit the loop after processing 100 users
-            }
-            if (!applicationUser.getAdmin() && applicationUser.getVerified()) {
-                userSubjects.add(getUserSubject(applicationUser.getId(), offeredSubject.getId(), "tutor"));
-                count++;
-            }
-        }
+        addSubjectsWithNoCoverage(userSubjects, subjects);
 
         userSubjectRepository.saveAll(userSubjects);
         log.info("User-subject relations generation completed.");
@@ -109,5 +85,47 @@ public class UserSubjectDataGenerator {
         user.setId(userId);
         UserSubjectKey id = new UserSubjectKey(user.getId(), subject.getId());
         return new UserSubject(id, user, subject, role);
+    }
+
+
+    //Methods adds subjects to users, and creates a low coverage for some subjects
+    private void addSubjectsWithNoCoverage(List<UserSubject> userSubjects, List<Subject> subjects) {
+
+        Subject requestedSubject = subjects.get(178); //Parallel Computing
+        int count = 0;
+        for (ApplicationUser applicationUser : userRepository.findAll()) {
+            if (count >= 250) {
+                break;
+            }
+            if (!applicationUser.getAdmin() && applicationUser.getVerified()) {
+                userSubjects.add(getUserSubject(applicationUser.getId(), requestedSubject.getId(), "trainee"));
+                count++;
+            }
+        }
+
+        count = 0;
+        requestedSubject = subjects.get(192); //Programmiersprachen
+        for (ApplicationUser applicationUser : userRepository.findAll()) {
+            if (count >= 200) {
+                break;
+            }
+            if (!applicationUser.getAdmin() && applicationUser.getVerified()) {
+                userSubjects.add(getUserSubject(applicationUser.getId(), requestedSubject.getId(), "trainee"));
+                count++;
+            }
+        }
+
+        count = 0;
+        Subject offeredSubject = subjects.get(61); //Critical Design
+        for (ApplicationUser applicationUser : userRepository.findAll()) {
+            if (count >= 150) {
+                break;
+            }
+            if (!applicationUser.getAdmin() && applicationUser.getVerified()) {
+                userSubjects.add(getUserSubject(applicationUser.getId(), offeredSubject.getId(), "tutor"));
+                count++;
+            }
+        }
+        userSubjectRepository.saveAll(userSubjects);
     }
 }
