@@ -121,14 +121,10 @@ export class MatchComponent implements OnInit, AfterViewInit {
           }
         });
       this.feedbackService.getChatExists(match.id).subscribe({
-        next: () => {
-          this.chatExists = true;
+        next: (value) => {
+          this.chatExists = value;
         },
         error: error => {
-          if (error.status == 404) {
-            this.chatExists = false;
-            return;
-          }
           this.notification.error(error.error, "Something went wrong!");
         }
       });
