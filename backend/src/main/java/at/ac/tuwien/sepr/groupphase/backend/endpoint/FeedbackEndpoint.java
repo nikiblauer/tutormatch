@@ -95,14 +95,12 @@ public class FeedbackEndpoint {
     @Secured("ROLE_USER")
     @GetMapping("/valid/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void getChatExists(@PathVariable("id") Long id1) {
+    public Boolean getChatExists(@PathVariable("id") Long id1) {
         LOGGER.info("GET /api/v1/feedback/valid/{}", id1);
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         long id2 = userService.findApplicationUserByEmail(userEmail).getId();
-        boolean exists = ratingService.chatExists(id1, id2);
-        if (!exists) {
-            throw new NotFoundException(String.format("No chat for users {} and {} was found", id1, id2));
-        }
+        return ratingService.chatExists(id1, id2);
+
     }
 
     @Operation(

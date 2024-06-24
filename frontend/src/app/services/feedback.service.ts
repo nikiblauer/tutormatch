@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Globals} from "../global/globals";
 import {FeedbackDto} from "../dtos/feedback";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,8 @@ export class FeedbackService {
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
 
-  getChatExists(ratedUserId: number) {
-    return this.httpClient.get<void>(this.baseUri + `/valid/${ratedUserId}`)
+  getChatExists(ratedUserId: number): Observable<boolean> {
+    return this.httpClient.get<boolean>(this.baseUri + `/valid/${ratedUserId}`)
   }
   getPostedFeedback(ratedUserId: number) {
     return this.httpClient.get<FeedbackDto[]>(this.baseUri + `/get/${ratedUserId}`)
