@@ -3,18 +3,18 @@
     <h2>Students:</h2>
     <form class="form-inline mb-3">
         <div class="form-group mr-2">
-            <input type="text" class="form-control" [(ngModel)]="searchName" (input)="searchTerm$.next(null)"
+            <input maxlength="255" type="text" class="form-control" [(ngModel)]="searchName" (input)="searchTerm$.next(null)"
                 placeholder="Name" name="name">
         </div>
         <div class="form-group mr-2">
-            <input type="text" class="form-control" [(ngModel)]="matrNumber" (input)="searchTerm$.next(null)"
+            <input maxlength="255" type="text" class="form-control" [(ngModel)]="matrNumber" (input)="searchTerm$.next(null)"
                 placeholder="Student ID" name="studentId">
         </div>
 
         <div class="dropdown">
             <button class="btn btn-link dropdown-toggle" type="button" id="filterDropdown" aria-haspopup="true"
                 aria-expanded="false" (click)="toggleFilter()">
-                <i class="bi bi-funnel"></i> Filter
+                <i class="bi bi-filter"></i> Filter
             </button>
             <div class="dropdown-menu p-3" [ngClass]="{'show': showFilter}" aria-labelledby="filterDropdown">
                 <div class="form-group">
@@ -126,7 +126,7 @@
         <div class="modal-body">
             <form [formGroup]="banForm" (ngSubmit)="onBanSubmit(modal)">
                 <div class="form-group">
-                    <textarea id="banReason" class="form-control" formControlName="banReason"
+                    <textarea maxlength="1000" id="banReason" class="form-control" formControlName="banReason"
                         placeholder="Type in reason for ban of Student" rows="5" required></textarea>
                     <div *ngIf="banForm.get('banReason').invalid && (banForm.get('banReason').dirty || banForm.get('banReason').touched)"
                         class="invalid-feedback">

@@ -41,17 +41,17 @@
               <div class="mb-3">
                 <label for="matrNumber" class="form-label text-muted">Student ID:</label>
                 <input id="matrNumber" type="text" class="form-control" name="matrNumber"
-                  [(ngModel)]="createUser.matrNumber" pattern="^([0-9]{7,8})" required>
+                  [(ngModel)]="createUser.matrNumber" pattern="^([0-9]{7,8})" maxlength="255" required>
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label text-muted">TU-Email:</label>
-                <input id="email" type="email" class="form-control" name="email" [(ngModel)]="createUser.email" email
+                <input id="email" type="email" class="form-control" name="email" maxlength="255" [(ngModel)]="createUser.email" email
                   required>
               </div>
               <div class="mb-3 form-group">
                 <label for="password" class="form-label text-muted">Password: <i>(min. 8 characters)</i></label>
                 <div class="input-group">
-                  <input id="password" [type]="showOrHidePassword ? 'text' : 'password'" class="form-control" name="password"
+                  <input id="password" maxlength="255" [type]="showOrHidePassword ? 'text' : 'password'" class="form-control" name="password"
                     [(ngModel)]="createUser.password" minlength="8" required>
                 </div>
               </div>
@@ -59,7 +59,7 @@
                 <label for="repeatPassword" class="form-label text-muted">Repeat Password:</label>
                 <div class="input-group">
                   <input id="repeatPassword" [type]="showOrHidePassword ? 'text' : 'password'" class="form-control"
-                    name="repeatPassword" [(ngModel)]="createUser.repeatPassword" minlength="8" required>
+                    name="repeatPassword" [(ngModel)]="createUser.repeatPassword" maxlength="255" minlength="8" required>
                   <span class="input-group-text">
                     <i class="fa" [ngClass]="{
                         'bi-eye-slash': !showOrHidePassword,
