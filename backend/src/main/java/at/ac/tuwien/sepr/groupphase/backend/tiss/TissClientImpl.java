@@ -37,7 +37,7 @@ public class TissClientImpl implements TissClient {
         logger.info("Fetching course info for number: {} and semester: {}", number, semester);
 
         try {
-            String response = sendGetRequest(endpoint);
+            String response = sendGetRequest(endpoint, "application/xml");
             var subjects = SubjectProcessor.parseCourseResponse(response);
             return subjects.getFirst();
         } catch (IOException | ParserConfigurationException | SAXException e) {
@@ -52,7 +52,7 @@ public class TissClientImpl implements TissClient {
         logger.info("Fetching courses for org unit: {}", orgUnit);
 
         try {
-            String response = sendGetRequest(endpoint);
+            String response = sendGetRequest(endpoint, "application/xml");
             return SubjectProcessor.parseCourseResponse(response);
         } catch (IOException | ParserConfigurationException | SAXException e) {
             logger.error("Error fetching courses for org unit: {}", orgUnit, e);
@@ -65,7 +65,7 @@ public class TissClientImpl implements TissClient {
         String endpoint = baseUrl + "/adressbuch/adressbuch/organigramm";
         logger.info("Fetching organization units");
         try {
-            String response = sendGetRequest(endpoint);
+            String response = sendGetRequest(endpoint, "text/html");
             return extractOrgUnitsFromResponse(response);
         } catch (IOException e) {
             logger.error("Error fetching organization units", e);
@@ -94,15 +94,15 @@ public class TissClientImpl implements TissClient {
         return List.copyOf(orgUnits);
     }
 
-    private String sendGetRequest(String endpoint) throws IOException, TissClientHttpException {
+    private String sendGetRequest(String endpoint, String acceptType) throws IOException, TissClientHttpException {
         logger.info("Sending GET request to endpoint: {}", endpoint);
         var url = URI.create(endpoint);
         HttpURLConnection conn = (HttpURLConnection) url.toURL().openConnection();
         conn.setRequestMethod("GET");
-        conn.setRequestProperty("Accept", "application/xml");
+        conn.setRequestProperty("Accept", acceptType);
 
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) {
+        if (responseCode < 200 || responseCode >= 300) {
             logger.info("Received HTTP response code: {}", responseCode);
             throw new TissClientHttpException("Failed : HTTP error code : " + responseCode, responseCode);
         }

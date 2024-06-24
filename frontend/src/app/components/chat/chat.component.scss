@@ -318,3 +318,18 @@ a {
     color: #FFA500;
   }
 }
+
+.feedback-btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+}
+
+.popup-container-feedback{
+  border-bottom: 2px solid #fff;
+  overflow-y: auto;
+  flex-grow: 1;
+  height: calc(80vh);
+  min-height: 0;
+}

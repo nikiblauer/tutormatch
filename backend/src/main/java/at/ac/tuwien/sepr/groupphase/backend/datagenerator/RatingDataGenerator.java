@@ -12,7 +12,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 @Slf4j
@@ -38,24 +40,51 @@ public class RatingDataGenerator {
         }
         log.info("Generating ratings...");
 
-        List<UserRating> ratings = new ArrayList<>();
-
         List<ApplicationUser> applicationUsers = userRepository.findAll()
             .stream().filter(item -> !item.isBanned() && item.getVerified() && !item.getAdmin())
             .toList();
 
-        Random random = new Random();
+        // Generate a list of all possible indices
+        List<Integer> allIndices = new ArrayList<>();
         for (int i = 0; i < applicationUsers.size(); i++) {
-            for (int j = 0; j < applicationUsers.size(); j++) {
-                if (i == j) {
+            allIndices.add(i);
+        }
+
+        List<UserRating> ratings = new ArrayList<>();
+        Random random = new Random();
+
+        for (ApplicationUser applicationUser : applicationUsers) {
+            var ratedId = applicationUser.getId();
+
+            // Shuffle the list for each user
+            Collections.shuffle(allIndices);
+
+            // Create a sublist of shuffled indices
+            List<Integer> indicesSublist = allIndices.subList(0, Math.min(200, allIndices.size()));
+
+            for (Integer index : indicesSublist) {
+                var raterId = applicationUsers.get(index).getId();
+                if (ratedId.equals(raterId)) {
                     continue;
                 }
                 int rating = random.nextInt(5) + 1; // generates a random integer from 1 to 5
-                ratings.add(getRating(applicationUsers.get(i).getId(), applicationUsers.get(j).getId(), (float) rating));
+                ratings.add(getRating(ratedId, raterId, (float) rating));
             }
         }
 
-        ratingRepository.saveAll(ratings);
+        // Partition the ratings list into sublists of size batchSize
+        List<List<UserRating>> batches = new ArrayList<>();
+
+        final int batchSize = 10000;
+        for (int i = 0; i < ratings.size(); i += batchSize) {
+            int end = Math.min(i + batchSize, ratings.size());
+            List<UserRating> batchList = ratings.subList(i, end);
+            batches.add(batchList);
+        }
+
+        batches.stream().parallel().forEach(ratingRepository::saveAll);
+
+        //ratingRepository.saveAll(ratings);
         log.info("Ratings generation completed.");
     }
 

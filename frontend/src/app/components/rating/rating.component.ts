@@ -15,11 +15,13 @@ export class StarRatingComponent implements OnInit {
   @Input() isEditable: boolean = true;
   @Input() amount: number = 0;
   @Input() ratedUserId: number;
+  @Input() feedbackActive: boolean = false;
   ratingStars = [];
   public chatExists: boolean = false;
   public postedFeedback: FeedbackDto[] = [];
   submitted = false;
   feedbackText: string = '';
+
   constructor(private notification: ToastrService, private spinner: NgxSpinnerService, private ratingService: RatingService, private feedbackService: FeedbackService) {
   }
 
@@ -32,8 +34,10 @@ export class StarRatingComponent implements OnInit {
       }
       this.ratingStars[i] = Math.max(Math.min(temp -= 100, 100), 0);
     }
-    this.getChatExists();
-    this.getPostedFeedback();
+    if (this.feedbackActive){
+      this.getChatExists();
+      this.getPostedFeedback();
+    }
   }
 
   getChatExists() {
@@ -51,6 +55,7 @@ export class StarRatingComponent implements OnInit {
       }
     });
   }
+
   getPostedFeedback() {
     if (!this.isEditable) return;
     this.feedbackService.getPostedFeedback(this.ratedUserId).subscribe({
@@ -67,6 +72,7 @@ export class StarRatingComponent implements OnInit {
       }
     });
   }
+
   setRating(newRating: number): void {
     if (!this.isEditable) return;
     this.rating = newRating;
@@ -82,6 +88,7 @@ export class StarRatingComponent implements OnInit {
       }
     });
   }
+
   postFeedback(form): void {
     if (!this.isEditable) return;
     this.spinner.show();
@@ -106,26 +113,27 @@ export class StarRatingComponent implements OnInit {
     this.submitted = false;
     this.spinner.hide();
   }
+
   deleteFeedback(id): void {
     if (!this.isEditable) return;
     this.spinner.show();
-      this.feedbackService.deleteFeedback(id).subscribe({
-          next: () => {
-            this.notification.success("Feedback successfully deleted.");
-            this.spinner.hide();
-            this.getPostedFeedback();
-            this.feedbackText = '';
-          },
-          error: error => {
-            this.spinner.hide();
-            console.error("Error deleting feedback", error);
-            this.notification.error(error.error, "Something went wrong!");
-          }
+    this.feedbackService.deleteFeedback(id).subscribe({
+        next: () => {
+          this.notification.success("Feedback successfully deleted.");
+          this.spinner.hide();
+          this.getPostedFeedback();
+          this.feedbackText = '';
+        },
+        error: error => {
+          this.spinner.hide();
+          console.error("Error deleting feedback", error);
+          this.notification.error(error.error, "Something went wrong!");
         }
-      );
-    }
+      }
+    );
+  }
 
-  getCharsLeft(){
+  getCharsLeft() {
     return this.feedbackText.length;
   }
 

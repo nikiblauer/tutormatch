@@ -341,7 +341,7 @@ public class UserEndpointTest extends BaseTest {
     @Test
     void testGetSubjectsByTokenEmailOfUser() throws Exception {
         Pageable pageable = Pageable.unpaged();
-        var expectedUser = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, null, pageable).getContent().get(0);
+        var expectedUser = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, null, true, pageable).getContent().get(0);
 
         long[] expectedUserSubjects = userSubjectRepository.findAll()
             .stream()
@@ -429,24 +429,24 @@ public class UserEndpointTest extends BaseTest {
     void testGetMatchingsShouldReturn2Matches() throws Exception {
         ArrayList<UserMatchDto> expectedMatches = new ArrayList<>();
         expectedMatches.add(UserMatchDto.builder()
-            .firstname("User2")
-            .lastname("Surname2")
-            .traineeMatchingcount(3)
-            .tutorMatchingcount(3)
-            .totalMatchingcount(6)
-            .traineeSubjects("188.952 Advanced Model Engineering, 188.953 Advanced Model Engineering, 194.056 Advanced Modeling and Simulation")
-            .tutorSubjects("183.130 3D Vision, 194.163 AKNUM Reinforcement Learning, 194.160 Abstrakte Maschinen")
+            .firstname("Tom")
+            .lastname("Clark")
+            .traineeMatchingcount(4)
+            .tutorMatchingcount(4)
+            .totalMatchingcount(8)
+            .traineeSubjects("188.953 Advanced Model Engineering, 194.056 Advanced Modeling and Simulation, 183.243 Advanced Software Engineering, 188.910 Advanced Software Engineering")
+            .tutorSubjects("183.130 3D Vision, 194.163 AKNUM Reinforcement Learning, 194.160 Abstrakte Maschinen, 188.980 Advanced Information Retrieval")
             .build()
         );
 
         expectedMatches.add(UserMatchDto.builder()
-            .firstname("User4")
-            .lastname("Surname4")
-            .traineeMatchingcount(1)
-            .tutorMatchingcount(1)
-            .totalMatchingcount(2)
-            .traineeSubjects("194.056 Advanced Modeling and Simulation")
-            .tutorSubjects("194.160 Abstrakte Maschinen")
+            .firstname("Olivia")
+            .lastname("Hill")
+            .traineeMatchingcount(2)
+            .tutorMatchingcount(2)
+            .totalMatchingcount(4)
+            .traineeSubjects("183.243 Advanced Software Engineering, 188.910 Advanced Software Engineering")
+            .tutorSubjects("194.160 Abstrakte Maschinen, 188.980 Advanced Information Retrieval")
             .build()
         );
 

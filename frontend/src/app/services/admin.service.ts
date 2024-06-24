@@ -5,9 +5,9 @@ import { Globals } from "../global/globals";
 import { BannedUserDto, StudentDto, UserProfile } from '../dtos/user';
 import { StudentSubjectInfoDto } from '../dtos/user';
 import { Page } from '../dtos/page';
-import {FeedbackDto} from "../dtos/feedback";
+import { FeedbackDto } from "../dtos/feedback";
 import { SubjectCreateDto, SubjectDetailDto } from "../dtos/subject";
-import { SimpleStaticticsDto, ExtendedStatisticsDto, CoverageStatisticsDto } from '../dtos/statistics';
+import { SimpleStaticticsDto, ExtendedStatisticsDto, CoverageSubjectsStatisticsDto } from '../dtos/statistics';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class AdminService {
 
   constructor(private http: HttpClient, private globals: Globals) { }
 
-  searchUsers(fullname: string, matrNumber: number, status: string, page: number, size: number): Observable<Page<StudentDto>> {
+  searchUsers(fullname: string, matrNumber: number, status: string, verifiedFilter: string, page: number, size: number): Observable<Page<StudentDto>> {
     const url = `${this.baseUri}/users`;
 
     // Define the query parameters
@@ -32,6 +32,9 @@ export class AdminService {
     }
     if (status) {
       params.status = status;
+    }
+    if (verifiedFilter) {
+      params.verified = verifiedFilter === 'verified' ? true : verifiedFilter === 'notVerified' ? false : null;
     }
 
     params.page = page.toString();
@@ -100,9 +103,9 @@ export class AdminService {
     return this.http.delete(this.baseUri + `/feedback/delete` + `/${id}`);
   }
 
-  getCoverageStatistics(x: number): Observable<CoverageStatisticsDto> {
+  getCoverageStatistics(x: number): Observable<CoverageSubjectsStatisticsDto[]> {
     const url = `${this.baseUri}/statistics/coverage?x=${x}`;
-    return this.http.get<CoverageStatisticsDto>(url);
+    return this.http.get<CoverageSubjectsStatisticsDto[]>(url);
   }
 
   getPreviewSubject(courseNr: string, semester: string): Observable<SubjectCreateDto> {

@@ -74,7 +74,6 @@ public class SubjectProcessor {
             var courseNode = courseNodes.item(i);
             if (courseNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element courseElement = (Element) courseNode;
-                Subject subject = new Subject();
 
                 String courseNumber = getElementTextContent(courseElement, "courseNumber");
                 String semesterCode = getElementTextContent(courseElement, "semesterCode");
@@ -88,10 +87,16 @@ public class SubjectProcessor {
                 //add dot to match current system style Format: 182.182
                 courseNumber = courseNumber.substring(0, 3) + "." + courseNumber.substring(3);
 
+                String description = getElementTextContentWithNamespace(courseElement, "teachingContent", "ns2:de");
+
+                if (isNullOrEmpty(description)) {
+                    description = getElementTextContentWithNamespace(courseElement, "objective", "ns2:de");
+                }
+
                 String title = getElementTextContentWithNamespace(courseElement, "title", "ns2:de");
                 String url = getElementTextContent(courseElement, "url");
-                String description = getElementTextContentWithNamespace(courseElement, "objective", "ns2:de");
 
+                Subject subject = new Subject();
                 subject.setNumber(courseNumber);
                 subject.setSemester(semesterCode);
                 subject.setType(courseType);
@@ -159,7 +164,7 @@ public class SubjectProcessor {
      *
      * @param html The HTML content to be converted.
      * @return A plain text representation of the input HTML content.
-     *         Returns {@code null} if the input HTML is {@code null}.
+     *      Returns {@code null} if the input HTML is {@code null}.
      */
     private static String htmlToPlainText(String html) {
         if (html == null) {

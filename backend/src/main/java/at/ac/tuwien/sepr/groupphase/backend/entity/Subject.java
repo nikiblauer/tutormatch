@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepr.groupphase.backend.entity;
 
-import at.ac.tuwien.sepr.groupphase.backend.exception.SubjectPreviewException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

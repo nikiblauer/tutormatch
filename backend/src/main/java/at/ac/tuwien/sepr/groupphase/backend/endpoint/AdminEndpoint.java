@@ -1,18 +1,18 @@
 package at.ac.tuwien.sepr.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.BanReasonDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CoverageSubjectsStatisticsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.FeedbackDtoNamed;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SimpleStatisticsDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectInfoDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentSubjectsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectCreateDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectDetailDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.SubjectsListDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.TopStatisticsDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentAsAdminDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserBanDetailsDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.ApplicationUserMapper;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.mapper.SubjectMapper;
@@ -86,6 +86,7 @@ public class AdminEndpoint {
         @RequestParam(name = "fullname", required = false) String fullname,
         @RequestParam(name = "matrNumber", required = false) Long matrNumber,
         @RequestParam(name = "status", required = false) String status,
+        @RequestParam(name = "verified", required = false) Boolean verified,
         Pageable pageable) {
         Boolean hasBan = null;
 
@@ -99,7 +100,7 @@ public class AdminEndpoint {
             }
         }
 
-        Page<ApplicationUser> pageOfUsers = userService.queryUsers(fullname, matrNumber, hasBan, pageable);
+        Page<ApplicationUser> pageOfUsers = userService.queryUsers(fullname, matrNumber, hasBan, pageable, verified);
         return pageOfUsers.map(userMapper::applicationUserToDto);
     }
 
@@ -290,7 +291,7 @@ public class AdminEndpoint {
     )
     @Secured("ROLE_ADMIN")
     @GetMapping("/statistics/coverage")
-    public CoverageSubjectsStatisticsDto getCoverageSubjectsStatistics(@RequestParam(name = "x", defaultValue = "5") int x) {
+    public List<CoverageSubjectsStatisticsDto> getCoverageSubjectsStatistics(@RequestParam(name = "x", defaultValue = "5") int x) {
         return statisticService.getCoverageSubjectsStatistics(x);
     }
 }

@@ -1,3 +1,7 @@
+myapp:
+  userCount: 1000
+  seed: null
+
 logging:
   file.name: ./log/backend.log
   level:
@@ -86,4 +90,3 @@ spring:
     timeout-per-shutdown-phase: 30s
 server:
   shutdown: graceful
-

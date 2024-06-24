@@ -67,7 +67,7 @@ public class ChatEndpointTest extends BaseTest{
     @Test
     public void testCreateChatRoomWithValidTokenReturnsChatRoomDto() throws Exception {
         Pageable pageable = Pageable.unpaged();
-        var recipient = userRepository.findAllByFullnameOrMatrNumber(null, 10000004L, false, pageable).getContent().get(0);
+        var recipient = userRepository.findAllByFullnameOrMatrNumber(null, 10000004L, false, true, pageable).getContent().get(0);
 
         var sender = userRepository.findApplicationUserByDetails_Email(DEFAULT_USER_EMAIL);
 
@@ -211,7 +211,7 @@ public class ChatEndpointTest extends BaseTest{
             .chatRoomId(chatRoomId)
             .senderId(user2.getId())
             .recipientId(user1.getId())
-            .content("Hi User1, how are you?")
+            .content("Hi " + user1.getFirstname() + ", how are you?")
             .timestamp(timestampMsg1)
             .build()
         );
@@ -219,7 +219,7 @@ public class ChatEndpointTest extends BaseTest{
             .chatRoomId(chatRoomId)
             .senderId(user1.getId())
             .recipientId(user2.getId())
-            .content("Hi User2, I'm fine. How are you?")
+            .content("Hi " + user2.getFirstname() + ", I'm fine. How are you?")
             .timestamp(timestampMsg2)
             .build()
         );
