@@ -39,6 +39,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.ADMIN_EMAIL;
 import static at.ac.tuwien.sepr.groupphase.backend.basetest.TestData.DEFAULT_USER_EMAIL;
@@ -46,6 +47,7 @@ import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.hibernate.validator.internal.util.Contracts.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -110,7 +112,7 @@ public class AdminEndpointTest extends BaseTest {
             () -> assertEquals(mockedSubject.getUrl(), subject.getUrl()),
             () -> assertEquals(mockedSubject.getSemester(), subject.getSemester()),
             () -> assertEquals(mockedSubject.getNumber(), subject.getNumber()),
-            () -> assertEquals(mockedSubject.getDescription(),subject.getDescription())
+            () -> assertEquals(mockedSubject.getDescription(), subject.getDescription())
         );
     }
 
@@ -176,8 +178,9 @@ public class AdminEndpointTest extends BaseTest {
             () -> assertEquals(expectedUser.getDetails().getTelNr(), returnedUser.getTelNr()),
             () -> assertEquals(expectedUser.getDetails().getAddress().getAreaCode(), returnedUser.getAreaCode()),
             () -> assertEquals(expectedUser.getDetails().getAddress().getCity(), returnedUser.getCity()),
-            () -> assertEquals("[Advanced Model Engineering, Advanced Model Engineering, Advanced Modeling and Simulation, Advanced Software Engineering, Advanced Software Engineering, Critical Design]", Arrays.toString(returnedUser.getTutorSubjects())),
-            () -> assertEquals("[3D Vision, 3D Vision, AKNUM Reinforcement Learning, Abstrakte Maschinen, Advanced Information Retrieval, Parallel Computing]", Arrays.toString(returnedUser.getTraineeSubjects()))
+            () -> assertEquals("[Advanced Model Engineering, Advanced Model Engineering, Advanced Modeling and Simulation, Advanced Software Engineering, Advanced Software Engineering, Critical Design]",
+                Arrays.toString(returnedUser.getTutorSubjects())),
+            () -> assertEquals("[3D Vision, 3D Vision, AKNUM Reinforcement Learning, Abstrakte Maschinen, Advanced Information Retrieval, Parallel Computing, Programmiersprachen]", Arrays.toString(returnedUser.getTraineeSubjects()))
         );
     }
 
@@ -378,14 +381,14 @@ public class AdminEndpointTest extends BaseTest {
 
         assertAll("Statistics",
             () -> assertEquals(10, returnedStatistics.getRegisteredVerifiedUsers()),
-            () -> assertEquals(1.0, returnedStatistics.getRatioOfferedNeededSubjects(), 0.01) // delta is used to compare doubles
+            () -> assertEquals(1.17, returnedStatistics.getRatioOfferedNeededSubjects(), 0.01) // delta is used to compare doubles
         );
     }
 
     @Test
-    void testGetTop5Statistics() throws Exception {
+    void testGetTopStatistics() throws Exception {
         String token = loginAsAdmin();
-        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/statistics/extended?x=5")
+        MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/statistics/extended?x=1")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
@@ -395,47 +398,37 @@ public class AdminEndpointTest extends BaseTest {
         TopStatisticsDto returnedStatistics = objectMapper.readValue(responseBody, TopStatisticsDto.class);
 
         List<String> expectedOfferedSubjects = Arrays.asList(
-            "193.150 VU Critical Design (2024S)",
-            "194.056 VU Advanced Modeling and Simulation (2024S)",
-            "188.910 PR Advanced Software Engineering (2024S)",
-            "188.952 VU Advanced Model Engineering (2024S)",
-            "183.243 PR Advanced Software Engineering (2024S)"
+            "193.150 VU Critical Design (2024S)"
         );
         List<String> expectedNeededSubjects = Arrays.asList(
-            "184.710 VU Parallel Computing (2024S)",
-            "183.243 PR Advanced Software Engineering (2024S)",
-            "194.164 SE Advanced Topics in Recommender Systems and Generative AI (2024S)",
-            "188.953 SE Advanced Model Engineering (2024S)",
-            "188.910 PR Advanced Software Engineering (2024S)"
-        );
-        List<String> alternativeExpectedNeededSubjects = Arrays.asList(
-            "184.710 VU Parallel Computing (2024S)",
-            "194.056 VU Advanced Modeling and Simulation (2024S)",
-            "188.910 PR Advanced Software Engineering (2024S)",
-            "183.243 PR Advanced Software Engineering (2024S)",
-            "188.953 SE Advanced Model Engineering (2024S)"
+            "184.710 VU Parallel Computing (2024S)"
         );
 
-        List<Integer> top5OfferedAmount = Arrays.asList(9, 5, 5, 4, 4);
-        List<Integer> top5NeededAmount = Arrays.asList(9, 5, 5, 4, 4);
+        List<Integer> top1OfferedAmount = Arrays.asList(9);
+        List<Integer> top1NeededAmount = Arrays.asList(9);
         assertAll("Statistics",
-            () -> assertEquals(5, returnedStatistics.getTopXofferedSubjects().size()),
-            () -> assertEquals(5, returnedStatistics.getTopXneededSubjects().size()),
-            () -> assertEquals(top5OfferedAmount, returnedStatistics.getTopXofferedAmount()),
-            () -> assertEquals(top5NeededAmount, returnedStatistics.getTopXneededAmount()),
+            () -> assertEquals(1, returnedStatistics.getTopXofferedSubjects().size()),
+            () -> assertEquals(1, returnedStatistics.getTopXneededSubjects().size()),
+            () -> assertEquals(top1OfferedAmount, returnedStatistics.getTopXofferedAmount()),
+            () -> assertEquals(top1NeededAmount, returnedStatistics.getTopXneededAmount()),
             () -> assertThat(returnedStatistics.getTopXofferedSubjects(), containsInAnyOrder(expectedOfferedSubjects.toArray())),
-            () -> assertThat(returnedStatistics.getTopXneededSubjects(), anyOf(containsInAnyOrder(expectedNeededSubjects.toArray()), containsInAnyOrder(alternativeExpectedNeededSubjects.toArray())))
+            () -> assertThat(returnedStatistics.getTopXneededSubjects(), containsInAnyOrder(expectedNeededSubjects.toArray()))
         );
     }
 
     @Test
     public void testGetCoverageSubjectsStatistics() throws Exception {
         // Arrange
-        int x = 5;
-        String expectedMostRequestedSubject = "184.710 VU Parallel Computing (2024S)";
-        String expectedMostOfferedSubject = "193.150 VU Critical Design (2024S)";
-        String expectedMostRequestedSubjectAmount = "Trainees: 9, Tutors: 0";
-        String expectedMostOfferedSubjectAmount = "Trainees: 9, Tutors: 0";
+        int x = 3;
+
+        List<CoverageSubjectsStatisticsDto> expectedStatistics = new ArrayList<>();
+        expectedStatistics.add(new CoverageSubjectsStatisticsDto("185.208 VU Programmiersprachen (2024S)", 0, 10, 10));
+        expectedStatistics.add(new CoverageSubjectsStatisticsDto("184.710 VU Parallel Computing (2024S)", 0, 10, 10));
+        expectedStatistics.add(new CoverageSubjectsStatisticsDto("193.150 VU Critical Design (2024S)", 10, 0, 10));
+
+        List<String> expectedSubjectNames = expectedStatistics.stream()
+            .map(CoverageSubjectsStatisticsDto::getSubjectInfo)
+            .collect(Collectors.toList());
 
         // Act
         MvcResult mvcResult = mockMvc.perform(get("/api/v1/admin/statistics/coverage")
@@ -447,12 +440,18 @@ public class AdminEndpointTest extends BaseTest {
 
         // Assert
         String responseBody = mvcResult.getResponse().getContentAsString();
-        CoverageSubjectsStatisticsDto returnedStatistics = objectMapper.readValue(responseBody, CoverageSubjectsStatisticsDto.class);
+        List<CoverageSubjectsStatisticsDto> returnedStatistics = objectMapper.readValue(responseBody, new TypeReference<List<CoverageSubjectsStatisticsDto>>() {
+        });
 
-        assertEquals(expectedMostRequestedSubject, returnedStatistics.getMostRequestedSubjectsWithoutCoverage().get(0));
-        assertEquals(expectedMostOfferedSubject, returnedStatistics.getMostOfferedSubjectsWithoutCoverage().get(0));
-        assertEquals(expectedMostRequestedSubjectAmount, returnedStatistics.getNumberOfStudentsRequestedSubjects().get(0));
-        assertEquals(expectedMostOfferedSubjectAmount, returnedStatistics.getNumberOfStudentsRequestedSubjects().get(0));
+        List<String> returnedSubjectNames = returnedStatistics.stream()
+            .map(CoverageSubjectsStatisticsDto::getSubjectInfo)
+            .collect(Collectors.toList());
+
+        // Assert the size of the returned list
+        assertEquals(x, returnedStatistics.size());
+
+        // Assert the subject names in the returned list
+        assertThat(returnedSubjectNames, containsInAnyOrder(expectedSubjectNames.toArray()));
     }
 
     @Test

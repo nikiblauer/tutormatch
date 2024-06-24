@@ -3,20 +3,35 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 /**
- * This DTO represents the statistics, of which subjects have a lot of requests (trainee)
- * but no coverage which means no one is offering this subject.
- * only subjects with a difference >= 5 are returned (requested - offered)
- * Returns an x amount of results
+ * Data transfer object for the coverage statistics of subjects.
  */
 @Getter
 @Setter
 public class CoverageSubjectsStatisticsDto {
-    List<String> mostRequestedSubjectsWithoutCoverage;
-    List<String> mostOfferedSubjectsWithoutCoverage;
 
-    List<String> numberOfStudentsRequestedSubjects;
-    List<String> numberOfStudentsOfferedSubjects;
+    private String subjectInfo; // subject title, subject type and number
+    private int numOfTutors;
+    private int numOfTrainees;
+    private int diff; // calculated difference between tutors and trainees
+
+    public CoverageSubjectsStatisticsDto(String subjectInfo, int numOfTutors, int numOfTrainees, int diff) {
+        this.subjectInfo = subjectInfo;
+        this.numOfTutors = numOfTutors;
+        this.numOfTrainees = numOfTrainees;
+        this.diff = diff;
+    }
+
+    public CoverageSubjectsStatisticsDto() {
+    }
+
+    @Override
+    public String toString() {
+        return "CoverageSubjectsStatisticsDto{"
+            + "subjectInfo='" + subjectInfo + '\''
+            + ", numOfTutors=" + numOfTutors
+            + ", numOfTrainees=" + numOfTrainees
+            + ", diff=" + diff
+            + '}';
+    }
 }

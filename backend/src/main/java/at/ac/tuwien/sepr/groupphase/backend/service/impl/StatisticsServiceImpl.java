@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @Service
 public class StatisticsServiceImpl implements StatisticService {
@@ -59,16 +60,8 @@ public class StatisticsServiceImpl implements StatisticService {
     }
 
     @Override
-    public CoverageSubjectsStatisticsDto getCoverageSubjectsStatistics(int x) {
+    public List<CoverageSubjectsStatisticsDto> getCoverageSubjectsStatistics(int limit) {
         LOGGER.trace("getCoverageSubjectsStatistics");
-        CoverageSubjectsStatisticsDto statistics = new CoverageSubjectsStatisticsDto();
-
-        statistics.setMostRequestedSubjectsWithoutCoverage(userSubjectRepository.getMostRequestedSubjectsWithoutCoverage(x));
-        statistics.setMostOfferedSubjectsWithoutCoverage(userSubjectRepository.getMostOfferedSubjectsWithoutCoverage(x));
-
-        //requested subjects
-        statistics.setNumberOfStudentsOfferedSubjects(userSubjectRepository.getMostOfferedSubjectsWithoutCoverageAmount(x));
-        statistics.setNumberOfStudentsRequestedSubjects(userSubjectRepository.getMostRequestedSubjectsWithoutCoverageAmount(x));
-        return statistics;
+        return userSubjectRepository.getLowCoverageSubjects(limit);
     }
 }
