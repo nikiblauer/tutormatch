@@ -33,6 +33,7 @@ export class MatchComponent implements OnInit, AfterViewInit {
   public matchOffers: Subject[];
   public reportReason: string;
   public chatExists: boolean = false;
+  public isLoaded: boolean;
 
   constructor(private userService: UserService, private notification: ToastrService,
               private spinner: NgxSpinnerService, private ratingService: RatingService,
@@ -51,6 +52,7 @@ export class MatchComponent implements OnInit, AfterViewInit {
         this.spinner.hide();
         this.matches = matches;
         this.placeholderMatches = this.matches;
+        this.isLoaded = true;
       },
       error: error => {
         clearTimeout(timeout);
