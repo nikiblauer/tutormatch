@@ -48,6 +48,18 @@ public class SubjectValidator {
         if (subject.getSemester().matches(VALIDATION_PATTERN)) {
             errors.add("Number may not consists only of whitespaces");
         }
+        if (subject.getNumber().length() > 255) {
+            errors.add("Number name has to be smaller than 255 characters");
+        }
+        if (subject.getSemester().length() > 255) {
+            errors.add("Semester name has to be smaller than 255 characters");
+        }
+        if (subject.getTitle().length() > 255) {
+            errors.add("Title has to be smaller than 255 characters");
+        }
+        if (subject.getType().length() > 255) {
+            errors.add("Type has to be smaller than 255 characters");
+        }
         if (!errors.isEmpty()) {
             throw new ValidationException(errors.toString());
         }
