@@ -37,7 +37,7 @@ export class StudentsComponent implements OnInit {
   selectedStudentDetails: StudentSubjectInfoDto | null = null;
   searchTerm$ = new Subject<string>();
   noMoreResults: boolean = false;
-  verifiedFilter: string = 'all';
+  verifiedFilter: string = "";
 
   selectedBanUser: StudentListing | null = null;
   selectedBanReasonUser: BannedUserDto | null = null;
@@ -103,7 +103,7 @@ export class StudentsComponent implements OnInit {
       this.filteredStudents = []; // Clear the list of filtered students
     }
 
-    this.withSpinner(this.adminService.searchUsers(this.searchName, Number(this.matrNumber), this.filterStatus, this.page, 100), this.spinner).subscribe({
+    this.withSpinner(this.adminService.searchUsers(this.searchName, Number(this.matrNumber), this.filterStatus, this.verifiedFilter, this.page, 100), this.spinner).subscribe({
       next: (response: Page<StudentDto>) => {
         this.spinner.hide();
         if (response.content.length === 0) {
@@ -117,7 +117,7 @@ export class StudentsComponent implements OnInit {
             id: user.id,
             verified: user.verified,
             isBanned: user.isBanned
-          })).filter(student => this.filterByVerifiedStatus(student)); // Filter here based on verified status
+          }));
 
           // Sort newStudents based on verified status
           newStudents = newStudents.sort((a, b) => {
@@ -167,14 +167,6 @@ export class StudentsComponent implements OnInit {
     this.search(false); // Don't clear the list of filtered students
   }
 
-  filterByVerifiedStatus(student: StudentListing): boolean {
-    if (this.verifiedFilter === 'all') return true;
-    if (this.verifiedFilter === 'verified') return student.verified;
-    if (this.verifiedFilter === 'notVerified') return !student.verified;
-    return false;
-  }
-
-
   banUser(student: StudentListing, content: any): void {
     this.selectedBanUser = student;
     this.modalService.open(content);
@@ -208,6 +200,11 @@ export class StudentsComponent implements OnInit {
 
   updateTmpFilterStatus(selectedValue: string) {
     this.tmpFilterStatus = selectedValue;
+  }
+
+  updateVerifiedFilter(selectedValue: string): void {
+    this.verifiedFilter = selectedValue;
+    this.search(true);
   }
 
   showBan(student: StudentListing, content: any) {

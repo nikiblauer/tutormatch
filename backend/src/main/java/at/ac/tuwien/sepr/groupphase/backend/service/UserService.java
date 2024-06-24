@@ -50,7 +50,7 @@ public interface UserService extends UserDetailsService {
     /**
      * Updates a User including the Matriculation Number.
      *
-     * @param userEmail          the email of tue user
+     * @param userEmail          the email of the user
      * @param applicationUserDto the updated user
      * @return the updated user
      * @throws ValidationException If any validation errors occur. (no name, ...)
@@ -61,9 +61,14 @@ public interface UserService extends UserDetailsService {
      * Get all users.
      * Returns empty list of no users are given in the list
      *
+     * @param fullname  the full name of the user
+     * @param matrNumber the matriculation number of the user
+     * @param hasBan    if the user is banned
+     * @param pageable  the pageable object for pagination
+     * @param verified  if the user is verified
      * @return a list of all users
      */
-    Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Boolean hasBan, Pageable pageable);
+    Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Boolean hasBan, Pageable pageable, Boolean verified);
 
     /**
      * Creates a new User in the database.

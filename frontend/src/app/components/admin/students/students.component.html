@@ -20,7 +20,7 @@
                 <div class="form-group">
                     <label class="form-label" for="status">Filter Profile Status:</label>
                     <select class="form-control mt-1 form-select" id="status" [(ngModel)]="tmpFilterStatus"
-                        (change)="updateTmpFilterStatus($event.target.value)" name="profileStatus">
+                        name="profileStatus">
                         <option value="" [selected]="tmpFilterStatus === ''">Indifferent</option>
                         <option value="active">Active</option>
                         <option value="banned">Banned</option>
@@ -28,10 +28,10 @@
                 </div>
                 <hr>
                 <div class="form-group mt-2">
-                    <label class="form-label" for="status">Filter Verified Status:</label>
-                    <select class="form-control mt-1 form-select" id="verifiedFilter" name="verifiedStatus"
-                        [(ngModel)]="verifiedFilter">
-                        <option value="all" [selected]="verifiedFilter === 'all'">Indifferent</option>
+                    <label class="form-label" for="verifiedFilter">Filter Verified Status:</label>
+                    <select class="form-control mt-1 form-select" id="verifiedFilter" [(ngModel)]="verifiedFilter"
+                        name="verifiedStatus">
+                        <option value="" [selected]="verifiedFilter === ''">Indifferent</option>
                         <option value="verified">Verified</option>
                         <option value="notVerified">Not Verified</option>
                     </select>

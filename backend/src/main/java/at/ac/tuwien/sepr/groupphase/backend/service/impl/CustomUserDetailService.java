@@ -319,8 +319,8 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Boolean hasBan, Pageable pageable) {
+    public Page<ApplicationUser> queryUsers(String fullname, Long matrNumber, Boolean hasBan, Pageable pageable, Boolean verified) {
         LOGGER.trace("Getting all users");
-        return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber, hasBan, pageable);
+        return userRepository.findAllByFullnameOrMatrNumber(fullname, matrNumber, hasBan, verified, pageable);
     }
 }

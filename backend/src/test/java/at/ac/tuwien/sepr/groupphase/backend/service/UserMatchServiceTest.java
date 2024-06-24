@@ -13,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -24,7 +24,7 @@ public class UserMatchServiceTest extends BaseTest {
     @Test
     void testFindMatchingUserByUserIdShouldReturn2Results() {
         Pageable pageable = Pageable.unpaged();
-        var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, null, pageable).getContent();
+        var user = userRepository.findAllByFullnameOrMatrNumber(null, 10000001L, null, true, pageable).getContent();
         var stream = userMatchService.findMatchingsForUser(user.get(0).getDetails().getEmail());
 
         List<UserMatchDto> resultList = stream.collect(Collectors.toList());
