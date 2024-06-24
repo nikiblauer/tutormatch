@@ -59,7 +59,12 @@ $base-color: #33709C;
   opacity: 100%;
   background-color: white;
   color: $base-color;
+}
 
+.btn:active {
+  opacity: 100%;
+  background-color: white;
+  color: $base-color;
 }
 
 .btn:hover{
