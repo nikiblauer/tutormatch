@@ -41,6 +41,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
   senderBlockedUsers: number[] = [];
   recipientBlockedUsers: number[] = [];
   feedbackActive: boolean = false;
+  isLoaded: boolean = false;
   @ViewChild('chatHistory') private chatHistoryContainer: ElementRef;
 
   constructor(private chatService: ChatService,
@@ -100,6 +101,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
         if (this.chatRooms.length > 0) {
           this.setActiveChatRoom(this.filteredChatRooms[0]);
         }
+        this.isLoaded = true;
       }, error: error => {
         console.error(error);
       }

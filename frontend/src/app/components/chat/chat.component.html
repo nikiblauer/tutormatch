@@ -29,8 +29,8 @@
               <div class="row">
                 <div>
                   <div class="circle">
-                    <p class="circle-inner">{{ activeChatRoom?.senderFirstName?.[0] }}{{
-                        activeChatRoom?.senderLastName?.[0]
+                    <p class="circle-inner">{{ activeChatRoom?.recipientFirstName?.[0] }}{{
+                        activeChatRoom?.recipientLastName?.[0]
                       }}</p>
                   </div>
                   <div class="chat-name">
@@ -140,7 +140,7 @@
   </div>
 </div>
 <ng-template #noChatRooms>
-  <div class="shadow no-chatRooms">
+  <div *ngIf="this.isLoaded" class="no-chatRooms">
     <h2>You don't have any chats yet! :(</h2>
     <p>Head to <a [routerLink]="['/matches']">Matches</a> to start a chat with someone you've matched.</p>
   </div>
