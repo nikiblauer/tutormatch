@@ -127,7 +127,7 @@
                 <form>
                     <div class="mb-3" *ngIf="admin">
                         <label for="matrikelNumber" class="form-label">Student number</label>
-                        <input maxlength="50" type="text" class="form-control" id="matrikelNumber" [(ngModel)]="editedUser.matrNumber"
+                        <input maxlength="50" type="number" class="form-control" id="matrikelNumber" [(ngModel)]="editedUser.matrNumber"
                             name="matrikelNumber">
                     </div>
                     <div class="mb-3">
@@ -147,7 +147,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="areaCode" class="form-label">Post Code</label>
-                        <input maxlength="20" type="text" class="form-control" id="areaCode"
+                        <input maxlength="20" type="number" class="form-control" id="areaCode"
                             [(ngModel)]="editedUser.areaCode === 0 ? '' : editedUser.areaCode" name="areaCode">
                     </div>
                     <div class="mb-3">

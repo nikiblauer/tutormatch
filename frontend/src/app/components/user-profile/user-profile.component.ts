@@ -175,6 +175,19 @@ export class UserProfileComponent implements OnInit {
     let timeout = setTimeout(() => {
       this.spinner.show();
     }, 1500);
+    if (typeof this.editedUser.areaCode != "number"){
+      this.notification.error("Post Code has to be a number!", "Updated user information!");
+      clearTimeout(timeout);
+      this.spinner.hide();
+      return;
+    }
+    if (typeof this.editedUser.matrNumber != "number"){
+      this.notification.error("Matriculation number has to be a number!", "Updated user information!");
+      clearTimeout(timeout);
+      this.spinner.hide();
+      return;
+    }
+
     if (this.mode == UserMode.admin) {
       this.adminService.updateUserDetails(this.editedUser)
         .subscribe({

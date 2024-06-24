@@ -234,6 +234,7 @@ export class SubjectComponent implements OnInit, AfterViewInit {
         event.stopPropagation();
         this.notification.success("Successfully created subject", "Created subject!")
         this.autofillUrlInput = "";
+        this.createdSubject = new SubjectDetailDto();
       },
       error: (e) => {
         this.spinner.hide();

@@ -22,7 +22,7 @@ public class UserValidator {
     private static final String VALIDATION_PATTERN_1 = "^[a-zA-Z0-9.+-]+@student\\.tuwien\\.ac\\.at$";
     private static final String VALIDATION_PATTERN_2 = "^[a-zA-Z0-9.+-]+@tuwien\\.ac\\.at$";
     private static final String VALIDATION_PATTERN_3 = "^\\s+";
-    private static final String VALIDATION_PATTERN_4 = "^(?:\\+?\\d⋅?){6,14}\\d$";
+    private static final String VALIDATION_PATTERN_4 = "^\\+[1-9][0-9]{7,14}$|^0\\d{10}$";
 
     private final PasswordEncoder passwordEncoder;
 
