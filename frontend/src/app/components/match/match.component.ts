@@ -148,6 +148,7 @@ export class MatchComponent implements OnInit, AfterViewInit {
         clearTimeout(timeout);
         this.spinner.hide();
         this.matches = matches;
+        this.placeholderMatches = matches;
       },
       error: error => {
         clearTimeout(timeout);
