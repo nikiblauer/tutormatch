@@ -43,14 +43,10 @@ export class StarRatingComponent implements OnInit {
   getChatExists() {
     if (!this.isEditable) return;
     this.feedbackService.getChatExists(this.ratedUserId).subscribe({
-      next: () => {
-        this.chatExists = true;
+      next: (value) => {
+        this.chatExists = value;
       },
       error: error => {
-        if (error.status == 404) {
-          this.chatExists = false;
-          return;
-        }
         this.notification.error(error.error, "Something went wrong!");
       }
     });
