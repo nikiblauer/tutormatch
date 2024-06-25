@@ -271,8 +271,4 @@ export class ChatComponent implements OnInit, AfterViewInit {
   openFeedbackModal() {
     this.feedbackActive = true;
   }
-
-  closeFeedbackModal() {
-    this.feedbackActive = false;
-  }
 }
