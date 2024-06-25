@@ -77,7 +77,7 @@
         <div *ngIf="selectedReport.chatRoomId === '' && selectedReport.feedback === ''" class="mb-3">
           <label class="form-label">User was reported:</label>
           <hr>
-          <p>{{ selectedReport.reason }}</p>
+          <p style="overflow-wrap: anywhere; hyphens: auto">{{ selectedReport.reason }}</p>
         </div>
       </div>
     </div>
