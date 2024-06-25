@@ -19,7 +19,6 @@ import java.util.Random;
 import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.ADMIN_EMAIL;
 import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.ADMIN_NAME;
 import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.BANNED_USER_EMAIL;
-import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.USER_COUNT;
 import static at.ac.tuwien.sepr.groupphase.backend.datagenerator.DataGeneratorConstants.USER_PASSWORD;
 
 
