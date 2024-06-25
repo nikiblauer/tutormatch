@@ -8,6 +8,13 @@
     </button>
   </div>
   <div class="container">
+    <div *ngIf="!this.visibility"
+      class="row no-match-display justify-content-center align-items-center">
+      <div class="col text-center">
+        <h2 class="display-4">Visibility is off!</h2>
+        <h3 style="font-weight: normal">Toggle visibility to get matches.</h3>
+      </div>
+    </div>
     <div *ngIf="matches.length < 1 && this.isLoaded"
          class="row no-match-display justify-content-center align-items-center">
       <div class="col text-center">
@@ -91,11 +98,11 @@
           <div class="flex-container">
             <div class="flex-item">
               <div class="detail-row"><span class="detail-label">Needs:</span>
-                <span>{{ selectedMatch.tutorSubjects }}</span></div>
+                <span>{{ selectedMatch.traineeSubjects }}</span></div>
             </div>
             <div class="flex-item">
               <div class="detail-row"><span class="detail-label">Offers:</span>
-                <span>{{ selectedMatch.traineeSubjects }}</span></div>
+                <span>{{ selectedMatch.tutorSubjects }}</span></div>
             </div>
           </div>
         </div>
