@@ -1,19 +1,14 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validators;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateChatRoomDto;
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UserMatchDto;
 import at.ac.tuwien.sepr.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import at.ac.tuwien.sepr.groupphase.backend.repository.ChatRoomRepository;
-import at.ac.tuwien.sepr.groupphase.backend.service.ChatRoomService;
 import at.ac.tuwien.sepr.groupphase.backend.service.UserMatchService;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class ChatValidator {

@@ -2,8 +2,6 @@ package at.ac.tuwien.sepr.groupphase.backend.endpoint.dto;
 
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class ReportDto {
     String firstnameReported;

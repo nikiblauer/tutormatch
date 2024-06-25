@@ -33,6 +33,7 @@ export class MatchComponent implements OnInit, AfterViewInit {
   public matchOffers: Subject[];
   public reportReason: string;
   public chatExists: boolean = false;
+  public isLoaded: boolean;
 
   constructor(private userService: UserService, private notification: ToastrService,
               private spinner: NgxSpinnerService, private ratingService: RatingService,
@@ -51,6 +52,7 @@ export class MatchComponent implements OnInit, AfterViewInit {
         this.spinner.hide();
         this.matches = matches;
         this.placeholderMatches = this.matches;
+        this.isLoaded = true;
       },
       error: error => {
         clearTimeout(timeout);
@@ -121,14 +123,10 @@ export class MatchComponent implements OnInit, AfterViewInit {
           }
         });
       this.feedbackService.getChatExists(match.id).subscribe({
-        next: () => {
-          this.chatExists = true;
+        next: (value) => {
+          this.chatExists = value;
         },
         error: error => {
-          if (error.status == 404) {
-            this.chatExists = false;
-            return;
-          }
           this.notification.error(error.error, "Something went wrong!");
         }
       });
@@ -148,6 +146,7 @@ export class MatchComponent implements OnInit, AfterViewInit {
         clearTimeout(timeout);
         this.spinner.hide();
         this.matches = matches;
+        this.placeholderMatches = matches;
       },
       error: error => {
         clearTimeout(timeout);

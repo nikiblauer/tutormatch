@@ -8,8 +8,7 @@
     </button>
   </div>
   <div class="container">
-    <div *ngIf="placeholderMatches.length < 1 &&
-  (this.filterNeeds.length !== 0 || this.filterOffers.length !== 0)"
+    <div *ngIf="matches.length < 1 && this.isLoaded"
          class="row no-match-display justify-content-center align-items-center">
       <div class="col text-center">
         <h2 class="display-4">No matches yet!</h2>
@@ -17,7 +16,7 @@
       </div>
     </div>
     <div *ngIf="this.placeholderMatches.length === 0 &&
-  (this.filterNeeds.length === 0 && this.filterOffers.length === 0)"
+  (this.filterNeeds.length === 0 && this.filterOffers.length === 0) && ((this.matchNeeds.length !== 0) && (this.matchOffers.length !== 0))"
          class="row no-match-display justify-content-center align-items-center">
       <div class="col text-center">
         <h2 class="display-4">No matches found! :(</h2>
@@ -156,7 +155,7 @@
       <div class="modal-body">
         <div class="mb-3">
           <label class="form-label" for="reportReason">Reason for Reporting</label>
-          <textarea [(ngModel)]="reportReason" class="form-control" id="reportReason" type="text"></textarea>
+          <textarea maxlength="100" [(ngModel)]="reportReason" class="form-control" id="reportReason" type="text"></textarea>
         </div>
       </div>
       <div class="modal-footer">

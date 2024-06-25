@@ -9,7 +9,7 @@
     </div>
 
     <div class="mb-4 input-group">
-      <input type="text" placeholder="Search Subjects ..." [(ngModel)]="searchQuery" (input)="onSearchChange()"
+      <input maxlength="255" type="text" placeholder="Search Subjects ..." [(ngModel)]="searchQuery" (input)="onSearchChange()"
              class="form-control mb-2">
     </div>
     <div class="mb-4 table-responsive">
@@ -100,31 +100,31 @@
         <div class="subject-details w-100">
           <div class="detail-row">
             <span class="detail-label">Number:</span>
-            <input id="subjectNumber" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.number"
+            <input maxlength="255" id="subjectNumber" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.number"
                    class="form-control"/>
           </div>
           <div class="detail-row w-100">
             <span class="detail-label">Semester:</span>
-            <input id="subjectSemester" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.semester"
+            <input maxlength="255" id="subjectSemester" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.semester"
                    class="form-control"/>
           </div>
           <div class="detail-row">
             <span class="detail-label">Title:</span>
-            <input id="subjectTitle" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.title"
+            <input maxlength="255" id="subjectTitle" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.title"
                    class="form-control"/>
           </div>
           <div class="detail-row">
             <span class="detail-label">Type:</span>
-            <input id="subjectType" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.type" class="form-control"/>
+            <input maxlength="255" id="subjectType" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.type" class="form-control"/>
           </div>
           <div class="detail-row">
             <span class="detail-label">Description:</span>
-            <input id="subjectDescription" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.description"
+            <input maxlength="1000" id="subjectDescription" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.description"
                    class="form-control"/>
           </div>
           <div class="detail-row">
             <span class="detail-label">URL:</span>
-            <input id="subjectUrl" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.url" class="form-control"/>
+            <input maxlength="255" id="subjectUrl" *ngIf="selectedSubject" [(ngModel)]="selectedSubject.url" class="form-control"/>
           </div>
           <div class="detail-row">
             <span class="detail-label"></span>
@@ -164,7 +164,7 @@
                 <label for="subjectNumber1" class="form-label">Number:</label>
               </div>
               <div class="col-sm-8">
-                <input id="subjectNumber1" [(ngModel)]="createdSubject.number" name="number" class="form-control"
+                <input maxlength="255" id="subjectNumber1" [(ngModel)]="createdSubject.number" name="number" class="form-control"
                        placeholder="Format: 180.764" required>
               </div>
             </div>
@@ -173,7 +173,7 @@
                 <label for="subjectSemester1" class="form-label">Semester:</label>
               </div>
               <div class="col-sm-8">
-                <input id="subjectSemester1" [(ngModel)]="createdSubject.semester" name="semester"
+                <input maxlength="255" id="subjectSemester1" [(ngModel)]="createdSubject.semester" name="semester"
                        class="form-control"
                        placeholder="Format: 2024S" required>
               </div>
@@ -183,7 +183,7 @@
                 <label for="subjectTitle1" class="form-label">Title:</label>
               </div>
               <div class="col-sm-8">
-                <input id="subjectTitle1" [(ngModel)]="createdSubject.title" name="title" class="form-control"
+                <input maxlength="255" id="subjectTitle1" [(ngModel)]="createdSubject.title" name="title" class="form-control"
                        required>
               </div>
             </div>
@@ -192,7 +192,7 @@
                 <label for="subjectType1" class="form-label">Type:</label>
               </div>
               <div class="col-sm-8">
-                <input id="subjectType1" *ngIf="createdSubject" [(ngModel)]="createdSubject.type" name="type"
+                <input maxlength="255" id="subjectType1" *ngIf="createdSubject" [(ngModel)]="createdSubject.type" name="type"
                        class="form-control" placeholder="Format: VU">
               </div>
             </div>
@@ -201,7 +201,7 @@
                 <label for="subjectDescription1" class="form-label">Description:</label>
               </div>
               <div class="col-sm-8">
-            <textarea id="subjectDescription1" *ngIf="createdSubject" [(ngModel)]="createdSubject.description"
+            <textarea maxlength="1000" id="subjectDescription1" *ngIf="createdSubject" [(ngModel)]="createdSubject.description"
                       name="description" class="form-control mb-2 description-scrollable"></textarea>
               </div>
             </div>

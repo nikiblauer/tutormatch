@@ -1,5 +1,5 @@
-<div style="padding-top:20px;"> 
-  <div class="report-header"> 
+<div style="padding-top:20px;">
+  <div class="report-header">
     <h2>All reports:</h2>
   </div>
   <table class="table table-striped" style="width:calc(100%)">
@@ -92,7 +92,7 @@
   <div class="modal-body">
     <form [formGroup]="banForm" (ngSubmit)="onBanSubmit(modal)">
       <div class="form-group">
-                    <textarea id="banReason" class="form-control" formControlName="banReason"
+                    <textarea maxlength="1000" id="banReason" class="form-control" formControlName="banReason"
                               placeholder="Type in reason for ban of Student" rows="5" required></textarea>
         <div
           *ngIf="banForm.get('banReason').invalid && (banForm.get('banReason').dirty || banForm.get('banReason').touched)"

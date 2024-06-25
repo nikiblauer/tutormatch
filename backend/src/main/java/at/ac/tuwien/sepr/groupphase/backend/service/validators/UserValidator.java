@@ -1,9 +1,8 @@
 package at.ac.tuwien.sepr.groupphase.backend.service.validators;
 
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
-
-import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.CreateStudentDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.PasswordResetDto;
+import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.StudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.endpoint.dto.UpdateStudentDto;
 import at.ac.tuwien.sepr.groupphase.backend.exception.ValidationException;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ public class UserValidator {
     private static final String VALIDATION_PATTERN_1 = "^[a-zA-Z0-9.+-]+@student\\.tuwien\\.ac\\.at$";
     private static final String VALIDATION_PATTERN_2 = "^[a-zA-Z0-9.+-]+@tuwien\\.ac\\.at$";
     private static final String VALIDATION_PATTERN_3 = "^\\s+";
-    private static final String VALIDATION_PATTERN_4 = "^(?:\\+?\\d⋅?){6,14}\\d$";
+    private static final String VALIDATION_PATTERN_4 = "^\\+[1-9][0-9]{7,14}$|^0\\d{10}$";
 
     private final PasswordEncoder passwordEncoder;
 
@@ -68,7 +67,12 @@ public class UserValidator {
         if (toCreate.password.length() < 8) {
             errors.add("Password has to be at least of length 8");
         }
-
+        if (toCreate.firstname.length() > 255) {
+            errors.add("First name has to be smaller than 255 characters");
+        }
+        if (toCreate.lastname.length() > 255) {
+            errors.add("Last name has to be smaller than 255 characters");
+        }
         if (!errors.isEmpty()) {
             throw new ValidationException("Errors while verifying user Data:", errors);
         }
@@ -111,6 +115,12 @@ public class UserValidator {
             if (!telNr.isEmpty()) {
                 errors.add("Telephone number has to be a valid phone number");
             }
+        }
+        if (firstname.length() > 255) {
+            errors.add("First name has to be smaller than 255 characters");
+        }
+        if (lastname.length() > 255) {
+            errors.add("Last name has to be smaller than 255 characters");
         }
 
         if (!errors.isEmpty()) {

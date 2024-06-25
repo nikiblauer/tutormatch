@@ -78,7 +78,7 @@
                     </div>
                 </div>
                 <div class="mb-4 input-group">
-                    <input type="text" placeholder="Search Subjects ..." [(ngModel)]="searchQuery"
+                    <input maxlength="255" type="text" placeholder="Search Subjects ..." [(ngModel)]="searchQuery"
                         (input)="onSearchChange()" class="form-control mb-2">
                 </div>
                 <div class="mb-4 table-responsive">
@@ -127,36 +127,36 @@
                 <form>
                     <div class="mb-3" *ngIf="admin">
                         <label for="matrikelNumber" class="form-label">Student number</label>
-                        <input type="text" class="form-control" id="matrikelNumber" [(ngModel)]="editedUser.matrNumber"
+                        <input maxlength="50" type="number" class="form-control" id="matrikelNumber" [(ngModel)]="editedUser.matrNumber"
                             name="matrikelNumber">
                     </div>
                     <div class="mb-3">
                         <label for="firstName" class="form-label">First Name</label>
-                        <input type="text" class="form-control" id="firstName" [(ngModel)]="editedUser.firstname"
+                        <input maxlength="50" type="text" class="form-control" id="firstName" [(ngModel)]="editedUser.firstname"
                             name="firstName">
                     </div>
                     <div class="mb-3">
                         <label for="lastName" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" [(ngModel)]="editedUser.lastname"
+                        <input maxlength="50" type="text" class="form-control" id="lastName" [(ngModel)]="editedUser.lastname"
                             name="lastName">
                     </div>
                     <div class="mb-3">
                         <label for="street" class="form-label">Street</label>
-                        <input type="text" class="form-control" id="street" [(ngModel)]="editedUser.street"
+                        <input maxlength="50" type="text" class="form-control" id="street" [(ngModel)]="editedUser.street"
                             name="street">
                     </div>
                     <div class="mb-3">
                         <label for="areaCode" class="form-label">Post Code</label>
-                        <input type="text" class="form-control" id="areaCode"
+                        <input maxlength="20" type="number" class="form-control" id="areaCode"
                             [(ngModel)]="editedUser.areaCode === 0 ? '' : editedUser.areaCode" name="areaCode">
                     </div>
                     <div class="mb-3">
                         <label for="city" class="form-label">City</label>
-                        <input type="text" class="form-control" id="city" [(ngModel)]="editedUser.city" name="city">
+                        <input maxlength="50" type="text" class="form-control" id="city" [(ngModel)]="editedUser.city" name="city">
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">Phone Number</label>
-                        <input type="tel" class="form-control" id="phone" [(ngModel)]="editedUser.telNr" name="phone">
+                        <input maxlength="50" type="tel" class="form-control" id="phone" [(ngModel)]="editedUser.telNr" name="phone">
                     </div>
                 </form>
             </div>
