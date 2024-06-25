@@ -240,18 +240,13 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   // fetches blocked users for the sender and recipient and saves it in the respective arrays for both users
   fetchBlockedUsers(userId: number, isSender: boolean) {
-    console.log(userId);
     this.chatService.getBlockedUsers(userId).subscribe(blockedUsers => {
       if (isSender) {
         this.senderBlockedUsers = blockedUsers;
       } else {
         this.recipientBlockedUsers = blockedUsers;
       }
-      if (blockedUsers.includes(userId)) {
-        console.log('User is blocked');
-      } else {
-        console.log('User is not blocked');
-      }
+
     }, error => {
       console.error('Error fetching blocked users:', error);
     });

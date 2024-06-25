@@ -72,7 +72,6 @@ export class ImportStatusComponent implements OnInit {
       return;
     }
     this.importStatus = data;
-    console.log("the status: " + this.importStatus.status + " the boolean: " + this.importStatus.status !== 'RUNNING')
     if (this.importStatus.status != 'RUNNING') {
       this.stopFetchingStatus(); //Stop fetching if status is not running initially
     }

@@ -29,11 +29,12 @@ export class MatchComponent implements OnInit, AfterViewInit {
   public filterOffers: Subject[] = [];
   public filterCourseNumNeeds: string[] = [];
   public filterCourseNumOffers: string[] = [];
-  public matchNeeds: Subject[];
-  public matchOffers: Subject[];
+  public matchNeeds: Subject[] = [];
+  public matchOffers: Subject[] = [];
   public reportReason: string;
   public chatExists: boolean = false;
   public isLoaded: boolean;
+  public visibility: boolean = true;
 
   constructor(private userService: UserService, private notification: ToastrService,
               private spinner: NgxSpinnerService, private ratingService: RatingService,
@@ -46,22 +47,39 @@ export class MatchComponent implements OnInit, AfterViewInit {
     let timeout = setTimeout(() => {
       this.spinner.show();
     }, 1500);
-    this.userService.getUserMatcher().subscribe({
-      next: (matches) => {
+    this.userService.getVisibility().subscribe({
+      next: (v) => {
+        this.visibility = v;
         clearTimeout(timeout);
         this.spinner.hide();
-        this.matches = matches;
-        this.placeholderMatches = this.matches;
-        this.isLoaded = true;
-      },
-      error: error => {
+        if (v){
+          this.userService.getUserMatcher().subscribe({
+            next: (matches) => {
+              clearTimeout(timeout);
+              this.spinner.hide();
+              this.matches = matches;
+              this.placeholderMatches = this.matches;
+              this.isLoaded = true;
+            },
+            error: error => {
+              clearTimeout(timeout);
+              this.spinner.hide();
+              console.error("Error when retrieving matches", error);
+              this.notification.error(error.error, "Something went wrong!");
+            }
+          });
+          this.getUserSubjects();
+        }
+      }, error: (error) => {
         clearTimeout(timeout);
         this.spinner.hide();
-        console.error("Error when retrieving matches", error);
+        console.error(error);
         this.notification.error(error.error, "Something went wrong!");
       }
-    });
-    this.getUserSubjects();
+    })
+
+
+
   }
 
   public trimStringByComma(input: string) {
@@ -199,7 +217,7 @@ export class MatchComponent implements OnInit, AfterViewInit {
         this.selectAll();
       },
       error: (errorMessage) => {
-        console.log(errorMessage);
+        console.error(errorMessage);
         this.notification.error(errorMessage, "Loading of matches failed.")
       }
     });
