@@ -20,7 +20,7 @@ white-space: nowrap;
         <i class="bi bi-info-circle"></i>
       </button>
     </td>
-    <td >{{ feedback.feedback }}</td>
+    <td style="overflow-wrap: anywhere; hyphens: auto">{{ feedback.feedback }}</td>
     <td >{{ feedback.created  | date:'MM/dd/yyyy HH:mm:ss'}}</td>
     <td>
       <button class="btn btn-warning custom-button" (click)="openBanModal(banModal)">
