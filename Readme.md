@@ -18,19 +18,32 @@ These are individuals currently enrolled in universities who are seeking academi
 
 ## Showcase
 
-**Register:**
+**Register/Login:** 
+<br>
+Users can register/login with their university email address. After registration an email is sent to the specified address and a link to verify the account is provided.
+After verifying, the user can login to TutorMatch.
 ![Screenshot 2024-07-04 201739](https://github.com/nikiblauer/tutormatch/assets/39680062/f214abb9-98e1-4900-ba8c-9faaa05a9d1b)
-
+<br>
+<br>
 **Matches:**
+<br>
+On this view, users can see their current matches with other students. Users can select their matches to view the details (Email, Phone, Address), they can start a private chat with them,
+they can give a rating from 1 to 5 stars and also give them feedback.
 ![Screenshot 2024-07-04 201827](https://github.com/nikiblauer/tutormatch/assets/39680062/050e5640-c9c7-4ac5-bf62-3375a577e7d0)
-
+<br>
 ![Screenshot 2024-07-04 201901](https://github.com/nikiblauer/tutormatch/assets/39680062/18c40bc4-2276-44ba-8be4-54019480a425)
-
+<br>
+<br>
 **Chat:**
+<br>
+The users can chat using the private real-time chat function of TutorMatch. Using this chat they can setup a time and place to study together. 
 ![Screenshot 2024-07-04 201918](https://github.com/nikiblauer/tutormatch/assets/39680062/fb9412fd-7e0a-4383-90f9-3edf8c1cf472)
-
+<br>
+<br>
 **Profile:**
-
+<br>
+Users can edit their profile information in this view. They can optionally also provide an address and a phone number other users can use to contact them. 
+Subjects are also selected in this view. All this information is then used by the TutorMatch matching algorithm to bring together students with their peers.
 ![Screenshot 2024-07-04 201938](https://github.com/nikiblauer/tutormatch/assets/39680062/8a05273a-723b-42b6-ab23-9444b4861314)
 ![Screenshot 2024-07-04 201950](https://github.com/nikiblauer/tutormatch/assets/39680062/9c5df77f-4a4d-4fdf-8b67-fc0a906f41c8)
 
